@@ -1,4 +1,4 @@
-% Chapter 2
+%!TEX root = ../main.tex
 
 \yyyymmdddate
 \renewcommand{\dateseparator}{-}
@@ -27,15 +27,13 @@
 
 \chapter{Ribofinder} % Main chapter title
 
-\label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter1}
+\label{Ribofinder} % For referencing the chapter elsewhere
 
-\lhead{Chapter 2. \emph{Ribofinder: A Riboswitch Detection Pipeline}} % This is for the header on each page - perhaps a shortened title
+\lhead{Chapter 1. \emph{Ribofinder: A Riboswitch Detection Pipeline}} % This is for the header on each page
 
 %----------------------------------------------------------------------------------------
 
-% \begin{abstract}
-%   Riboswitches are regulatory mRNA elements that modulate gene expression via structural changes induced by the direct sensing of a small-molecule metabolite. Most often found in bacteria, riboswitches regulate diverse pathways including the metabolism and transport of purines, methionine, and thiamin amongst others. The structure of a riboswitch includes an aptamer domain---involved in the direct sensing of the small-molecule---and an expression platform whose structure changes upon the aptamer binding the metabolite. Because of the discriminatory nature of metabolite sensing, groups have had great success in finding representative examples of aptamers across a diverse collection of bacterial species; RFam 12.0 currently contains 26 different families of aptamers involved in different metabolic pathways. Whereas there exists strong sequence and structural similarity within the aptamer of a riboswitch family, the expression platform is highly variable, and thus challenging to capture using traditional SCFG-based approaches. For this reason databases such as RFam only contain the aptamer portion of the riboswitch, and there exists no database providing sequences including expression platforms, necessary for capturing the `on' and `off' conformations of this regulatory element. We have developed a new pipeline---called \rfinder---which can detect putative riboswitches including their expression platforms and likely conformational structures across a wide collection of genomic sequences.
-% \end{abstract}
+Riboswitches are regulatory mRNA elements that modulate gene expression via structural changes induced by the direct sensing of a small-molecule metabolite. Most often found in bacteria, riboswitches regulate diverse pathways including the metabolism and transport of purines, methionine, and thiamin amongst others. The structure of a riboswitch includes an aptamer domain---involved in the direct sensing of the small-molecule---and an expression platform whose structure changes upon the aptamer binding the metabolite. Because of the discriminatory nature of metabolite sensing, groups have had great success in finding representative examples of aptamers across a diverse collection of bacterial species; RFam 12.0 currently contains 26 different families of aptamers involved in different metabolic pathways. Whereas there exists strong sequence and structural similarity within the aptamer of a riboswitch family, the expression platform is highly variable, and thus challenging to capture using traditional SCFG-based approaches. For this reason databases such as RFam only contain the aptamer portion of the riboswitch, and there exists no database providing sequences including expression platforms, necessary for capturing the `on' and `off' conformations of this regulatory element. We have developed a new pipeline---called \rfinder---which can detect putative riboswitches including their expression platforms and likely conformational structures across a wide collection of genomic sequences.
 
 \section{Pipeline} \label{sec:pipeline}
 
@@ -63,7 +61,7 @@ Due to the spatially-mediated structural regulation of purine riboswitches, wher
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=.75\linewidth]{Figures/refseq_genome_sizes.pdf}
+    \includegraphics[width=.75\linewidth]{Figures/Ribofinder/refseq_genome_sizes.pdf}
   \caption{Histogram displaying the distribution of genome sizes across the RefSeq data analyzed, comprising 5,172 bacterial genomes. Genome size is shown using a $\log_{10}$ scale.}
   \label{fig:genome_sizes}
 \end{figure}
@@ -119,9 +117,9 @@ This difficulty with \rfold can be shown by using the constraint-produced struct
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=.45\linewidth]{Figures/NC_014019_1_1427313_1427501_off.png}
+    \includegraphics[width=.45\linewidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_off.png}
     \hfill
-    \includegraphics[width=.45\linewidth]{Figures/NC_014019_1_1427313_1427501_on.png}
+    \includegraphics[width=.45\linewidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_on.png}
     \caption{{\em Left:} the computationally predicted gene-off conformation of sequence NC\_014019.1 1427313-1427501, using \ms{RNAfold} from the ViennaRNA 2.1.8 suite, with dangles disabled and the Turner 1999 energies. This sequence is located upstream of the xpt gene in Bacillus megaterium QM B1551. {\em Right:} the gene-on conformation.}
   \label{fig:example_ss}
 \end{figure}
