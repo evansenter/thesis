@@ -3,10 +3,54 @@
 \chapter{Ribofinder}
 \label{ch:rfinder}
 
-\lhead{Ribofinder: A Riboswitch Detection Pipeline}
+\lhead{Ribofinder: A \Rb Detection Pipeline}
 
 \section{Introduction}
 \label{sec:rfinder:intro}
 
+In this chapter, we present the \rfinder program---a pipeline to facilitate the
+detection of putative guanine \rbs across genomic data. The \rfinder
+tool operates in three stages. First we use \infernal and \tthp to detect
+putative aptamers and expression platforms, two distinct components of
+\rbs described in section \ref{sec:rfinder:bkgrnd}. After coalescing
+this data into a pool of candidate \rbs, we use \rfold with constraints
+based on experimental data to compute the two distinct structural
+conformations---`gene on' and `gene off'. In the third and final stage, we
+leverage \foldalign to measure the similarity between our candidate pool and a
+canonical guanine \rb well studied in the literature, the xpt G-box
+\rb from Bacillus subtilis.
+
 \subsection{Organization}
 \label{subsec:rfinder:org}
+
+This chapter is organized in the following fashion. After providing background
+on the structural components of a \rb alongside their biological
+significance, we outline the deficiencies in the `state of the art' software
+when as it relates specifically to \rb detection. We then move on to outline
+the three stages of \rfinder: candidate selection, structural prediction, and
+candidate curation. Having described the approach of the software, we move on
+to present our findings in using \rfinder to detect guanine \rbs across
+the bacterial RefSeq database. Finally, we provide brief commentary on possible
+extensions of the algorithm to locate other flavors of \rbs, of which
+adenine-sensitive aptamers are a straightforward extension.
+
+\section{Background}
+\label{sec:rfinder:bkgrnd}
+
+\section{The \rfinder pipeline}
+\label{sec:rfinder:pipeline}
+
+\subsection{Step 1: Candidate selection}
+\label{subsec:rfinder:selection}
+
+\subsection{Step 2: Structural prediction}
+\label{subsec:rfinder:consfold}
+
+\subsection{Step 3: Candidate curation}
+\label{subsec:rfinder:curation}
+
+\section{Using \rfinder against the RefSeq database}
+\label{sec:rfinder:refseq}
+
+\section{Extending beyond guanine \rbs}
+\label{sec:rfinder:ext}

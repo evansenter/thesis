@@ -15,13 +15,14 @@ sequence \seq, differ by $k$ base pairs. By leveraging polynomial interpolation
 via the \fft, this algorithm runs in $O(n^4)$ time and
 $O(n^2)$ space, a significant improvement over its predecessor. The accompanying
 software which implements this algorithm has been used to predict the location
-of expression platforms for putative riboswitches in genomic data, and to
+of expression platforms for putative \rbs in genomic data, and to
 evaluate the correlation between kinetic folding speed and landscape ruggedness.
 
 \subsection{Organization}
 \label{subsec:fftbor:org}
 
-The following chapter is organized as follows. First, we provide background on
+This chapter is organized in the following fashion. First, we provide
+background on
 the problem which \fftbor aims to address, as well as a brief overview of
 existing approaches. We follow by a formal explanation of the problem, and
 proceed to describe how the energy landscape is coarsified into discrete bins.
@@ -32,7 +33,7 @@ reformulated as a polynomial whose coefficients $c_k=\z{k}{1}{n}$. We then
 describe how the \fft can be employed to efficiently compute the coefficients
 $c_k$, finishing our description of the underlying algorithm. Then we proceed
 to present two applications of \fftbor, an application to RNA kinetics and
-another to riboswitch detection in genomic data. Finally, we give reference
+another to \rb detection in genomic data. Finally, we give reference
 to the full recursions using the more accurate Turner energy model, which the
 underlying implementation actually uses.
 
@@ -93,6 +94,6 @@ d_{BP}(S,T) = |S \cup T| - |S \cap T|
 \section{Recursions for structural neighbors}
 \label{sec:fftbor:recursions}
 
-\section{Polynomial interpolation to evaluate $\Z_{i,j}(x)$}
+\section{Polynomial interpolation to evaluate \texorpdfstring{$\Z_{i,j}(x)$}{}}
 \label{sec:fftbor:fft}
 
