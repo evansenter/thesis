@@ -24,13 +24,12 @@
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
-
 \documentclass[11pt, oneside]{Thesis} % The default font size and one-sided printing (no margin offsets)
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
 \usepackage[square, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers'
-\hypersetup{urlcolor=black, colorlinks=true} % Colors hyperlinks in blue - change to black if annoying
+\hypersetup{urlcolor=black, colorlinks=false} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
 
 \usepackage[utf8]{inputenc}
@@ -47,6 +46,7 @@
 \usepackage{booktabs}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{rnamacros}
 
 \begin{document}
 
@@ -69,38 +69,6 @@
 \hypersetup{pdfauthor=\authornames}
 \hypersetup{pdfkeywords=\keywordnames}
 
-%%%%%%%%%%%%%%%%%%%%%%%% mverbatim mode %%%%%%%%%%%%%%%%%%%%%%%%
-\chardef\other=12
-\def\mdeactivate{%
-    % \catcode`\\=\other
-    % \catcode`\{=\other
-    % \catcode`\}=\other
-    % \catcode`\$=\other
-    \catcode`\&=\other   \catcode`\#=\other
-    \catcode`\%=\other   \catcode`\~=\other
-    %\catcode`\^=\other   \catcode`\_=\other
-}
-
-\def\mmakeactive#1{\catcode`#1=\active\ignorespaces}
-
-{% The group delimits the text over which ^^M is active.
-    \mmakeactive\^^M
-    \gdef\obeywhitespace{%
-         \mmakeactive\^^M %
-         \let^^M=\NewLine %
-         \aftergroup\removebox %
-         \obeyspaces %
-}}
-
-\def\NewLine{\par\indent}
-\def\removebox{\setbox0=\lastbox}
-
-\def\mverbatim{\par\begingroup\parindent=0em\tt\mdeactivate\obeywhitespace
-              \catcode`\|=0  %
-}
-\def\mendverbatim{\endgroup}
-\def\|{|}
-
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
@@ -112,7 +80,7 @@
 \textsc{\Large Doctoral Thesis}\\[0.5cm] % Thesis type
 
 \HRule \\[0.4cm] % Horizontal line
-{\large \bfseries \ttitle}\\[0.4cm] % Thesis title
+{\large \bfseries \ttitle}\\[0.25cm] % Thesis title
 \HRule \\[1.5cm] % Horizontal line
 
 \begin{minipage}{0.4\textwidth}
@@ -303,11 +271,11 @@
 
 % \input{Chapters/Introduction}
 % \input{Chapters/Background}
-% \input{Chapters/Ribofinder}
+\input{Chapters/Ribofinder}
 \input{Chapters/FFTbor}
 % \input{Chapters/RNAparametric}
-% \input{Chapters/FFTbor2D}
-% \input{Chapters/Hermes}
+\input{Chapters/FFTbor2D}
+\input{Chapters/Hermes}
 % \input{Chapters/Wrnap}
 % \input{Chapters/Discussion}
 
