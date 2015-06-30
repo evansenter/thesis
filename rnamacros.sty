@@ -8,28 +8,47 @@
 % --------------------------------------------------
 \newcommand{\ms}[1]{\mbox{\tt #1}\xspace}
 \newcommand{\fftbor}{\ms{FFTbor}}
+\newcommand{\ffteq}{\ms{FFTeq}}
+\newcommand{\fftmfpt}{\ms{FFTmfpt}}
+\newcommand{\ffttwo}{\ms{FFTbor2D}}
 \newcommand{\foldalign}{\ms{FoldAlign}}
+\newcommand{\hermes}{\ms{Hermes}}
 \newcommand{\infernal}{\ms{Infernal}}
 \newcommand{\rfinder}{\ms{Ribofinder}}
 \newcommand{\rfold}{\ms{RNAfold}}
+\newcommand{\rnaeq}{\ms{RNAeq}}
+\newcommand{\rnamfpt}{\ms{RNAmfpt}}
+\newcommand{\rtwofold}{\ms{RNA2Dfold}}
 \newcommand{\tthp}{\ms{TransTermHP}}
 
 % --------------------------------------------------
 % Software and terminology
 % --------------------------------------------------
-\newcommand{\fft}{Fast Fourier Transform}
-\newcommand{\idft}{inverse Discrete Fourier Transform}
-\newcommand{\Rb}{Riboswitch}
-\newcommand{\rb}{riboswitch}
-\newcommand{\Rbs}{Riboswitches}
-\newcommand{\rbs}{riboswitches}
+\newcommand{\fft}{Fast Fourier Transform\xspace}
+\newcommand{\idft}{inverse Discrete Fourier Transform\xspace}
+\newcommand{\Eqt}{Equilibrium time\xspace}
+\newcommand{\eqt}{equilibrium time\xspace}
+\newcommand{\Mfpt}{Mean first passage time\xspace}
+\newcommand{\mfpt}{mean first passage time\xspace}
+\newcommand{\Rb}{Riboswitch\xspace}
+\newcommand{\rb}{riboswitch\xspace}
+\newcommand{\Rbs}{Riboswitches\xspace}
+\newcommand{\rbs}{riboswitches\xspace}
+
+% --------------------------------------------------
+% RNA notation
+% --------------------------------------------------
+\newcommand{\seq}{{\bf s}\xspace}
+\newcommand{\str}{\strS}
+\newcommand{\strletter}[1]{\ensuremath{\mathcal #1}\xspace}
+\newcommand{\strA}{\strletter{A}}
+\newcommand{\strB}{\strletter{B}}
+\newcommand{\strS}{\strletter{S}}
+\newcommand{\strT}{\strletter{T}}
 
 % --------------------------------------------------
 % Math notation
 % --------------------------------------------------
-\newcommand{\seq}{{\bf s}\xspace}
-\newcommand{\str}{\strS}
-\newcommand{\strS}{\ensuremath{\mathcal S}\xspace}
-\newcommand{\strT}{\ensuremath{\mathcal T}\xspace}
-\newcommand{\Z}{\mathcal{Z}}
-\newcommand{\z}[3]{{\bf Z}^{#1}_{#2,#3}}
+\newcommand{\On}[1]{\ensuremath{O(n^{#1})}}
+\newcommand{\bfZ}[2]{\ensuremath{{\bf Z}^{#1}_{#2}}}
+\newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}}

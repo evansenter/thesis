@@ -8,7 +8,63 @@
 \section{Introduction}
 \label{sec:ffttwo:intro}
 
+In this chapter, we present the \ffttwo algorithm and accompanying software.
+\ffttwo, like \fftbor described in Chapter \ref{ch:fftbor}, is an algorithm
+which computes the paramerized partition function for an input RNA sequence
+\seq. \ffttwo computes the two-dimensional coarse energy landscape for \seq
+given two compatible input secondary structures \strA and \strB, where position
+$(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
+probability for those structures \str which have $d_{BP}(\str, \strA)=x$ and
+$d_{BP}(\str, \strB)=y$ (where $d_{BP}$ is as defined in equation
+\ref{eq:fftbor:dBP}). By again leveraging the \fft, \ffttwo runs in \On{5}
+time and only uses \On{2} space---a significant improvement over previous
+approaches. This permits the output energy landscape to be used in a
+high-throughput fashion to analyze folding kinetics; a topic covered in detail
+in Chapter \ref{ch:hermes}.
+
 \subsection{Organization}
 \label{subsec:ffttwo:org}
 
-This chapter is organized in the following fashion.
+This chapter is organized in the following fashion. Because the history for
+this work arises naturally from the background described in section
+\ref{sec:fftbor:bkgrnd}, we forego reiteration and instead fall directly into
+a technical discussion of the underlying algorithm. We first develop the
+recursions for the Nussinov energy model for expository clarity, the
+underlying implementation uses the more complicated and robust Turner energy
+model. Recursions in place, we then move to show how these lead to
+a single variable polynomial $P(x)$ whose coeffecients can be computed by
+the \idft, and map to the 2D energy landscape. We describe two exploitations of
+$P(x)$, a parity condition and complex conjugates which further reduce the
+runtime by a factor of 4. Finally, we contrast this software against \rtwofold,
+and outline the performance characteristics of both softwares and highlight
+the benefits and drawbacks of both.
+
+\section{Derivation of the \ffttwo algorithm}
+\label{sec:ffttwo:math}
+
+\subsection{Definition of the partition function
+\texorpdfstring{\bfZ{x,y}{1,n}}{}}
+\label{subsec:ffttwo:recursions}
+
+\subsection{Recursions to compute the polynomial
+\texorpdfstring{\emZ{i,j}}{}}
+\label{subsec:ffttwo:polynomial}
+
+\subsection{Polynomial interpolation to evaluate
+\texorpdfstring{\emZ{i,j}}{}}
+\label{subsec:ffttwo:fft}
+
+\section{Acceleration of the \ffttwo algorithm}
+\label{sec:ffttwo:perf}
+
+\subsection{Optimization due to parity condition}
+\label{subsec:ffttwo:parity}
+
+\subsection{Optimization due to complex conjugates}
+\label{subsec:ffttwo:compconj}
+
+\section{Benchmarking and performance considerations}
+\label{sec:ffttwo:benchmarking}
+
+\section{Applications of the \ffttwo algorithm}
+\label{sec:ffttwo:applications}
