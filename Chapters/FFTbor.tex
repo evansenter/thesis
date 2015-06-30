@@ -1,0 +1,100 @@
+%!TEX root = ../main.tex
+
+\newcommand{\FFTbor}{\mbox{\tt FFTbor}\xspace}
+\newcommand{\FFT}{Fast Fourier Transform}
+\newcommand{\iDFT}{inverse Discrete Fourier Transform}
+\newcommand{\Z}{\mathcal{Z}}
+\newcommand{\z}[3]{{\bf Z}^{#1}_{#2,#3}}
+\newcommand{\seq}{{\bf s}\xspace}
+\newcommand{\strS}{\ensuremath{\mathcal S}\xspace}
+\newcommand{\strT}{\ensuremath{\mathcal T}\xspace}
+
+\chapter{FFTbor}
+
+\label{FFTbor}
+
+\lhead{Chapter X. \emph{FFTbor}}
+
+\section{Introduction}
+
+In this chapter, we present the \FFTbor algorithm and accompanying software.
+\FFTbor is a novel algorithm developed with the intent of efficiently computing
+the Boltzmann probability of those structures whom, for a given input RNA
+sequence \seq, differ by $k$ base pairs. By leveraging polynomial interpolation
+via the \FFT, this algorithm runs in $O(n^4)$ time and
+$O(n^2)$ space, a significant improvement over its predecessor. The accompanying
+software which implements this algorithm has been used to predict the location
+of expression platforms for putative riboswitches in genomic data, and to
+evaluate the correlation between kinetic folding speed and landscape ruggedness.
+
+\subsection{Organization}
+
+The following chapter is organized as follows. First, we provide background on
+the problem which \FFTbor aims to address, as well as a brief overview of
+existing approaches. We follow by a formal explanation of the problem, and
+proceed to describe how the energy landscape is coarsified into discrete bins.
+We then develop the recursions for the parameterized partition function using
+the Nussinov-Jacobson energy model, which allows us to exposé the novel aspects
+of the algorithm. After developing the recursions, we indicate how they can be
+reformulated as a polynomial whose coefficients $c_k=\z{k}{1}{n}$. We then
+describe how the \FFT can be employed to efficiently compute the coefficients
+$c_k$, finishing our description of the underlying algorithm. Then we proceed
+to present two applications of \FFTbor, an application to RNA kinetics and
+another to riboswitch detection in genomic data. Finally, we give reference
+to the full recursions using the more accurate Turner energy model, which the
+underlying implementation actually uses.
+
+\section{Background}
+
+\section{Formalization of the problem}
+
+\FFTbor aims to compute the coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
+\begin{eqnarray}
+\label{eqn:PofX}
+p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
+\end{eqnarray}
+where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \FFT to compute
+the \iDFT on values $y_0,\ldots,y_{n-1}$, where
+$y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal $n$th complex
+root of unity and $p(x)$ is defined in (\ref{eqn:PofX}). By leveraging complex
+roots of unity in conjunction with the \iDFT the we subvert numeric instability
+issues observed with both Lagrange interpolation and Gaussian elimination.
+
+Consider an RNA sequence $\seq = s_1,\ldots,s_n$, where
+$s_i \in \{A,C,G,U\}$, i.e. a sequence of nucleotides. We can describe a
+secondary structure \strS which is compatible with \seq as a collection of
+base pair tuples $(i,j)$, where $1 \le i \le i+\theta < j \le n$ and
+$\theta \ge 0$---generally taken to be 3, the minimum number of unpaired bases
+in a hairpin loop due to steric constraints.
+
+To more simply develop the underlying recursions for \FFTbor, we introduce a
+number of constraints on the base pairs within \strS. Firstly, we require that
+each base pair is either a Watson-Crick or G-U wobble, i.e. base pair $(i,j)$
+for sequence \seq has corresponding nucleotides $(s_i,s_j)$, which are
+restricted
+to the set $\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}$. With
+this constraint satisfied we say that \strS is {\em compatible} with \seq, and
+for the remainder of this chapter will only consider those structures which are
+compatible with \seq.
+Secondly, we insist that given two base pairs $(i,j), (x,y)$ from \strS,
+$i=x \iff j=y$---bases have at most one partner. Finally, we require that
+$i<x<j \iff i<y<j$, no pseudoknots are allowed. While pseudoknots have been
+shown to be present in some biologically relevant RNAs, their inclusion greatly
+complicates the recursive decomposition of the structure, and thus it is common
+to ignore them.
+
+Provided two secondary structures $S,T$, we can define a notion of
+distance between them. There are a number of different definitions of distance
+used across the literature; we will use {\em base pair distance} for \FFTbor.
+Base pair distance is defined as the symmetric difference between the sets
+$S,T$
+\begin{equation}
+d_{BP}(S,T) = |S \cup T| - |S \cap T|
+\end{equation}
+
+\section{Coarsification of the energy landscape}
+
+\section{Recursions for structural neighbors}
+
+\section{Polynomial interpolation to evaluate $\Z_{i,j}(x)$}
+
