@@ -44,10 +44,10 @@ underlying implementation actually uses.
 \label{sec:fftbor:formal}
 
 \fftbor aims to compute the coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
-\begin{eqnarray}
+\begin{align}
 \label{eq:fftbor:pOfX}
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
-\end{eqnarray}
+\end{align}
 where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \fft to compute
 the \idft on values $y_0,\ldots,y_{n-1}$, where
 $y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal $n$th complex
@@ -58,39 +58,90 @@ issues observed with both Lagrange interpolation and Gaussian elimination.
 
 Consider an RNA sequence $\seq = s_1,\ldots,s_n$, where
 $s_i \in \{A,C,G,U\}$, i.e. a sequence of nucleotides. We can describe a
-secondary structure \strS which is compatible with \seq as a collection of
+secondary structure \str which is compatible with \seq as a collection of
 base pair tuples $(i,j)$, where $1 \le i \le i+\theta < j \le n$ and
 $\theta \ge 0$---generally taken to be 3, the minimum number of unpaired bases
 in a hairpin loop due to steric constraints.
 
 To more simply develop the underlying recursions for \fftbor, we introduce a
-number of constraints on the base pairs within \strS. Firstly, we require that
+number of constraints on the base pairs within \str. Firstly, we require that
 each base pair is either a Watson-Crick or G-U wobble, i.e. base pair $(i,j)$
 for sequence \seq has corresponding nucleotides $(s_i,s_j)$, which are
-restricted
-to the set $\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}$. With
-this constraint satisfied we say that \strS is {\em compatible} with \seq, and
+restricted to the set
+\[
+\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}.
+\]
+With
+this constraint satisfied we say that \str is {\em compatible} with \seq, and
 for the remainder of this chapter will only consider those structures which are
 compatible with \seq.
-Secondly, we insist that given two base pairs $(i,j), (x,y)$ from \strS,
+Secondly, we insist that given two base pairs $(i,j), (x,y)$ from \str,
 $i=x \iff j=y$---bases have at most one partner. Finally, we require that
 $i<x<j \iff i<y<j$, no pseudoknots are allowed. While pseudoknots have been
 shown to be present in some biologically relevant RNAs, their inclusion greatly
 complicates the recursive decomposition of the structure, and thus it is common
 to ignore them.
 
-Provided two secondary structures $S,T$, we can define a notion of
+Provided two secondary structures $\str,\strT$, we can define a notion of
 distance between them. There are a number of different definitions of distance
-used across the literature; we will use {\em base pair distance} for \fftbor.
+used across the literature; we will use {\em \bpd} for \fftbor.
 Base pair distance is defined as the symmetric difference between the sets
-$S,T$
-\begin{equation}
+\str,\strT
+\begin{align}
 \label{eq:fftbor:dBP}
-d_{BP}(S,T) = |S \cup T| - |S \cap T|
-\end{equation}
+\dBP{\str,\strT} = |\str \cup \strT| - |\str \cap \strT|.
+\end{align}
+Given this definition of distance, two structures \str and \strT are said to
+be \kNbrs if $\dBP{\str,\strT} = k$. It is important to note that
+the notion of \bpd is also applicable to restrictions of secondary structures
+on the subsequence $\seq_{i,j}$,
+i.e. $\str_{i,j} = \{ (x,y) \,:\, i \leq  x < y \leq j,  (x,y) \in \str \}$.
+
+For a restriction of base pairs for a given structure $\str_{i,j}$,
+$\strT_{i,j}$ is said to be a \kNbr of $\str_{i,j}$ if
+\[
+\dBP{\str_{i,j},\strT_{i,j}} = |\{ (x,y): i \leq x<y\leq j,
+(x,y) \in \str - \strT \mbox{ or } (x,y) \in \strT - \str \}| = k.
+\]
 
 \section{Derivation of the \fftbor algorithm}
 \label{sec:fftbor:math}
+
+Given an RNA sequence $\seq=s_1,\ldots,s_n$ and compatible secondary structure
+\strSt, let $\bfZ{k}{}$ denote the sum of the Boltzmann factors
+\boltzf{\str} of all $k$-neighbors \str of \strSt; i.e.
+\[
+\bfZ{k}{} = \bfZ{k}{1,n} =
+\sum_{\substack{\str \text{ such that }\\ \dBP{\str,\strSt}=k}}
+\boltzF{\str}
+\]
+where $E(\str)$ denotes the Turner (nearest neighbor)
+energy \cite{}
+of \str, $R = 0.00198$ kcal/mol denotes the universal
+gas constant and $T$ denotes absolute temperature. From this, it follows that
+the full partition function is defined as
+\begin{align}
+\label{eq:fftbor:partFunc}
+\bfZ{}{} = \bfZ{}{1,n} = \sum_{k=0}^n \bfZ{k}{1,n}
+\end{align}
+since the \bpd between \strSt and \str is at most
+\begin{align}
+\label{eq:fftbor:maxDist}
+\dBP{\strSt,\str} \leq |\strSt| + \lfloor \frac{n-\theta}{2} \rfloor \leq n.
+\end{align}
+
+We can then define the Boltzmann probability of all \kNbrs \. of \strSt as
+\begin{align}
+\label{eq:fftbor:probK}
+p(k) =\frac{\bfZ{k}{1,n}}{\bfZ{}{1,n}}.
+\end{align}
+
+By visualizing the probabilities $p_k$ as a function of $k$, we generate a
+coarse grained view of the one-dimensional energy landscape of \seq with
+respect to \strSt. When \strSt is taken to be the \mfes for example, one would
+anticipate to see a peak at $k=0$, with additional peaks implying additional
+metastable structures; local energy minima which could suggest an energetic
+trap while folding.
 
 \subsection{Definition of the partition function
 \texorpdfstring{\bfZ{k}{1,n}}{}}
