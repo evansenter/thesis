@@ -32,6 +32,8 @@
 \hypersetup{urlcolor=black, colorlinks=false} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
 
+\usepackage[compact]{titlesec}
+\usepackage[T1]{fontenc}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{bookmark}
@@ -42,6 +44,24 @@
 \usepackage{paralist}
 \usepackage{rnamacros}
 \usepackage{url}
+
+\titleformat{\chapter}[display]
+{\normalfont\Large\filcenter}
+{\titlerule[1pt]
+\vspace{1pt}
+\titlerule
+\vspace{1pc}
+\LARGE\chaptertitlename\:\thechapter}
+{1.8pc}
+{\titlerule
+\vspace{1pc}
+\Huge}
+\titleformat*{\section}{\normalfont\fontsize{17}{20}\selectfont}
+\titleformat*{\subsection}{\normalfont\fontsize{14}{17}\selectfont}
+\titleformat*{\subsubsection}{\normalfont\fontsize{14}{17}\selectfont}
+\titlespacing{\section}{0pt}{*2}{*2}
+\titlespacing{\subsection}{0pt}{*1}{*1}
+\titlespacing{\subsubsection}{0pt}{*1}{*1}
 
 \begin{document}
 
@@ -75,7 +95,7 @@
 \textsc{\Large Doctoral Thesis}\\[0.5cm] % Thesis type
 
 \HRule \\[0.4cm] % Horizontal line
-{\large \bfseries \ttitle}\\[0.25cm] % Thesis title
+{\large \bfseries \ttitle}\\[0.225cm] % Thesis title
 \HRule \\[1.5cm] % Horizontal line
 
 \begin{minipage}{0.4\textwidth}
