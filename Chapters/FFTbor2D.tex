@@ -14,8 +14,8 @@ which computes the paramerized partition function for an input RNA sequence
 \seq. \ffttwo computes the two-dimensional coarse energy landscape for \seq
 given two compatible input secondary structures \strA and \strB, where position
 $(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
-probability for those structures \str which have $d_{BP}(\str, \strA)=x$ and
-$d_{BP}(\str, \strB)=y$ (where $d_{BP}$ is as defined in equation
+probability for those structures \str which have $\dBP(\str, \strA)=x$ and
+$\dBP(\str, \strB)=y$ (where $\dBP$ is as defined in equation
 \ref{eq:fftbor:dBP}). By again leveraging the \fft, \ffttwo runs in \On{5}
 time and only uses \On{2} space---a significant improvement over previous
 approaches. This permits the output energy landscape to be used in a
@@ -41,6 +41,714 @@ the benefits and drawbacks of both.
 
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
+
+For expository clarity, we describe {\tt FFTbor2D} and all recursions
+in terms of the Nussinov energy model \cite{nussinovJacobson}, where
+the energy $E_0(i,j)$ of a base pair $(i,j)$ is defined to be $-1$, and the
+energy $E(S)$ of a secondary structure \str is $-1$ times the number $|S|$
+of base pairs in structure \str.  Nevertheless, the implementation of
+{\tt FFTbor2D} involves the full Turner energy model \cite{xia:RNA}, where
+free energy $E(S)$ depends on negative, stabilizing energy contributions
+from base stacking, and positive, destabilizing energy contributions due to
+loss of entropy in loops.
+
+Given reference secondary structures $A,B$ of a
+given RNA sequence $\seq=s_1,\ldots,s_n$, our goal is to compute
+\begin{equation}
+\label{eqn:defZk}
+\bfZ{x,y}{1,n} = \sum_{\substack{S \text{ such that }\\
+\dBP{\str,\strA} = x, \dBP{\str,\strB}=y}} e^{\frac{-E(S)}{RT}}
+\end{equation}
+for all $0\leq x,y < n$, where $R$ is the universal gas constant, $T$
+absolute temperature, $E(S)$ denotes the free energy of \str, and \str ranges
+over all secondary structures that are compatible with $\seq$. As mentioned,
+we emphasize that for expository reasons alone, the Nussinov energy model is
+used in the recursions in this paper, although full recursions and
+the implementation of {\tt FFTbor2D} involve the Turner energy model.
+
+For any secondary structure \str of $\seq$, and any values
+$1\leq i\leq j \leq n$, the restriction $S_{[i,j]}$ is defined to be the
+collection of base pairs of \str, lying within interval $[i,j]$; i.e.
+$S_{[i,j]} = \{ (k,\ell) : i \leq k < \ell \leq j\}$.
+In \cite{hofacker:RNAbor2D}, Lorenz et al. generalized
+the dynamic programming recursions of our earlier work \cite{Freyhult.b07},
+to yield recursions
+for the partition function $\bfZ{x,y}{i,j}$ in equation
+(\ref{eqn:defZk}).  In the context of the Nussinov model,
+$\bfZ{x,y}{i,j}$ is equal to
+\begin{eqnarray}
+\label{eqn:RNAborNussRecursion}
+&\bfZ{(x-\alpha_0),(y-\beta_0)}{i,j-1} +  \\
+&\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
+\left(e^{\frac{-E_0(k,j)}{RT}}
+\sum_{u+u'=x-\alpha(k)} \sum_{v+v'=y-\beta(k)}
+\bfZ{u,v}{i,k-1}  \bfZ{u',v'}{k+1,j-1} \right) \nonumber
+\end{eqnarray}
+where $\alpha_0 = 1$ if $j$ is base paired in $A_{[i,j]}$ and $0$ otherwise,
+$\beta_0 = 1$ if $j$ is base paired in $B_{[i,j]}$ and $0$ otherwise,
+$E_0(k,j)=-1$ if $k,j$ can base-pair, and otherwise $E_0(k,j)=0$, and
+$\alpha(k)=\dBP(A_{[i,j]}, A_{[i,k-1]} \cup A_{[k+1,j-1]} \cup\{(k,j)\})$,
+and
+$\beta(k)=\dBP(B_{[i,j]}, B_{[i,k-1]} \cup B_{[k+1,j-1]} \cup\{(k,j)\})$.
+
+\subsection{Recursions to compute the polynomial $\emZ{i,j}$}
+\label{section:recursionsForPolynomialZij}
+
+Given RNA sequence $\seq = s_1,\ldots,s_n$
+and two arbitrary, but fixed reference
+structures $A,B$, we define the {\em polynomial}
+\begin{eqnarray}
+\label{eqn:polynomialYann}
+\emZ{} = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  z_{rn+s} x^{r\cdot n + s}
+\end{eqnarray}
+where (constant) coefficients
+\[ z_{rn+s}= \bfZ{r,s}{1,n} =
+\sum_{\substack{S \text{ such that }\\
+\dBP{\str,\strA}=r, \dBP{\str,\strB}=s}}
+e^{\frac{-E(S)}{RT}}
+\]
+where $E(S)$ denotes the free energy of \str.
+If we evaluate the polynomial \emZ{} at $n^2$ distinct pairs of values
+$a_0,\ldots,a_{n^2-1}$ in
+\begin{eqnarray}
+\label{eqn:ZofX}
+\emZof{}{a_{0}} = z_{0},\ldots, \emZof{}{a_{n^2-1}} = z_{n^2-1},
+\end{eqnarray}
+%then Lagrange polynomial interpolation  \cite{LagrangeInterpolation}
+then Lagrange polynomial interpolation
+guarantees that we can determine the coefficients $c_{rn+s}$ of \emZ{},
+for $0\leq r,s < n$. Due to technical difficulties concerning numerical
+robustness, we will perform polynomial interpolation by using Vandermonde
+matrices and the fast Fourier transform (FFT).
+
+The following theorem shows that a
+recursion, analogous to equation (\ref{eqn:RNAborNussRecursion}),
+can be used to compute
+the {\em polynomial} $\emZ{i,j}$ defined by
+\begin{eqnarray}
+\label{eqn:defZijpolynomial}
+\emZ{i,j} &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
+z_{rn+s}(i,j) x^{rn+s}
+=\sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
+\end{eqnarray}
+%\begin{eqnarray}
+%\label{eqn:defZijpolynomial}
+%\emZ{i,j} &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
+%z_{rn+s}(i,j) x^{rn+s}  \nonumber \\
+%\emZ{i,j} &=& \sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
+%\end{eqnarray}
+where
+\[ z_{rn+s}(i,j)= \bfZ{r,s}{i,j} =
+\sum_{\substack{S \text{ such that }\\
+\dBP{\str,\strA_{[i,j]}}=r, \dBP{\str,\strB_{[i,j]}}=s}}
+e^{\frac{-E(S)}{RT}}.
+\]
+Here, in the summation, \str runs over structures on $s_i,\ldots,s_j$, which
+are $r$-neighbors of the restriction $A_{[i,j]}$ of reference structure
+$A$ to interval $[i,j]$, and simultaneously
+\str-neighbors of the restriction $B_{[i,j]}$ of reference structure
+$B$ to interval $[i,j]$.
+\medskip
+
+\noindent
+{\sc Theorem 1:} Let $s_1,\ldots,s_n$ be a given RNA sequence.
+For any integers $1 \leq i < j \leq n$, let
+\begin{eqnarray*}
+\emZ{i,j} = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1} z_{rn+s}  x^{rn+s}
+\end{eqnarray*}
+where
+\[
+z_{rn+s}(i,j)= \bfZ{r,s}{i,j}.
+\]
+%Peter commented out
+%Then  for $i\leq j \leq i+\theta$, $\emZ{i,j}=1$ and for
+%$j>i+\theta$ we have the recurrence relation
+%given by $\emZ{i,j}$ equals
+%\begin{eqnarray}
+%\label{eqn:polynomialRecursionNussJac}
+%\emZ{i,j} &= \emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
+%&\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
+%\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
+%\emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
+%\nonumber
+%\end{eqnarray}
+%end of Peter
+Inductively we define $\emZ{i,j}$ to equal
+\begin{eqnarray}
+\label{eqn:polynomialRecursionNussJac}
+&\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
+&\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
+\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
+\emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
+\nonumber
+\end{eqnarray}
+where $\alpha_0 = 1$ if $j$ is base-paired in $A_{[i,j]}$ and $0$ otherwise,
+$\beta_0 = 1$ if $j$ is base-paired in $B_{[i,j]}$ and $0$ otherwise, and
+$\alpha(k)=\dBP(\strA_{[i,j]}, \strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup\{(k,j)\})$,
+$\beta(k)=\dBP(\strB_{[i,j]}, \strB_{[i,k-1]} \cup \strB_{[k+1,j-1]} \cup\{(k,j)\})$.
+The proof is given in supplementary information.
+\medskip
+
+Note that if one were to compute all terms of the polynomial $\emZ{1,n}$
+by explicitly performing polynomial multiplications,
+then the computation would require \On{7} time and \On{4} space, the
+same time complexity of \cite{hofacker:RNAbor2D}.
+Instead of explicitly performing polynomial expansion in {\em variable} $x$,
+we instantiate $x$ to a
+complex number $\rho \in \mathbb{C}$, and apply
+the following recursion, by setting $\emZof{i,j}{\rho}$ equal to
+%\begin{eqnarray}
+%\label{eqn:RNAborNussRecursionInstantiated}
+%\emZof{i,j}{\rho} &= &\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} +
+%\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
+%\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
+%\emZof{i,k-1}{\rho} \cdot \emZof{k+1,j-1}{\rho}
+%\cdot \rho^{\alpha(k)n+\beta(k)} \right).
+%\end{eqnarray}
+\begin{eqnarray}
+\label{eqn:RNAborNussRecursionInstantiated}
+&\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} + \\
+&\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
+\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
+\emZof{i,k-1}{\rho} \cdot \emZof{k+1,j-1}{\rho}
+\cdot \rho^{\alpha(k)n+\beta(k)} \right) \nonumber
+\end{eqnarray}
+In this fashion, we can compute $\emZof{}{\rho}=\emZof{1,n}{\rho}$ in
+\On{3} time and \On{2} space. For $n^2$ distinct complex numbers
+$\rho_i$ where $0 \leq i \leq n^2-1$, we can compute and save only the
+values $\emZof{}{\rho_0},\ldots, \emZof{}{\rho_{n^2-1}}$, each time re-using the
+\On{2} space for the next computation of $\emZof{}{\rho_i}$.
+It follows that
+the computation resources used to determine the (column) vector
+\begin{eqnarray}
+\label{eqn:defY}
+{\bf Y} = (y_0,\ldots,y_{n^2-1})^T =
+\left(
+\begin{array}{l}
+y_0\\
+y_1\\
+\vdots \\
+y_{n^2-1}\\
+\end{array}
+\right)
+\end{eqnarray}
+where
+$y_0=\emZof{}{\alpha_0},\ldots, y_{n^2-1}=\emZof{}{\alpha_{n^2-1}}$ are thus
+quintic time $O(n^5)$ and quadratic space \On{2}.
+
+\subsection{Polynomial interpolation}
+Our plan is to determine the coefficients of the polynomial
+\emZ{} in equation (\ref{eqn:polynomialYann}) by
+polynomial interpolation.  For reasons of numerical stability,
+we instead determine the coefficients of the polynomial \bfPofX,
+defined by
+\begin{eqnarray}
+\label{eqn:polynomialYannP}
+\bfPofX =
+\sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \bfP_{rn+s}
+ x^{r\cdot n + s} =
+%\sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \frac{z_{rn+s}}{\bfZ{}{}}
+\sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \frac{z_{rn+s}}{Z}
+ x^{r\cdot n + s},
+\end{eqnarray}
+where the fast Fourier transform (FFT) is used to implement the
+interpolation of
+the coefficients using the inverse discrete Fourier transform (DFT), as
+described in Section~\ref{section:FFT}.  The following pseudocode describes how
+to compute the $m$ most significant digits
+for probabilities
+$p_{rn+s} = \frac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. It is well-known that
+the FFT requires $O(N \log N)$ time to solve the inverse discrete
+Fourier transform for a polynomial of degree $N$. In our case,
+$N=n^2$, and so line 6 involving the FFT requires time $O(n^2 \log n)$.
+
+The pseudocode for the algorithm to compute \bfPofX is given in
+%Figure~\ref{fig:fftbor}.
+Figure~1.
+In the next section, we explain a highly non-trivial improvement of
+this algorithm to reduce time by a factor of $4$.
+
+\begin{figure}[!h]
+\begin{small}
+{\sc Algorithm} for {\tt FFTbor2D}\hfill\break
+{\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and distinct secondary
+structures $A,B$ of $\seq$, and integer $m$. \hfill\break
+{\sc Output:} Probabilities $p_{rn+s} = p(r,s)=\bfZ{r,s}{1,n}/\bfZ{}{}$
+to $m$ significant digits for $x,y=0,\ldots,n-1$.
+Let $i$ denote $\sqrt{-1}$, $\alpha = \exp(\frac{2\pi i}{n^2})$ and
+$\alpha^k = \exp(\frac{2\pi i k}{n^2})$.
+\end{small}
+\hfill\break
+\smallskip
+\begin{small}
+% \mverbatim
+%  1.  for $k=0,\ldots,n^2-1$
+%  2.    compute the $k$th roots of unity $\alpha^k$
+%  3.  for $k=0,\ldots,n^2-1$
+%  4.    compute $y_k = \emZof{}{\alpha^k}$
+%  5.    $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
+%  6.  compute $p_0,\ldots,p_{n^2-1}$ by FFT
+%  7.  for $k=0$ to $n^2-1$
+%  8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+%  9.  //truncate to $m$ most significant digits
+% |mendverbatim
+\end{small}
+\caption{\small
+Pseudocode to compute the $m$ most significant digits
+for probabilities
+$p_{rn+s} = \frac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
+due to numerical stability issues in the FFT engine, precision parameter
+$m$ has an upper bound of $8$ -- only the $m=8$ most significant digits
+are computed with {\tt FFTbor2D}.
+(Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
+10^8$.)
+It is well-known that
+the FFT requires $O(N \log N)$ time to solve the inverse discrete
+Fourier transform for a polynomial of degree $N$. In our case,
+$N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
+}
+\label{fig:fftbor}
+\end{figure}
+
+
+\subsection{Speed-up by factor of $4$}
+Recall that if $a+bi$ is a complex number, where $a,b$ are real values and $i$
+denotes $\sqrt{-1}$, then the complex conjugate of $a+bi$, denoted by
+$\overline{a+bi}$ is defined to be $a-bi$.  Recall that a complex $n$th
+root of unity is a number whose $n$th power equals one. Moreover,
+$e^{2 \pi i/n}$ is the {\em principal} complex $n$th root of unity; i.e.
+$\{ e^{2 \pi i k/n} : k=0,\ldots,n-1 \}$ is a set of pairwise distinct
+$n$th roots of unity. For notational reasons below, we will write
+`$n$-root of unity' instead of `$n$th root of unity'.
+We have the following.
+\medskip
+
+\noindent
+{\sc Lemma 1:} Let $A,B$ denote two distinct, arbitrary but fixed,
+ secondary structures of RNA sequence $\seq$, let \str range over
+all secondary structures of $\seq$, and let $d_0$ denote $\dBP{\strA,\strB}$.
+If $x=\dBP{\strA,\str}$ and $y=\dBP{\str,\strB}$, then
+$y \in \{ d_0-x+2k: k=0,\ldots,x\}$.
+\medskip
+
+\noindent
+It follows that if $x=\dBP{\strA,\str}$ and $y=\dBP{\str,\strB}$,
+then the only possible values for
+$(x,y)$ are $(0,d_0), (1,d_0-1), (1,d_0+1),
+(2,d_0-2), (2,d_0), (2, d_0+2),
+(3,d_0-3), (3,d_0-1), (3, d_0+1), (3,d_0+3), \cdots$.
+As a corollary, we have the {\em parity condition}, that
+\begin{eqnarray}
+\label{eqn:parity}
+\dBP{\strA,\str} + \dBP{\str,\strB} \equiv \dBP{\strA,\strB} \bmod 2
+\end{eqnarray}
+first noticed in \cite{hofacker:RNAbor2D}, as well as
+the triangle inequality
+$\dBP{\strA,\str} + \dBP{\str,\strB} \geq \dBP{\strA,\strB}$
+for base pair distance, probably folklore.
+%but explicitly mentioned in \cite{Moulton.jcb00}.
+Lorenz et al. \cite{hofacker:RNAbor2D} exploited the parity condition
+and the triangle inequality by using sparse matrix methods to improve on
+the efficiency of the naive  implementation of the
+\On{7} time and \On{4} space algorithm to compute
+the partition function, $\bfZ{r,s}{1,n}$,
+and minimum free energy structure, $MFE^{r,s}_{1,n}$, over all
+structures having base pair distance $r$ to $A$ and \str to $B$.
+The following lemma is not difficult to establish.
+\medskip
+
+\noindent
+{\sc Lemma 2:} If \emZ{} is the complex polynomial defined in
+equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+unity $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
+\overline{\emZof{}{\alpha}}$.
+\medskip
+
+\noindent
+{\sc Lemma 3:}
+Let \emZ{} be defined by equation (\ref{eqn:polynomialYann}), and
+let $\alpha \in \mathbb{C}$ be any complex number.
+If the base pair distance between reference
+structures $A,B$ is even, then $emZof{}{-\alpha} = emZof{}{\alpha}$, while if
+the distance is odd, then $emZof{}{-\alpha} = -emZof{}{\alpha}$.
+\medskip
+
+\noindent
+{\sc Lemma 4:} Suppose that $M$ is evenly divisible by $4$,
+$\nu = \exp(\frac{2 \pi i}{M})$ is the principal $M$-root of unity, and
+$\frac{M}{4} < k \leq \frac{M}{2}$. Then
+\[
+\nu^k = -(\nu^{-(M/2-k)}) = - \overline{\nu^{M/2-k}}.
+\]
+\medskip
+
+Lemma 1 is proved by simple induction; Lemma 2
+is proved by a computation involving binomial coefficients;
+Lemma 3 is immediate
+by the parity observation above, resulting from Lemma 1;
+Lemma 4 is elementary, relying on Euler's
+formula and trigonometric addition formulas. Details proofs of
+Lemmas 2,3,4 can be found in supplementary information.
+
+Lemma 1 entails that either all even coefficients, or all odd coefficients
+of \emZ{} are zero, and so by a variable change described in detail below,
+we require only half the number of evaluations of \emZ{}, in order to perform
+polynomial interpolation.
+Lemma 2 entails that we require only half again the number of evaluations of
+\emZ{}, since the remainder can be inferred by taking the complex conjugate.
+Lemma 1 and Lemma 2, along with a
+precomputation of powers of the complex roots of unity, lead to a
+large performance speed-up in our implementation of {\tt FFTbor2D} -- indeed,
+by a factor of $4$ or more. Though the intuitive idea of how to obtain
+this speedup by a factor of four may be apparent, the technical details
+leading to the pseudocode of {\tt FFTbor2D}, presented in
+%Figure~\ref{pseudocode:interpolatingP}, are rather tricky. These details
+Figure~2, are rather tricky. These details
+are presented in the next two subsections, which can be skipped by the
+reader wishing to move on to the algorithm itself.
+\medskip
+
+\subsection{Time reduction due to Lemma 1}
+Let $n$ denote the length of RNA sequence $\seq$, and let $N$ denote the
+least {\em even} integer greater than or equal to $n$. Since $N$ is even,
+we have $(r+s) \equiv (r\cdot(N+1)+s) \bmod 2$. For distinct
+fixed structures $A,B$, let
+$\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
+$\pi_2(k) = k \bmod (N+1)$, and define the polynomial
+\begin{eqnarray*}
+\label{eqn:polynomialPeter}
+\emZ{} &=& \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{r\cdot N + s}\\
+&=&
+\sum_{k=0}^{(N+1)^2-1} z_{\pi_1(k)\cdot (N+1) + \pi_2(k)}
+x^{\pi_1(k)\cdot (N+1) + \pi_2(k)}\\
+&=&
+\sum_{k=0}^{(N+1)^2-1} z_k x^k
+\end{eqnarray*}
+where for the last equality, we have used the fact that
+$k = \pi_1(k)\cdot (N+1) + \pi_2(k)$, well-known from
+row major order of a 2-dimensional array.
+
+Consider the coefficients of the polynomial
+\begin{eqnarray}
+\label{eqn:yannPolynomialN}
+\emZ{} = \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{rN+s}
+= \sum_{k=0}^{(N+1)^2-1} z_k x^k.
+\end{eqnarray}
+Since $N$ is even, the parity of $r+s$ equals the parity of
+$r(N+1)+s$, hence  it follows from the parity condition that either
+{\em (i)} all coefficients $z_1,z_3,z_5,\ldots$ of odd parity are zero,
+or {\em (ii)} all coefficients $z_0,z_2,z_4,\ldots$ of even parity are zero.
+To simplify notation, in the remainder of this subsection, let $M$ be
+the least integer greater than or equal to $(N+1)^2$ that is evenly divisible
+by $4$, and let $M_0=M/2$. We will assume that $\emZ{} = \sum_{k=0}^{M-1}
+z_k x^k$, whereupon coefficients $z_k=0$ for $k>(N+1)^2$.
+\smallskip
+
+\noindent
+{\sc Case 1}: All coefficients $z_k$ of odd parity in
+equation (\ref{eqn:yannPolynomialN}) are zero.
+\smallskip
+
+\noindent
+In this case, we have
+$\emZ{} = \sum_{k=0}^{\frac{M}{2}-1} z_{2k} x^{2k}$. But then
+$\emZ{} = Y(u) = \displaystyle\sum_{k=0}^{M_0-1} b_k u^k$,
+where we have made a variable change $u=x^2$, and coefficient changes
+$b_k = a_{2k}$.
+By evaluating $M_0=\frac{M}{2}$ many complex
+$M_0$-roots of unity, we can
+use polynomial interpolation to determine all coefficients $b_k$ of
+the polynomial
+\[
+Y(u) = \displaystyle\sum_{k=0}^{M_0-1} b_k u^k =
+\displaystyle\sum_{k=0}^{M_0-1} z_{2k} x^{2k}.
+\]
+
+
+Since $Y(x^2)=Z(x)$, we have
+$Y(\exp(\frac{2\pi k i}{M/2})) =
+Y(\exp(\frac{4\pi k i}{M})) =
+Z(\exp(\frac{2\pi k i}{M}))$, hence we
+use the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+to evaluate $Z(\exp(\frac{2\pi ki}{M})$.  Instead of
+performing $M$ evaluations of $Z(x)$ at $M$-roots of unity,
+this requires only $M_0=M/2$ evaluations of $Y(u)$ at
+$M_0$-roots of unity; i.e. only half the number of
+evaluations of $Z(x)$ are necessary to
+obtain the coefficients of $Y(x)$. But then, we immediately obtain the
+full polynomial \emZ{}, since its coefficients of odd  parity are zero.
+\medskip
+
+\noindent
+{\sc Case 2}: All coefficients $z_k$ of even parity in
+equation (\ref{eqn:yannPolynomialN}) are zero.
+\smallskip
+
+\noindent
+In this case, $z_0,z_2,z_4,\cdots$ are zero, so
+$\emZ{} = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
+$\emZ{} = x \cdot Y(u)$, where
+$Y(u)= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
+a variable change $u=x^2$, and coefficient changes
+$b_k = z_{2k+1}$. Similarly to Case 1,
+we can interpolate the $M_0$ coefficients of the polynomial
+$Y(u) = \displaystyle\sum_{k=0}^{M_0-1} b_k u^k$
+by evaluating $M_0$ many complex $M_0$-roots
+of unity.  Since $\emZ{}=x \cdot Y(x^2)$, $Y(x^2) = x^{-1} \cdot \emZ{}$,
+so
+$Y(\exp(\frac{2\pi ki}{M/2})) = Y(\exp(\frac{4\pi ki}{M})) =
+\exp(\frac{-2\pi ki}{M}) \cdot
+\emZof{}{\exp(\frac{2\pi ki}{M})}$, employing
+the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+to evaluate \emZof{}{\exp(\frac{2\pi ki}{M})}.  Note, that unlike the
+Case 1, since $Z(x)=x \cdot Y(x^2)$, we have
+$Y(x^2)=\frac{\emZ{}}{x}$, which explains the presence of additional factor
+$\exp(\frac{-2\pi ki}{M}))$ in Case 2.  Thus, instead of
+performing $M$ evaluations of \emZ{} at $M$-roots of unity,
+we perform only $M_0=\frac{M}{2}$ evaluations of $Y(u)$ at
+$M_0$-roots of unity; i.e. only half the number of
+evaluations of \emZ{} are necessary to
+obtain the coefficients of $Y(x)$. But then, we immediately obtain the
+full polynomial \emZ{}, since $\emZ{} = x \cdot Y(x^2)$, and the
+coefficients of \emZ{} of even parity are zero.
+
+In the following, we will need the observation, that if the parity of
+base pair distance $\dBP{\strA,\strB}$ between $A,B$ is
+even, then
+\begin{eqnarray}
+\label{eqn:evenY}
+Y(x^2) = \emZ{}
+\end{eqnarray}
+while if the parity is odd,
+then
+\begin{eqnarray}
+\label{eqn:oddY}
+Y(x^2) = \frac{1}{x} \cdot \emZ{}.
+\end{eqnarray}
+
+\subsection{Time reduction due to Lemma 2}
+As before, let $M$ be the the least number evenly divisible by $4$, which is
+greater than or equal to $(N+1)^2$, let $\nu = \exp(\frac{2 \pi i}{M})$
+and $\omega=\nu^2 = \exp(\frac{2 \pi i}{M})^2 =
+\exp(\frac{2 \pi i}{M/2})$. Clearly, $\nu$ is a principal complex
+$M$-root of unity, while $\omega$ is a principal complex $\frac{M}{2}$-root
+of unity. Evaluate $Z(\alpha)$ for each $\frac{M}{2}$-root of unity
+that belongs to the first quadrant, and apply Lemma 2 to infer the values
+of $Z(\alpha)$ for each $\frac{M}{2}$-root of unity that belongs to the
+fourth quadrant. More precisely,
+we compute $Z(\nu^k)$, for $k=0,\ldots,\frac{M}{4}$, and by Lemmas 2,3,4 infer
+that for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$, we have
+$Z(\nu^{k})= -1^{d_0} \cdot \overline{Z(\nu^{\frac{M}{2}-k})}$, where
+$d_0 = \dBP{\strA,\strB}$. This is justified in the following.
+
+By induction on $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$, we have
+\begin{eqnarray*}
+Y(\omega^k)&=& Y(\nu^{2k})  \nonumber \\
+&=& \left\{ \begin{array}{ll}
+Z(\nu^{k}) &\mbox{\tiny if
+$\dBP{\strA,\strB} = 0 \bmod 2$}\\
+\frac{1}{\nu^{k}} \cdot Z(\nu^{k})
+&\mbox{\tiny if
+$\dBP{\strA,\strB} = 1 \bmod 2$}\\
+\end{array} \right. \nonumber\\
+&=& \left\{ \begin{array}{ll}
+Z(- \overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
+$\dBP{\strA,\strB} = 0 \bmod 2$}\\
+\nu^{-k} \cdot
+Z(-\overline{\nu^{(\frac{M}{2}-k)}})
+&\mbox{\tiny if
+$\dBP{\strA,\strB} = 1 \bmod 2$}\\
+\end{array} \right. \nonumber\\
+&=& \left\{ \begin{array}{ll}
+Z(\overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
+$\dBP{\strA,\strB} = 0 \bmod 2$}\\
+\nu^{-k} \cdot
+-Z(\overline{\nu^{(\frac{M}{2}-k)}})
+&\mbox{\tiny if
+$\dBP{\strA,\strB} = 1 \bmod 2$}\\
+\end{array} \right.  \nonumber\\
+&=& \left\{ \begin{array}{ll}
+\overline{Z(\nu^{(\frac{M}{2}-k)})} &\mbox{\tiny if
+$\dBP{\strA,\strB} = 0 \bmod 2$}\\
+-\nu^{-k} \cdot
+\overline{Z(\nu^{(\frac{M}{2}-k)})}
+&\mbox{\tiny if
+$\dBP{\strA,\strB} = 1 \bmod 2$}\\
+\end{array} \right.  \nonumber\\
+\end{eqnarray*}
+Line 1 follows by definition, since $\omega=\nu^2$;
+line 2 follows by equations (\ref{eqn:evenY}) and
+(\ref{eqn:oddY});
+line 3 follows by Lemma 4;
+line 4 follows by Lemma 3.
+Thus if $\dBP{\strA,\strB}$ is even, then
+\begin{eqnarray}
+\label{eqn:trickyRootsOfUnity1}
+y_k = Y(\omega^k) = \left\{
+\begin{array}{ll}
+Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
+\quad & \quad\\
+\overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$.}\\
+\end{array} \right.
+\end{eqnarray}
+while if $\dBP{\strA,\strB}$ is odd, then
+\begin{eqnarray}
+\label{eqn:trickyRootsOfUnity2}
+y_k = Y(\omega^k) = \left\{
+\begin{array}{ll}
+\nu^{-k} \cdot Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
+\quad & \quad\\
+-\nu^{-k} \cdot \overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$.}\\
+\end{array} \right.
+\end{eqnarray}
+It follows that values $y_0,\ldots,y_{M/2-1}$ can be obtained by only
+$\frac{M}{4}$ evaluations of \emZ{}.
+
+
+\begin{figure}[!h]
+\begin{small}
+{\sc Improved Algorithm} for {\tt FFTbor2D}\hfill\break
+{\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and distinct secondary
+structures $A,B$ of $\seq$, and integer $m$. \hfill\break
+{\sc Output:} Probabilities $p(x,y)=\bfZ{x,y}{1,n}/\bfZ{}{}$
+to $m$ significant digits for $x,y=0,\ldots,n-1$.
+Let $N$ be the least even number greater than or equal
+to $n$, $M$ be the least number evenly divisible by $4$, which is greater than
+or equal to $(N+1)^2$, $M_0=M/2$, $\nu = \exp(\frac{2\pi i}{M})$,
+$\omega=\nu^2= \exp(\frac{2\pi i}{M_0})$. For $0 \leq k < M^2$, let
+$\pi_1(k) = \lfloor \frac{k}{M} \rfloor$,
+$\pi_2(k) = k - M \cdot \pi_1(k) = k \bmod M$, and note that
+$k=\pi_1(k)\cdot M + \pi_2(k)$.
+\end{small}
+\hfill\break
+\smallskip
+\begin{small}
+% \mverbatim
+% 1.  for $k=0,\ldots,\frac{M}{2}$
+% 2.    compute the $M$-roots of unity $\nu^k,\nu^{-k}$
+% 3.  for $k=0,\ldots,\frac{M}{2}-1$
+% 4.    if $\dBP{\strA,\strB}$ even
+% 5.      if $k \leq \frac{M}{4}$
+% 6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity1})
+% 7.      else// $\frac{M}{4}<k<\frac{M}{2}$
+% 8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity1})
+% 9.    else // $\dBP{\strA,\strB}$ is odd
+% 10.     if $k \leq \frac{M}{4}$
+% 11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity2})
+% 12.     else// $\frac{M}{4}<k<\frac{M}{2}$
+% 13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity2})
+% 14. //note that $\bfZ{}{}=\sum_{r,s}\bfZ{r,s}{1,n}=y_0=\Z(\nu^0)$
+% 15. for $k=0,\ldots,\frac{M}{2}-1$
+% 16.   $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
+% 17. //compute coefficients of $\frac{Y(x)}{\bfZ{}{}}$ using (\ref{eqn:ajdef})
+% 18. if $\dBP{\strA,\strB}$ even then
+% 19.   for $k=0$ to $M-1$
+% 20.     $r=\pi_1(k)$, $s=\pi_2(k)$
+% 21.     if $k$ even
+% 22.       $\frac{\bfZ{r,s}{1,n}}{\bfZ{}{}} = a_{k/2}$ from (\ref{eqn:ajdef})
+% 23.     else// $k$ odd
+% 24.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = 0$
+% 25. else // $\dBP{\strA,\strB}$ odd
+% 26.   for $k=0$ to $M-1$
+% 27.     $r=\pi_1(k)$, $s=\pi_2(k)$
+% 28.     if $k$ even
+% 29.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = 0$
+% 30.     else// $k$ odd
+% 31.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = a_{(k-1)/2}$ from (\ref{eqn:ajdef})
+% 32.  for $k=0$ to $(N+1)^2$
+% 33.    $z_k = \lfloor 10^m \cdot z_k \rfloor \cdot \frac{1}{10^m}$
+% 34.    //truncate to $m$ significant digits
+% |mendverbatim
+\end{small}
+\caption{\small
+Pseudocode to compute the $m$ most significant digits
+for probabilities
+$p_k = \frac{z_{k}}{\bfZ{}{}}=\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$.
+Our program, {\tt FFTbor2D}, supports values of $m = 1,\ldots,8$ for the
+precision parameter $m$.
+(Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
+10^8$.)
+}
+\label{pseudocode:interpolatingP}
+\end{figure}
+
+
+\subsection{Using the fast Fourier transform}
+\label{section:FFT}
+
+Now let $M_0=\frac{M}{2}$, let
+$\nu=\exp(\frac{2\pi i}{M})$ be the principal $M$-root of unity, and
+$\omega=\nu^2=\exp(\frac{2\pi i}{M/2})=\exp(\frac{2\pi \cdot 2i}{M})$ be
+the principal $M_0$-root of unity. Recall that the
+Vandermonde matrix $V_{M_0}$ is defined to be the
+$M_0 \times M_0$ matrix, whose $i,j$ entry is
+$\omega^{i \cdot j} = \nu^{2 i \cdot j}$;
+i.e.
+$$
+V_{M_0} = \left(
+\begin{array}{rrrrr}
+1&1&1&\cdots&1\\
+1&\omega&\omega^2&\cdots&\omega^{M_0-1}\\
+1&\omega^2&\omega^4&\cdots&\omega^{2(M_0-1)}\\
+1&\omega^3&\omega^6&\cdots&\omega^{3(M_0-1)}\\
+\vdots& \vdots& \vdots& \vdots& \vdots\\
+1&\omega^{M_0-1}&\omega^{2(M_0-1)}&\cdots&\omega^{(M_0-1)(M_0-1)}\\
+\end{array}
+\right)
+$$
+The Fast Fourier Transform (FFT) is the $O(n \log n)$
+algorithm, which computes the Discrete Fourier Transform (DFT), defined
+as the matrix product ${\bf Y} = V_{M_0} {\bf A}$:
+$$
+\left(
+\begin{array}{l}
+y_0\\
+y_1\\
+y_2\\
+\vdots \\
+y_{M_0-1}\\
+\end{array}
+\right)
+= V_{M_0} \cdot
+\left(
+\begin{array}{l}
+a_0\\
+a_1\\
+a_2\\
+\vdots \\
+a_{M_0-1}\\
+\end{array}
+\right)
+$$
+The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
+and that
+\begin{eqnarray}
+\label{eqn:ajdef}
+a_j &=&\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
+=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \nu^{-2kj}
+\end{eqnarray}
+for $j=0,\ldots,M_0-1$ (for more on FFT, see \cite{cormen}).
+
+Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+(y_0,\ldots,y_{M_0-1})^T$, where
+$y_0=\emZof{}{\alpha_0},\ldots, y_{M_0-1}=\emZof{}{\alpha_{M_0-1}}$ and $\alpha_k = \omega^k
+\exp(\frac{k \cdot 2\pi i}{M_0})$,
+it follows that the coefficients
+$z_k=\bfZ{\pi_1(k),\pi_2(k)}{1,n}$ in the polynomial
+$\emZ{} = z_0 + z_1 x + \cdots + z_{M} x^{M}$ defined in
+(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+by using the FFT. However, since the values of
+$z_{k}$ are astronomically large, numerical
+instability makes even this approach infeasible for moderate values of $n$.
+Nevertheless, we apply this approach to compute the $m$ most significant
+digits of $\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$,
+where the partition function $\bfZ{}{} = \sum_{S} \exp(-E(S)/RT)$ satisfies
+${\bfZ{}{}} = \sum_{x,y} \bfZ{x,y}{1,n}$. This leads to numerical stability,
+allowing {\tt FFTbor2D} to compute the
+$m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\bfZ{}{}}$.
+Pseudocode for the complete algorithm, {\tt FFTbor}, is given in
+%Figure~\ref{pseudocode:interpolatingP}.
+Figure~2.
 
 \subsection{Definition of the partition function
 \texorpdfstring{\bfZ{x,y}{1,n}}{}}
