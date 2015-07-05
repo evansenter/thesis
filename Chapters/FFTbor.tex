@@ -108,7 +108,7 @@ $\strT_{i,j}$ is said to be a \kNbr of $\str_{i,j}$ if
 \label{sec:fftbor:math}
 
 Given an RNA sequence $\seq=s_1,\ldots,s_n$ and compatible secondary structure
-\strSt, let $\bfZ{k}{}$ denote the sum of the Boltzmann factors
+\strSt, let \bfZ{k}{} denote the sum of the Boltzmann factors
 \boltzf{\str} of all $k$-neighbors \str of \strSt; i.e.
 \[
 \bfZ{k}{} = \bfZ{k}{1,n} =
@@ -146,6 +146,430 @@ trap while folding.
 \subsection{Definition of the partition function
 \texorpdfstring{\bfZ{k}{1,n}}{}}
 \label{subsec:fftbor:recursions}
+
+For the rest of the paper, we consider both \seq as well as the
+secondary structure \strSt on \seq to be fixed. We now recall the
+recursions from Freyhult et al. \cite{Freyhult.ab05} to determine
+the partition function \bfZ{k}{i,j} with
+respect to the Nussinov-Jacobson
+energy $E_0$ model \cite{nussinovJacobson}, defined by
+$-1$ times the number of base pairs; i.e. $E_0(S) = -1 \cdot |S|$.
+Although we describe here the recursions for the Nussinov-Jacobson
+model, for the sake of
+simplicity of exposition, both \rnabor
+\cite{Freyhult.ab05} as well as our current software \fftbor,
+concern the Turner energy model, consisting of free energy parameters for
+stacked bases, hairpins, bulges, internal loops and multiloops. The full
+recursions for \fftbor are described for the
+the Turner energy model in the appendix.
+
+The base case for \bfZ{k}{i,j} is given by
+\begin{equation}
+  \bfZ{0}{i}{j} = 1,\, \mbox{ for $i \le j$,}
+  \label{eq:Zinit1}
+\end{equation}
+since the only $0$-neighbor to a structure \strSt
+is the structure \strSt itself, and
+\begin{equation}
+  \bfZ{k}{i}{j} = 0,\, \mbox{for $k > 0$, $i \le j \leq
+    i+\theta$},
+  \label{eq:Zinit2}
+\end{equation}
+since the empty structure is the only possible structure for a
+sequence shorter than $\theta + 2$ nucleotides, and so there are no
+$k$-neighbors for $k>0$. The recursion used to compute
+\bfZ{k}{i,j} for $k > 0$ and $j > i+\theta$ is
+\begin{equation}
+  \bfZ{k}{i}{j} = \bfZ{k -b_0}{i}{j-1} +
+  \hspace{-5pt} \sum_{\substack{ (s_r,s_j) \in \mathbb{B}, \\
+  i \leq r < j }} \sum_{w+w'=k - b(r)} \hspace{-10pt}
+  \exp(-E_0(r,j)/RT) \cdot \bfZ{w}{i}{r-1} \bfZ{w'}{r+1}{j-1},
+  \label{eq:N}
+\end{equation}
+where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence \seq,
+and otherwise $E_0(r,j) = +\infty$. Additionally,
+$b_0 = 1$ if $j$ is base-paired
+in $\strSt_{[i,j]}$ and $0$ otherwise, and
+$b(r)=d_{BP}(\strSt_{[i,j]}, \strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\})$.
+This holds since in a secondary
+structure $T_{[i,j]}$ on $s_i,\ldots,s_j$ that is a $k$-neighbor of
+$\strSt_{[i,j]}$,
+either nucleotide $j$ is unpaired in $[i,j]$ or it is
+paired to a nucleotide $r$ such that $i \leq r < j$. In this
+latter case it is enough to study the smaller sequence segments
+$[i,r-1]$ and $[r+1,j-1]$ noting that, except for $(r,j)$,
+base pairs outside of these regions are not allowed, since there
+are no pseudoknots. In addition,
+for $d_{BP}(\strSt_{[i,j]},T_{[i,j]}) = k$ to hold,
+it is necessary for $w+w' = k -b(r)$ to hold, where $w =
+d_{BP}(\strSt_{[i,r-1]},T_{[i,r-1]})$ and $w' =
+d_{BP}(\strSt_{[r+1,j-1]},T_{[r+1,j-1]})$, since $b(r)$ is the
+number of base pairs that differ between $\strSt_{[i,j]}$ and a
+structure $T_{[i,j]}$, due to the introduction of the base pair
+$(r,j)$.
+
+\section*{Methods}
+
+Given RNA sequence \seq and compatible initial structure \strSt,
+we define the {\em polynomial}
+\begin{eqnarray}
+\label{eqn:polynomialYann}
+\emZ{} = \sum_{k=0}^n c_k x^k
+\end{eqnarray}
+where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of
+(\ref{eqn:upperBound}) and the fact that the minimum number of
+unpaired bases in a hairpin loop $\theta$ is $3$, we know that $c_n=0$,
+so that \emZ{} is a polynomial of degree strictly less than $n$.
+If we evaluate the polynomial \emZ{} for $n$ distinct values
+\begin{eqnarray}
+\label{eqn:ZofX}
+\emZof{}{a_1} = y_1,\ldots, \emZof{}{a_n} = y_n,
+\end{eqnarray}
+then the Lagrange polynomial interpolation formula guarantees that
+$\emZ{} = \sum_{k=1}^n y_k P_k(x)$, where the polynomials $P_k(x)$ have degree
+at most $n-1$ and are given by the Lagrange formula
+\begin{eqnarray}
+\label{eqn:LagrangeInterpolation}
+P_k(x) = \frac{\prod_{i\ne k} (x-x_i)}{\prod_{i \ne k} (x_k-x_i)}.
+\end{eqnarray}
+Since the polynomials $P_k(x)$ can be explicitly computed, it follows that
+we can compute the coefficients $c_k$ of polynomial \emZ{}. As we describe
+below, the evaluation of \emZ{} for a fixed value of $x$ can be done in
+time $O(n^3)$ and space $O(n^2)$.  It follows that the coefficients
+$c_k=\bfZ{k}{1,n}$ can be computed after
+$n$ evaluations of \emZ{}, where the space for each evaluation of \emZ{}
+is re-used; hence these evaluations can be performed in time $O(n^4)$ and space
+$O(n^2)$. Finally,
+Lagrange interpolation is clearly computable in time $O(n^3)$.
+Although this approach is theoretically sound, there are severe
+numerical stability issues related to the interpolation method
+\cite{HighamBarycentricInterpolation},
+the choice of values $a_1,\ldots,a_{n}$ in the interpolation,
+and floating point arithmetic (round-off error) related to the
+astronomically large values of the partition functions
+\bfZ{k}{1,n}, for $0 \leq k < n$. After many unsuccessful
+approaches including scaling (see Supplementary Information),
+we obtained excellent results by
+interpolating the polynomial $p(x)$, defined in equation~(\ref{eqn:PofX}),
+rather than the polynomial \emZ{}, defined in equation~(\ref{eqn:ZofX}),
+and performing interpolation with the Fast Fourier Transform (FFT) \cite{cormen}
+where $\alpha_0,\ldots,\alpha_{n-1}$ are
+chosen to be $n$th complex roots of unity,
+$\alpha_k = e^{\frac{2 \pi k}{n}}$.
+One
+advantage of the FFT is that interpolation can be performed in $O(n \log n)$
+time, rather than the cubic time required by using the Lagrange formula
+(\ref{eqn:LagrangeInterpolation}) or by Gaussian elimination. Fewer
+numerical operations implies increased numerical stability in our application.
+Details now follow.
+
+\subsection*{Recursions to compute the polynomial $\emZ{i,j}$}
+\label{section:recursionsForPolynomialZij}
+
+Given an initial secondary structure \strSt of a
+given RNA sequence \seq, our goal is to compute
+\begin{align}
+\label{eqn:defZk}
+\bfZ{k}{1,n} &= \sum_{\substack{S \text{ such that }\\ d_{BP}(S,\strSt)=k}}
+e^{\frac{-E_0(S)}{RT}}
+\end{align}
+where $S$ can be any structure compatible with \seq.
+As previously mentioned, the recurrence relation for \rnabor
+with respect to the Nussinov energy model $E_0$ is
+\begin{align}
+\label{eqn:RNAborNussRecursion}
+\bfZ{k}{i}{j} &= \bfZ{k-b_0}{i}{j-1} + \sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}\left(e^{\frac{-E_0(r,j)}{RT}}\sum_{w+w'=k-b(r)}
+\bfZ{w}{i}{r-1}  \bfZ{w'}{r+1}{j-1} \right)
+\end{align}
+where $E_0(r,j)=-1$ if $r$ and $j$ can base-pair and otherwise
+$+\infty$, and
+$b_0 = 1$ if $j$ is base paired in $\strSt_{[i,j]}$ and $0$ otherwise, and
+$b(r)=d_{BP}(\strSt_{[i,j]}, \strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\})$.
+The following theorem shows that an analogous recursion can be used to compute
+the {\em polynomial} $\emZ{i,j}$ defined by
+\begin{eqnarray}
+\label{eqn:defZijpolynomial}
+\emZ{i,j} = \sum_{k=0}^n c_k(i,j) x^k
+\end{eqnarray}
+where
+\[ c_k(i,j)= \bfZ{k}{i}{j} =
+\sum_{\substack{S \text{ such that }\\ d_{BP}(S,\strSt_{[i,j]})=k}}
+e^{\frac{-E_0(S)}{RT}}.
+\]
+Here, in the summation, $S$ runs over structures on $s_i,\ldots,s_j$, which
+are $k$-neighbors of the restriction $\strSt_{[i,j]}$ of initial structure
+\strSt to interval $[i,j]$, and
+$E_0(S)=-1 \cdot |S|$ denotes the Nussinov-Jacobson energy of $S$.
+\medskip
+
+\noindent
+{\sc Theorem 1:} Let $s_1,\ldots,s_n$ be a given RNA sequence.
+For any integers $1 \leq i \leq j \leq n$, let
+\begin{eqnarray*}
+\emZ{i,j} = \sum_{k=0}^n c_k x^k
+\end{eqnarray*}
+where
+\[ c_k(i,j)= \bfZ{k}{i}{j}.
+\]
+Then  for $i\leq j \leq i+\theta$, $\emZ{i,j}=1$ and for
+$j>i+\theta$ we have the recurrence relation
+\begin{eqnarray}
+\label{eqn:polynomialRecursionNussJac}
+\emZ{i,j} &= \emZ{i,j-1} \cdot x^{b_0} +
+\sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}
+\left(e^{\frac{-E_0(r,j)}{RT}}\cdot
+\emZ{i,r-1}\cdot\emZ{r+1,j-1}\cdot x^{b(r)} \right).
+\end{eqnarray}
+\medskip
+where $b_0 = 1$ if $j$ is base-paired in $\strSt_{[i,j]}$ and $0$ otherwise, and
+$b(r)=d_{BP}(\strSt_{[i,j]}, \strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\})$.
+
+\noindent
+{\sc Proof:}
+First, some notation is necessary. Recall that if $F$ is an arbitrary
+polynomial [resp. analytic] function, then $[x^k] F(x)$
+denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
+Taylor expansion of $F$] -- for instance, in equation~(\ref{eqn:PofX}),
+$[x^k]p(x) = p_k$, and in equation~(\ref{eqn:ZofX}), $[x^k]\emZ{} = c_k(i,j)$.
+
+By definition, it is clear that $\emZ{i,j}=1$ if $i\leq j \leq i+\theta$,
+where we recall that $\theta = 3$ is the minimum number of unpaired bases in
+a hairpin loop.  For $j>i+\theta$, we have
+\begin{eqnarray*}
+[x^k] \emZ{i,j} &=& c_k(i,j) = \bfZ{k}{i}{j}\\
+&=&\bfZ{k-b_0}{i}{j-1} + \sum_{r=i}^{j-1} \sum_{k_0+k_1 = k-b(r)}
+e^{\frac{-E_0(r,j)}{RT}} \cdot \bfZ{k_0}{i}{r-1} \cdot \bfZ{k_1}{r+1}{j-1} \\
+&=&
+[x^{k-b_0}] \emZ{i,j-1} +
+\sum_{r=i}^{j-1} \sum_{k_0+k_1 = k-b(r)}
+e^{\frac{-E_0(r,j)}{RT}} \cdot \left\{ [x^{k_0}] \emZ{i,r-1} \right\} \cdot
+\left\{ [x^{k_1}] \emZ{r-1,j-1} \right\} \\
+&=&
+[x^{k-b_0}] \emZ{i,j-1} +
+\sum_{r=i}^{j-1} \sum_{k_0+k_1 = k-b(r)}
+e^{\frac{-E_0(r,j)}{RT}} \cdot [x^{k_0+k_1}] \emZ{i,r-1} \emZ{r-1,j-1} .\\
+\end{eqnarray*}
+By induction, the proof of the theorem now follows. $\Box$
+\medskip
+
+Notice that if one were to compute all terms of the polynomial $\emZ{1,n}$
+by explicitly performing polynomial multiplications,
+then the computation would require $O(n^5)$ time and $O(n^3)$ space.
+Instead of explicitly performing polynomial expansion in {\em variable} $x$,
+we instantiate $x$ to a fixed complex number $\alpha \in \mathbb{C}$, and apply
+the following recursion for this instantiation:
+\begin{eqnarray}
+\label{eqn:RNAborNussRecursionInstantiated}
+\emZof{i,j}{\alpha} &= &\emZof{i,j-1}{\alpha} \cdot \alpha^{b_0} +
+\sum_{\substack{(s_r,s_j) \in \mathbb{B},\\i\le r<j}}
+\left(e^{\frac{-E_0(r,j)}{RT}}\cdot
+\emZof{i,r-1}{\alpha}\cdot\emZof{r+1,j-1}{\alpha}\cdot \alpha^{b(r)} \right).
+\end{eqnarray}
+In this fashion, we can compute $\emZof{}{\alpha}=\emZof{1,n}{\alpha}$ in
+$O(n^3)$ time and $O(n^2)$ space. For $n$ distinct complex values
+$\alpha_0,\ldots,\alpha_{n-1}$, we can compute and save only the
+values $\emZof{}{\alpha_0},\ldots, \emZof{}{\alpha_{n-1}}$, each time re-using the
+$O(n^2)$ space for the next computation of $\emZof{}{\alpha_k}$. It follows that
+the computation resources used to determine the (column) vector
+\begin{eqnarray}
+\label{eqn:defY}
+{\bf Y} = (y_0,\ldots,y_{n-1})^T =
+\left(
+\begin{array}{l}
+y_0\\
+y_1\\
+\vdots \\
+y_{n-1}\\
+\end{array}
+\right)
+\end{eqnarray}
+where
+$y_0=\emZof{}{\alpha_0},\ldots, y_{n-1}=\emZof{}{\alpha_{n-1}})$ is thus
+$O(n^4)$ are quartic time $O(n^4)$ and quadratic space $O(n^2)$.
+
+\subsection*{Polynomial interpolation using the FFT}
+Let $\omega = e^{2 \pi i /n}$ be the principal $n$th complex root of unity.
+Recall that the
+Vandermonde matrix $V_{n}$ is defined to be the
+$n \times n$ matrix, whose $i,j$ entry is $\omega^{i \cdot j}$;
+i.e.
+$$
+V_{n} = \left(
+\begin{array}{rrrrr}
+1&1&1&\cdots&1\\
+1&\omega&\omega^2&\cdots&\omega^{n-1}\\
+1&\omega^2&\omega^4&\cdots&\omega^{2(n-1)}\\
+1&\omega^3&\omega^6&\cdots&\omega^{3(n-1)}\\
+\vdots& \vdots& \vdots& \vdots& \vdots\\
+1&\omega^{n-1}&\omega^{2(n-1)}&\cdots&\omega^{(n-1)(n-1)}\\
+\end{array}
+\right)
+$$
+The Fast Fourier Transform (FFT) is defined to be the $O(n \log n)$
+algorithm to compute the Discrete Fourier Transform (DFT), defined
+as the matrix product ${\bf Y} = V_{n} {\bf A}$:
+$$
+\left(
+\begin{array}{l}
+y_0\\
+y_1\\
+y_2\\
+\vdots \\
+y_{n-1}\\
+\end{array}
+\right)
+= V_n \cdot
+\left(
+\begin{array}{l}
+a_0\\
+a_1\\
+a_2\\
+\vdots \\
+a_{n-1}\\
+\end{array}
+\right)
+$$
+On page 837 of  \cite{cormen}, it is shown that the
+$(i,j)$ entry of $V_n^{-1}$ is $\frac{\omega^{-j i}}{n}$
+and that
+\begin{eqnarray}
+\label{eqn:ajdef}
+a_j &=&\frac{1}{n} \sum_{k=0}^{n-1} y_k \omega^{-kj}
+\end{eqnarray}
+for $j=0,\ldots,n-1$.
+
+Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+(y_0,\ldots,y_{n-1})^T$, where
+$y_0=\emZof{}{\alpha_0},\ldots, y_{n-1}=\emZof{}{\alpha_{n-1}})$ and $\alpha_k = \omega^k
+\exp(\frac{k \cdot 2\pi i}{n})$, it follows that the coefficients
+$c_k=\bfZ{k}{1,n}$ in the polynomial
+$\emZ{} = c_0 + c_1 x + \cdots + c_{n-1} x^{n-1}$ defined in
+(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+by using the FFT. It turns out, however, that the values of
+\bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
+instability makes even this approach infeasible for values of $n$
+that exceed $56$ (data not shown).
+Nevertheless, our approach can be modified as follows.
+Define $\bf Y$ by ${\bf Y} = (y_1,\ldots,y_n)^T$, where
+$y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\ldots, y_{n}=\frac{\emZof{}{\alpha_n-1}}{\emZ{}}$, and
+\bfZ{}{} is the partition function defined in (\ref{eqn:mcCaskillPartitionFun}).
+Using the FFT to compute the inverse DFT, it follows from
+(\ref{eqn:ajdef}) that we can compute the probabilities $p_0,\ldots,p_{n-1}$
+that are coefficients of the polynomial
+$p(x)=p_0+p_1 x + \cdots + p_{n-1}x^{n-1}$
+defined in equation~(\ref{eqn:PofX}). For genomics applications, we are
+only interested in the $m$ most significant digits of each $p_k$, as described
+in the pseudocode below.
+\medskip
+
+\noindent
+{\sc Algorithm} for \fftbor\hfill\break
+This pseudocode computes the $m$ most significant digits
+of probabilities $p_k = \frac{\bfZ{k}{1,n}}{\bfZ{}{}}$. \hfill\break
+{\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and initial secondary
+structure \strSt of \seq, and integer $m$. \hfill\break
+{\sc Output:} Probabilities $p_k=\bfZ{k}{1,n}/\bfZ{}{}$ to $m$ significant digits for $k=0,\ldots,n-1$. \hfill\break
+\smallskip
+% \mverbatim
+% 1.  generate roots of unity $\omega^k$ for $k=0,\ldots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
+% 2.  note that the partition function $\bfZ{}{}=y_0=\Z(\omega^0)$
+% 3.  for $k=0$ to $n-1$
+% 4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eqn:RNAborNussRecursionInstantiated})
+% 5.    $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
+% 6.  compute $P = (p_0,\ldots,p_{n-1})^T$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eqn:ajdef})
+% 7.  for $k=0$ to $n-1$
+% 8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+% 9.    //truncate to $m$ most significant digits
+% |mendverbatim
+\medskip
+
+\subsubsection*{Speed-up in our implementation of \fftbor}
+
+In this subsection, we show that we need only evaluate the polynomial
+\emZ{}, as defined in
+equation~(\ref{eqn:polynomialYann}), for $n/2$ of the complex $n$th roots
+of unity. It is first necessary to recall the definition of complex
+conjugate.
+Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
+i.e. if $z=a+bi$ where $a,b \in \mathbb{R}$ are real numbers and
+$i = \sqrt{-1}$,  then $\overline{z} = a-bi$.
+\smallskip
+
+\noindent
+{\sc Lemma 1:} If \emZ{} is the complex polynomial defined in
+equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+unity $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
+\overline{\emZof{}{\alpha}}$. In other words, if $\alpha$ is a complex $n$th root
+of unity of the form $a+bi$, where $a,b \in \mathbb{R}$ and $b>0$, and
+if $\emZof{}{a+bi} = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case that
+\[
+\emZof{}{a-bi} = A - Bi.
+\]
+\smallskip
+
+\noindent
+{\sc Proof:}
+Letting $i = \sqrt{-1}$, if  $\theta = \frac{2 \pi}{n}$, then
+$\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
+is the principal $n$th complex root of unity, and
+$1=\omega^{0},\ldots,e^{(n-1)\cdot i \theta}=\omega^{n-1}$ together
+constitute the complete collection of all
+$n$th complex roots of unity -- i.e. the $n$ unique solutions of
+of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
+Clearly, for any $1 \leq r < n$,
+$e^{-i r \theta} = 1 \cdot e^{-i r \theta} =
+e^{2 \pi i} \cdot e^{-i r \theta} = e^{i(2 \pi - r \theta)} =
+e^{i(n \theta - r \theta)} = e^{i \theta (n - r)}$.
+Moreover, if $\omega^r = e^{i r \theta} = a + b i$ where
+$b>0$, then we have $e^{-i r \theta} = a-bi$. It follows that for any
+$n$th root of unity of the form $a+bi$, where $b>0$, the number $a-bi$
+is also an $n$th root of unity.
+
+Recall that $\emZ{} = \sum_{k=0}^n c_k x^k$, where
+$c_k\in \mathbb{R}$ are real numbers representing the partition function
+\bfZ{k}{1,n} over
+all secondary structures of a given RNA sequence $s_1,\ldots,s_n$,
+whose base pair distance from initial structure
+\strSt is $k$. Thus, in order to prove the lemma, it suffices to show
+that for all values $k=0,\ldots,n-1$, if $a+bi$ is a complex $n$th
+root of unity, where $a,b \in \mathbb{R}$
+and $b>0$, and if $(a+bi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
+$(a-bi)^k = C-Di$. Indeed, we have the following.
+
+\begin{eqnarray*}
+(a+bi)^m &=& \sum_{k=0}^m {m \choose k} a^{m-k}\cdot  (bi)^k \\
+(bi)^k  &=& \left\{
+\begin{array}{ll}
+b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
+i b^k &\mbox{if $k \equiv 1 \bmod 4$}\\
+-b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
+-i b^k &\mbox{if $k \equiv 3 \bmod 4$}\\
+\end{array} \right.
+\end{eqnarray*}
+\begin{eqnarray*}
+(a-bi)^m &=& \sum_{k=0}^m {m \choose k} a^{m-k} \cdot (-bi)^k \\
+(-bi)^k &=& \left\{
+\begin{array}{ll}
+b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
+-ib^k &\mbox{if $k \equiv 1 \bmod 4$}\\
+-b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
+ib^k &\mbox{if $k \equiv 3 \bmod 4$}\\
+\end{array} \right.
+\end{eqnarray*}
+It follows that each term of the form
+$a^{m-k} \cdot (bi)^k$, for $k=0,\ldots,m$, is the complex conjugate of
+$a^{m-k} \cdot (-bi)^k$, and thus $(a+bi)^m$ is the complex conjugate of
+$(a-bi)^m$. Since \emZof{}{a+bi} is a sum of terms of the form $c_k (a+bi)^k$,
+it follows that \emZof{}{a-bi} is the complex conjugate of \emZof{}{a+bi}.
+This completes the proof of the lemma. \hfill  $\Box$
+\medskip
+
+Lemma 1 immediately entails that we need only evaluate \emZ{} on $n/2$
+many of the complex $n$th roots of unity -- namely, those of the form
+$a+bi$, where $b \geq 0$. The remaining values of \emZ{} are obtained by
+taking conplex conjugates of the first $n/2$ values. This, along with a
+precomputation of powers of the complex $n$th roots of unity, leads to an
+enormous performance speed-up in our implementation of \fftbor.
 
 \subsection{Recursions to compute the polynomial
 \texorpdfstring{\emZ{i,j}}{}}
