@@ -54,11 +54,13 @@ loss of entropy in loops.
 
 Given reference secondary structures $A,B$ of a
 given RNA sequence $\seq=s_1,\ldots,s_n$, our goal is to compute
-\begin{equation}
+
+\begin{align}
 \label{eqn:defZk}
 \bfZ{x,y}{1,n} = \sum_{\substack{S \text{ such that }\\
 \dBP{\str,\strA} = x, \dBP{\str,\strB}=y}} e^{\frac{-E(S)}{RT}}
-\end{equation}
+\end{align}
+
 for all $0\leq x,y < n$, where $R$ is the universal gas constant, $T$
 absolute temperature, $E(S)$ denotes the free energy of \str, and \str ranges
 over all secondary structures that are compatible with $\seq$. As mentioned,
@@ -76,14 +78,14 @@ to yield recursions
 for the partition function $\bfZ{x,y}{i,j}$ in equation
 (\ref{eqn:defZk}).  In the context of the Nussinov model,
 $\bfZ{x,y}{i,j}$ is equal to
-\begin{eqnarray}
+\begin{align}
 \label{eqn:RNAborNussRecursion}
 &\bfZ{(x-\alpha_0),(y-\beta_0)}{i,j-1} +  \\
 &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}
 \sum_{u+u'=x-\alpha(k)} \sum_{v+v'=y-\beta(k)}
 \bfZ{u,v}{i,k-1}  \bfZ{u',v'}{k+1,j-1} \right) \nonumber
-\end{eqnarray}
+\end{align}
 where $\alpha_0 = 1$ if $j$ is base paired in $A_{[i,j]}$ and $0$ otherwise,
 $\beta_0 = 1$ if $j$ is base paired in $B_{[i,j]}$ and $0$ otherwise,
 $E_0(k,j)=-1$ if $k,j$ can base-pair, and otherwise $E_0(k,j)=0$, and
@@ -97,23 +99,24 @@ $\beta(k)=\dBP(B_{[i,j]}, B_{[i,k-1]} \cup B_{[k+1,j-1]} \cup\{(k,j)\})$.
 Given RNA sequence $\seq = s_1,\ldots,s_n$
 and two arbitrary, but fixed reference
 structures $A,B$, we define the {\em polynomial}
-\begin{eqnarray}
+\begin{align}
 \label{eqn:polynomialYann}
 \emZ{} = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  z_{rn+s} x^{r\cdot n + s}
-\end{eqnarray}
+\end{align}
 where (constant) coefficients
-\[ z_{rn+s}= \bfZ{r,s}{1,n} =
+
+\begin{align} z_{rn+s}= \bfZ{r,s}{1,n} =
 \sum_{\substack{S \text{ such that }\\
 \dBP{\str,\strA}=r, \dBP{\str,\strB}=s}}
 e^{\frac{-E(S)}{RT}}
-\]
+\end{align}
 where $E(S)$ denotes the free energy of \str.
 If we evaluate the polynomial \emZ{} at $n^2$ distinct pairs of values
 $a_0,\ldots,a_{n^2-1}$ in
-\begin{eqnarray}
+\begin{align}
 \label{eqn:ZofX}
 \emZof{}{a_{0}} = z_{0},\ldots, \emZof{}{a_{n^2-1}} = z_{n^2-1},
-\end{eqnarray}
+\end{align}
 %then Lagrange polynomial interpolation  \cite{LagrangeInterpolation}
 then Lagrange polynomial interpolation
 guarantees that we can determine the coefficients $c_{rn+s}$ of \emZ{},
@@ -125,24 +128,26 @@ The following theorem shows that a
 recursion, analogous to equation (\ref{eqn:RNAborNussRecursion}),
 can be used to compute
 the {\em polynomial} $\emZ{i,j}$ defined by
-\begin{eqnarray}
+\begin{align}
 \label{eqn:defZijpolynomial}
-\emZ{i,j} &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
+\emZ{i,j} &= \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
 z_{rn+s}(i,j) x^{rn+s}
 =\sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
-\end{eqnarray}
-%\begin{eqnarray}
+\end{align}
+%\begin{align}
 %\label{eqn:defZijpolynomial}
-%\emZ{i,j} &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
+%\emZ{i,j} &= \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
 %z_{rn+s}(i,j) x^{rn+s}  \nonumber \\
-%\emZ{i,j} &=& \sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
-%\end{eqnarray}
+%\emZ{i,j} &= \sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
+%\end{align}
+
 where
-\[ z_{rn+s}(i,j)= \bfZ{r,s}{i,j} =
+
+\begin{align} z_{rn+s}(i,j)= \bfZ{r,s}{i,j} =
 \sum_{\substack{S \text{ such that }\\
 \dBP{\str,\strA_{[i,j]}}=r, \dBP{\str,\strB_{[i,j]}}=s}}
 e^{\frac{-E(S)}{RT}}.
-\]
+\end{align}
 Here, in the summation, \str runs over structures on $s_i,\ldots,s_j$, which
 are $r$-neighbors of the restriction $A_{[i,j]}$ of reference structure
 $A$ to interval $[i,j]$, and simultaneously
@@ -153,35 +158,37 @@ $B$ to interval $[i,j]$.
 \noindent
 {\sc Theorem 1:} Let $s_1,\ldots,s_n$ be a given RNA sequence.
 For any integers $1 \leq i < j \leq n$, let
-\begin{eqnarray*}
+\begin{align}
 \emZ{i,j} = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1} z_{rn+s}  x^{rn+s}
-\end{eqnarray*}
+\end{align}
 where
-\[
+
+\begin{align}
 z_{rn+s}(i,j)= \bfZ{r,s}{i,j}.
-\]
+\end{align}
+
 %Peter commented out
 %Then  for $i\leq j \leq i+\theta$, $\emZ{i,j}=1$ and for
 %$j>i+\theta$ we have the recurrence relation
 %given by $\emZ{i,j}$ equals
-%\begin{eqnarray}
+%\begin{align}
 %\label{eqn:polynomialRecursionNussJac}
 %\emZ{i,j} &= \emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
 %&\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
 %\emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
 %\nonumber
-%\end{eqnarray}
+%\end{align}
 %end of Peter
 Inductively we define $\emZ{i,j}$ to equal
-\begin{eqnarray}
+\begin{align}
 \label{eqn:polynomialRecursionNussJac}
 &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
 \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
 \nonumber
-\end{eqnarray}
+\end{align}
 where $\alpha_0 = 1$ if $j$ is base-paired in $A_{[i,j]}$ and $0$ otherwise,
 $\beta_0 = 1$ if $j$ is base-paired in $B_{[i,j]}$ and $0$ otherwise, and
 $\alpha(k)=\dBP(\strA_{[i,j]}, \strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup\{(k,j)\})$,
@@ -197,22 +204,22 @@ Instead of explicitly performing polynomial expansion in {\em variable} $x$,
 we instantiate $x$ to a
 complex number $\rho \in \mathbb{C}$, and apply
 the following recursion, by setting $\emZof{i,j}{\rho}$ equal to
-%\begin{eqnarray}
+%\begin{align}
 %\label{eqn:RNAborNussRecursionInstantiated}
 %\emZof{i,j}{\rho} &= &\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} +
 %\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
 %\emZof{i,k-1}{\rho} \cdot \emZof{k+1,j-1}{\rho}
 %\cdot \rho^{\alpha(k)n+\beta(k)} \right).
-%\end{eqnarray}
-\begin{eqnarray}
+%\end{align}
+\begin{align}
 \label{eqn:RNAborNussRecursionInstantiated}
 &\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
 \emZof{i,k-1}{\rho} \cdot \emZof{k+1,j-1}{\rho}
 \cdot \rho^{\alpha(k)n+\beta(k)} \right) \nonumber
-\end{eqnarray}
+\end{align}
 In this fashion, we can compute $\emZof{}{\rho}=\emZof{1,n}{\rho}$ in
 \On{3} time and \On{2} space. For $n^2$ distinct complex numbers
 $\rho_i$ where $0 \leq i \leq n^2-1$, we can compute and save only the
@@ -220,7 +227,7 @@ values $\emZof{}{\rho_0},\ldots, \emZof{}{\rho_{n^2-1}}$, each time re-using the
 \On{2} space for the next computation of $\emZof{}{\rho_i}$.
 It follows that
 the computation resources used to determine the (column) vector
-\begin{eqnarray}
+\begin{align}
 \label{eqn:defY}
 {\bf Y} = (y_0,\ldots,y_{n^2-1})^T =
 \left(
@@ -231,7 +238,7 @@ y_1\\
 y_{n^2-1}\\
 \end{array}
 \right)
-\end{eqnarray}
+\end{align}
 where
 $y_0=\emZof{}{\alpha_0},\ldots, y_{n^2-1}=\emZof{}{\alpha_{n^2-1}}$ are thus
 quintic time $O(n^5)$ and quadratic space \On{2}.
@@ -242,7 +249,7 @@ Our plan is to determine the coefficients of the polynomial
 polynomial interpolation.  For reasons of numerical stability,
 we instead determine the coefficients of the polynomial \bfPofX,
 defined by
-\begin{eqnarray}
+\begin{align}
 \label{eqn:polynomialYannP}
 \bfPofX =
 \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \bfP_{rn+s}
@@ -250,7 +257,7 @@ defined by
 %\sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \frac{z_{rn+s}}{\bfZ{}{}}
 \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \frac{z_{rn+s}}{Z}
  x^{r\cdot n + s},
-\end{eqnarray}
+\end{align}
 where the fast Fourier transform (FFT) is used to implement the
 interpolation of
 the coefficients using the inverse discrete Fourier transform (DFT), as
@@ -338,10 +345,10 @@ $(x,y)$ are $(0,d_0), (1,d_0-1), (1,d_0+1),
 (2,d_0-2), (2,d_0), (2, d_0+2),
 (3,d_0-3), (3,d_0-1), (3, d_0+1), (3,d_0+3), \cdots$.
 As a corollary, we have the {\em parity condition}, that
-\begin{eqnarray}
+\begin{align}
 \label{eqn:parity}
 \dBP{\strA,\str} + \dBP{\str,\strB} \equiv \dBP{\strA,\strB} \bmod 2
-\end{eqnarray}
+\end{align}
 first noticed in \cite{hofacker:RNAbor2D}, as well as
 the triangle inequality
 $\dBP{\strA,\str} + \dBP{\str,\strB} \geq \dBP{\strA,\strB}$
@@ -377,9 +384,10 @@ the distance is odd, then $emZof{}{-\alpha} = -emZof{}{\alpha}$.
 {\sc Lemma 4:} Suppose that $M$ is evenly divisible by $4$,
 $\nu = \exp(\frac{2 \pi i}{M})$ is the principal $M$-root of unity, and
 $\frac{M}{4} < k \leq \frac{M}{2}$. Then
-\[
+
+\begin{align}
 \nu^k = -(\nu^{-(M/2-k)}) = - \overline{\nu^{M/2-k}}.
-\]
+\end{align}
 \medskip
 
 Lemma 1 is proved by simple induction; Lemma 2
@@ -415,25 +423,25 @@ we have $(r+s) \equiv (r\cdot(N+1)+s) \bmod 2$. For distinct
 fixed structures $A,B$, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
 $\pi_2(k) = k \bmod (N+1)$, and define the polynomial
-\begin{eqnarray*}
+\begin{align}
 \label{eqn:polynomialPeter}
-\emZ{} &=& \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{r\cdot N + s}\\
-&=&
+\emZ{} &= \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{r\cdot N + s}\\
+&=
 \sum_{k=0}^{(N+1)^2-1} z_{\pi_1(k)\cdot (N+1) + \pi_2(k)}
 x^{\pi_1(k)\cdot (N+1) + \pi_2(k)}\\
-&=&
+&=
 \sum_{k=0}^{(N+1)^2-1} z_k x^k
-\end{eqnarray*}
+\end{align}
 where for the last equality, we have used the fact that
 $k = \pi_1(k)\cdot (N+1) + \pi_2(k)$, well-known from
 row major order of a 2-dimensional array.
 
 Consider the coefficients of the polynomial
-\begin{eqnarray}
+\begin{align}
 \label{eqn:yannPolynomialN}
 \emZ{} = \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{rN+s}
 = \sum_{k=0}^{(N+1)^2-1} z_k x^k.
-\end{eqnarray}
+\end{align}
 Since $N$ is even, the parity of $r+s$ equals the parity of
 $r(N+1)+s$, hence  it follows from the parity condition that either
 {\em (i)} all coefficients $z_1,z_3,z_5,\ldots$ of odd parity are zero,
@@ -459,10 +467,11 @@ By evaluating $M_0=\frac{M}{2}$ many complex
 $M_0$-roots of unity, we can
 use polynomial interpolation to determine all coefficients $b_k$ of
 the polynomial
-\[
+
+\begin{align}
 Y(u) = \displaystyle\sum_{k=0}^{M_0-1} b_k u^k =
 \displaystyle\sum_{k=0}^{M_0-1} z_{2k} x^{2k}.
-\]
+\end{align}
 
 
 Since $Y(x^2)=Z(x)$, we have
@@ -515,16 +524,16 @@ coefficients of \emZ{} of even parity are zero.
 In the following, we will need the observation, that if the parity of
 base pair distance $\dBP{\strA,\strB}$ between $A,B$ is
 even, then
-\begin{eqnarray}
+\begin{align}
 \label{eqn:evenY}
 Y(x^2) = \emZ{}
-\end{eqnarray}
+\end{align}
 while if the parity is odd,
 then
-\begin{eqnarray}
+\begin{align}
 \label{eqn:oddY}
 Y(x^2) = \frac{1}{x} \cdot \emZ{}.
-\end{eqnarray}
+\end{align}
 
 \subsection{Time reduction due to Lemma 2}
 As before, let $M$ be the the least number evenly divisible by $4$, which is
@@ -542,16 +551,16 @@ $Z(\nu^{k})= -1^{d_0} \cdot \overline{Z(\nu^{\frac{M}{2}-k})}$, where
 $d_0 = \dBP{\strA,\strB}$. This is justified in the following.
 
 By induction on $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$, we have
-\begin{eqnarray*}
-Y(\omega^k)&=& Y(\nu^{2k})  \nonumber \\
-&=& \left\{ \begin{array}{ll}
+\begin{align}
+Y(\omega^k)&= Y(\nu^{2k})  \nonumber \\
+&= \left\{ \begin{array}{ll}
 Z(\nu^{k}) &\mbox{\tiny if
 $\dBP{\strA,\strB} = 0 \bmod 2$}\\
 \frac{1}{\nu^{k}} \cdot Z(\nu^{k})
 &\mbox{\tiny if
 $\dBP{\strA,\strB} = 1 \bmod 2$}\\
 \end{array} \right. \nonumber\\
-&=& \left\{ \begin{array}{ll}
+&= \left\{ \begin{array}{ll}
 Z(- \overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
 $\dBP{\strA,\strB} = 0 \bmod 2$}\\
 \nu^{-k} \cdot
@@ -559,7 +568,7 @@ Z(-\overline{\nu^{(\frac{M}{2}-k)}})
 &\mbox{\tiny if
 $\dBP{\strA,\strB} = 1 \bmod 2$}\\
 \end{array} \right. \nonumber\\
-&=& \left\{ \begin{array}{ll}
+&= \left\{ \begin{array}{ll}
 Z(\overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
 $\dBP{\strA,\strB} = 0 \bmod 2$}\\
 \nu^{-k} \cdot
@@ -567,7 +576,7 @@ $\dBP{\strA,\strB} = 0 \bmod 2$}\\
 &\mbox{\tiny if
 $\dBP{\strA,\strB} = 1 \bmod 2$}\\
 \end{array} \right.  \nonumber\\
-&=& \left\{ \begin{array}{ll}
+&= \left\{ \begin{array}{ll}
 \overline{Z(\nu^{(\frac{M}{2}-k)})} &\mbox{\tiny if
 $\dBP{\strA,\strB} = 0 \bmod 2$}\\
 -\nu^{-k} \cdot
@@ -575,14 +584,14 @@ $\dBP{\strA,\strB} = 0 \bmod 2$}\\
 &\mbox{\tiny if
 $\dBP{\strA,\strB} = 1 \bmod 2$}\\
 \end{array} \right.  \nonumber\\
-\end{eqnarray*}
+\end{align}
 Line 1 follows by definition, since $\omega=\nu^2$;
 line 2 follows by equations (\ref{eqn:evenY}) and
 (\ref{eqn:oddY});
 line 3 follows by Lemma 4;
 line 4 follows by Lemma 3.
 Thus if $\dBP{\strA,\strB}$ is even, then
-\begin{eqnarray}
+\begin{align}
 \label{eqn:trickyRootsOfUnity1}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
@@ -590,9 +599,9 @@ Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
 \quad & \quad\\
 \overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$.}\\
 \end{array} \right.
-\end{eqnarray}
+\end{align}
 while if $\dBP{\strA,\strB}$ is odd, then
-\begin{eqnarray}
+\begin{align}
 \label{eqn:trickyRootsOfUnity2}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
@@ -600,7 +609,7 @@ y_k = Y(\omega^k) = \left\{
 \quad & \quad\\
 -\nu^{-k} \cdot \overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$.}\\
 \end{array} \right.
-\end{eqnarray}
+\end{align}
 It follows that values $y_0,\ldots,y_{M/2-1}$ can be obtained by only
 $\frac{M}{4}$ evaluations of \emZ{}.
 
@@ -722,11 +731,11 @@ a_{M_0-1}\\
 $$
 The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
 and that
-\begin{eqnarray}
+\begin{align}
 \label{eqn:ajdef}
-a_j &=&\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
+a_j &=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
 =\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \nu^{-2kj}
-\end{eqnarray}
+\end{align}
 for $j=0,\ldots,M_0-1$ (for more on FFT, see \cite{cormen}).
 
 Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =

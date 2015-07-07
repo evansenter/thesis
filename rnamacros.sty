@@ -43,6 +43,9 @@
 % RNA notation
 % --------------------------------------------------
 \newcommand{\seq}{{\bf s}\xspace}
+\newcommand{\seqN}{\ensuremath{s_1,\dots,s_n}\xspace}
+\newcommand{\seqIJ}{\ensuremath{s_i,\dots,s_j}\xspace}
+\newcommand{\alphaN}{\ensuremath{\alpha_0,\dots,\alpha_{n-1}}\xspace}
 \newcommand{\str}{\strS}
 \newcommand{\strSt}{\ensuremath{\strS^*}\xspace}
 \newcommand{\strletter}[1]{\ensuremath{\mathcal #1}\xspace}
@@ -50,7 +53,8 @@
 \newcommand{\strB}{\strletter{B}}
 \newcommand{\strS}{\strletter{S}}
 \newcommand{\strT}{\strletter{T}}
-\newcommand{\dBP}[1]{\ensuremath{d_{\text{BP}}(#1)}\xspace}
+\newcommand{\bpSet}{\ensuremath{\mathbb{B}}}
+\newcommand{\dBP}[2]{\ensuremath{d_{\text{BP}}(#1,\,#2)}\xspace}
 \newcommand{\kNbr}{$k$-{\em neighbor}\xspace}
 \newcommand{\kNbrs}{$k$-{\em neighbors}\xspace}
 
@@ -67,4 +71,5 @@
 \newcommand{\bfP}{\ensuremath{{\bf p}}\xspace}
 \newcommand{\bfPofX}{\ensuremath{\bfP(x)}\xspace}
 \newcommand{\boltzf}[1]{\ensuremath{\exp(-E(#1)/RT)}\xspace}
-\newcommand{\boltzF}[1]{\ensuremath{\exp^{\frac{-E(#1)}{RT}}}\xspace}
+\newcommand{\boltzF}[1]{\ensuremath{e^{\frac{-E(#1)}{RT}}}\xspace}
+\newcommand{\boltzNuss}[1]{\ensuremath{e^{\frac{-E_0(#1)}{RT}}}\xspace}

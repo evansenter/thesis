@@ -43,15 +43,15 @@ underlying implementation actually uses.
 \section{Formalization of the problem}
 \label{sec:fftbor:formal}
 
-\fftbor aims to compute the coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
+\fftbor aims to compute the coefficients $p_0,\dots,p_{n-1}$ of the polynomial
 
 \begin{align}
 \label{eq:fftbor:pOfX}
-p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
+p(x) = p_0 + p_1 x + p_2 x^2 + \dots + p_{n-1} x^{n-1},
 \end{align}
 
 where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \fft to compute
-the \idft on values $y_0,\ldots,y_{n-1}$, where
+the \idft on values $y_0,\dots,y_{n-1}$, where
 $y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal $n$th complex
 root of unity and $p(x)$ is defined in
 equation~(\ref{eq:fftbor:pOfX}). By leveraging
@@ -59,11 +59,11 @@ complex
 roots of unity in conjunction with the \idft the we subvert numeric instability
 issues observed with both Lagrange interpolation and Gaussian elimination.
 
-Consider an RNA sequence $\seq = s_1,\ldots,s_n$, where
-$s_i \in \{A,C,G,U\}$, i.e. a sequence of nucleotides. We can describe a
+Consider an RNA sequence $\seq = \seqN$, where
+$s_i \in \{\text{A,\,U,\,G,\,C}\}$, i.e. a sequence of nucleotides. We can describe a
 secondary structure \str which is compatible with \seq as a collection of
 base pair tuples $(i,j)$, where $1 \le i \le i+\theta < j \le n$ and
-$\theta \ge 0$---generally taken to be 3, the minimum number of unpaired bases
+$\theta \ge 0$ (generally taken to be 3), the minimum number of unpaired bases
 in a hairpin loop due to steric constraints.
 
 To more simply develop the underlying recursions for \fftbor, we introduce a
@@ -72,17 +72,19 @@ each base pair is either a Watson-Crick or G-U wobble, i.e. base pair $(i,j)$
 for sequence \seq has corresponding nucleotides $(s_i,s_j)$, which are
 restricted to the set
 
-\[
-\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}.
-\]
+\begin{align}
+\label{eq:fftbor:validBP}
+\bpSet =
+\{\text{(A,\,U),\,(U,\,A),\,(G,\,C),\,(C,\,G),\,(G,\,U),\,(U,\,G)}\}.
+\end{align}
 
 With
 this constraint satisfied we say that \str is {\em compatible} with \seq, and
 for the remainder of this chapter will only consider those structures which are
 compatible with \seq.
 Secondly, we insist that given two base pairs $(i,j), (x,y)$ from \str,
-$i=x \iff j=y$---bases have at most one partner. Finally, we require that
-$i<x<j \iff i<y<j$, no pseudoknots are allowed. While pseudoknots have been
+$i=x \iff j=y$ (bases have at most one partner). Finally, we require that
+$i<x<j \iff i<y<j$ (no pseudoknots are allowed). While pseudoknots have been
 shown to be present in some biologically relevant RNAs, their inclusion greatly
 complicates the recursive decomposition of the structure, and thus it is common
 to ignore them.
@@ -91,39 +93,41 @@ Provided two secondary structures $\str,\strT$, we can define a notion of
 distance between them. There are a number of different definitions of distance
 used across the literature; we will use {\em \bpd} for \fftbor.
 Base pair distance is defined as the symmetric difference between the sets
-\str,\strT
+\str,\,\strT
 
 \begin{align}
 \label{eq:fftbor:dBP}
-\dBP{\str,\strT} = |\str \cup \strT| - |\str \cap \strT|.
+\dBP{\str}{\strT} = |\str \cup \strT| - |\str \cap \strT|.
 \end{align}
 
 Given this definition of distance, two structures \str and \strT are said to
-be \kNbrs if $\dBP{\str,\strT} = k$. It is important to note that
+be \kNbrs if $\dBP{\str}{\strT} = k$. It is important to note that
 the notion of \bpd is also applicable to restrictions of secondary structures
 on the subsequence $\seq_{i,j}$,
-i.e. $\str_{i,j} = \{ (x,y) \,:\, i \leq  x < y \leq j,  (x,y) \in \str \}$.
+i.e. $\str_{[i,j]} = \{ (x,y) \,:\, i \leq  x < y \leq j,  (x,y) \in \str \}$.
 
-For a restriction of base pairs for a given structure $\str_{i,j}$,
-$\strT_{i,j}$ is said to be a \kNbr of $\str_{i,j}$ if
+For a restriction of base pairs for a given structure $\str_{[i,j]}$,
+$\strT_{[i,j]}$ is said to be a \kNbr of $\str_{[i,j]}$ if
 
-\[
-\dBP{\str_{i,j},\strT_{i,j}} = |\{ (x,y): i \leq x<y\leq j,
-(x,y) \in \str - \strT \mbox{ or } (x,y) \in \strT - \str \}| = k.
-\]
+\begin{align}
+\label{eq:fftbor:dBPonRestriction}
+\dBP{\str_{[i,j]}}{\strT_{[i,j]}} =
+|\{ (x,y): i \leq x<y\leq j,
+(x,y) \in \str - \strT \text{or} (x,y) \in \strT - \str \}| = k.
+\end{align}
 
 \section{Derivation of the \fftbor algorithm}
 \label{sec:fftbor:math}
 
-Given an RNA sequence $\seq=s_1,\ldots,s_n$ and compatible secondary structure
+Given an RNA sequence $\seq=\seqN$ and compatible secondary structure
 \strSt, let \bfZ{k}{} denote the sum of the Boltzmann factors
 \boltzf{\str} of all \kNbrs \str of \strSt; i.e.
 
-\[
+\begin{align}
 \bfZ{k}{} = \bfZ{k}{1,n} =
-\sum_{\substack{\str \text{ such that }\\ \dBP{\str,\strSt}=k}}
+\sum_{\mathclap{\substack{\str \text{ such that } \\ \dBP{\str}{\strSt}=k}}}\;
 \boltzF{\str}
-\]
+\end{align}
 
 where $E(\str)$ denotes the Turner (nearest neighbor)
 energy \cite{}
@@ -140,7 +144,7 @@ since the \bpd between \strSt and \str is at most
 
 \begin{align}
 \label{eq:fftbor:maxDist}
-\dBP{\strSt,\str} \leq |\strSt| + \lfloor \frac{n-\theta}{2} \rfloor \leq n.
+\dBP{\strSt}{\str} \leq |\strSt| + \lfloor \frac{n-\theta}{2} \rfloor \leq n.
 \end{align}
 
 We can then define the Boltzmann probability of all \kNbrs of \strSt as
@@ -173,15 +177,17 @@ model, for the sake of
 simplicity of exposition, both \rnabor
 \cite{Freyhult.ab05} as well as our current software \fftbor,
 concern the Turner energy model, consisting of free energy parameters for
-stacked bases, hairpins, bulges, internal loops and multiloops. The full
-recursions for \fftbor are described for the
-the Turner energy model in the appendix.
+stacked bases, hairpins, bulges, internal loops and multiloops.
+
+% The full
+% recursions for \fftbor are described for the
+% the Turner energy model in the appendix.
 
 The base case for \bfZ{k}{i,j} is given by
 
 \begin{align}
 \label{eq:fftbor:initZpart1}
-\bfZ{0}{i,j} = 1,\, \mbox{for $i \le j$},
+\bfZ{0}{i,j} = 1, \text{ for } i \le j,
 \end{align}
 
 since the only $0$-neighbor to a structure \strSt
@@ -189,7 +195,7 @@ is the structure \strSt itself, and
 
 \begin{align}
 \label{eq:fftbor:initZpart2}
-\bfZ{k}{i,j} = 0,\, \mbox{for $k > 0$, $i \le j \leq i+\theta$},
+\bfZ{k}{i,j} = 0, \text{ for } k > 0, i \le j \leq i + \theta,
 \end{align}
 
 since the empty structure is the only possible structure for a
@@ -199,9 +205,9 @@ sequence shorter than $\theta + 2$ nucleotides, and so there are no
 
 \begin{align}
 \label{eq:fftbor:bfZkij}
-\bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1} \hspace{5pt} +
-\sum_{\substack{(s_r,s_j) \in \mathbb{B}, \\ i \leq r < j}} \hspace{5pt}
-\sum_{w+w'=k-b(r)}
+\bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
+\sum_{\substack{(s_r,s_j) \in \bpSet, \\ i \leq r<j}}\qquad
+\sum_{\mathclap{w+w'=k-b(r)}}\enspace
 \exp(-E_0(r,j)/RT) \cdot \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1},
 \end{align}
 
@@ -209,9 +215,9 @@ where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence \seq,
 and otherwise $E_0(r,j) = +\infty$. Additionally,
 $b_0 = 1$ if $j$ is base-paired
 in $\strSt_{[i,j]}$ and $0$ otherwise, and
-$b(r)=\dBP{\strSt_{[i,j]},\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
+$b(r)=\dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
 This holds since in a secondary
-structure $T_{[i,j]}$ on $s_i,\ldots,s_j$ that is a \kNbr of
+structure $T_{[i,j]}$ on \seqIJ that is a \kNbr of
 $\strSt_{[i,j]}$,
 either nucleotide $j$ is unpaired in $[i,j]$ or it is
 paired to a nucleotide $r$ such that $i \leq r < j$. In this
@@ -219,10 +225,10 @@ latter case it is enough to study the smaller sequence segments
 $[i,r-1]$ and $[r+1,j-1]$ noting that, except for $(r,j)$,
 base pairs outside of these regions are not allowed, since there
 are no pseudoknots. In addition,
-for $\dBP{\strSt_{[i,j]},T_{[i,j]}} = k$ to hold,
+for $\dBP{\strSt_{[i,j]}}{T_{[i,j]}} = k$ to hold,
 it is necessary for $w+w' = k -b(r)$ to hold, where $w =
-\dBP{\strSt_{[i,r-1]},T_{[i,r-1]}}$ and $w' =
-\dBP{\strSt_{[r+1,j-1]},T_{[r+1,j-1]}}$, since $b(r)$ is the
+\dBP{\strSt_{[i,r-1]}}{T_{[i,r-1]}}$ and $w' =
+\dBP{\strSt_{[r+1,j-1]}}{T_{[r+1,j-1]}}$, since $b(r)$ is the
 number of base pairs that differ between $\strSt_{[i,j]}$ and a
 structure $T_{[i,j]}$, due to the introduction of the base pair
 $(r,j)$.
@@ -231,19 +237,19 @@ Given RNA sequence \seq and compatible initial structure \strSt,
 we define the {\em polynomial}
 
 \begin{align}
-\label{eq:fftbor:partFuncOfX}
+\label{eq:fftbor:zOfX}
 \emZ{} = \sum_{k=0}^n c_k x^k
 \end{align}
 
 where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of
-(\ref{eqn:upperBound}) and the fact that the minimum number of
+(\ref{eq:fftbor:maxDist}) and the fact that the minimum number of
 unpaired bases in a hairpin loop $\theta$ is $3$, we know that $c_n=0$,
 so that \emZ{} is a polynomial of degree strictly less than $n$.
 If we evaluate the polynomial \emZ{} for $n$ distinct values
 
 \begin{align}
 \label{eq:fftbor:solutionsForAlpha}
-\emZof{}{a_1} = y_1,\ldots, \emZof{}{a_n} = y_n,
+\emZof{}{a_1} = y_1,\dots, \emZof{}{a_n} = y_n,
 \end{align}
 
 then the Lagrange polynomial interpolation formula guarantees that
@@ -267,24 +273,22 @@ Lagrange interpolation is clearly computable in time \On{3}.
 Although this approach is theoretically sound, there are severe
 numerical stability issues related to the interpolation method
 \cite{HighamBarycentricInterpolation},
-the choice of values $a_1,\ldots,a_{n}$ in the interpolation,
+the choice of values $a_1,\dots,a_{n}$ in the interpolation,
 and floating point arithmetic (round-off error) related to the
 astronomically large values of the partition functions
 \bfZ{k}{1,n}, for $0 \leq k < n$. After many unsuccessful
-approaches including scaling (see Supplementary Information),
-we obtained excellent results by
-interpolating the polynomial $p(x)$, defined in equation~(\ref{eqn:PofX}),
-rather than the polynomial \emZ{}, defined in equation~(\ref{eqn:ZofX}),
+approaches including scaling we obtained excellent results by
+interpolating the polynomial $p(x)$, defined in equation (\ref{eq:fftbor:pOfX}),
+rather than the polynomial \emZ{}, defined in equation (\ref{eq:fftbor:zOfX}),
 and performing interpolation with the Fast Fourier Transform (FFT) \cite{cormen}
-where $\alpha_0,\ldots,\alpha_{n-1}$ are
+where \alphaN are
 chosen to be $n$th complex roots of unity,
-$\alpha_k = e^{\frac{2 \pi k}{n}}$.
+$\alpha_k = e^{2 \pi i k/n}$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
 time, rather than the cubic time required by using the Lagrange formula
-(\ref{eqn:LagrangeInterpolation}) or by Gaussian elimination. Fewer
+(\ref{eq:fftbor:lagrangeInterpolation}) or by Gaussian elimination. Fewer
 numerical operations implies increased numerical stability in our application.
-Details now follow.
 
 \subsection{Recursions to compute the polynomial
 \texorpdfstring{\emZ{i,j}}{}}
@@ -295,99 +299,119 @@ given RNA sequence \seq, our goal is to compute
 
 \begin{align}
 \label{eq:fftbor:defZofK}
-\bfZ{k}{1,n} &= \sum_{\substack{\str \text{ such that }\\ \dBP{\str,\strSt}=k}}
-e^{\frac{-E_0(S)}{RT}}
+\bfZ{k}{1,n} = \sum_{\mathclap{\substack{\str \text{ such that }\\ \dBP{\str}{\strSt}=k}}}\;
+\boltzNuss{\str}
 \end{align}
 
 where \str can be any structure compatible with \seq.
 As previously mentioned, the recurrence relation for \rnabor
 with respect to the Nussinov energy model $E_0$ is
 
+% \bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
+% \sum_{\substack{(s_r,s_j) \in \bpSet, \\ i \leq r<j}}\qquad
+% \sum_{\mathclap{w+w'=k-b(r)}}\enspace
+% \exp(-E_0(r,j)/RT) \cdot \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1},
+
 \begin{align}
 \label{eq:fftbor:rnaborNuss}
-\bfZ{k}{i,j} &= \bfZ{k-b_0}{i,j-1} + \sum_{\substack{s_r s_j \in \mathbb{B}, \\
-i \le r<j}}\left(e^{\frac{-E_0(r,j)}{RT}}\sum_{w+w'=k-b(r)}
-\bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1} \right)
+\bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
+\sum_{\substack{s_r s_j \in \bpSet, \\ i \le r<j}}
+\left(
+\boltzNuss{r,j}\enspace \sum_{\mathclap{w+w'=k-b(r)}}\quad
+\bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1}
+\right)
 \end{align}
 
 where $E_0(r,j)=-1$ if $r$ and $j$ can base-pair and otherwise
 $+\infty$, and
 $b_0 = 1$ if $j$ is base paired in $\strSt_{[i,j]}$ and $0$ otherwise, and
-$b(r)=\dBP{\strSt_{[i,j]}, \strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
+$b(r)=\dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
 The following theorem shows that an analogous recursion can be used to compute
 the {\em polynomial} $\emZ{i,j}$ defined by
 
 \begin{align}
 \label{eq:fftbor:polynomialZij}
-\emZ{i,j} = \sum_{k=0}^n c_k(i,j) x^k
+\emZ{i,j} = \sum_{k=0}^n c_k(i,j)\,x^k
 \end{align}
 
 where
 
-\[ c_k(i,j)= \bfZ{k}{i,j} =
-\sum_{\substack{\str \text{ such that }\\ \dBP{\str,\strSt_{[i,j]}}=k}}
-e^{\frac{-E_0(S)}{RT}}.
-\]
+\begin{align}
+c_k(i,j)\>=\>
+\bfZ{k}{i,j}\enspace=\enspace
+\sum_{\mathclap{\substack{\str \text{ such that } \\
+\dBP{\str}{\strSt_{[i,j]}}=k}}}\enspace
+\boltzNuss{\str}.
+\end{align}
 
-Here, in the summation, \str runs over structures on $s_i,\ldots,s_j$, which
+Here, in the summation, \str runs over structures on \seqIJ, which
 are \kNbrs of the restriction $\strSt_{[i,j]}$ of initial structure
 \strSt to interval $[i,j]$, and
 $E_0(S)=-1 \cdot |S|$ denotes the Nussinov-Jacobson energy of \str.
 
-\noindent {\sc Theorem 1:} Let $s_1,\ldots,s_n$ be a given RNA sequence.
+% \noindent {\sc Theorem 1:} Let \seqN be a given RNA sequence.
+\begin{theorem}
+Let \seqN be a given RNA sequence.
 For any integers $1 \leq i \leq j \leq n$, let
 
 \begin{align}
-\emZ{i,j} = \sum_{k=0}^n c_k x^k
+\emZ{i,j} = \sum_{k=0}^n c_k\,x^k
 \end{align}
 
 where
 
-\[
-c_k(i,j)= \bfZ{k}{i,j}.
-\]
+\begin{align}
+c_k(i,j) = \bfZ{k}{i,j}.
+\end{align}
 
 Then for $i\leq j \leq i+\theta$, $\emZ{i,j}=1$ and for
 $j>i+\theta$ we have the recurrence relation
 
 \begin{align}
-\label{eq:fftbor:rnaborNussPoly}
-\emZ{i,j} &= \emZ{i,j-1} \cdot x^{b_0} +
-\sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}
-\left(e^{\frac{-E_0(r,j)}{RT}}\cdot
-\emZ{i,r-1}\cdot\emZ{r+1,j-1}\cdot x^{b(r)} \right).
+\label{eq:fftbor:fftborNussPoly}
+\emZ{i,j} = \emZ{i,j-1} \cdot x^{b_0} +
+\sum_{\substack{s_r s_j \in \bpSet, \\ i\le r<j}}
+\left(
+\boltzNuss{r,j} \cdot \emZ{i,r-1} \cdot \emZ{r+1,j-1} \cdot x^{b(r)}
+\right).
 \end{align}
 
 where $b_0 = 1$ if $j$ is base-paired in $\strSt_{[i,j]}$ and $0$ otherwise, and
-$b(r)=\dBP{\strSt_{[i,j]}, \strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
+$b(r) =
+\dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup \{(r,j)\}}$.
+\end{theorem}
 
-\noindent {\sc Proof:} First, some notation is necessary.
+\begin{proof}
+First, some notation is necessary.
 Recall that if $F$ is an arbitrary
 polynomial [resp. analytic] function, then $[x^k] F(x)$
 denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
-Taylor expansion of $F$] -- for instance, in equation~(\ref{eqn:PofX}),
-$[x^k]p(x) = p_k$, and in equation~(\ref{eqn:ZofX}), $[x^k]\emZ{} = c_k(i,j)$.
+Taylor expansion of $F$]. For instance, in equation (\ref{eq:fftbor:pOfX}),
+$[x^k]p(x) = p_k$, and in equation (\ref{eq:fftbor:zOfX}),
+$[x^k]\emZ{} = c_k(i,j)$.
 
-By definition, it is clear that $\emZ{i,j}=1$ if $i\leq j \leq i+\theta$,
+By definition, it is clear that $\emZ{i,j}=1$ if $i \leq j \leq i + \theta$,
 where we recall that $\theta = 3$ is the minimum number of unpaired bases in
-a hairpin loop.  For $j>i+\theta$, we have
+a hairpin loop. For $j > i + \theta$, we have
 
-\begin{eqnarray*}
-[x^k] \emZ{i,j} &=& c_k(i,j) = \bfZ{k}{i,j}\\
-&=&\bfZ{k-b_0}{i,j-1} + \sum_{r=i}^{j-1} \sum_{k_0+k_1 = k-b(r)}
-e^{\frac{-E_0(r,j)}{RT}} \cdot \bfZ{k_0}{i,r-1} \cdot \bfZ{k_1}{r+1,j-1} \\
-&=&
-[x^{k-b_0}] \emZ{i,j-1} +
-\sum_{r=i}^{j-1} \sum_{k_0+k_1 = k-b(r)}
-e^{\frac{-E_0(r,j)}{RT}} \cdot \left\{ [x^{k_0}] \emZ{i,r-1} \right\} \cdot
+\begin{align}
+\begin{split}
+[x^k] \emZ{i,j} &= c_k(i,j) = \bfZ{k}{i,j} \\
+&= \bfZ{k-b_0}{i,j-1} +
+\sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\enspace
+\boltzNuss{r,j} \cdot \bfZ{k_0}{i,r-1} \cdot \bfZ{k_1}{r+1,j-1} \\
+&= [x^{k-b_0}] \emZ{i,j-1} \\
+&+ \sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\enspace
+\boltzNuss{r,j} \cdot \left\{ [x^{k_0}] \emZ{i,r-1} \right\} \cdot
 \left\{ [x^{k_1}] \emZ{r-1,j-1} \right\} \\
-&=&
-[x^{k-b_0}] \emZ{i,j-1} +
-\sum_{r=i}^{j-1} \sum_{k_0+k_1 = k-b(r)}
-e^{\frac{-E_0(r,j)}{RT}} \cdot [x^{k_0+k_1}] \emZ{i,r-1} \emZ{r-1,j-1} .\\
-\end{eqnarray*}
+&= [x^{k-b_0}] \emZ{i,j-1} \\
+&+ \sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\enspace
+\boltzNuss{r,j} \cdot [x^{k_0+k_1}] \emZ{i,r-1} \emZ{r-1,j-1} .\\
+\end{split}
+\end{align}
 
 By induction, the proof of the theorem now follows.
+\end{proof}
 
 Notice that if one were to compute all terms of the polynomial $\emZ{1,n}$
 by explicitly performing polynomial multiplications,
@@ -406,14 +430,14 @@ the following recursion for this instantiation:
 
 In this fashion, we can compute $\emZof{}{\alpha}=\emZof{1,n}{\alpha}$ in
 \On{3} time and \On{2} space. For $n$ distinct complex values
-$\alpha_0,\ldots,\alpha_{n-1}$, we can compute and save only the
-values $\emZof{}{\alpha_0},\ldots, \emZof{}{\alpha_{n-1}}$, each time re-using the
+\alphaN, we can compute and save only the
+values $\emZof{}{\alpha_0},\dots, \emZof{}{\alpha_{n-1}}$, each time re-using the
 \On{2} space for the next computation of $\emZof{}{\alpha_k}$. It follows that
 the computation resources used to determine the (column) vector
 
 \begin{align}
 \label{eq:fftbor:yColumn}
-\bfY = (y_0,\ldots,y_{n-1})^{\text T} =
+\bfY = (y_0,\dots,y_{n-1})^{\text T} =
 \left(
 \begin{array}{l}
 y_0\\
@@ -425,7 +449,7 @@ y_{n-1}\\
 \end{align}
 
 where
-$y_0=\emZof{}{\alpha_0},\ldots, y_{n-1}=\emZof{}{\alpha_{n-1}})$ is thus quartic time \On{4} and quadratic space \On{2}.
+$y_0=\emZof{}{\alpha_0},\dots, y_{n-1}=\emZof{}{\alpha_{n-1}})$ is thus quartic time \On{4} and quadratic space \On{2}.
 
 \subsection{Polynomial interpolation to evaluate
 \texorpdfstring{\emZ{i,j}}{}}
@@ -440,12 +464,12 @@ i.e.
 \begin{align}
 V_{n} = \left(
 \begin{array}{rrrrr}
-1&1&1&\cdots&1\\
-1&\omega&\omega^2&\cdots&\omega^{n-1}\\
-1&\omega^2&\omega^4&\cdots&\omega^{2(n-1)}\\
-1&\omega^3&\omega^6&\cdots&\omega^{3(n-1)}\\
+1&1&1&\dots&1\\
+1&\omega&\omega^2&\dots&\omega^{n-1}\\
+1&\omega^2&\omega^4&\dots&\omega^{2(n-1)}\\
+1&\omega^3&\omega^6&\dots&\omega^{3(n-1)}\\
 \vdots& \vdots& \vdots& \ddots& \vdots\\
-1&\omega^{n-1}&\omega^{2(n-1)}&\cdots&\omega^{(n-1)(n-1)}\\
+1&\omega^{n-1}&\omega^{2(n-1)}&\dots&\omega^{(n-1)(n-1)}\\
 \end{array}
 \right)
 \end{align}
@@ -485,27 +509,27 @@ and that
 a_j = \frac{1}{n} \sum_{k=0}^{n-1} y_k \omega^{-kj}
 \end{align}
 
-for $j=0,\ldots,n-1$.
+for $j=0,\dots,n-1$.
 
 Since we defined \bfY in (\ref{eq:fftbor:yColumn}) by $\bfY =
-(y_0,\ldots,y_{n-1})^{\text T}$, where
-$y_0=\emZof{}{\alpha_0},\ldots, y_{n-1}=\emZof{}{\alpha_{n-1}})$ and $\alpha_k = \omega^k
+(y_0,\dots,y_{n-1})^{\text T}$, where
+$y_0=\emZof{}{\alpha_0},\dots, y_{n-1}=\emZof{}{\alpha_{n-1}})$ and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{n})$, it follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ in the polynomial
-$\emZ{} = c_0 + c_1 x + \cdots + c_{n-1} x^{n-1}$ defined in
+$\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in
 (\ref{eqn:polynomialYann}) can be computed, at least in principle,
 by using the FFT. It turns out, however, that the values of
 \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
 that exceed $56$ (data not shown).
 Nevertheless, our approach can be modified as follows.
-Define \bfY by $\bfY = (y_1,\ldots,y_n)^{\text T}$, where
-$y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\ldots, y_{n}=\frac{\emZof{}{\alpha_n-1}}{\emZ{}}$, and
+Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
+$y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\dots, y_{n}=\frac{\emZof{}{\alpha_n-1}}{\emZ{}}$, and
 \bfZ{}{} is the partition function defined in (\ref{eqn:mcCaskillPartitionFun}).
 Using the FFT to compute the inverse DFT, it follows from
-(\ref{eqn:ajdef}) that we can compute the probabilities $p_0,\ldots,p_{n-1}$
+(\ref{eqn:ajdef}) that we can compute the probabilities $p_0,\dots,p_{n-1}$
 that are coefficients of the polynomial
-$p(x)=p_0+p_1 x + \cdots + p_{n-1}x^{n-1}$
+$p(x)=p_0+p_1 x + \dots + p_{n-1}x^{n-1}$
 defined in equation~(\ref{eqn:PofX}). For genomics applications, we are
 only interested in the $m$ most significant digits of each $p_k$, as described
 in the pseudocode below.
@@ -513,16 +537,16 @@ in the pseudocode below.
 \noindent {\sc Algorithm} for \fftbor \hfill \break
 This pseudocode computes the $m$ most significant digits
 of probabilities $p_k = \frac{\bfZ{k}{1,n}}{\bfZ{}{}}$. \hfill\break
-{\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and initial secondary
+{\sc Input:} RNA sequence $\seq=\seqN$, and initial secondary
 structure \strSt of \seq, and integer $m$. \hfill\break
-{\sc Output:} Probabilities $p_k=\bfZ{k}{1,n}/\bfZ{}{}$ to $m$ significant digits for $k=0,\ldots,n-1$. \hfill\break
+{\sc Output:} Probabilities $p_k=\bfZ{k}{1,n}/\bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$. \hfill\break
 % \mverbatim
-% 1.  generate roots of unity $\omega^k$ for $k=0,\ldots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
+% 1.  generate roots of unity $\omega^k$ for $k=0,\dots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
 % 2.  note that the partition function $\bfZ{}{}=y_0=\Z(\omega^0)$
 % 3.  for $k=0$ to $n-1$
 % 4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eqn:RNAborNussRecursionInstantiated})
 % 5.    $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
-% 6.  compute $P = (p_0,\ldots,p_{n-1})^{\text T}$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eqn:ajdef})
+% 6.  compute $P = (p_0,\dots,p_{n-1})^{\text T}$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eqn:ajdef})
 % 7.  for $k=0$ to $n-1$
 % 8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
 % 9.    //truncate to $m$ most significant digits
@@ -547,15 +571,15 @@ unity $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 of unity of the form \aPbi, where $a,b \in \mathbb{R}$ and $b>0$, and
 if $\emZof{}{\aPbi} = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case that
 
-\[
+\begin{align}
 \emZof{}{\aMbi} = A - Bi.
-\]
+\end{align}
 
 \noindent {\sc Proof:} Letting $i = \sqrt{-1}$, if
 $\theta = \frac{2 \pi}{n}$, then
 $\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
 is the principal $n$th complex root of unity, and
-$1=\omega^{0},\ldots,e^{(n-1)\cdot i \theta}=\omega^{n-1}$ together
+$1=\omega^{0},\dots,e^{(n-1)\cdot i \theta}=\omega^{n-1}$ together
 constitute the complete collection of all
 $n$th complex roots of unity -- i.e. the $n$ unique solutions of
 of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
@@ -571,38 +595,38 @@ is also an $n$th root of unity.
 Recall that $\emZ{} = \sum_{k=0}^n c_k x^k$, where
 $c_k\in \mathbb{R}$ are real numbers representing the partition function
 \bfZ{k}{1,n} over
-all secondary structures of a given RNA sequence $s_1,\ldots,s_n$,
+all secondary structures of a given RNA sequence \seqN,
 whose base pair distance from initial structure
 \strSt is $k$. Thus, in order to prove the lemma, it suffices to show
-that for all values $k=0,\ldots,n-1$, if \aPbi is a complex $n$th
+that for all values $k=0,\dots,n-1$, if \aPbi is a complex $n$th
 root of unity, where $a,b \in \mathbb{R}$
 and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
 $(\aMbi)^k = C-Di$. Indeed, we have the following.
 
-\begin{eqnarray*}
-(\aPbi)^m &=& \sum_{k=0}^m {m \choose k} a^{m-k}\cdot (bi)^k \\
-(bi)^k  &=& \left\{
+\begin{align}
+(\aPbi)^m &= \sum_{k=0}^m {m \choose k} a^{m-k}\cdot (bi)^k \\
+(bi)^k  &= \left\{
 \begin{array}{ll}
 b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
 i b^k &\mbox{if $k \equiv 1 \bmod 4$}\\
 -b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
 -i b^k &\mbox{if $k \equiv 3 \bmod 4$}\\
 \end{array} \right.
-\end{eqnarray*}
+\end{align}
 
-\begin{eqnarray*}
-(\aMbi)^m &=& \sum_{k=0}^m {m \choose k} a^{m-k} \cdot (-bi)^k \\
-(-bi)^k &=& \left\{
+\begin{align}
+(\aMbi)^m &= \sum_{k=0}^m {m \choose k} a^{m-k} \cdot (-bi)^k \\
+(-bi)^k &= \left\{
 \begin{array}{ll}
 b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
 -ib^k &\mbox{if $k \equiv 1 \bmod 4$}\\
 -b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
 ib^k &\mbox{if $k \equiv 3 \bmod 4$}\\
 \end{array} \right.
-\end{eqnarray*}
+\end{align}
 
 It follows that each term of the form
-$a^{m-k} \cdot (bi)^k$, for $k=0,\ldots,m$, is the complex conjugate of
+$a^{m-k} \cdot (bi)^k$, for $k=0,\dots,m$, is the complex conjugate of
 $a^{m-k} \cdot (-bi)^k$, and thus $(\aPbi)^m$ is the complex conjugate of
 $(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $c_k (\aPbi)^k$,
 it follows that \emZof{}{\aMbi} is the complex conjugate of \emZof{}{\aPbi}.
