@@ -52,11 +52,9 @@ p(x) = p_0 + p_1 x + p_2 x^2 + \dots + p_{n-1} x^{n-1},
 
 where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \fft to compute
 the \idft on values $y_0,\dots,y_{n-1}$, where
-$y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal $n$th complex
-root of unity and $p(x)$ is defined in
+$y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal \nRoU and $p(x)$ is defined in
 equation (\ref{eq:fftbor:pOfX}). By leveraging
-complex
-roots of unity in conjunction with the \idft the we subvert numeric instability
+\nRoUs in conjunction with the \idft the we subvert numeric instability
 issues observed with both Lagrange interpolation and Gaussian elimination.
 
 Consider an RNA sequence $\seq = \seqN$, where
@@ -282,7 +280,7 @@ interpolating the polynomial $p(x)$, defined in equation (\ref{eq:fftbor:pOfX}),
 rather than the polynomial \emZ{}, defined in equation (\ref{eq:fftbor:zOfX}),
 and performing interpolation with the \fft (FFT) \cite{cormen}
 where \alphaN are
-chosen to be $n$th complex roots of unity,
+chosen to be \nRoUs,
 $\alpha_k = e^{2 \pi i k/n}$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
@@ -349,7 +347,6 @@ are \kNbrs of the restriction $\strSt_{[i,j]}$ of initial structure
 \strSt to interval $[i,j]$, and
 $E_0(S)=-1 \cdot |S|$ denotes the Nussinov-Jacobson energy of \str.
 
-% \noindent {\sc Theorem 1:} Let \seqN be a given RNA sequence.
 \begin{theorem}
 Let \seqN be a given RNA sequence.
 For any integers $1 \leq i \leq j \leq n$, let
@@ -457,7 +454,7 @@ $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$ is thus quartic t
 \texorpdfstring{\emZ{i,j}}{}}
 \label{subsec:fftbor:fft}
 
-Let $\omega = e^{2 \pi i/n}$ be the principal $n$th complex root of unity.
+Let $\omega = e^{2 \pi i/n}$ be the principal \nRoU.
 Recall that the Vandermonde matrix $V_{n}$ is defined to be the
 $n \times n$ matrix, whose $i,j$ entry is $\omega^{i \cdot j}$; i.e.
 
@@ -541,19 +538,20 @@ in the pseudocode on the following page.
 \begin{algorithm}[H]
 \label{algo:fftbor:algo}
 \caption{Pseudocode for \fftbor \rule[1.75ex]{0pt}{0pt}}
-\begin{tabular}{ll}
+\begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
 of probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structure \strSt of \seq, integer $m$ \\
 {\sc Output:} & Probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75ex]{0pt}{0pt} \\
 \hline
-\end{tabular}
+\end{tabular*}
 \begin{algorithmic}[1]
 \Function{FFTbor}{\seq, \strSt, $m$}
+\State $n \gets \textit{length}(\seq)$
 \For{$k \gets 0, n-1$}
 \State $\omega_k \gets \exp(\frac{2 \pi i k}{n})$
-\Comment{Pre-compute all \textit{n}-roots of unity, where $i = \sqrt{-1}$}
+\Comment{Pre-compute all \nRoU, where $i = \sqrt{-1}$}
 \EndFor
 \For{$k \gets 0, n-1$}
 \State $y_k \gets 10^m \cdot \emZof{}{\omega_k} / \bfZ{}{}$
@@ -569,6 +567,7 @@ structure \strSt of \seq, integer $m$ \\
 \Comment{Return all $p_k$ for $0 \leq k < n$,
 from equation (\ref{eq:fftbor:probK})}
 \EndFunction
+\rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
 \end{algorithm}
 
@@ -577,71 +576,78 @@ from equation (\ref{eq:fftbor:probK})}
 
 In this subsection, we show that we need only evaluate the polynomial
 \emZ{}, as defined in
-equation (\ref{eqn:polynomialYann}), for $n/2$ of the complex $n$th roots
-of unity. It is first necessary to recall the definition of complex
+equation (\ref{eq:fftbor:zOfX}), for $n/2$ of the \nRoUs.
+ It is first necessary to recall the definition of complex
 conjugate.
 Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
 i.e. if $z=\aPbi$ where $a,b \in \mathbb{R}$ are real numbers and
 $i = \sqrt{-1}$,  then $\overline{z} = \aMbi$.
 
-\noindent {\sc Lemma 1:} If \emZ{} is the complex polynomial defined in
-equation (\ref{eqn:polynomialYann}), then for any complex $n$th root of
-unity $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
-\overline{\emZof{}{\alpha}}$. In other words, if $\alpha$ is a complex $n$th root
-of unity of the form \aPbi, where $a,b \in \mathbb{R}$ and $b>0$, and
+\begin{lemma}
+\label{lem:fftbor:compconj}
+
+If \emZ{} is the complex polynomial defined in
+equation (\ref{eq:fftbor:zOfX}), then for any \nRoU
+ $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
+\overline{\emZof{}{\alpha}}$. In other words, if $\alpha$ is a \nRoU
+ of the form \aPbi, where $a,b \in \mathbb{R}$ and $b>0$, and
 if $\emZof{}{\aPbi} = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case that
 
 \begin{align}
 \emZof{}{\aMbi} = A - Bi.
 \end{align}
 
-\noindent {\sc Proof:} Letting $i = \sqrt{-1}$, if
+\end{lemma}
+
+\begin{proof}
+Letting $i = \sqrt{-1}$, if
 $\theta = \frac{2 \pi}{n}$, then
 $\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
-is the principal $n$th complex root of unity, and
-$1=\omega^{0},\dots,e^{(n-1)\cdot i \theta}=\omega^{n-1}$ together
+is the principal \nRoU, and
+$e^{(0) \cdot i \theta} = 1 = \omega^{0}, \dots ,
+e^{(n-1) \cdot i \theta} = \omega^{n-1}$ together
 constitute the complete collection of all
-$n$th complex roots of unity -- i.e. the $n$ unique solutions of
+\nRoUs---i.e. the $n$ unique solutions of
 of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
-Clearly, for any $1 \leq r < n$,
-$e^{-i r \theta} = 1 \cdot e^{-i r \theta} =
-e^{2 \pi i} \cdot e^{-i r \theta} = e^{i(2 \pi - r \theta)} =
-e^{i(n \theta - r \theta)} = e^{i \theta (n - r)}$.
-Moreover, if $\omega^r = e^{i r \theta} = a + b i$ where
-$b>0$, then we have $e^{-i r \theta} = \aMbi$. It follows that for any
-$n$th root of unity of the form \aPbi, where $b>0$, the number \aMbi
-is also an $n$th root of unity.
+Clearly, for any $1 \leq k < n$,
+$e^{-i k \theta} = 1 \cdot e^{-i k \theta} =
+e^{2 \pi i} \cdot e^{-i k \theta} = e^{i(2 \pi - k \theta)} =
+e^{i(n \theta - k \theta)} = e^{i \theta (n - k)}$.
+Moreover, if $\omega^k = e^{i k \theta} = a + b i$ where
+$b>0$, then we have $e^{-i k \theta} = \aMbi$. It follows that for any
+\nRoU of the form \aPbi, where $b>0$, the number \aMbi
+is also an \nRoU.
 
 Recall that $\emZ{} = \sum_{k=0}^n c_k x^k$, where
-$c_k\in \mathbb{R}$ are real numbers representing the partition function
+$c_k \in \mathbb{R}$ are real numbers representing the partition function
 \bfZ{k}{1,n} over
 all secondary structures of a given RNA sequence \seqN,
 whose base pair distance from initial structure
 \strSt is $k$. Thus, in order to prove the lemma, it suffices to show
-that for all values $k=0,\dots,n-1$, if \aPbi is a complex $n$th
-root of unity, where $a,b \in \mathbb{R}$
+that for all values $k=0,\dots,n-1$, if \aPbi is a
+\nRoU, where $a,b \in \mathbb{R}$
 and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
 $(\aMbi)^k = C-Di$. Indeed, we have the following.
 
 \begin{align}
-(\aPbi)^m &= \sum_{k=0}^m {m \choose k} a^{m-k}\cdot (bi)^k \\
+(\aPbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (bi)^k \\
 (bi)^k  &= \left\{
 \begin{array}{rl}
-b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
-i b^k &\mbox{if $k \equiv 1 \bmod 4$}\\
--b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
--i b^k &\mbox{if $k \equiv 3 \bmod 4$}\\
+b^k    & \text{if $k \equiv 0 \bmod 4$} \\
+i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
+-b^k   & \text{if $k \equiv 2 \bmod 4$} \\
+-i b^k & \text{if $k \equiv 3 \bmod 4$} \\
 \end{array} \right.
 \end{align}
 
 \begin{align}
-(\aMbi)^m &= \sum_{k=0}^m {m \choose k} a^{m-k} \cdot (-bi)^k \\
+(\aMbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (-bi)^k \\
 (-bi)^k &= \left\{
 \begin{array}{rl}
-b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
--ib^k &\mbox{if $k \equiv 1 \bmod 4$}\\
--b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
-ib^k &\mbox{if $k \equiv 3 \bmod 4$}\\
+b^k   & \text{if $k \equiv 0 \bmod 4$} \\
+-ib^k & \text{if $k \equiv 1 \bmod 4$} \\
+-b^k  & \text{if $k \equiv 2 \bmod 4$} \\
+ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
 \end{array} \right.
 \end{align}
 
@@ -650,13 +656,15 @@ $a^{m-k} \cdot (bi)^k$, for $k=0,\dots,m$, is the complex conjugate of
 $a^{m-k} \cdot (-bi)^k$, and thus $(\aPbi)^m$ is the complex conjugate of
 $(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $c_k (\aPbi)^k$,
 it follows that \emZof{}{\aMbi} is the complex conjugate of \emZof{}{\aPbi}.
-This completes the proof of the lemma. \hfill $\Box$
+This completes the proof of the lemma.
 
-Lemma 1 immediately entails that we need only evaluate \emZ{} on $n/2$
-many of the complex $n$th roots of unity -- namely, those of the form
+\end{proof}
+
+Lemma \ref{lem:fftbor:compconj} immediately entails that we need only to evaluate \emZ{} on $n/2$
+many of the \nRoUs---namely, those of the form
 \aPbi, where $b \geq 0$. The remaining values of \emZ{} are obtained by
 taking conplex conjugates of the first $n/2$ values. This, along with a
-precomputation of powers of the complex $n$th roots of unity, leads to an
+precomputation of powers of the \nRoUs, leads to an
 enormous performance speed-up in our implementation of \fftbor.
 
 \section{Coarse-grained kinetics with \fftbor}
