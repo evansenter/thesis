@@ -239,7 +239,7 @@ we define the {\em polynomial}
 \emZ{} = \sum_{k=0}^n c_k x^k
 \end{align}
 
-where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of
+where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of equation
 (\ref{eq:fftbor:maxDist}) and the fact that the minimum number of
 unpaired bases in a hairpin loop $\theta$ is $3$, we know that $c_n=0$,
 so that \emZ{} is a polynomial of degree strictly less than $n$.
@@ -511,12 +511,12 @@ a_j = \frac{1}{n} \sum_{k=0}^{n-1} y_k\,\omega^{-kj}
 
 for $j=0,\dots,n-1$.
 
-Since we defined \bfY in (\ref{eq:fftbor:yColumn}) by $\bfY =
+Since we defined \bfY in equation (\ref{eq:fftbor:yColumn}) by $\bfY =
 (y_0,\dots,y_{n-1})^{\text T}$, where
 $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$
 and $\alpha_k = \omega^k e^{2 \pi i k/n}$, it follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ in the polynomial
-$\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in
+$\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in equation
 (\ref{eq:fftbor:zOfX}) can be computed, at least in principle,
 by using the \fft. It turns out, however, that the values of
 \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
@@ -526,8 +526,8 @@ Nevertheless, our approach can be modified as follows.
 Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
 $y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\dots,
 y_{n}=\frac{\emZof{}{\alpha_n}}{\emZ{}}$, and
-\bfZ{}{} is the partition function defined in (\ref{eq:fftbor:partFunc}).
-Using the \fft to compute the \idft, it follows from
+\bfZ{}{} is the partition function defined in equation (\ref{eq:fftbor:partFunc}).
+Using the \fft to compute the \idft, it follows from equation
 (\ref{eq:fftbor:aFromY}) that we can compute the probabilities $p_0,\dots,p_{n-1}$
 that are coefficients of the polynomial
 $p(x) = p_0 + p_1 x + \dots + p_{n-1}x^{n-1}$
