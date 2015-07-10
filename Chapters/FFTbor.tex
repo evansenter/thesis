@@ -54,7 +54,7 @@ where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \fft to compute
 the \idft on values $y_0,\dots,y_{n-1}$, where
 $y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal $n$th complex
 root of unity and $p(x)$ is defined in
-equation~(\ref{eq:fftbor:pOfX}). By leveraging
+equation (\ref{eq:fftbor:pOfX}). By leveraging
 complex
 roots of unity in conjunction with the \idft the we subvert numeric instability
 issues observed with both Lagrange interpolation and Gaussian elimination.
@@ -280,7 +280,7 @@ astronomically large values of the partition functions
 approaches including scaling we obtained excellent results by
 interpolating the polynomial $p(x)$, defined in equation (\ref{eq:fftbor:pOfX}),
 rather than the polynomial \emZ{}, defined in equation (\ref{eq:fftbor:zOfX}),
-and performing interpolation with the Fast Fourier Transform (FFT) \cite{cormen}
+and performing interpolation with the \fft (FFT) \cite{cormen}
 where \alphaN are
 chosen to be $n$th complex roots of unity,
 $\alpha_k = e^{2 \pi i k/n}$.
@@ -476,7 +476,7 @@ V_{n} =
 \right)
 \end{align}
 
-The Fast Fourier Transform (FFT) is defined to be the $O(n \log n)$
+The \fft is defined to be the $O(n \log n)$
 algorithm to compute the Discrete Fourier Transform (DFT), defined
 as the matrix product $\bfY = V_{n} {\bf A}$:
 
@@ -521,7 +521,7 @@ and $\alpha_k = \omega^k e^{2 \pi i k/n}$, it follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ in the polynomial
 $\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in
 (\ref{eq:fftbor:zOfX}) can be computed, at least in principle,
-by using the FFT. It turns out, however, that the values of
+by using the \fft. It turns out, however, that the values of
 \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
 that exceed $56$ (data not shown).
@@ -530,63 +530,54 @@ Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
 $y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\dots,
 y_{n}=\frac{\emZof{}{\alpha_n}}{\emZ{}}$, and
 \bfZ{}{} is the partition function defined in (\ref{eq:fftbor:partFunc}).
-Using the FFT to compute the inverse DFT, it follows from
+Using the \fft to compute the \idft, it follows from
 (\ref{eq:fftbor:aFromY}) that we can compute the probabilities $p_0,\dots,p_{n-1}$
 that are coefficients of the polynomial
 $p(x) = p_0 + p_1 x + \dots + p_{n-1}x^{n-1}$
 defined in equation (\ref{eq:fftbor:pOfX}). For genomics applications, we are
 only interested in the $m$ most significant digits of each $p_k$, as described
-in the pseudocode that follows.
+in the pseudocode on the following page.
 
 \begin{algorithm}[H]
 \label{algo:fftbor:algo}
-\caption{Pseudocode for \fftbor}
+\caption{Pseudocode for \fftbor \rule[1.75ex]{0pt}{0pt}}
 \begin{tabular}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
 of probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structure \strSt of \seq, integer $m$ \\
-{\sc Output:} & Probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$ \\ \hline
+{\sc Output:} & Probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75ex]{0pt}{0pt} \\
+\hline
 \end{tabular}
 \begin{algorithmic}[1]
-\Procedure{FFTbor}{}
-\State $\textit{stringlen} \gets \text{length of }\textit{string}$
-\State $i \gets \textit{patlen}$
-% \BState \emph{top}:
-\If {$i > \textit{stringlen}$} \Return false
-\EndIf
-\State $j \gets \textit{patlen}$
-% \BState \emph{loop}:
-\If {$\textit{string}(i) = \textit{path}(j)$}
-\State $j \gets j-1$.
-\State $i \gets i-1$.
-\State \textbf{goto} \emph{loop}.
-\State \textbf{close};
-\EndIf
-\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
-\State \textbf{goto} \emph{top}.
-\EndProcedure
+\Function{FFTbor}{\seq, \strSt, $m$}
+\For{$k \gets 0, n-1$}
+\State $\omega_k \gets \exp(\frac{2 \pi i k}{n})$
+\Comment{Pre-compute all \textit{n}-roots of unity, where $i = \sqrt{-1}$}
+\EndFor
+\For{$k \gets 0, n-1$}
+\State $y_k \gets 10^m \cdot \emZof{}{\omega_k} / \bfZ{}{}$
+\Comment{Note that \emZof{}{\omega_0} = $\bfZ{}{}$}
+\EndFor
+\For{$k \gets 0, n-1$}
+\State $p_k \gets \frac{\sum_{j=0}^{n-1} a_j \omega^{-kj}}{n}$
+\Comment{Where $a_j$ comes from equation (\ref{eq:fftbor:aFromY})}
+\State $p_k \gets \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+\Comment{Truncate to $m$ significant digits}
+\EndFor
+\State \textbf{return} $p_0,\dots,p_{n-1}$
+\Comment{Return all $p_k$ for $0 \leq k < n$,
+from equation (\ref{eq:fftbor:probK})}
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
-
-% \mverbatim
-% 1.  generate roots of unity $\omega^k$ for $k=0,\dots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
-% 2.  note that the partition function $\bfZ{}{}=y_0=\Z(\omega^0)$
-% 3.  for $k=0$ to $n-1$
-% 4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eqn:RNAborNussRecursionInstantiated})
-% 5.    $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
-% 6.  compute $P = (p_0,\dots,p_{n-1})^{\text T}$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eqn:ajdef})
-% 7.  for $k=0$ to $n-1$
-% 8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
-% 9.    //truncate to $m$ most significant digits
-% |mendverbatim
 
 \section{Benchmarking and performance considerations}
 \label{sec:fftbor:benchmarking}
 
 In this subsection, we show that we need only evaluate the polynomial
 \emZ{}, as defined in
-equation~(\ref{eqn:polynomialYann}), for $n/2$ of the complex $n$th roots
+equation (\ref{eqn:polynomialYann}), for $n/2$ of the complex $n$th roots
 of unity. It is first necessary to recall the definition of complex
 conjugate.
 Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
@@ -594,7 +585,7 @@ i.e. if $z=\aPbi$ where $a,b \in \mathbb{R}$ are real numbers and
 $i = \sqrt{-1}$,  then $\overline{z} = \aMbi$.
 
 \noindent {\sc Lemma 1:} If \emZ{} is the complex polynomial defined in
-equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+equation (\ref{eqn:polynomialYann}), then for any complex $n$th root of
 unity $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \overline{\emZof{}{\alpha}}$. In other words, if $\alpha$ is a complex $n$th root
 of unity of the form \aPbi, where $a,b \in \mathbb{R}$ and $b>0$, and
