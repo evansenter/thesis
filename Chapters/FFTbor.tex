@@ -37,8 +37,8 @@ another to \rb detection in genomic data. Finally, we give reference
 to the full recursions using the more accurate Turner energy model, which the
 underlying implementation actually uses.
 
-\section{Background}
-\label{sec:fftbor:bkgrnd}
+% \section{Background}
+% \label{sec:fftbor:bkgrnd}
 
 \section{Formalization of the problem}
 \label{sec:fftbor:formal}
@@ -87,11 +87,11 @@ shown to be present in some biologically relevant RNAs, their inclusion greatly
 complicates the recursive decomposition of the structure, and thus it is common
 to ignore them.
 
-Provided two secondary structures $\str,\strT$, we can define a notion of
+Provided two secondary structures \str,\,\strT, we can define a notion of
 distance between them. There are a number of different definitions of distance
 used across the literature; we will use {\em \bpd} for \fftbor.
 Base pair distance is defined as the symmetric difference between the sets
-\str,\,\strT
+\str,\,\strT:
 
 \begin{align}
 \label{eq:fftbor:dBP}
@@ -247,7 +247,7 @@ If we evaluate the polynomial \emZ{} for $n$ distinct values
 
 \begin{align}
 \label{eq:fftbor:solutionsForAlpha}
-\emZof{}{a_1} = y_1,\dots, \emZof{}{a_n} = y_n,
+\emZof{}{a_1} = y_1, \dots, \emZof{}{a_n} = y_n,
 \end{align}
 
 then the Lagrange polynomial interpolation formula guarantees that
@@ -304,11 +304,6 @@ given RNA sequence \seq, our goal is to compute
 where \str can be any structure compatible with \seq.
 As previously mentioned, the recurrence relation for \rnabor
 with respect to the Nussinov energy model $E_0$ is
-
-% \bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
-% \sum_{\substack{(s_r,s_j) \in \bpSet, \\ i \leq r<j}}\qquad
-% \sum_{\mathclap{w+w'=k-b(r)}}\enspace
-% \exp(-E_0(r,j)/RT) \cdot \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1},
 
 \begin{align}
 \label{eq:fftbor:rnaborNuss}
