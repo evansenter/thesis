@@ -51,7 +51,7 @@ prounounced {\em FFT neighbor},
 that uses polynomial interpolation to compute the
 coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
 \begin{eqnarray}
-\label{eqn:PofX}
+\label{eq:PofX}
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
 \end{eqnarray}
 where $p_k$ is defined by $p_k = \frac{Z_k}{Z}$.
@@ -60,7 +60,7 @@ interpolation formula and in Gaussian elimination, we employ
 the Fast Fourier Transform (FFT) to compute the inverse Discrete Fourier
 Transform (DFT) on values $y_0,\ldots,y_{n-1}$, where $y_k = p(\omega^k)$ and
 $\omega = e^{2 \pi i/n}$ is the principal $n$th complex root of unity and
-$p(x)$ is defined in (\ref{eqn:PofX}). This
+$p(x)$ is defined in (\ref{eq:PofX}). This
 gives rise to an improved version of {\tt RNAbor}, denoted {\tt FFTbor},
 which runs in time $O(n^4)$ and space $O(n^2)$.
 Once two metastable structures $S_1,S_2$ are identified, we can
@@ -145,12 +145,12 @@ Since the maximum base pair distance between a given initial
 structure $S^*$ and any other structure $S$ on RNA sequence
 $\seq = s_1,\ldots,s_n$ must satisfy
 \begin{eqnarray}
-\label{eqn:upperBound}
+\label{eq:upperBound}
 d_{BP}(S,S^*) \leq |S^*| + \lfloor \frac{n-\theta}{2} \rfloor \leq n
 \end{eqnarray}
 it follows that the full partition function
 \begin{eqnarray}
-\label{eqn:mcCaskillPartitionFun}
+\label{eq:mcCaskillPartitionFun}
 {\bf Z}=\z{}{1}{n} = \sum_{k=0}^n \z{k}{1}{n}.
 \end{eqnarray}
 Moreover, since $\theta=3$,
@@ -238,23 +238,23 @@ $(r,j)$.
 Given RNA sequence $\seq$ and compatible initial structure $S^*$,
 we define the {\em polynomial}
 \begin{eqnarray}
-\label{eqn:polynomialYann}
+\label{eq:polynomialYann}
 \Z(x) = \sum_{k=0}^n c_k x^k
 \end{eqnarray}
 where coefficients $c_k=\z{k}{1}{n}$. Moreover, because of
-(\ref{eqn:upperBound}) and the fact that the minimum number of
+(\ref{eq:upperBound}) and the fact that the minimum number of
 unpaired bases in a hairpin loop $\theta$ is $3$, we know that $c_n=0$,
 so that $\Z(x)$ is a polynomial of degree strictly less than $n$.
 If we evaluate the polynomial $\Z(x)$ for $n$ distinct values
 \begin{eqnarray}
-\label{eqn:ZofX}
+\label{eq:ZofX}
 \Z(a_1) = y_1,\ldots, \Z(a_{n}) = y_{n},
 \end{eqnarray}
 then the Lagrange polynomial interpolation formula guarantees that
 $\Z(x) = \sum_{k=1}^n y_k P_k(x)$, where the polynomials $P_k(x)$ have degree
 at most $n-1$ and are given by the Lagrange formula
 \begin{eqnarray}
-\label{eqn:LagrangeInterpolation}
+\label{eq:LagrangeInterpolation}
 P_k(x) = \frac{\prod_{i\ne k} (x-x_i)}{\prod_{i \ne k} (x_k-x_i)}.
 \end{eqnarray}
 Since the polynomials $P_k(x)$ can be explicitly computed, it follows that
@@ -275,8 +275,8 @@ astronomically large values of the partition functions
 $\z{k}{1}{n}$, for $0 \leq k < n$. After many unsuccessful
 approaches including scaling (see Supplementary Information),
 we obtained excellent results by
-interpolating the polynomial $p(x)$, defined in equation~(\ref{eqn:PofX}),
-rather than the polynomial $\Z(x)$, defined in equation~(\ref{eqn:ZofX}),
+interpolating the polynomial $p(x)$, defined in equation~(\ref{eq:PofX}),
+rather than the polynomial $\Z(x)$, defined in equation~(\ref{eq:ZofX}),
 and performing interpolation with the Fast Fourier Transform (FFT) \cite{cormen}
 where $\alpha_0,\ldots,\alpha_{n-1}$ are
 chosen to be $n$th complex roots of unity,
@@ -284,7 +284,7 @@ $\alpha_k = e^{\frac{2 \pi k}{n}}$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
 time, rather than the cubic time required by using the Lagrange formula
-(\ref{eqn:LagrangeInterpolation}) or by Gaussian elimination. Fewer
+(\ref{eq:LagrangeInterpolation}) or by Gaussian elimination. Fewer
 numerical operations implies increased numerical stability in our application.
 Details now follow.
 
@@ -294,7 +294,7 @@ Details now follow.
 Given an initial secondary structure $S^*$ of a
 given RNA sequence $\seq$, our goal is to compute
 \begin{align}
-\label{eqn:defZk}
+\label{eq:defZk}
 \z{k}{1}{n} &= \sum_{\substack{S \text{ such that }\\ d_{BP}(S,S^*)=k}}
 e^{\frac{-E_0(S)}{RT}}
 \end{align}
@@ -302,7 +302,7 @@ where $S$ can be any structure compatible with $\seq$.
 As previously mentioned, the recurrence relation for {\tt RNAbor}
 with respect to the Nussinov energy model $E_0$ is
 \begin{align}
-\label{eqn:RNAborNussRecursion}
+\label{eq:RNAborNussRecursion}
 \z{k}{i}{j} &= \z{k-b_0}{i}{j-1} + \sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}\left(e^{\frac{-E_0(r,j)}{RT}}\sum_{w+w'=k-b(r)}
 \z{w}{i}{r-1}  \z{w'}{r+1}{j-1} \right)
 \end{align}
@@ -313,7 +313,7 @@ $b(r)=d_{BP}(S^*_{[i,j]}, S^*_{[i,r-1]} \cup S^*_{[r+1,j-1]} \cup\{(r,j)\})$.
 The following theorem shows that an analogous recursion can be used to compute
 the {\em polynomial} $\Z_{i,j}(x)$ defined by
 \begin{eqnarray}
-\label{eqn:defZijpolynomial}
+\label{eq:defZijpolynomial}
 \Z_{i,j}(x) = \sum_{k=0}^n c_k(i,j) x^k
 \end{eqnarray}
 where
@@ -339,7 +339,7 @@ where
 Then  for $i\leq j \leq i+\theta$, $\Z_{i,j}(x)=1$ and for
 $j>i+\theta$ we have the recurrence relation
 \begin{eqnarray}
-\label{eqn:polynomialRecursionNussJac}
+\label{eq:polynomialRecursionNussJac}
 \Z_{i,j}(x) &= \Z_{i,j-1}(x) \cdot x^{b_0} +
 \sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}
 \left(e^{\frac{-E_0(r,j)}{RT}}\cdot
@@ -354,8 +354,8 @@ $b(r)=d_{BP}(S^*_{[i,j]}, S^*_{[i,r-1]} \cup S^*_{[r+1,j-1]} \cup\{(r,j)\})$.
 First, some notation is necessary. Recall that if $F$ is an arbitrary
 polynomial [resp. analytic] function, then $[x^k] F(x)$
 denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
-Taylor expansion of $F$] -- for instance, in equation~(\ref{eqn:PofX}),
-$[x^k]p(x) = p_k$, and in equation~(\ref{eqn:ZofX}), $[x^k]\Z(x) = c_k(i,j)$.
+Taylor expansion of $F$] -- for instance, in equation~(\ref{eq:PofX}),
+$[x^k]p(x) = p_k$, and in equation~(\ref{eq:ZofX}), $[x^k]\Z(x) = c_k(i,j)$.
 
 By definition, it is clear that $\Z_{i,j}(x)=1$ if $i\leq j \leq i+\theta$,
 where we recall that $\theta = 3$ is the minimum number of unpaired bases in
@@ -384,7 +384,7 @@ Instead of explicitly performing polynomial expansion in {\em variable} $x$,
 we instantiate $x$ to a fixed complex number $\alpha \in \mathbb{C}$, and apply
 the following recursion for this instantiation:
 \begin{eqnarray}
-\label{eqn:RNAborNussRecursionInstantiated}
+\label{eq:RNAborNussRecursionInstantiated}
 \Z_{i,j}(\alpha) &= &\Z_{i,j-1}(\alpha) \cdot \alpha^{b_0} +
 \sum_{\substack{(s_r,s_j) \in \mathbb{B},\\i\le r<j}}
 \left(e^{\frac{-E_0(r,j)}{RT}}\cdot
@@ -397,7 +397,7 @@ values $\Z(\alpha_0),\ldots, \Z(\alpha_{n-1})$, each time re-using the
 $O(n^2)$ space for the next computation of $\Z(\alpha_k)$. It follows that
 the computation resources used to determine the (column) vector
 \begin{eqnarray}
-\label{eqn:defY}
+\label{eq:defY}
 {\bf Y} = (y_0,\ldots,y_{n-1})^T =
 \left(
 \begin{array}{l}
@@ -458,18 +458,18 @@ On page 837 of  \cite{cormen}, it is shown that the
 $(i,j)$ entry of $V_n^{-1}$ is $\frac{\omega^{-j i}}{n}$
 and that
 \begin{eqnarray}
-\label{eqn:ajdef}
+\label{eq:ajdef}
 a_j &=&\frac{1}{n} \sum_{k=0}^{n-1} y_k \omega^{-kj}
 \end{eqnarray}
 for $j=0,\ldots,n-1$.
 
-Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+Since we defined $\bf Y$ in (\ref{eq:defY}) by ${\bf Y} =
 (y_0,\ldots,y_{n-1})^T$, where
 $y_0=\Z(\alpha_0),\ldots, y_{n-1}=\Z(\alpha_{n-1})$ and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{n})$, it follows that the coefficients
 $c_k=\z{k}{1}{n}$ in the polynomial
 $\Z(x) = c_0 + c_1 x + \cdots + c_{n-1} x^{n-1}$ defined in
-(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+(\ref{eq:polynomialYann}) can be computed, at least in principle,
 by using the FFT. It turns out, however, that the values of
 $\z{k}{1}{n}$ are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
@@ -477,12 +477,12 @@ that exceed $56$ (data not shown).
 Nevertheless, our approach can be modified as follows.
 Define $\bf Y$ by ${\bf Y} = (y_1,\ldots,y_n)^T$, where
 $y_1=\frac{\Z(\alpha_1)}{Z},\ldots, y_{n}=\frac{\Z(\alpha_{n})}{Z}$, and
-$Z$ is the partition function defined in (\ref{eqn:mcCaskillPartitionFun}).
+$Z$ is the partition function defined in (\ref{eq:mcCaskillPartitionFun}).
 Using the FFT to compute the inverse DFT, it follows from
-(\ref{eqn:ajdef}) that we can compute the probabilities $p_0,\ldots,p_{n-1}$
+(\ref{eq:ajdef}) that we can compute the probabilities $p_0,\ldots,p_{n-1}$
 that are coefficients of the polynomial
 $p(x)=p_0+p_1 x + \cdots + p_{n-1}x^{n-1}$
-defined in equation~(\ref{eqn:PofX}). For genomics applications, we are
+defined in equation~(\ref{eq:PofX}). For genomics applications, we are
 only interested in the $m$ most significant digits of each $p_k$, as described
 in the pseudocode below.
 \medskip
@@ -499,9 +499,9 @@ structure $S^*$ of $\seq$, and integer $m$. \hfill\break
 1.  generate roots of unity $\omega^k$ for $k=0,\ldots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
 2.  note that the partition function ${\bf Z}=y_0=\Z(\omega^0)$
 3.  for $k=0$ to $n-1$
-4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eqn:RNAborNussRecursionInstantiated})
+4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eq:RNAborNussRecursionInstantiated})
 5.    $y_k = 10^m \cdot \frac{y_k}{{\bf Z}}$ //normalize $y_k$
-6.  compute $P = (p_0,\ldots,p_{n-1})^T$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eqn:ajdef})
+6.  compute $P = (p_0,\ldots,p_{n-1})^T$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eq:ajdef})
 7.  for $k=0$ to $n-1$
 8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
 9.    //truncate to $m$ most significant digits
@@ -512,7 +512,7 @@ structure $S^*$ of $\seq$, and integer $m$. \hfill\break
 
 In this subsection, we show that we need only evaluate the polynomial
 $\Z(x)$, as defined in
-equation~(\ref{eqn:polynomialYann}), for $n/2$ of the complex $n$th roots
+equation~(\ref{eq:polynomialYann}), for $n/2$ of the complex $n$th roots
 of unity. It is first necessary to recall the definition of complex
 conjugate.
 Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
@@ -522,7 +522,7 @@ $i = \sqrt{-1}$,  then $\overline{z} = a-bi$.
 
 \noindent
 {\sc Lemma 1:} If $\Z(x)$ is the complex polynomial defined in
-equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+equation~(\ref{eq:polynomialYann}), then for any complex $n$th root of
 unity $\alpha$, it is the case that $\Z(\overline{\alpha}) =
 \overline{\Z(\alpha)}$. In other words, if $\alpha$ is a complex $n$th root
 of unity of the form $a+bi$, where $a,b \in \mathbb{R}$ and $b>0$, and
@@ -719,7 +719,7 @@ structure. Let $S^*$ be an arbitrary secondary structure of the RNA sequence
 $\seq = a_1,\dots,a_n$.
 The expected base pair distance to $S^*$ is defined by
 \begin{eqnarray}
-\label{eqn:expectedBasePairDist}
+\label{eq:expectedBasePairDist}
 E[ \{ d_{\mbox{\sc bp}}(S,S^*): S \in \mathbb{S}(a_1,\ldots,a_n)\} ]  =
 \sum_{S} P(S) \cdot d_{\mbox{\sc bp}}(S,S^*)
 \end{eqnarray}
@@ -848,7 +848,7 @@ three computational experiments with FFTbor. The left panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
 \begin{eqnarray}
-\label{eqn:xpt1}
+\label{eq:xpt1}
 %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGAGCAAUGGAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
 \bf
 .((((((((...(((((((.......)))))))........((((((.......))))))..))))))))........(((((........)))))............((((((((((((((.......)))))))))))))).
@@ -867,7 +867,7 @@ mentioned.  The center panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
 \begin{eqnarray}
-\label{eqn:xpt2}
+\label{eq:xpt2}
 %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGA
 \bf
 .((((((((...(((((((.......)))))))........((((((.......))))))..)))))))).
@@ -878,7 +878,7 @@ target {\em aptamer} structure. Similarly, the right panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
 \begin{eqnarray}
-\label{eqn:xpt3}
+\label{eq:xpt3}
 %GAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
 \bf
 .(((((........)))))............((((((((((((((.......)))))))))))))).
@@ -1325,13 +1325,13 @@ set to equal the length of $S^*$.
 of the xpt riboswitch, as depicted in Figure~5, with the
 exception that the leading and trailing unpaired positions were removed,
 as explained in the text -- see displayed dot bracket structure in
-(\ref{eqn:xpt1}).
+(\ref{eq:xpt1}).
 {\em (Center)} Target structure $S^*$ comprises only the aptamer
 secondary structure, as displayed in dot bracket structure in
-(\ref{eqn:xpt2}).
+(\ref{eq:xpt2}).
 {\em (Right)} Target structure $S^*$ comprises only the expression platform
 secondary structure, as displayed in dot bracket structure in
-(\ref{eqn:xpt3}). The number of points displayed on the $x$-axis differs
+(\ref{eq:xpt3}). The number of points displayed on the $x$-axis differs
 in each case, since the window size differs, as explained above.
 The very well-defined minimum in each panel corresponds to the exact
 location of the entire riboswitch (left panel), aptamer (center panel)

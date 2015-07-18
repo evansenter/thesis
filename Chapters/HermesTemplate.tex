@@ -268,7 +268,7 @@ defines the set $N_x$ of conformations reachable in unit time
 from conformation $x$, and the transition probability matrix
 $P = (p_{x,y})$ is defined as follows:
 \begin{eqnarray}
-\label{eqn:transitionProb1}
+\label{eq:transitionProb1}
 p_{x,y} = \left\{
 \begin{array}{ll}
 \frac{1}{|N_x|} \cdot \min\left(1,\exp(-\frac{E(y)-E(x)}{RT})\right)
@@ -283,12 +283,12 @@ $x,y \in Q$, then
 {\em detailed balance} is said to hold, or equivalently the Markov
 chain $\mathbb{M}$ is said to be {\em reversible}.
 If transitional probabilities
-are defined as in (\ref{eqn:transitionProb1}), and if neighborhood
+are defined as in (\ref{eq:transitionProb1}), and if neighborhood
 size is constant ($|N_x|=|N_y|$ for all $x,y$), then it is well-known
 that the stationary probability distribution
 $p^*=(p^*_1,\ldots,p^*_n)$ is the Boltzmann distribution; i.e.
 \begin{eqnarray}
-\label{eqn:stationaryBoltzmannProb}
+\label{eq:stationaryBoltzmannProb}
 p^*_i = \frac{\exp(-E(i)/RT)}{Z}
 \end{eqnarray}
 where $E(k)$ is the energy of conformation $k$ at temperature $T$,
@@ -299,7 +299,7 @@ $Z = \sum_{i=1}^n \exp(-E(i)/RT)$ is a normalization constant
 constant, as in the case where states are RNA secondary structures and transitions
 are restricted to the addition or removal of a single base pair, then
 by {\em Hasting's trick}, an equivalent Markov chain can be defined which
-satisfies detailed balance -- see equation (\ref{eqn:MFPTwithHastings}).
+satisfies detailed balance -- see equation (\ref{eq:MFPTwithHastings}).
 
 Following Anfinsen's experimental work on the denaturation and
 refolding of bovine pancreatic ribonuclease \cite{anfinsen},
@@ -350,7 +350,7 @@ probability transition functions.\footnote{Only in the
 current section does $P(t)$ denote the Markov process
 transition probability matrix.  In all later sections of the paper,
 $P(t) = (P_1(t),\ldots,P_n(t))$ will denote the population occupancy
-frequency function, defined in (\ref{eqn:populationOccupancyEquation}).
+frequency function, defined in (\ref{eq:populationOccupancyEquation}).
 In Markov processes, the rate matrix $R$ is used rather than the transition
 probability matrix $P(t)$, so there will be no ambiguity in later
 reserving $P(t)$ to denote the population occupancy function.}
@@ -358,7 +358,7 @@ Letting $q_t$ denote the state at (continuous)
 time $t$, the probability that the initial state $q_0$ at time $0$ is
 $k$ is $\pi_k$, while
 \begin{eqnarray}
-\label{eqn:MarkovProcess}
+\label{eq:MarkovProcess}
 p_{i,j}(t) = Pr[q_{t} = j| q_0 = i] .
 \end{eqnarray}
 The matrix $P'(t)$ of derivatives, defined by
@@ -383,7 +383,7 @@ r_{i,i} = - \sum_{j\ne i} r_{i,j}.
 Define the {\em population occupancy} distribution
 $p(t) = (p_1(t),\ldots,p_n(t))$ by
 \begin{eqnarray}
-\label{eqn:markovProcessPopulationFreq}
+\label{eq:markovProcessPopulationFreq}
 p_i(t) = Pr[q(t) = i] = \sum_{k=1}^n\pi_k p_{k,i}(t)
 \end{eqnarray}
 where $q(t)$ denotes the state of the Markov process
@@ -394,7 +394,7 @@ are molecular conformations and conformational energies are available,
 it is typical to define the rate matrix
 $R = (r_{x,y})$ as follows:
 \begin{eqnarray}
-\label{eqn:transitionProb2}
+\label{eq:transitionProb2}
 r_{x,y} = \left\{
 \begin{array}{ll}
 \min\left(1,\exp(-\frac{E(y)-E(x)}{RT})\right)
@@ -405,12 +405,12 @@ r_{x,y} = \left\{
 \end{eqnarray}
 The {\em master equation} is defined by the matrix differential equation
 \begin{eqnarray}
-\label{eqn:masterEquationMatrix}
+\label{eq:masterEquationMatrix}
 \frac{d p(t)}{dt} = p(t) \cdot R
 \end{eqnarray}
 or equivalently, for all $1 \leq x \leq n$,
 \begin{eqnarray}
-\label{eqn:masterEquation}
+\label{eq:masterEquation}
 \frac{d p_x(t)}{dt} = \sum_{y=1}^n (p_y(t) \cdot r_{y,x} - p_x(t) \cdot r_{x,y})
   = \sum_{x \ne y} (p_y(t) \cdot r_{y,x} - p_x(t) \cdot r_{x,y}) .
 \end{eqnarray}
@@ -423,9 +423,9 @@ $Pr[ q(t) = k] = p^*_k$ for all $t \in \mathbb{R}$ and
 $1 \leq k \leq n$.
 Define the {\em equilibrium distribution} $p^* = (p^*_1,\ldots,p^*_n)$
 to be the unique solution for $p(t)$, when the master equation
-(\ref{eqn:masterEquation}) is set to equal zero; i.e.
+(\ref{eq:masterEquation}) is set to equal zero; i.e.
 \begin{eqnarray}
-\label{eqn:equilibriumTime}
+\label{eq:equilibriumTime}
 \sum_{x \ne y} p^*_x \cdot r_{x,y} = \sum_{x \ne y} p^*_y \cdot r_{y,x}.
 \end{eqnarray}
 
@@ -435,7 +435,7 @@ to satisfy detailed balance if $p^*_x \cdot r_{x,y} = p^*_y \cdot r_{y,x}$,
 for all $1 \leq x,y \leq n$, where the rate matrix $R = (r_{x,y})$.
 
 The rate equation $R$ for is usually defined
-as in (\ref{eqn:transitionProb2}) for
+as in (\ref{eq:transitionProb2}) for
 Markov processes which model macromolecular folding,
 hence it is easy to see that
 such Markov processes satisfy detailed balance and moreover that
@@ -444,10 +444,10 @@ Boltzmann distribution; i.e.  $p^*_x = \exp(-E(x)/RT)$ for
 all $1 \leq x \leq n$.
 Since detailed balance ensures that the eigenvalues of the rate matrix $R$ are
 real, one can solve the matrix differential equation
-(\ref{eqn:masterEquation}) by diagonalizing the rate matrix, and thus obtain
+(\ref{eq:masterEquation}) by diagonalizing the rate matrix, and thus obtain
 the solution
 \begin{eqnarray}
-\label{eqn:populationOccupancyEquation}
+\label{eq:populationOccupancyEquation}
 p(t) = \sum_{k=1}^n c_k {\bf v}_k e^{\lambda_k t}
 \end{eqnarray}
 where $p(t) = (p_1(t),\ldots,p_n(t))$, and the
@@ -477,14 +477,14 @@ Letting $T$ be the $n\times n$ matrix, whose columns are
 $\mathbbt^1,\ldots,\mathbbt^n$, using standard matrix algebra
 \cite{matrixTheory}, it can be shown that
 \begin{eqnarray}
-\label{eqn:solutionMasterEquation}
+\label{eq:solutionMasterEquation}
 p(t) &=& \sum_{j=1}^n (T^{-1}
 \mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
 \end{eqnarray}
 The {\em equilibrium time} can be directly computed by using a
 nonlinear solver to solve for $t$ in
 \begin{eqnarray}
-\label{eqn:solutionEquilibriumTime}
+\label{eq:solutionEquilibriumTime}
 p^* &=& \sum_{j=1}^n (T^{-1}
 \mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
 \end{eqnarray}
@@ -702,7 +702,7 @@ sampling with {\tt RNAsubopt}, even with constraints.
 %Given a continuous time Markov process $\mathbb{M}$ with rate matrix
 %$R=(r_{x,y})$, the master equation is
 %\begin{eqnarray}
-%\label{eqn:masterEquation} \frac{dP_x(t)}{dt} = \sum_{y} (p^*_y \cdot
+%\label{eq:masterEquation} \frac{dP_x(t)}{dt} = \sum_{y} (p^*_y \cdot
 %r_{y,x} - p^*_x \cdot r_{x,y}) = \sum_{x \ne y} (p^*_y \cdot r_{y,x} -
 %p^*_x \cdot r_{x,y})
 %\end{eqnarray}
@@ -717,12 +717,12 @@ sampling with {\tt RNAsubopt}, even with constraints.
 %$\mathbbt^1,\ldots,\mathbbt^n$, using standard matrix algebra
 %\cite{matrixTheory}, it can be shown that
 %\begin{eqnarray}
-%\label{eqn:solutionMasterEquation} P(t) &=& \sum_{j=1}^n (T^{-1}
+%\label{eq:solutionMasterEquation} P(t) &=& \sum_{j=1}^n (T^{-1}
 %\mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
 %\end{eqnarray}
 %The {\em equilibrium time} can be directly computed by using a
 %nonlinear solver to solve for $t$ in
-%(\ref{eqn:solutionMasterEquation}); however, we have found it more
+%(\ref{eq:solutionMasterEquation}); however, we have found it more
 %expedient to compute the {\em equilibrium time} as the smallest $t_0$,
 %such that for $t \in \{t_0+1,t_0+2,t_0+3\}$, the absolute difference
 %$|P(t)[x_{\infty}] - P(t_0)[x_{\infty}]| < \epsilon$, for $\epsilon =
@@ -789,13 +789,13 @@ and {\tt RNA2Dfold} \cite{hofacker:RNAbor2D}. The {\em exact} data {\tt MFPT}
 The gold standard, {\tt MFPT}, is obtained by computing the
 mean first passage time by matrix inverse $(I - P^{-}_{x_{\infty}})^{-1}$
 from the transition probability matrix $P$, defined by equation
-(\ref{eqn:transitionProb1}) from the ensemble of all secondary structures
+(\ref{eq:transitionProb1}) from the ensemble of all secondary structures
 for each 20-mer in the benchmarking set described in the next section.
 The platinum standard, {\tt Equilibrium}, is obtained from the
 population occupancy frequencies
-(\ref{eqn:solutionEquilibriumTime}), determined by spectral decomposition
+(\ref{eq:solutionEquilibriumTime}), determined by spectral decomposition
 of the rate matrix, the latter defined by
-(\ref{eqn:transitionProb2}) from the ensemble of all secondary structures
+(\ref{eq:transitionProb2}) from the ensemble of all secondary structures
 for each 20-mer in the benchmarking set.
 
 {\tt FFTmfpt} computes the mean first passage time
@@ -805,7 +805,7 @@ structure $A$ and distance $y$ from reference structure $B$.
 {\tt FFTbor2D} is used in {\tt Hermes} to compute the Boltzmann probabilities
 $p(x,y) = \frac{Z(x,y)}{Z}$ for the coarse-grained model consisting of
 macrostates $M(x,y)$. Transition probabilities are computed by
-equation (\ref{eqn:transitionProb1}), and matrix inversion is used to
+equation (\ref{eq:transitionProb1}), and matrix inversion is used to
 determine mean first passage time for the coarse-grained model.
 For comparison purposes, the method {\tt FFTbor} calls the
 program {\tt FFTbor} \cite{Senter.po12} to compute the Boltzmann probabilities
@@ -821,9 +821,9 @@ structure $A$ and distance $y$ from reference structure $B$. As in
 {\tt FFTbor2D} is used to compute the Boltzmann probabilities
 $p(x,y) = \frac{Z(x,y)}{Z}$ for the coarse-grained model consisting of
 macrostates $M(x,y)$. The rate matrix is computed by
-equation (\ref{eqn:transitionProb2}), then population occupancy
+equation (\ref{eq:transitionProb2}), then population occupancy
 frequencies and equilibrium time
-are computed by equation (\ref{eqn:markovProcessPopulationFreq})
+are computed by equation (\ref{eq:markovProcessPopulationFreq})
 using spectral decomposition of the rate matrix.
 
 
@@ -867,7 +867,7 @@ determine the equilibrium time for the resulting Markov process whose
 rate matrix is returned by {\tt barriers}.\footnote{Since
 the rate matrix returned by {\tt barriers}
 does not necessarily have the property that diagonal entries are negative
-row sums, as required by equation (\ref{eqn:transitionProb2}), we modify
+row sums, as required by equation (\ref{eq:transitionProb2}), we modify
 diagonal entries of the {\tt barriers} rate matrix to satisfy this property.}
 \footnote{At the time we did the benchmarking, we were unaware of the
 program {\tt treekin} from Vienna RNA Package, which can be combined with
@@ -1009,16 +1009,16 @@ approximate folding time.
 
 In this section, we display the correlation between (1) the {\em gold
 standard} method {\tt MFPT}, both with and without the Hastings
-modification using equations (\ref{eqn:MFPTwithHastings}) and
-(\ref{eqn:MFPTwithoutHastings}), (2) the {\em platinum standard} method {\tt
+modification using equations (\ref{eq:MFPTwithHastings}) and
+(\ref{eq:MFPTwithoutHastings}), (2) the {\em platinum standard} method {\tt
 Equilibrium}, (3) the {\em silver standard} method {\tt Kinfold}, (4) {\tt
 FFTmfpt} with and without the Hastings modification using equations
-(\ref{eqn:transitionProbabilityFFTbor2DwithHastings}) and
-(\ref{eqn:transitionProbabilityFFTbor2DwithoutHastings}), (5) {\tt
+(\ref{eq:transitionProbabilityFFTbor2DwithHastings}) and
+(\ref{eq:transitionProbabilityFFTbor2DwithoutHastings}), (5) {\tt
 FFTeq} which computes equilibrium time for the 2D-grid, (6) {\tt
 RNA2Dfold } with and without the Hastings modification using equations
-(\ref{eqn:transitionProbabilityFFTbor2DwithHastings}) and
-(\ref{eqn:transitionProbabilityFFTbor2DwithoutHastings}). Correlations
+(\ref{eq:transitionProbabilityFFTbor2DwithHastings}) and
+(\ref{eq:transitionProbabilityFFTbor2DwithoutHastings}). Correlations
 with [resp. without] the Hastings modification are summarized in the
 lower [resp. upper] triangular portion of
 Table~\ref{table:correlation}. It is clear that correlations between
@@ -1431,7 +1431,7 @@ modification as follows.
 
 {\em With} the Hastings modification,
 \begin{eqnarray}
-\label{eqn:MFPTwithHastings} p_{x,y} = \left\{
+\label{eq:MFPTwithHastings} p_{x,y} = \left\{
 \begin{array}{ll}
 \frac{1}{|N(x)|} \cdot \min(1, \frac{p^*(y)}{p^*(x)} \cdot
 \frac{N(x)}{N(y)}) &\mbox{if $y \in N(x)$}\\
@@ -1443,7 +1443,7 @@ modification as follows.
 
 {\em Without} the Hastings modification,
 \begin{eqnarray}
-\label{eqn:MFPTwithoutHastings} p_{x,y} = \left\{
+\label{eq:MFPTwithoutHastings} p_{x,y} = \left\{
 \begin{array}{ll}
 \frac{1}{|N(x)|} \cdot \min(1, \frac{p^*(y)}{p^*(x)} ) &\mbox{if $y
 \in N(x)$}\\
@@ -1474,7 +1474,7 @@ to be the {\em gold standard} value for RNA folding kinetics.
 $\mathcal{M}=(SS(\seq),R)$, where $R$ is the {\em rate matrix} defined
 by
 \begin{eqnarray}
-\label{eqn:rateMatrix} k_{x,y} = \left\{
+\label{eq:rateMatrix} k_{x,y} = \left\{
 \begin{array}{ll}
 
 %\frac{1}{|N(x)|} \cdot \min(1, \frac{p^*(y)}{p^*(x)} )
@@ -1497,7 +1497,7 @@ Table~\ref{table:correlation} for equilibrium time computed from this
 modified rate matrix is somewhat better than without the Hastings
 correction. However, the Hastings correction is never used for rate
 matrices, hence we only consider the usual definition of rate matrix
-given in equation (\ref{eqn:rateMatrix}).}
+given in equation (\ref{eq:rateMatrix}).}
 
 \item[Kinfold]: Version 1.3 of {\tt Kinfold} \cite{Flamm:00a}, from
 the Vienna RNA Package (version 2.1.7) was run with the following
@@ -1543,7 +1543,7 @@ Let $d_0= d_{BP}(A,B)$, the base pair distance between initial structure
 $A$ and target structure $B$.  Let $n$ denote the length of sequence $\seq$.
 Define the Markov chain $\mathcal{M}_1(\seq) = (Q_1,P_1)$, where
 \begin{eqnarray}
-\label{eqn:defQ1} Q_1 &=& \{ (x,y) : 0 \leq x,y \leq n, (x+y \bmod 2)
+\label{eq:defQ1} Q_1 &=& \{ (x,y) : 0 \leq x,y \leq n, (x+y \bmod 2)
 = (d_0 \bmod 2), \\ % Parity condition
 & & (d_0 \leq x+y), (x \leq d_0 + y), (y \leq d_0 + x). \nonumber %
 Triangle inequality
@@ -1551,11 +1551,11 @@ Triangle inequality
 For reference, we say that the {\em parity condition} holds for
 $(x,y)$ if
 \begin{eqnarray}
-\label{eqn:parityCondition} (x+y \bmod 2) = (d_0 \bmod 2).
+\label{eq:parityCondition} (x+y \bmod 2) = (d_0 \bmod 2).
 \end{eqnarray}
 We say that the {\em triangle inequality} holds for $(x,y)$ if
 \begin{eqnarray}
-\label{eqn:triangleInequality} (d_0 \leq x+y), (x \leq d_0 + y), (y
+\label{eq:triangleInequality} (d_0 \leq x+y), (x \leq d_0 + y), (y
 \leq d_0 + x)
 \end{eqnarray}
 Figure~\ref{fig:checkerboardGridPointsSplicedLeader} displays the
@@ -1577,7 +1577,7 @@ from structure $(0,d_0)$ to $(d_0,0)$.}
 To address this situation, we proceed as follows. Let $\epsilon =
 10^{-8}$ and for all $(x,y) \in Q_1$, modify probabilities $p(x,y)$ by
 \begin{eqnarray}
-\label{eqn:modifyNormalizeCellProb} p(x,y) &=& \frac{p(x,y) +
+\label{eq:modifyNormalizeCellProb} p(x,y) &=& \frac{p(x,y) +
 \epsilon/|Q_1|}{1+\epsilon }.
 \end{eqnarray}
 This operation corresponds to adding the negligeable value of
@@ -1587,7 +1587,7 @@ $\epsilon$-modification and renormalization, {\em when using the
 Hastings modification}, the transition probabilities $P( (u,v) | (x,y)
 )$ are given by
 \begin{eqnarray}
-\label{eqn:transitionProbabilityFFTbor2DwithHastings} P( (u,v) |(x,y)
+\label{eq:transitionProbabilityFFTbor2DwithHastings} P( (u,v) |(x,y)
 ) = \left\{
 \begin{array}{ll}
 \frac{1}{|N(x,y)|} \cdot \min(1, \frac{p(u,v)}{p(x,y)} \cdot
@@ -1605,7 +1605,7 @@ probability $p(x,y)$ is obtained from {\tt FFTbor2D}.
 {\em Without the Hastings modification}, the transition probabilities
 $P( (u,v) | (x,y) )$ are instead given by
 \begin{eqnarray}
-\label{eqn:transitionProbabilityFFTbor2DwithoutHastings} P( (u,v)
+\label{eq:transitionProbabilityFFTbor2DwithoutHastings} P( (u,v)
 |(x,y) ) = \left\{
 \begin{array}{ll}
 \frac{1}{|N(x,y)|} \cdot \min(1, \frac{p(u,v)}{p(x,y)}) &\mbox{if
@@ -1619,10 +1619,10 @@ $(x,y) =(u,v)$}\\
 \item[FFTeq]: This method consists of computing the equilibrium time
 from the master equation for the coarse-grain Markov process
 $\mathcal{M}=(Q_1,R)$, where $Q_1$ is defined in equation
-(\ref{eqn:defQ1}), and the rate matrix $R = ( k( (x,y), (u,v) ) )$ is
+(\ref{eq:defQ1}), and the rate matrix $R = ( k( (x,y), (u,v) ) )$ is
 defined by
 \begin{eqnarray}
-\label{eqn:rateProbabilityFFTbor2DwithoutHastings} k( (x,y), (u,v) ) =
+\label{eq:rateProbabilityFFTbor2DwithoutHastings} k( (x,y), (u,v) ) =
 \left\{
 \begin{array}{ll}
 \min(1, \frac{p(u,v)}{p(x,y)}) &\mbox{if $(u,v) \ne (x,y)$}\\
@@ -1675,7 +1675,7 @@ $(x,y) \in Q_1$, the $\epsilon$-modified and renormalized probability
 corresponding to $p$ is $\frac{p+\epsilon/|Q_1|}{1+ \epsilon}$ and so
 the corresponding new energy term is
 \begin{eqnarray}
-\label{eqn:modifiedEnergyTerm} Enew &=& G- RT \ln( \frac{p+\epsilon}{1
+\label{eq:modifiedEnergyTerm} Enew &=& G- RT \ln( \frac{p+\epsilon}{1
 + \epsilon \cdot |Q_1|} ).
 \end{eqnarray}
 It follows that we are forced to use probabilities in any case, and so

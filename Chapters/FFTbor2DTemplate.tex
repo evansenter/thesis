@@ -210,7 +210,7 @@ loss of entropy in loops.
 Given reference secondary structures $A,B$ of a
 given RNA sequence $\seq=s_1,\ldots,s_n$, our goal is to compute
 \begin{align}
-\label{eqn:defZk}
+\label{eq:defZk}
 \z{x,y}{1}{n} &= \sum_{\substack{S \text{ such that }\\
 d_{BP}(S,A)=x, d_{BP}(S,B)=y}} e^{\frac{-E(S)}{RT}}
 \end{align}
@@ -229,10 +229,10 @@ In \cite{hofacker:RNAbor2D}, Lorenz et al. generalized
 the dynamic programming recursions of our earlier work \cite{Freyhult.b07},
 to yield recursions
 for the partition function $\z{x,y}{i}{j}$ in equation
-(\ref{eqn:defZk}).  In the context of the Nussinov model,
+(\ref{eq:defZk}).  In the context of the Nussinov model,
 $\z{x,y}{i}{j}$ is equal to
 \begin{eqnarray}
-\label{eqn:RNAborNussRecursion}
+\label{eq:RNAborNussRecursion}
 &\z{(x-\alpha_0),(y-\beta_0)}{i}{j-1} +  \\
 &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}
@@ -253,7 +253,7 @@ Given RNA sequence $\seq = s_1,\ldots,s_n$
 and two arbitrary, but fixed reference
 structures $A,B$, we define the {\em polynomial}
 \begin{eqnarray}
-\label{eqn:polynomialYann}
+\label{eq:polynomialYann}
 \Z(x) = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  z_{rn+s} x^{r\cdot n + s}
 \end{eqnarray}
 where (constant) coefficients
@@ -266,7 +266,7 @@ where $E(S)$ denotes the free energy of $S$.
 If we evaluate the polynomial $\Z(x)$ at $n^2$ distinct pairs of values
 $a_0,\ldots,a_{n^2-1}$ in
 \begin{eqnarray}
-\label{eqn:ZofX}
+\label{eq:ZofX}
 \Z(a_{0}) = z_{0},\ldots, \Z(a_{n^2-1}) = z_{n^2-1},
 \end{eqnarray}
 %then Lagrange polynomial interpolation  \cite{LagrangeInterpolation}
@@ -277,17 +277,17 @@ robustness, we will perform polynomial interpolation by using Vandermonde
 matrices and the fast Fourier transform (FFT).
 
 The following theorem shows that a
-recursion, analogous to equation (\ref{eqn:RNAborNussRecursion}),
+recursion, analogous to equation (\ref{eq:RNAborNussRecursion}),
 can be used to compute
 the {\em polynomial} $\Z_{i,j}(x)$ defined by
 \begin{eqnarray}
-\label{eqn:defZijpolynomial}
+\label{eq:defZijpolynomial}
 \Z_{i,j}(x) &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
 z_{rn+s}(i,j) x^{rn+s}
 =\sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
 \end{eqnarray}
 %\begin{eqnarray}
-%\label{eqn:defZijpolynomial}
+%\label{eq:defZijpolynomial}
 %\Z_{i,j}(x) &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
 %z_{rn+s}(i,j) x^{rn+s}  \nonumber \\
 %\Z_{i,j}(x) &=& \sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
@@ -320,7 +320,7 @@ z_{rn+s}(i,j)= \z{r,s}{i}{j}.
 %$j>i+\theta$ we have the recurrence relation
 %given by $\Z_{i,j}(x)$ equals
 %\begin{eqnarray}
-%\label{eqn:polynomialRecursionNussJac}
+%\label{eq:polynomialRecursionNussJac}
 %\Z_{i,j}(x) &= \Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0} + \\
 %&\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -330,7 +330,7 @@ z_{rn+s}(i,j)= \z{r,s}{i}{j}.
 %end of Peter
 Inductively we define $\Z_{i,j}(x)$ to equal
 \begin{eqnarray}
-\label{eqn:polynomialRecursionNussJac}
+\label{eq:polynomialRecursionNussJac}
 &\Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -353,7 +353,7 @@ we instantiate $x$ to a
 complex number $\rho \in \mathbb{C}$, and apply
 the following recursion, by setting $\Z_{i,j}(\rho)$ equal to
 %\begin{eqnarray}
-%\label{eqn:RNAborNussRecursionInstantiated}
+%\label{eq:RNAborNussRecursionInstantiated}
 %\Z_{i,j}(\rho) &= &\Z_{i,j-1}(\rho) \cdot \rho^{\alpha_0n+\beta_0} +
 %\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -361,7 +361,7 @@ the following recursion, by setting $\Z_{i,j}(\rho)$ equal to
 %\cdot \rho^{\alpha(k)n+\beta(k)} \right).
 %\end{eqnarray}
 \begin{eqnarray}
-\label{eqn:RNAborNussRecursionInstantiated}
+\label{eq:RNAborNussRecursionInstantiated}
 &\Z_{i,j-1}(\rho) \cdot \rho^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -376,7 +376,7 @@ $O(n^2)$ space for the next computation of $\Z(\rho_i)$.
 It follows that
 the computation resources used to determine the (column) vector
 \begin{eqnarray}
-\label{eqn:defY}
+\label{eq:defY}
 {\bf Y} = (y_0,\ldots,y_{n^2-1})^T =
 \left(
 \begin{array}{l}
@@ -393,12 +393,12 @@ quintic time $O(n^5)$ and quadratic space $O(n^2)$.
 
 \subsection{Polynomial interpolation}
 Our plan is to determine the coefficients of the polynomial
-$\Z(x)$ in equation (\ref{eqn:polynomialYann}) by
+$\Z(x)$ in equation (\ref{eq:polynomialYann}) by
 polynomial interpolation.  For reasons of numerical stability,
 we instead determine the coefficients of the polynomial $\p(x)$,
 defined by
 \begin{eqnarray}
-\label{eqn:polynomialYannP}
+\label{eq:polynomialYannP}
 \p(x) =
 \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \p_{rn+s}
  x^{r\cdot n + s} =
@@ -494,7 +494,7 @@ $(x,y)$ are $(0,d_0), (1,d_0-1), (1,d_0+1),
 (3,d_0-3), (3,d_0-1), (3, d_0+1), (3,d_0+3), \cdots$.
 As a corollary, we have the {\em parity condition}, that
 \begin{eqnarray}
-\label{eqn:parity}
+\label{eq:parity}
 d_{BP}(A,S)+d_{BP}(S,B) \equiv d_{BP}(A,B) \bmod 2
 \end{eqnarray}
 first noticed in \cite{hofacker:RNAbor2D}, as well as
@@ -514,14 +514,14 @@ The following lemma is not difficult to establish.
 
 \noindent
 {\sc Lemma 2:} If $\Z(x)$ is the complex polynomial defined in
-equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+equation~(\ref{eq:polynomialYann}), then for any complex $n$th root of
 unity $\alpha$, it is the case that $\Z(\overline{\alpha}) =
 \overline{\Z(\alpha)}$.
 \medskip
 
 \noindent
 {\sc Lemma 3:}
-Let $\Z(x)$ be defined by equation (\ref{eqn:polynomialYann}), and
+Let $\Z(x)$ be defined by equation (\ref{eq:polynomialYann}), and
 let $\alpha \in \mathbb{C}$ be any complex number.
 If the base pair distance between reference
 structures $A,B$ is even, then $Z(-\alpha)=Z(\alpha)$, while if
@@ -571,7 +571,7 @@ fixed structures $A,B$, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
 $\pi_2(k) = k \bmod (N+1)$, and define the polynomial
 \begin{eqnarray*}
-\label{eqn:polynomialPeter}
+\label{eq:polynomialPeter}
 \Z(x) &=& \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{r\cdot N + s}\\
 &=&
 \sum_{k=0}^{(N+1)^2-1} z_{\pi_1(k)\cdot (N+1) + \pi_2(k)}
@@ -585,7 +585,7 @@ row major order of a 2-dimensional array.
 
 Consider the coefficients of the polynomial
 \begin{eqnarray}
-\label{eqn:yannPolynomialN}
+\label{eq:yannPolynomialN}
 \Z(x) = \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{rN+s}
 = \sum_{k=0}^{(N+1)^2-1} z_k x^k.
 \end{eqnarray}
@@ -601,7 +601,7 @@ z_k x^k$, whereupon coefficients $z_k=0$ for $k>(N+1)^2$.
 
 \noindent
 {\sc Case 1}: All coefficients $z_k$ of odd parity in
-equation (\ref{eqn:yannPolynomialN}) are zero.
+equation (\ref{eq:yannPolynomialN}) are zero.
 \smallskip
 
 \noindent
@@ -624,7 +624,7 @@ Since $Y(x^2)=Z(x)$, we have
 $Y(\exp(\frac{2\pi k i}{M/2})) =
 Y(\exp(\frac{4\pi k i}{M})) =
 Z(\exp(\frac{2\pi k i}{M}))$, hence we
-use the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+use the previous recursions (\ref{eq:polynomialRecursionNussJac})
 to evaluate $Z(\exp(\frac{2\pi ki}{M})$.  Instead of
 performing $M$ evaluations of $Z(x)$ at $M$-roots of unity,
 this requires only $M_0=M/2$ evaluations of $Y(u)$ at
@@ -636,7 +636,7 @@ full polynomial $\Z(x)$, since its coefficients of odd  parity are zero.
 
 \noindent
 {\sc Case 2}: All coefficients $z_k$ of even parity in
-equation (\ref{eqn:yannPolynomialN}) are zero.
+equation (\ref{eq:yannPolynomialN}) are zero.
 \smallskip
 
 \noindent
@@ -654,7 +654,7 @@ so
 $Y(\exp(\frac{2\pi ki}{M/2})) = Y(\exp(\frac{4\pi ki}{M})) =
 \exp(\frac{-2\pi ki}{M}) \cdot
 \Z(\exp(\frac{2\pi ki}{M}))$, employing
-the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+the previous recursions (\ref{eq:polynomialRecursionNussJac})
 to evaluate $\Z(\exp(\frac{2\pi ki}{M})$.  Note, that unlike the
 Case 1, since $Z(x)=x \cdot Y(x^2)$, we have
 $Y(x^2)=\frac{\Z(x)}{x}$, which explains the presence of additional factor
@@ -671,13 +671,13 @@ In the following, we will need the observation, that if the parity of
 base pair distance $d_{BP}(A,B)$ between $A,B$ is
 even, then
 \begin{eqnarray}
-\label{eqn:evenY}
+\label{eq:evenY}
 Y(x^2) = \Z(x)
 \end{eqnarray}
 while if the parity is odd,
 then
 \begin{eqnarray}
-\label{eqn:oddY}
+\label{eq:oddY}
 Y(x^2) = \frac{1}{x} \cdot \Z(x).
 \end{eqnarray}
 
@@ -732,13 +732,13 @@ $d_{BP}(A,B) = 1 \bmod 2$}\\
 \end{array} \right.  \nonumber\\
 \end{eqnarray*}
 Line 1 follows by definition, since $\omega=\nu^2$;
-line 2 follows by equations (\ref{eqn:evenY}) and
-(\ref{eqn:oddY});
+line 2 follows by equations (\ref{eq:evenY}) and
+(\ref{eq:oddY});
 line 3 follows by Lemma 4;
 line 4 follows by Lemma 3.
 Thus if $d_{BP}(A,B)$ is even, then
 \begin{eqnarray}
-\label{eqn:trickyRootsOfUnity1}
+\label{eq:trickyRootsOfUnity1}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
 Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
@@ -748,7 +748,7 @@ Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
 \end{eqnarray}
 while if $d_{BP}(A,B)$ is odd, then
 \begin{eqnarray}
-\label{eqn:trickyRootsOfUnity2}
+\label{eq:trickyRootsOfUnity2}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
 \nu^{-k} \cdot Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
@@ -784,23 +784,23 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 3.  for $k=0,\ldots,\frac{M}{2}-1$
 4.    if $d_{BP}(A,B)$ even
 5.      if $k \leq \frac{M}{4}$
-6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity1})
+6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity1})
 7.      else// $\frac{M}{4}<k<\frac{M}{2}$
-8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity1})
+8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity1})
 9.    else // $d_{BP}(A,B)$ is odd
 10.     if $k \leq \frac{M}{4}$
-11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity2})
+11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity2})
 12.     else// $\frac{M}{4}<k<\frac{M}{2}$
-13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity2})
+13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity2})
 14. //note that ${\bf Z}=\sum_{r,s}\z{r,s}{1}{n}=y_0=\Z(\nu^0)$
 15. for $k=0,\ldots,\frac{M}{2}-1$
 16.   $y_k = 10^m \cdot \frac{y_k}{{\bf Z}}$ //normalize $y_k$
-17. //compute coefficients of $\frac{Y(x)}{{\bf Z}}$ using (\ref{eqn:ajdef})
+17. //compute coefficients of $\frac{Y(x)}{{\bf Z}}$ using (\ref{eq:ajdef})
 18. if $d_{BP}(A,B)$ even then
 19.   for $k=0$ to $M-1$
 20.     $r=\pi_1(k)$, $s=\pi_2(k)$
 21.     if $k$ even
-22.       $\frac{\z{r,s}{1}{n}}{{\bf Z}} = a_{k/2}$ from (\ref{eqn:ajdef})
+22.       $\frac{\z{r,s}{1}{n}}{{\bf Z}} = a_{k/2}$ from (\ref{eq:ajdef})
 23.     else// $k$ odd
 24.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = 0$
 25. else // $d_{BP}(A,B)$ odd
@@ -809,7 +809,7 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 28.     if $k$ even
 29.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = 0$
 30.     else// $k$ odd
-31.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = a_{(k-1)/2}$ from (\ref{eqn:ajdef})
+31.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = a_{(k-1)/2}$ from (\ref{eq:ajdef})
 32.  for $k=0$ to $(N+1)^2$
 33.    $z_k = \lfloor 10^m \cdot z_k \rfloor \cdot \frac{1}{10^m}$
 34.    //truncate to $m$ significant digits
@@ -878,20 +878,20 @@ $$
 The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
 and that
 \begin{eqnarray}
-\label{eqn:ajdef}
+\label{eq:ajdef}
 a_j &=&\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
 =\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \nu^{-2kj}
 \end{eqnarray}
 for $j=0,\ldots,M_0-1$ (for more on FFT, see \cite{cormen}).
 
-Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+Since we defined $\bf Y$ in (\ref{eq:defY}) by ${\bf Y} =
 (y_0,\ldots,y_{M_0-1})^T$, where
 $y_0=\Z(\alpha_0),\ldots, y_{M_0-1}=\Z(\alpha_{M_0-1})$ and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{M_0})$,
 it follows that the coefficients
 $z_k=\z{\pi_1(k),\pi_2(k)}{1}{n}$ in the polynomial
 $\Z(x) = z_0 + z_1 x + \cdots + z_{M} x^{M}$ defined in
-(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+(\ref{eq:polynomialYann}) can be computed, at least in principle,
 by using the FFT. However, since the values of
 $z_{k}$ are astronomically large, numerical
 instability makes even this approach infeasible for moderate values of $n$.

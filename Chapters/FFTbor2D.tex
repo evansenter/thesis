@@ -203,12 +203,11 @@ z_{rn+s}(i,j) = \bfZ{r,s}{i,j}.
 Inductively we define $\emZ{i,j}$ to equal
 
 \begin{align}
-\label{eqn:polynomialRecursionNussJac}
+\label{eq:polynomialRecursionNussJac}
 &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{s_k s_j \in \bpSet,\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
 \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
-\nonumber
 \end{align}
 
 where $\alpha_0 = 1$ if $j$ is base-paired in $\strA_{[i,j]}$ and $0$ otherwise,
@@ -230,7 +229,7 @@ we instantiate $x$ to a
 complex number $\rho \in \mathbb{C}$, and apply
 the following recursion, by setting $\emZof{i,j}{\rho}$ equal to
 %\begin{align}
-%\label{eqn:RNAborNussRecursionInstantiated}
+%\label{eq:RNAborNussRecursionInstantiated}
 %\emZof{i,j}{\rho} &= &\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} +
 %\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -238,7 +237,7 @@ the following recursion, by setting $\emZof{i,j}{\rho}$ equal to
 %\cdot \rho^{\alpha(k)n+\beta(k)} \right).
 %\end{align}
 \begin{align}
-\label{eqn:RNAborNussRecursionInstantiated}
+\label{eq:RNAborNussRecursionInstantiated}
 &\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -253,7 +252,7 @@ values $\emZof{}{\rho_0},\dots, \emZof{}{\rho_{n^2-1}}$, each time re-using the
 It follows that
 the computation resources used to determine the (column) vector
 \begin{align}
-\label{eqn:defY}
+\label{eq:defY}
 {\bf Y} = (y_0,\dots,y_{n^2-1})^T =
 \left(
 \begin{array}{l}
@@ -270,12 +269,12 @@ quintic time $O(n^5)$ and quadratic space \On{2}.
 
 \subsection{Polynomial interpolation}
 Our plan is to determine the coefficients of the polynomial
-\emZ{} in equation (\ref{eqn:polynomialYann}) by
+\emZ{} in equation (\ref{eq:polynomialYann}) by
 polynomial interpolation.  For reasons of numerical stability,
 we instead determine the coefficients of the polynomial \bfPofX,
 defined by
 \begin{align}
-\label{eqn:polynomialYannP}
+\label{eq:polynomialYannP}
 \bfPofX =
 \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \bfP_{rn+s}
  x^{r\cdot n + s} =
@@ -371,7 +370,7 @@ $(x,y)$ are $(0,d_0), (1,d_0-1), (1,d_0+1),
 (3,d_0-3), (3,d_0-1), (3, d_0+1), (3,d_0+3), \dots$.
 As a corollary, we have the {\em parity condition}, that
 \begin{align}
-\label{eqn:parity}
+\label{eq:parity}
 \dBP{\strA,\str} + \dBP{\str,\strB} \equiv \dBP{\strA,\strB} \bmod 2
 \end{align}
 first noticed in \cite{hofacker:RNAbor2D}, as well as
@@ -391,14 +390,14 @@ The following lemma is not difficult to establish.
 
 \noindent
 {\sc Lemma 2:} If \emZ{} is the complex polynomial defined in
-equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+equation~(\ref{eq:polynomialYann}), then for any complex $n$th root of
 unity $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \overline{\emZof{}{\alpha}}$.
 \medskip
 
 \noindent
 {\sc Lemma 3:}
-Let \emZ{} be defined by equation (\ref{eqn:polynomialYann}), and
+Let \emZ{} be defined by equation (\ref{eq:polynomialYann}), and
 let $\alpha \in \mathbb{C}$ be any complex number.
 If the base pair distance between reference
 structures \strA,\,\strB is even, then $emZof{}{-\alpha} = emZof{}{\alpha}$, while if
@@ -449,7 +448,7 @@ fixed structures \strA,\,\strB, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
 $\pi_2(k) = k \bmod (N+1)$, and define the polynomial
 \begin{align}
-\label{eqn:polynomialPeter}
+\label{eq:polynomialPeter}
 \emZ{} &= \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{r\cdot N + s}\\
 &=
 \sum_{k=0}^{(N+1)^2-1} z_{\pi_1(k)\cdot (N+1) + \pi_2(k)}
@@ -463,7 +462,7 @@ row major order of a 2-dimensional array.
 
 Consider the coefficients of the polynomial
 \begin{align}
-\label{eqn:yannPolynomialN}
+\label{eq:yannPolynomialN}
 \emZ{} = \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{rN+s}
 = \sum_{k=0}^{(N+1)^2-1} z_k x^k.
 \end{align}
@@ -479,7 +478,7 @@ z_k x^k$, whereupon coefficients $z_k=0$ for $k>(N+1)^2$.
 
 \noindent
 {\sc Case 1}: All coefficients $z_k$ of odd parity in
-equation (\ref{eqn:yannPolynomialN}) are zero.
+equation (\ref{eq:yannPolynomialN}) are zero.
 \smallskip
 
 \noindent
@@ -503,7 +502,7 @@ Since $Y(x^2)=Z(x)$, we have
 $Y(\exp(\frac{2\pi k i}{M/2})) =
 Y(\exp(\frac{4\pi k i}{M})) =
 Z(\exp(\frac{2\pi k i}{M}))$, hence we
-use the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+use the previous recursions (\ref{eq:polynomialRecursionNussJac})
 to evaluate $Z(\exp(\frac{2\pi ki}{M})$.  Instead of
 performing $M$ evaluations of $Z(x)$ at $M$-roots of unity,
 this requires only $M_0=M/2$ evaluations of $Y(u)$ at
@@ -515,7 +514,7 @@ full polynomial \emZ{}, since its coefficients of odd  parity are zero.
 
 \noindent
 {\sc Case 2}: All coefficients $z_k$ of even parity in
-equation (\ref{eqn:yannPolynomialN}) are zero.
+equation (\ref{eq:yannPolynomialN}) are zero.
 \smallskip
 
 \noindent
@@ -533,7 +532,7 @@ so
 $Y(\exp(\frac{2\pi ki}{M/2})) = Y(\exp(\frac{4\pi ki}{M})) =
 \exp(\frac{-2\pi ki}{M}) \cdot
 \emZof{}{\exp(\frac{2\pi ki}{M})}$, employing
-the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+the previous recursions (\ref{eq:polynomialRecursionNussJac})
 to evaluate \emZof{}{\exp(\frac{2\pi ki}{M})}.  Note, that unlike the
 Case 1, since $Z(x)=x \cdot Y(x^2)$, we have
 $Y(x^2)=\frac{\emZ{}}{x}$, which explains the presence of additional factor
@@ -550,13 +549,13 @@ In the following, we will need the observation, that if the parity of
 base pair distance $\dBP{\strA,\strB}$ between \strA,\,\strB is
 even, then
 \begin{align}
-\label{eqn:evenY}
+\label{eq:evenY}
 Y(x^2) = \emZ{}
 \end{align}
 while if the parity is odd,
 then
 \begin{align}
-\label{eqn:oddY}
+\label{eq:oddY}
 Y(x^2) = \frac{1}{x} \cdot \emZ{}.
 \end{align}
 
@@ -611,13 +610,13 @@ $\dBP{\strA,\strB} = 1 \bmod 2$}\\
 \end{array} \right.  \nonumber\\
 \end{align}
 Line 1 follows by definition, since $\omega=\nu^2$;
-line 2 follows by equations (\ref{eqn:evenY}) and
-(\ref{eqn:oddY});
+line 2 follows by equations (\ref{eq:evenY}) and
+(\ref{eq:oddY});
 line 3 follows by Lemma 4;
 line 4 follows by Lemma 3.
 Thus if $\dBP{\strA,\strB}$ is even, then
 \begin{align}
-\label{eqn:trickyRootsOfUnity1}
+\label{eq:trickyRootsOfUnity1}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
 Z(\nu^k) &\mbox{\tiny for $k=0,\dots,\frac{M}{4}$}\\
@@ -627,7 +626,7 @@ Z(\nu^k) &\mbox{\tiny for $k=0,\dots,\frac{M}{4}$}\\
 \end{align}
 while if $\dBP{\strA,\strB}$ is odd, then
 \begin{align}
-\label{eqn:trickyRootsOfUnity2}
+\label{eq:trickyRootsOfUnity2}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
 \nu^{-k} \cdot Z(\nu^k) &\mbox{\tiny for $k=0,\dots,\frac{M}{4}$}\\
@@ -663,23 +662,23 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 % 3.  for $k=0,\dots,\frac{M}{2}-1$
 % 4.    if $\dBP{\strA,\strB}$ even
 % 5.      if $k \leq \frac{M}{4}$
-% 6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity1})
+% 6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity1})
 % 7.      else// $\frac{M}{4}<k<\frac{M}{2}$
-% 8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity1})
+% 8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity1})
 % 9.    else // $\dBP{\strA,\strB}$ is odd
 % 10.     if $k \leq \frac{M}{4}$
-% 11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity2})
+% 11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity2})
 % 12.     else// $\frac{M}{4}<k<\frac{M}{2}$
-% 13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity2})
+% 13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity2})
 % 14. //note that $\bfZ{}{}=\sum_{r,s}\bfZ{r,s}{1,n}=y_0=\Z(\nu^0)$
 % 15. for $k=0,\dots,\frac{M}{2}-1$
 % 16.   $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
-% 17. //compute coefficients of $\frac{Y(x)}{\bfZ{}{}}$ using (\ref{eqn:ajdef})
+% 17. //compute coefficients of $\frac{Y(x)}{\bfZ{}{}}$ using (\ref{eq:ajdef})
 % 18. if $\dBP{\strA,\strB}$ even then
 % 19.   for $k=0$ to $M-1$
 % 20.     $r=\pi_1(k)$, $s=\pi_2(k)$
 % 21.     if $k$ even
-% 22.       $\frac{\bfZ{r,s}{1,n}}{\bfZ{}{}} = a_{k/2}$ from (\ref{eqn:ajdef})
+% 22.       $\frac{\bfZ{r,s}{1,n}}{\bfZ{}{}} = a_{k/2}$ from (\ref{eq:ajdef})
 % 23.     else// $k$ odd
 % 24.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = 0$
 % 25. else // $\dBP{\strA,\strB}$ odd
@@ -688,7 +687,7 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 % 28.     if $k$ even
 % 29.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = 0$
 % 30.     else// $k$ odd
-% 31.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = a_{(k-1)/2}$ from (\ref{eqn:ajdef})
+% 31.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = a_{(k-1)/2}$ from (\ref{eq:ajdef})
 % 32.  for $k=0$ to $(N+1)^2$
 % 33.    $z_k = \lfloor 10^m \cdot z_k \rfloor \cdot \frac{1}{10^m}$
 % 34.    //truncate to $m$ significant digits
@@ -757,20 +756,20 @@ $$
 The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
 and that
 \begin{align}
-\label{eqn:ajdef}
+\label{eq:ajdef}
 a_j &=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
 =\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \nu^{-2kj}
 \end{align}
 for $j=0,\dots,M_0-1$ (for more on FFT, see \cite{cormen}).
 
-Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+Since we defined $\bf Y$ in (\ref{eq:defY}) by ${\bf Y} =
 (y_0,\dots,y_{M_0-1})^T$, where
 $y_0=\emZof{}{\alpha_0},\dots, y_{M_0-1}=\emZof{}{\alpha_{M_0-1}}$ and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{M_0})$,
 it follows that the coefficients
 $z_k=\bfZ{\pi_1(k),\pi_2(k)}{1,n}$ in the polynomial
 $\emZ{} = z_0 + z_1 x + \dots + z_{M} x^{M}$ defined in
-(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+(\ref{eq:polynomialYann}) can be computed, at least in principle,
 by using the FFT. However, since the values of
 $z_{k}$ are astronomically large, numerical
 instability makes even this approach infeasible for moderate values of $n$.
