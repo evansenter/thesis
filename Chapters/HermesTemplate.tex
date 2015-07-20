@@ -2,14 +2,14 @@
 
 \newcommand{\mathbbP}{\mbox{\bf P}}
 \newcommand{\mathbbt}{\mbox{\bf t}}
-\newcommand{\Hermes}{\mbox{\tt Hermes}\xspace}
-\newcommand{\FFTmfpt}{\mbox{\tt FFTmfpt}\xspace}
-\newcommand{\FFTeq}{\mbox{\tt FFTeq}\xspace}
-\newcommand{\FFTbor}{\mbox{\tt FFTbor}\xspace}
-\newcommand{\FFTborTwoD}{\mbox{\tt FFTbor2D}\xspace}
-\newcommand{\RNAmfpt}{\mbox{\tt RNAmfpt}\xspace}
-\newcommand{\RNAeq}{\mbox{\tt RNAeq}\xspace}
-\newcommand{\RNAsubopt}{\mbox{\tt RNAsubopt}\xspace}
+\newcommand{\hermes}{\mbox{\tt Hermes}\xspace}
+\newcommand{\fftmfpt}{\mbox{\tt FFTmfpt}\xspace}
+\newcommand{\ffteq}{\mbox{\tt FFTeq}\xspace}
+\newcommand{\fftbor}{\mbox{\tt FFTbor}\xspace}
+\newcommand{\ffttwo}{\mbox{\tt FFTbor2D}\xspace}
+\newcommand{\rnamfpt}{\mbox{\tt RNAmfpt}\xspace}
+\newcommand{\rnaeq}{\mbox{\tt RNAeq}\xspace}
+\newcommand{\rnasub}{\mbox{\tt RNAsubopt}\xspace}
 
 \chapter{Hermes} % Main chapter title
 
@@ -540,7 +540,7 @@ folding, as implemented in {\tt Kinfold} \cite{flammPhD,flamm}.
 \section{Methods}
 \label{section:software}
 
-The \Hermes software package was developed on the Macintosh OS X
+The \hermes software package was developed on the Macintosh OS X
 operating system (10.9.2 and 10.10) and should work with any Unix-like platform
 (Ubuntu, Debian, and CentOS were tested). We make the source code freely
 available under the MIT License in two locations.
@@ -561,46 +561,46 @@ any corresponding sub-packages included with the aforementioned
 software. For a more detailed explanation of both external
 dependencies and installation instructions, refer to the
 `DOCS.pdf' file at the web site
-outlining the configuration and compilation process for the \Hermes
+outlining the configuration and compilation process for the \hermes
 suite.
 
-\Hermes is organized into three independent directories: (1)
-\FFTborTwoD, (2) \RNAmfpt, and (3) \RNAeq (see
+\hermes is organized into three independent directories: (1)
+\ffttwo, (2) \rnamfpt, and (3) \rnaeq (see
 Figure~\ref{fig:organizationHermes}). These packages compile into both
 standalone executables and archive files. The archives provide a DRY
 API which allow the development of novel applications using source
-from across the \Hermes package without having to copy-and-paste
+from across the \hermes package without having to copy-and-paste
 relevant functions. We provide two such examples of this in the {\tt
-ext} subdirectory: \FFTmfpt and \FFTeq. These applications
-are simple C drivers that use functions from \FFTborTwoD, \RNAmfpt and
-\RNAeq to replicate a pipeline of executable calls without having to
+ext} subdirectory: \fftmfpt and \ffteq. These applications
+are simple C drivers that use functions from \ffttwo, \rnamfpt and
+\rnaeq to replicate a pipeline of executable calls without having to
 deal with intermediary data transformation, I/O between calls or
 slow-down due to a scripting language driver such as Python or R.
 
 \subsection{Programs}
 
 What follows is a brief overview of the three core applications
-(\FFTborTwoD, \RNAmfpt, \RNAeq), as well as the two extension
-programs (\FFTmfpt, \FFTeq). For an exhaustive list of
+(\ffttwo, \rnamfpt, \rnaeq), as well as the two extension
+programs (\fftmfpt, \ffteq). For an exhaustive list of
 command-line options, please see the corresponding help files.
 
 Given an RNA sequence $\seq$ of length $n$ and two reference
-structures $A,B$, the algorithm \FFTborTwoD \cite{Senter.jmb14}
+structures $A,B$, the algorithm \ffttwo \cite{Senter.jmb14}
 computes for each $0 \leq x,y \leq n$ the Boltzmann probability
 $P(x,y) = \frac{Z(x,y)}{Z}$ of all structures having base pair
 distance $x$ to $A$ [resp. $y$ to $B$]. Although the algorithm for the
-software \FFTborTwoD is unchanged from that of \cite{Senter.jmb14},
+software \ffttwo is unchanged from that of \cite{Senter.jmb14},
 the software described in this
 paper has been heavily refactored to provide a user-facing API,
-homogeneous with the rest of the \Hermes suite. As with the rest of
-\Hermes, \FFTborTwoD makes use of either the Turner 1999 \cite{turner}
+homogeneous with the rest of the \hermes suite. As with the rest of
+\hermes, \ffttwo makes use of either the Turner 1999 \cite{turner}
 or the later Turner 2004 energy parameters
 \cite{Turner.nar10}, taken respectively
 from the files rna\_turner1999.par and  rna\_turner2004.par in Vienna
-RNA Package. \FFTborTwoD takes as input an RNA sequence $\seq$ and two
+RNA Package. \ffttwo takes as input an RNA sequence $\seq$ and two
 secondary structures $A,B$ of the input RNA sequence -- both given
 in dot-bracket
-notation. Alternatively, \FFTborTwoD can also process a file of RNAs,
+notation. Alternatively, \ffttwo can also process a file of RNAs,
 where data for each RNA appears in the form: FASTA comment, sequence,
 structure $A$, structure $B$ -- each on a separate line. In return,
 for each RNA, the program returns as output a 2D probability grid
@@ -609,7 +609,7 @@ grid position $(x,y)$ is the Boltzmann probability of all secondary
 structures compatible with $\seq$ having base pair distance $x$ (resp.
 $y$) from $A$ (resp. $B$).
 
-\RNAmfpt computes the {\em mean first passage time} (MFPT), sometimes
+\rnamfpt computes the {\em mean first passage time} (MFPT), sometimes
 referred to as the {\em hitting time} of a Markov chain, by using
 matrix inversion \cite{meyerMFPT} -- see
 Section~\ref{section:algo}. The program takes as input a
@@ -624,62 +624,62 @@ Because this program was designed with the original intent
 of handling 2D-probability grids, all vertexes are uniquely identified
 by index tuples (which conceptually correspond to positioning in a 2D
 array). However, it is trivial to use this code with both
-1D-probability grids such as those produced by \FFTbor
+1D-probability grids such as those produced by \fftbor
 \cite{Senter.po12} or arbitrary transition matrices without any change
 to the underlying implementation. The software additionally provides
 many options for defining the structure of the graph underlying the
 Markov chain. Some of these include the option to force a fully
 connected graph (useful in cases where there is no non-zero path
 between the start / end state) or to enforce detailed balance.
-Finally, \RNAmfpt also accepts as input the probability transition matrix,
+Finally, \rnamfpt also accepts as input the probability transition matrix,
 a stochastic matrix with row sums equal to $1$, and computes the mean
 first passage time for the corresponding Markov chain.
 
-\RNAeq computes the population proportion of a user-provided structure
-over arbitrary time units. Like \RNAmfpt, this program takes as input a
+\rnaeq computes the population proportion of a user-provided structure
+over arbitrary time units. Like \rnamfpt, this program takes as input a
 comma separated value (CSV) file containing the non-zero positions and
 values of a 2D probability grid. From this input a rate matrix
 is constructed for the underlying Markov process. Alternatively,
-\RNAeq can accept as input an arbitrary rate matrix. Performing
+\rnaeq can accept as input an arbitrary rate matrix. Performing
 spectral decomposition of the column-ordered rate matrix that
-underlies the corresponding Markov process, \RNAeq computes either
+underlies the corresponding Markov process, \rnaeq computes either
 the equilibrium time or population occupancy frequencies.
-Additionally, \RNAeq can call the
-Vienna RNA Package program \RNAsubopt \cite{Wuchty.b99}, with a
+Additionally, \rnaeq can call the
+Vienna RNA Package program \rnasub \cite{Wuchty.b99}, with a
 user-specified upper bound to the energy difference with the minimum
 free energy. With this option, the rate matrix is
 constructed for the Markov process, whose states consist of all
-the structures returned by \RNAeq, and the equilibrium time or
+the structures returned by \rnaeq, and the equilibrium time or
 population occupancy frequencies are computed. Due to the time
 and memory required for this option, we do not expect it to be used except for
 small sequences.
 
-Beyond these three core applications, \Hermes includes two
+Beyond these three core applications, \hermes includes two
 additional programs located in the {\tt ext} directory, which fulfill
 more specific roles and highlight the modular nature of the codebase.
 
-\FFTmfpt approximates the mean first passage time of a given RNA
+\fftmfpt approximates the mean first passage time of a given RNA
 sequence folding from input structure A to B, by {\em exactly}
 computing the mean first passage time from state $(0,d_0)$ to state
 $(d_0,0)$ in the 2D probability grid obtained from running
-\FFTborTwoD. Here, $d_0$ is the base pair distance between structures
+\ffttwo. Here, $d_0$ is the base pair distance between structures
 $A,B$, and the MFPT is computed for the Markov chain, whose states are
 the non-empty 2D probability grid points, and whose transition
 probabilities are defined by $p_{(x,y),(x',y')} =
 \frac{P(x',y')}{P(x,y)}$. As we report in this paper, given an RNA
 sequence $\seq$, if $A$ is the empty structure and $B$ the MFE
-structure of $\seq$, then \FFTmfpt output is well correlated with the
+structure of $\seq$, then \fftmfpt output is well correlated with the
 exact MFPT in folding the empty structure to the MFE structure, where
 transitions between structures involve the addition or removal of a
 single base pair.
 
-\FFTeq allows an investigator to efficiently estimate population
+\ffteq allows an investigator to efficiently estimate population
 kinetics for a sequence folding between two arbitrary, but fixed,
 structures. The transition rate matrix underlying the Markov process
 necessary for eigendecomposition is derived from the 2D-energy
 landscape. Vertices in the rate matrix represent a subset of
 structures compatible with the input sequence as modeled by
-\FFTborTwoD, which makes the graph size more tractable than structural
+\ffttwo, which makes the graph size more tractable than structural
 sampling with {\tt RNAsubopt}, even with constraints.
 
 
@@ -743,18 +743,18 @@ sampling with {\tt RNAsubopt}, even with constraints.
 %\includegraphics[width= \textwidth]{FIGURES/hermes_layout}
 \includegraphics[width= \textwidth]{figure1.eps}
 \caption{Overall organization of
-\Hermes. \FFTborTwoD, \RNAmfpt, and \RNAeq are three distinct software
+\hermes. \ffttwo, \rnamfpt, and \rnaeq are three distinct software
 packages we have developed, which compile into both standalone
 executables and archive files, providing a DRY API that allow novel
 applications development using source from each of the packages,
 without having to copy-and-paste relevant functions. The applications
-\FFTmfpt and \FFTeq are C drivers that use data structures and functions from
-\FFTborTwoD, \RNAmfpt and \RNAeq. \FFTmfpt computes the mean first
+\fftmfpt and \ffteq are C drivers that use data structures and functions from
+\ffttwo, \rnamfpt and \rnaeq. \fftmfpt computes the mean first
 passage time (MFPT) for an RNA secondary structure to fold from an
 initial structure, such as the empty structure or a given metastable
 structure, into a target structure, such as the minimum free energy
 (MFE) structure or possibly the Rfam \cite{Gardner.nar11} consensus
-structure. \FFTeq uses spectral decomposition to compute the equilibrium time and the
+structure. \ffteq uses spectral decomposition to compute the equilibrium time and the
 fraction of the population of RNA structures that are
 equal to a given target structure, as a function of time.
  } \label{fig:organizationHermes}

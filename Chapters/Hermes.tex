@@ -53,20 +53,144 @@ RNA design.
 \section{Software within the \hermes suite}
 \label{sec:hermes:layout}
 
+The \hermes software package was developed on the Macintosh OS X
+operating system (10.9.2 and 10.10) and should work with any Unix-like platform
+(Ubuntu, Debian, and CentOS were tested). We make the source code freely
+available under the MIT License in two locations.
+Our lab hosts the latest stable version of the code at
+\url{http://bioinformatics.bc.edu/clotelab/Hermes} and a fully
+version-controlled copy at \url{https://github.com/evansenter/hermes}.
+The data and figures presented in this article were generated with the
+source code hosted at the first URL, and we make no guarantee as to
+the stability of development branches in our Git repository.
+
+External dependencies for the software include a C (resp. C++)
+compiler supporting the GNU99 language specification (resp. C++98),
+FFTW implementation of Fast Fourier Transform \cite{FFTW05} ($\geq
+3.3.4$) \url{http://www.fftw.org/}, Gnu Scientific Library GSL ($\geq
+1.15$) \url{http://www.gnu.org/software/gsl/}, Vienna RNA Package
+\cite{Lorenz.amb11} ($\geq 2.0.7$) \url{http://www.viennarna.at}, and
+any corresponding sub-packages included with the aforementioned
+software. For a more detailed explanation of both external
+dependencies and installation instructions, refer to the
+`DOCS.pdf' file at the web site
+outlining the configuration and compilation process for the \hermes
+suite.
+
+\hermes is organized into three independent directories: (1)
+\ffttwo, (2) \rnamfpt, and (3) \rnaeq (see
+Figure~\ref{fig:organizationHermes}). These packages compile into both
+standalone executables and archive files. The archives provide a DRY
+API which allow the development of novel applications using source
+from across the \hermes package without having to copy-and-paste
+relevant functions. We provide two such examples of this in the {\tt
+ext} subdirectory: \fftmfpt and \ffteq. These applications
+are simple C drivers that use functions from \ffttwo, \rnamfpt and
+\rnaeq to replicate a pipeline of executable calls without having to
+deal with intermediary data transformation, I/O between calls or
+slow-down due to a scripting language driver such as Python or R.
+
 \subsection{Exact \mfpt with \rnamfpt}
 \label{subsec:hermes:rnamfpt}
+
+\rnamfpt computes the {\em mean first passage time} (MFPT), sometimes
+referred to as the {\em hitting time} of a Markov chain, by using
+matrix inversion \cite{meyerMFPT} -- see
+Section~\ref{section:algo}. The program takes as input a
+comma separated value (CSV) file containing the non-zero positions and
+values of a 2D probability grid; i.e. a CSV format file having columns {\em i},
+{\em j}, and {\em p}. The first two columns, {\em i} and {\em j}
+correspond to the {\em 0-indexed} row-ordered position in the rate
+matrix and the final column {\em p} is the probability $p_{i,j}$
+of a transition from {\em i} to {\em j}.  From this input, the
+mean first passage time is constructed by matrix inversion.
+Because this program was designed with the original intent
+of handling 2D-probability grids, all vertexes are uniquely identified
+by index tuples (which conceptually correspond to positioning in a 2D
+array). However, it is trivial to use this code with both
+1D-probability grids such as those produced by \fftbor
+\cite{Senter.po12} or arbitrary transition matrices without any change
+to the underlying implementation. The software additionally provides
+many options for defining the structure of the graph underlying the
+Markov chain. Some of these include the option to force a fully
+connected graph (useful in cases where there is no non-zero path
+between the start / end state) or to enforce detailed balance.
+Finally, \rnamfpt also accepts as input the probability transition matrix,
+a stochastic matrix with row sums equal to $1$, and computes the mean
+first passage time for the corresponding Markov chain.
 
 \subsection{Approximate \mfpt with \fftmfpt}
 \label{subsec:hermes:fftmfpt}
 
+\fftmfpt approximates the mean first passage time of a given RNA
+sequence folding from input structure A to B, by {\em exactly}
+computing the mean first passage time from state $(0,d_0)$ to state
+$(d_0,0)$ in the 2D probability grid obtained from running
+\ffttwo. Here, $d_0$ is the base pair distance between structures
+$A,B$, and the MFPT is computed for the Markov chain, whose states are
+the non-empty 2D probability grid points, and whose transition
+probabilities are defined by $p_{(x,y),(x',y')} =
+\frac{P(x',y')}{P(x,y)}$. As we report in this paper, given an RNA
+sequence $\seq$, if $A$ is the empty structure and $B$ the MFE
+structure of $\seq$, then \fftmfpt output is well correlated with the
+exact MFPT in folding the empty structure to the MFE structure, where
+transitions between structures involve the addition or removal of a
+single base pair.
+
 \subsection{Exact \eqt with \rnaeq}
 \label{subsec:hermes:rnaeq}
 
+\rnaeq computes the population proportion of a user-provided structure
+over arbitrary time units. Like \rnamfpt, this program takes as input a
+comma separated value (CSV) file containing the non-zero positions and
+values of a 2D probability grid. From this input a rate matrix
+is constructed for the underlying Markov process. Alternatively,
+\rnaeq can accept as input an arbitrary rate matrix. Performing
+spectral decomposition of the column-ordered rate matrix that
+underlies the corresponding Markov process, \rnaeq computes either
+the equilibrium time or population occupancy frequencies.
+Additionally, \rnaeq can call the
+Vienna RNA Package program \rnasub \cite{Wuchty.b99}, with a
+user-specified upper bound to the energy difference with the minimum
+free energy. With this option, the rate matrix is
+constructed for the Markov process, whose states consist of all
+the structures returned by \rnaeq, and the equilibrium time or
+population occupancy frequencies are computed. Due to the time
+and memory required for this option, we do not expect it to be used except for
+small sequences.
+
 \subsection{Approximate \eqt with \ffteq}
 \label{subsec:hermes:ffteq}
+
+\ffteq allows an investigator to efficiently estimate population
+kinetics for a sequence folding between two arbitrary, but fixed,
+structures. The transition rate matrix underlying the Markov process
+necessary for eigendecomposition is derived from the 2D-energy
+landscape. Vertices in the rate matrix represent a subset of
+structures compatible with the input sequence as modeled by
+\ffttwo, which makes the graph size more tractable than structural
+sampling with {\tt RNAsubopt}, even with constraints.
 
 \subsubsection{Population occupancy curves with \ffteq}
 \label{subsubsec:hermes:popcurve}
 
 \section{Correlations of kinetics data across software}
 \label{sec:hermes:corr}
+
+\begin{table}
+\label{table:correlation}
+\begin{tabular}
+  {|l|llllllll|} \hline \small{Hastings (Yes\textbackslash No)} & \small{MFPT} & \small{Equilibrium} & \small{Kinfold} & \small{FFTmfpt} & \small{RNA2Dfold} & \small{FFTbor} & \small{BarrierBasins} & \small{FFTeq} \\
+  \hline \small{MFPT}   & 1      & 0.5683 & 0.7945 & 0.5060 & 0.5110 & 0.5204 & 0.5280 & 0.4472 \\
+  \small{Equilibrium}   & 0.5798 & 1      & 0.7814 & 0.7043 & 0.7025 & 0.5080 & 0.5979 & 0.6820 \\
+  \small{Kinfold}       & 0.7933 & 0.7507 & 1      & 0.7312 & 0.7358 & 0.6241 & 0.6328 & 0.6445 \\
+  \small{FFTmfpt}       & 0.6035 & 0.7935 & 0.7608 & 1      & 0.9980 & 0.5485 & 0.8614 & 0.9589 \\
+  \small{RNA2Dfold}     & 0.6076 & 0.7919 & 0.7655 & 0.9983 & 1      & 0.5584 & 0.8538 & 0.9515 \\
+  \small{FFTbor}        & 0.5416 & 0.5218 & 0.6241 & 0.5748 & 0.5855 & 1      & 0.3450 & 0.4229 \\
+  \small{BarrierBasins} & 0.6346 & 0.6578 & 0.6328 & 0.8310 & 0.8217 & 0.3450 & 1      & 0.9149 \\
+  \small{FFTeq}         & 0.5614 & 0.7916 & 0.6966 & 0.9670 & 0.9590 & 0.4757 & 0.8940 & 1      \\
+  \hline
+ \end{tabular}
+
+ \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: {\tt MFPT} (mean first passage time, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), {\tt Equilibrium} (equilibrium time, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), {\tt Kinfold} (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), {\tt FFTmfpt} (mean first passage time for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by {\tt FFTbor2D}, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, {\tt RNA2Dfold} (mean first passage time, computed as previously explained, but using {\tt RNA2Dfold} in place of {\tt FFTbor2D} to compute $P(x,y)$), {\tt FFTbor} (mean first passage time, computed for the Markov chain consisting of states $0,1,\ldots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), {\tt BarrierBasins} (equilibrium time, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from {\tt Barriers}), and {\tt FFTeq} (equilibrium time, computed in the same fashion as {\tt BarrierBasins} using a Markov process derived from the energy landscape output by {\tt FFTbor2D}). }
+ \end{table}
