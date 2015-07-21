@@ -666,5 +666,502 @@ enormous performance speed-up in our implementation of \fftbor.
 \section{Coarse-grained kinetics with \fftbor}
 \label{sec:fftbor:kinetics}
 
-\section{Riboswitch detection with \fftbor}
-\label{sec:fftbor:rb}
+The output of \fftbor, as shown in Figure
+\ref{fig:fftbor:tppDistributions}, is a probability distribution,
+where the $x$-axis represents the base pair distance from an arbitrary,
+but fixed secondary structure \strSt, and the $y$-axis represents the
+Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$ that a secondary structure
+has base pair distance $k$ from \strSt. Arguably, this probability distribution
+is an accurate one-dimensional projection of the rugged, high dimensional energy
+landscape near structure \strSt,
+of the sort artistically rendered in the well-known
+energy landscape depicted in Figure 1 of \cite{Wolynes.ptam05}.
+A hypothesis behind theoretical work in biomolecular folding theory in
+\cite{Bryngelson.p95}
+is that kinetic folding slows down as the energy landscape becomes more
+{\em rugged}. This is borne out in our computational experiments for RNA
+using \fftbor, as reported
+in Figure \ref{fig:fftbor:tppDistributions}.
+
+We randomly chose two TPP riboswitch
+aptamers from the seed alignment for
+Rfam family RF00059. The first sequence has EMBL accession code
+BX842649.1/277414-277318 and is comprised of the 97 nt sequence
+\seqsplit{%
+  ACCUGACGCUAGGGGUGUUGGUGAAUUCACCGACUGAGAAUAACCCUUU%
+  GAACCUGAUAGAGAUAAUGCUCGCGCAGGGAAGCAAGAAUAGAAAGAU%
+}, while the second sequence
+has EMBL accession code AACY022101973.1/389-487 and is comprised of the 99
+nt sequence
+\seqsplit{%
+  UAUAAGUCCAAGGGGUGCCAAUUGGCUGAGAUGGUUUUAACCAAUCCCUU%
+  UGAACCUGAUCCGGUUAAUACCGGCGUAGGAAUGGAUUUUCUCUACAGC%
+}.
+Rfam consensus and minimum free energy structures for both sequences are
+depicted in Figure \ref{fig:fftbor:tppConsensusAndMfe}.
+Despite the fact that there is no sequence homology according to
+pairwise BLAST \cite{BLAST}, this figure clearly demonstrates that
+consensus and
+minimum free energy structures closely resemble each other, and that the
+structures of both TPP riboswitch aptamers are quite similar, with the
+exception of the leftmost hairpin loop [resp. multiloop].
+The MFE structures differ
+from the consensus structures principally by the addition of base pairs not
+determined by covariation in the Rfam alignment.
+Indeed, if we let $\str_0,\str_1$
+denote the Rfam consensus structure resp. MFE structure for the 97 nt
+sequence with EMBL accession code BX842649.1/277414-277318, then
+$\str_0 \setminus \str_1$ has $4$ base pairs, and $\str_1 \setminus \str_0$
+ has $7$
+base pairs. If we let $\strT_0,\strT_1$
+denote the Rfam consensus structure resp. MFE structure for the 99 nt
+sequence with EMBL accession code
+AACY022101973.1/389-487, then
+$\strT_0 \setminus \strT_1$ has $1$ base pair, and $\strT_1 \setminus \strT_0$ has $5$
+base pairs.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{Figures/FFTbor/tppConsensusAndMfe.pdf}
+\caption{Rfam consensus structures (Rfam) and minimum free energy (MFE)
+secondary structures for two thiamine pyrophosphate (TPP) riboswitch aptamers,
+chosen at random from RF00059 Rfam family seed alignment
+\cite{Gardner.nar11}. Using pairwise BLAST \cite{BLAST}, there is no
+sequence similarity, although the secondary structures are very similar,
+as shown in this figure. From left to right:
+{\em (A)} Rfam consensus structure for BX842649.1/277414-277318.
+{\em (B)} MFE structure for BX842649.1/277414-277318.
+{\em (C)} Rfam consensus structure for AACY022101973.1/389-487.
+{\em (D)} Rfam consensus structure for AACY022101973.1/389-487.
+}
+\label{fig:fftbor:tppConsensusAndMfe}
+\end{figure}
+
+We ran \fftbor on each of the TPP riboswitch aptamer
+sequences, with the MFE structure of each
+sequence taken as the initial structure \strSt for that sequence. For the
+first sequence, BX842649.1/277414-277318, the \fftbor output
+suggests that there are low energy structures
+at a distance from the MFE structure, which might compete with the MFE
+structure and hence slow the kinetics of folding. In contrast, for the
+second sequence, AACY022101973.1/389-487, the \fftbor output suggests
+that there are no such competing low energy structures, hence
+the second sequence should fold more quickly than the first.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{Figures/FFTbor/tppDistributions.pdf}
+\caption{Output from \fftbor on two randomly selected
+thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
+\cite{Gardner.nar11}. The $x$-axis represents base pair distance from the
+minimum free energy structure for each given sequence; the $y$-axis represents
+Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\bfZ{}{}}$, where
+\bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
+whose base pair distance from the MFE structure is exactly $k$.
+{\em (Left)}
+The 97 nt sequence BX842649.1/277414-277318 appears to have a rugged energy
+landscape near its minimum free energy structure, with distinct
+low energy structures that may compete with the MFE structure during the
+folding process.
+{\em (Right)}
+The 99 nt sequence, AACY022101973.1/389-487 appears to have a smooth energy
+landscape near its MFE structure, with no distinct low energy structures
+to might compete with the MFE structure.
+Based on the \fftbor output or {\em structural profile} near MFE
+structure \strSt, one might expect
+folding time for the first sequence to increase due to competition from
+metastable structures, while one might expect the second sequence to have
+rapid folding time.
+Computational Monte Carlo folding experiments bear out this fact.
+\kinfold \cite{flamm} simulations clearly show that the second
+sequence folds
+at least four times more quickly than the first sequence. See section
+\ref{sec:fftbor:kinetics} for
+details.}
+\label{fig:fftbor:tppDistributions}
+\end{figure}
+
+To test the hypothesis that folding is slower for rugged energy landscapes,
+we ran the kinetic folding software, \kinfold \cite{flamm},
+on each of the two TPP riboswitch aptamer sequences,
+BX842649.1/277414-277318 and AACY022101973.1/389-487,
+to determine the \mfpt (MFPT) to
+fold into the MFE structure, when starting from the empty structure.
+In this computational
+experiment, we took MFPT to be the average number of Monte Carlo steps
+taken by \kinfold, each step consisting of the addition or removal
+of a single base pair (or shift -- see \cite{flamm}), to fold the
+empty structure into the MFE
+structure, where the average was taken over $30$ runs, with an absolute
+maximum number of Monte Carlo steps taken to be $500,000$.
+The first sequence, BX842649.1/277414-277318, converged within $500,000$
+steps only for 20 out of 30 runs. Assigning the maximum step count of
+$500,000$ for the 10 runs that did not converge, we found a mean first
+passage time of $311,075.06$ steps for this sequence.
+The second sequence, AACY022101973.1/389-487, converged within $500,000$
+steps in 29 out of 30 runs, and we found a mean first passage time of
+$61,575.69$ steps for this sequence. From computational experiments of this
+type, it is suggestive that \fftbor may prove useful in synthetic
+biology,
+where one would like to design rapidly folding RNA molecules that
+fold into a designated target structure.
+
+In order to more systematically determine the relation between kinetic
+folding speed and the ruggedness of an energy landscape near the MFE structure,
+we need to numerically quantify ruggedness. To this end, in the following
+we define the notion of \ebpd to a designated
+structure. Let \strSt be an arbitrary secondary structure of the RNA sequence
+$\seq = \seqN$.
+The expected base pair distance to \strSt is defined by
+\begin{align}
+E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
+\sum_{\str} P(\str) \cdot \dBP{\str}{\strSt}
+\end{align}
+where
+$\mathbb{S}(\seqN)$ denotes the set of secondary structures for
+$\seq = \seqN$, $P(\str) = \frac{\boltzf{\str}}{\bfZ{}{}}$ is the Boltzmann
+probability of \str, and
+\dBP{\str}{\strSt} denotes base pair distance between \str and \strSt.
+If we run \fftbor on an input sequence \seq and secondary structure
+\strSt, then clearly
+$E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
+\sum_{k} k \cdot p(k)$, where $p(k)=\frac{\bfZ{k}{}}{\bfZ{}{}}$, obtained from the
+program output.  If \strSt is the empty structure, then \fftbor output
+is simply the probability distribution of the number of base pairs per
+secondary structure, taken over the Boltzmann ensemble of all structures.
+
+For the benchmarking assay, we took all 61 selenocysteine insertion sequence
+(SECIS) sequences from the seed alignment of Rfam family RF00031
+\cite{Gardner.nar11}. Average length was $64.32 \pm 2.83$ nt.
+For each sequence, we ran both \fftbor (when starting
+from the empty structure rather than the MFE structure) and a Monte Carlo
+folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
+Using the Monte Carlo algorithm, we
+determined the \mfpt (MFPT), defined as the average
+taken over 50 runs, of the number of Monte Carlo steps taken to fold
+the empty structure into the MFE structure, where an absolute upper bound
+of 5 million steps was allowed in the simulation.
+
+As described above, \fftbor output is simply
+the probability distribution
+for the number of base pairs per structure, taken over the ensemble
+of all secondary structure for the input RNA
+sequence. Surprisingly, we found that there is a significant
+correlation of  $0.48436192$ with one-tailed
+$p$-value of $0.00018249$ between the
+standard deviation of the \fftbor output (when starting from the
+empty structure) and logarithm base $10$ of the mean first passage time.
+
+\begin{landscape}
+\begin{table}[!h]
+\centering
+\begin{tabular}{|l|rrrrrr|}
+\hline
+~ &$\mu$ &$\sigma$& $\frac{\sigma}{\mu}$& $n$ & MFE & $\log_{10}(\text{MFPT})$\\
+\hline
+$\mu$& 1 & & & & &\\
+$\sigma$&-0.43722448& 1  & & & & \\
+$\frac{\sigma}{\mu}$&-0.691411183&0.943650913&1 & & &\\
+$n$&0.707683898&-0.158951202&-0.364591789&1& & \\
+MFE&-0.569474125&0.739515083&0.759622716&-0.368485646&1 & \\
+$\log_{10}(\text{MFPT})$&-0.036291124&0.48436192&0.376230235&0.405865529&0.399015556& 1 \\
+\hline
+\end{tabular}
+\caption{Pearson correlation between various aspects of selenocysteine
+insertion sequences from the seed alignment of Rfam family
+RF00031 \cite{Gardner.nar11}.
+For each of the 61 RNA sequences, we ran \fftbor, starting
+from empty initial structure \strSt, and we ran a Monte Carlo
+folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
+Using the Monte Carlo algorithm, we
+determined the \mfpt (MFPT), defined as the average
+taken over 50 runs, of the number of Monte Carlo steps taken to fold
+the empty structure into the MFE structure, where an absolute upper bound
+of 5 million steps was allowed in the simulation.  From the output of
+\fftbor, we computed
+{\em (1)}
+the mean number ($\mu$) of base pairs per structure, taken over
+the ensemble of all secondary structures for the given sequence,
+{\em (2)}
+the standard deviation ($\sigma$) of the number of base pairs per structure,
+{\em (3)}
+the coefficient of variation $\frac{\sigma}{\mu}$,
+{\em (4)}
+the RNA sequence length $n$,
+and
+{\em (5)}
+the minimum free energy (MFE).  Additionally, we computed the
+logarithm base $10$ of mean first passage
+time ($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
+(log base $10$ of the standard deviation of number of Monte Carlo
+steps per run was approximately
+9\% of $\log_{10}(\text{MFPT})$ on average). The table shows the correlation between each of
+these aspects.
+Some correlations are obvious --
+for example,
+{\em (i)}
+the standard deviation $\sigma$ is highly correlated with the
+coefficient of variation $\frac{\sigma}{\mu}$;
+{\em (ii)}
+the mean $\mu$ is negatively correlated with the
+coefficient of variation $\frac{\sigma}{\mu}$;
+{\em (iii)}
+the mean $\mu$ is negatively correlated with the
+minimum free energy (MFE) -- if most low energy structures in the ensemble
+have many base pairs, then it is likely that the minimum free energy is very
+low (i.e. since MFE is negative, the absolute value of MFE increases);
+{\em (iv)}
+sequence length is negatively correlated with MFE -- as sequence length
+increases, the minimum free energy (MFE) decreases.
+However, it may appear surprising that
+{\em (v)} the
+mean $\mu$ number of base pairs per structure is independent of MFPT
+(correlation $-0.036291124$), although
+{\em (vi)} MFE is correlated with MFPT
+(correlation $0.399015556$) -- i.e.  from {\em (iii)},
+lower MFE is correlated with a larger average $\mu$ number of base pairs per
+structure, from {\em (vi)}
+higher MFE is correlated with longer folding time, but
+from {\em (v)} the average $\mu$  number of base pairs per structure is
+independent of folding time.
+The most important insight from this table is that
+{\em (vii)}
+standard deviation $\sigma$ is correlated with mean first passage
+time -- the correlation is statistically significant, with one-tailed
+$p$-value of $0.00018249$.}
+\label{table:correlationFFTborEmpty}
+\end{table}
+\end{landscape}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=\textwidth]{Figures/FFTbor/correlationFFTborEmpty.pdf}
+\caption{This figure represents the
+graphical output of \fftbor, when the empty structure is chosen as
+initial structure \strSt.
+The $x$-axis represents the number of base pairs per structure,
+taken over the ensemble of all secondary structures for the given RNA
+sequence; the $y$-axis represents Boltzmann probability
+$p(k) = \sfrac{\bfZ{k}{}}{\bfZ{}{}}$,
+where \bfZ{}{} is the partition function for all secondary structures
+having exactly $k$ base pairs.
+{\em (Left)}
+For the selenocysteine (SECIS) element AB030643.1/4176-4241 from Rfam family
+RF00031, the standard deviation $\sigma$ of the number of base pairs,
+taken over the ensemble of all secondary structures, is
+$0.727618$, while the logarithm base $10$ of the mean first passage time ($\log_{10}(\text{MFPT})$)
+is $4.75$.
+{\em (Center)}
+For the selenocysteine (SECIS) element
+AL645723.11/192421-192359 from Rfam family
+RF00031, the standard deviation $\sigma$ of the number of base pairs,
+taken over the ensemble of all secondary structures, is
+$2.679446$, while $\log_{10}(\text{MFPT})$ is $5.69$.
+Among the 61 sequences in the seed alignment of RF00031,
+AB030643.1/4176-4241 was the fastest folder, while
+AL645723.11/192421-192359 was the slowest folder.
+{\em (Right)}
+Superimposition of output of \fftbor for two TPP riboswitch aptamers: the
+97 nt sequence BX842649.1/277414-277318 and the
+99 nt sequence AACY022101973.1/389-487, both obtained when
+taking the empty structure for the initial structure \strSt.
+The mean $\mu$ for the \fftbor structural profile near the empty
+structure is $23.0203$  [resp. $27.5821$], the
+standard deviation $\sigma$ for the \fftbor structural profile
+is $2.22528791$  [resp. $1.98565959$], and the \kinfold MFPT is
+$311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
+AB030643.1/4176-4241 [resp.  AL645723.11/192421-192359].
+The right panel of this figure should be compared with Figure
+\ref{fig:fftbor:tppDistributions}.
+These anecdotal results bear up the correlation between standard deviation
+$\sigma$ and $\log_{10}(\text{MFPT})$ described in \ref{table:correlationFFTborEmpty}.
+}
+\label{fig:fftbor:correlationFFTborEmpty}
+\end{figure}
+
+In the right panel of Figure \ref{fig:fftbor:correlationFFTborEmpty}, we
+applied \fftbor to each of the two randomly chosen TPP riboswitch
+aptamers BX842649.1/277414-277318 and AACY022101973.1/389-487, starting
+from the empty reference structure $\strSt=\emptyset$.
+The mean for the \fftbor structural profile near the empty
+structure is $\mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
+standard deviation $\sigma$ for the \fftbor structural profile
+is $\sigma_1=2.22528791$  [resp. $\sigma_2=1.98565959$], and the \kinfold MFPT is
+$311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
+AB030643.1/4176-4241 [resp.  AL645723.11/192421-192359]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
+
+Additionally, we randomized the TPP riboswitches BX842649.1/277414-277318 and AACY022101973.1/389-487 by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
+\cite{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these
+sequences, starting from the empty structure.  The mean $\mu_1$ and standard
+deviation $\sigma_1$ for the \fftbor distribution for randomized BX842649 are
+respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
+AACY022101973 are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
+maximum of $500,000$ steps with $30$ replicates (as explained in the text), we
+found
+that for randomized BX842649, all $30$ runs converged yielding a mean first passage
+time (MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
+randomized AACY022101973, only $15$ out of $30$ runs converged within $500,000$ steps,
+and discounting these nonconvergent data, we obtain an average mean first passage
+time (MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
+test provides more anecdotal evidence supporting our hypothesis that small
+standard deviation $\sigma$ in \fftbor probability density is correlated with fast folding, as measured by MFPT.
+
+This notion of correlation between the coarse-grained energy landscape and
+kinetics is what motivates the work described in Chapters \ref{ch:ffttwo}
+and \ref{ch:hermes}, where a more detailed explanation of kinetics is provided,
+and additional evidence is provided to support this claim.
+
+% \section{Riboswitch detection with \fftbor}
+% \label{sec:fftbor:rb}
+
+% A bacterial riboswitch is a portion of the $5'$
+% untranslated region (UTR) of messenger RNA,
+% that performs gene regulation by undergoing a conformational change upon
+% binding with a ligand, such as guanine, thiamine pyrophosphate, lysine,
+% etc.  \cite{breaker:Riboswitch2}.
+% This conformational change may either turn  on or off
+% the corresponding gene by either transcriptional or translational regulation
+% of the messenger RNA \cite{tuckerBreaker:review}, depending on the
+% particular riboswitch. The common feature shared by all riboswitches
+% is that a gene is regulated by conformational change upon ligand binding.
+% Bacterial riboswitches are often found upstream
+% of operons, regulating groups of genes, as in purine {\em de novo}
+% synthesis and salvage \cite{mandalBoeseBarrickWinklerBreaker}.
+
+% A riboswitch consists of two equally important parts: an upstream
+% {\em aptamer}, capable of highly discriminative binding to a particular
+% ligand, and a downstream {\em expression platform}, capable of undergoing
+% a radical conformational change upon binding of a ligand with the
+% discriminating aptamer.
+% Since aptamers have been under strong evolutionary pressure to
+% bind with high affinity
+% (e.g. $K_D \approx 5$ nM for guanine \cite{Mandal.nsmb04}),
+% there is strong
+% sequence conservation found in the aptameric region of orthologous
+% riboswitches.
+% In contrast, while secondary structure is conserved in the
+% terminator loop of the expression platform in purine riboswitches,
+% there is relatively low sequence conservation (data not shown).
+% While a number of methods exist to computationally predict
+% riboswitch aptamers
+% \cite{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
+% (and especially {\tt INFERNAL} \cite{INFERNAL}, which latter is used
+% to predict riboswitch aptamers in Rfam), it is an important
+% biological problem to determine the expression platform, since the structure
+% of the expression platform can suggest whether there is
+% transcriptional regulation
+% via a terminator loop or translational regulation via the sequestration of
+% the Shine-Dalgarno sequence \cite{tuckerBreaker:review}. Determination of
+% the precise location and structure of the expression platform is difficult
+% due to low conserved sequence identity (in-house computations, data not shown).
+% Although this problem remains open, we report here how
+% \fftbor may provide help to biologists in the selection and
+% prioritization of riboswitch candidates.
+
+% Figure~5 depicts the gene OFF structure of the
+% xpt G-box purine riboswitch in {\em B. subtilis}, as determined by
+% inline-probing -- this structure was taken from
+% Figure 1 of \cite{breaker:Riboswitch2}.
+% Note that this structure is only partial, since there are regions
+% with no base pairs depicted, despite the fact that additional
+% base pairs could be added. By using
+% {\tt blastn}, it is found that this 161 nt purine riboswitch
+% can be found on the complement strand of GenBank accession number
+% CP002906.1/c2165302-2165142 in
+% complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
+% Figure~6 depicts the result of
+% three computational experiments with FFTbor. The left panel displays
+% the expected base pair distance to the following secondary structure
+% \begin{small}
+% \begin{eqnarray}
+% \label{eq:xpt1}
+% %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGAGCAAUGGAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
+% \bf
+% .((((((((...(((((((.......)))))))........((((((.......))))))..))))))))........(((((........)))))............((((((((((((((.......)))))))))))))).
+% \end{eqnarray}
+% \end{small}
+% as a function of window offset, where window size equals the size of this
+% target structure. This structure was
+% obtained by removing all leading and trailing unpaired positions
+% from the structure depicted in Figure~5,
+% except for the leftmost [resp. rightmost] unpaired position
+% adjacent to the leftmost [resp. rightmost] base-paired position.
+% The reason for removal of the leading and trailing unpaired positions was
+% that the structure of \cite{breaker:Riboswitch2}, depicted in
+% Figure~5, is clearly only partial, as earlier
+% mentioned.  The center panel displays
+% the expected base pair distance to the following secondary structure
+% \begin{small}
+% \begin{eqnarray}
+% \label{eq:xpt2}
+% %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGA
+% \bf
+% .((((((((...(((((((.......)))))))........((((((.......))))))..)))))))).
+% \end{eqnarray}
+% \end{small}
+% as a function of window offset, where window size equals the size of this
+% target {\em aptamer} structure. Similarly, the right panel displays
+% the expected base pair distance to the following secondary structure
+% \begin{small}
+% \begin{eqnarray}
+% \label{eq:xpt3}
+% %GAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
+% \bf
+% .(((((........)))))............((((((((((((((.......)))))))))))))).
+% \end{eqnarray}
+% \end{small}
+% as a function of window offset, where window size equals the size of this
+% target {\em expression platform} structure.
+% Figure~6 determines the precise location of the
+% xpt riboswitch, both aptamer and expression platform.
+
+% If the biologically functional target structure is unknown, one can
+% instead attempt a similar moving window computation, where the target
+% structure is taken to be the minimum free energy structure of the
+% current window contents. In this case, one may hope to determine a
+% bimodal distribution, as displayed in Figure~7.
+% Given an input RNA sequence, or genomic region, the
+% web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
+% creates a movie as follows, described here for the xpt riboswitch
+% previously discussed.  We extracted the downstream region of
+% Taking the
+% 161 nt xpt G-box purine riboswitch described in Figure~5,
+% with GenBank accession number CP002906.1/c2165302-2165142, we extended
+% to a sequence of length 200 nt, by appending flanking
+% downstream genomic nucleotides.  Running \fftbor on all
+% prefixes of the resulting sequence of lengths
+% $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
+% \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
+% Figure~5 displays the output of \fftbor on the
+% 166 nt prefix, clearly showing a bimodal distribution. Attempting to
+% automate the identification of non-unimodal \fftbor output, we have
+% applied the Hartigan-Hartigan dip-test \cite{hartiganDipTest},
+% implemented in {\tt R}; however,
+% the dip-test appears to be too sensitive, in that a probability distribution
+% is reported to be non-unimodal, even when visual inspection indicates that
+% it appears overwhelmingly to be unimodal (data not shown). It is for this
+% reason that the web server
+% \url{http://bioinformatics.bc.edu/clotelab/FFTbor} produces a movie of
+% prefixes, where the user can start/stop the movie,
+% move forward/backward, or download all raw data output by \fftbor.
+
+\section{Performance characteristics of \fftbor}
+\label{sec:fftbor:speed}
+
+\begin{figure}[!h]
+\centering
+\begin{center}
+\includegraphics[width=\textwidth]{Figures/FFTbor/benchmarking.pdf}
+\end{center}
+\caption{Run times in seconds for \rnabor and \fftbor, on random RNA
+of length $20,40,60,\dots,300$ in step size of 20 nt. Each algorithm
+was run with the empty initial structure \strSt, see rows
+\rnabor (empty), \fftbor (empty), and with the minimum free
+energy structure as the initial structure \strSt, see rows
+\rnabor (MFE) and \fftbor (MFE). Note that for both \rnabor
+and \fftbor, the run time increases when \strSt is the MFE structure,
+rather than the empty structure. Notice the radical improvement in the
+run time of \fftbor over that of \rnabor.
+}
+\label{fig:fftbor:benchmarking}
+\end{figure}

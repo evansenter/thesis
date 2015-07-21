@@ -37,11 +37,19 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{datetime}
+\usepackage{fixltx2e}
 \usepackage{lmodern}
 \usepackage{mathtools}
 \usepackage{paralist}
+\usepackage{pdflscape}
 \usepackage{rnamacros}
+\usepackage{seqsplit}
 \usepackage{url}
+\usepackage{xfrac}
+
+\input{ushyphex}
+
+% \epstopdfsetup{outdir=./Figures/FFTbor/}
 
 \titleformat{\chapter}[display]
 {\normalfont\Large\filcenter}
@@ -175,7 +183,6 @@ Date:\\
 \addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
 
 \abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
-
 Abstract
 }
 
@@ -185,13 +192,12 @@ Abstract
 %	ACKNOWLEDGEMENTS
 %----------------------------------------------------------------------------------------
 
-% \setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
+\setstretch{1.3} % Reset the line-spacing to 1.3 for body text (if it has changed)
 
-% \acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
-
-% The acknowledgements and the people to thank go here, don't forget to include your project advisor\ldots
-% }
-% \clearpage % Start a new page
+\acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+Acknowledgements
+}
+\clearpage % Start a new page
 
 %----------------------------------------------------------------------------------------
 %	LIST OF CONTENTS/FIGURES/TABLES PAGES

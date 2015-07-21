@@ -70,7 +70,7 @@ appear to have been among the first
 to have considered the computational problem of determining optimal and
 near-optimal {\em folding pathways} between two metastable secondary
 structures $A,B$ of a given RNA sequence.  In \cite{flammPhD}, Flamm
-developed an event-driven Monte Carlo simulation, {\tt Kinfold},
+developed an event-driven Monte Carlo simulation, \kinfold,
 to determine expected
 folding time between two reference structures, including the mean first
 passage time to fold into the minimum free energy structure.
@@ -159,9 +159,9 @@ interpolation to compute partition function values was first suggested
 by Waldisp\"uhl and Ponty in the context of the
 {\tt RNAmutants} program \cite{waldispuhlPontyRecomb}. Subsequently,
 we used the Fast Fourier Transform (FFT) in our algorithm
-{\tt FFTbor} \cite{fftbor}  to interpolate the
+\fftbor \cite{fftbor}  to interpolate the
 probabilities $p_k$ that structures from the Boltzmann
-ensemble have base pair distance $k$ from a target structure $S^*$.
+ensemble have base pair distance $k$ from a target structure \strSt.
 This paper extends the result from \cite{fftbor} to two dimensions; i.e.
 in the algorithm {\tt FFTbor2D},
 we interpolate the probabilities $p(x,y)$ that
@@ -901,7 +901,7 @@ where the partition function ${\bf Z} = \sum_{S} \exp(-E(S)/RT)$ satisfies
 ${{\bf Z}} = \sum_{x,y} \z{x,y}{1}{n}$. This leads to numerical stability,
 allowing {\tt FFTbor2D} to compute the
 $m$ most significant digits of $p(x,y) = \frac{\z{x,y}{1}{n}}{{\bf Z}}$.
-Pseudocode for the complete algorithm, {\tt FFTbor}, is given in
+Pseudocode for the complete algorithm, \fftbor, is given in
 %Figure~\ref{pseudocode:interpolatingP}.
 Figure~2.
 
@@ -1130,11 +1130,11 @@ $Z$-score of $1.989$ for the kinetics of folding from $A$ to $B$
 This result seems to suggest that spliced leader could be
 under evolutionary pressure for {\em slow} folding between these
 metastable structures, if we take
-MFPT from $(0,d_0)$ to $(d_0,0)$ as a surrogate for {\tt Kinfold} \cite{flamm}
+MFPT from $(0,d_0)$ to $(d_0,0)$ as a surrogate for \kinfold \cite{flamm}
 folding time from $A$ to $B$ -- an interpretation which seems to be
 consistent with the functional role of spliced leader as described
 in the Introduction.
-Since accurate {\tt Kinfold} kinetics requires many simulations,
+Since accurate \kinfold kinetics requires many simulations,
 each requiring enormous time \cite{wolfingerStadler:kinetics},
 our method may prove useful in synthetic biology, in prioritizing
 computationally designed RNA sequences for subsequent
@@ -1220,7 +1220,7 @@ An important advantage of
 compute the structures $M_{x,y}$ having minimum free energy over all
 structures that are $x$-neighbors of metastable $A$ and simultaneously
 $y$-neighbors of metastable $B$. (There is a similar advantage of {\tt RNAbor}
-\cite{Freyhult.b07} over the faster {\tt FFTbor} \cite{fftbor}.)
+\cite{Freyhult.b07} over the faster \fftbor \cite{fftbor}.)
 As well, {\tt RNA2Dfold} directly computes the partition function values
 $Z_{x,y}$, while {\tt FFTbor2D} estimates $Z_{x,y}$ by computing
 $p(x,y) \cdot Z$. This difference entails a significant loss of precision,

@@ -5,7 +5,7 @@
 \newcommand{\hermes}{\mbox{\tt Hermes}\xspace}
 \newcommand{\fftmfpt}{\mbox{\tt FFTmfpt}\xspace}
 \newcommand{\ffteq}{\mbox{\tt FFTeq}\xspace}
-\newcommand{\fftbor}{\mbox{\tt FFTbor}\xspace}
+\newcommand{\fftbor}{\mbox\fftbor\xspace}
 \newcommand{\ffttwo}{\mbox{\tt FFTbor2D}\xspace}
 \newcommand{\rnamfpt}{\mbox{\tt RNAmfpt}\xspace}
 \newcommand{\rnaeq}{\mbox{\tt RNAeq}\xspace}
@@ -123,11 +123,11 @@ sufficiently small for an explicit solution of the master equation to
 be given.
 
 We now come to simulation approaches to estimate RNA folding kinetics.
-The program {\tt Kinfold} \cite{flammPhD,flamm} is an implementation
+The program \kinfold \cite{flammPhD,flamm} is an implementation
 of Gillespie's algorithm \cite{gillespieStochasticSimulation1},
 directly related to the master equation, hence is considered by many
 to be the gold standard for RNA kinetics. A recent extension of the
-{\tt Kinfold} algorithm was reported in \cite{Aviram.amb12}. {\tt
+\kinfold algorithm was reported in \cite{Aviram.amb12}. {\tt
 Kinefold} \cite{Xayaphoummine.nar05} uses stochastic simulations of
 the nucleation and dissociation of helical regions to predict
 secondary structure and folding pathways. In contrast to the
@@ -509,7 +509,7 @@ a very influential algorithm to simulate a finite Markov process.
 The pseudocode, is given in Algorithm~\ref{algo:Gillespie}.
 Though Gillespie's original application was for chemical kinetics,
 Flamm et al.  adapted the method for the kinetics of RNA secondary structure
-folding, as implemented in {\tt Kinfold} \cite{flammPhD,flamm}.
+folding, as implemented in \kinfold \cite{flammPhD,flamm}.
 
 
 % \begin{algorithm}[Gillespie algorithm] \hfill\break
@@ -778,9 +778,9 @@ The kinetics methods benchmarked in Table~\ref{table:correlation}
 are {\tt MFPT},
 {\tt Equilibrium},
 {\tt FFTmfpt},
-{\tt FFTbor},
+\fftbor,
 {\tt FFTeq} -- all computed using {\tt Hermes}, together with,
-{\tt Kinfold} \cite{flammHofacker},
+\kinfold \cite{flammHofacker},
 {\tt BarrierBasins} \cite{wolfingerStadler:kinetics},
 and {\tt RNA2Dfold} \cite{hofacker:RNAbor2D}. The {\em exact} data {\tt MFPT}
 [resp. {\tt Equilibrium}] were computed using the {\tt Hermes} software {\tt RNAmfpt}
@@ -807,8 +807,8 @@ $p(x,y) = \frac{Z(x,y)}{Z}$ for the coarse-grained model consisting of
 macrostates $M(x,y)$. Transition probabilities are computed by
 equation (\ref{eq:transitionProb1}), and matrix inversion is used to
 determine mean first passage time for the coarse-grained model.
-For comparison purposes, the method {\tt FFTbor} calls the
-program {\tt FFTbor} \cite{Senter.po12} to compute the Boltzmann probabilities
+For comparison purposes, the method \fftbor calls the
+program \fftbor \cite{Senter.po12} to compute the Boltzmann probabilities
 $p(x) = \frac{Z(x)}{Z}$ for the coarse-grained model consisting of
 macrostates $M(x)$ of all secondary structures having base pair distance
 $x$ to a given target structure. Mean first passage time is then computed
@@ -841,20 +841,20 @@ using spectral decomposition of the rate matrix.
   \hline
  \end{tabular}
 
- \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: {\tt MFPT} (mean first passage time, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), {\tt Equilibrium} (equilibrium time, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), {\tt Kinfold} (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), {\tt FFTmfpt} (mean first passage time for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by {\tt FFTbor2D}, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, {\tt RNA2Dfold} (mean first passage time, computed as previously explained, but using {\tt RNA2Dfold} in place of {\tt FFTbor2D} to compute $P(x,y)$), {\tt FFTbor} (mean first passage time, computed for the Markov chain consisting of states $0,1,\ldots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), {\tt BarrierBasins} (equilibrium time, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from {\tt Barriers}), and {\tt FFTeq} (equilibrium time, computed in the same fashion as {\tt BarrierBasins} using a Markov process derived from the energy landscape output by {\tt FFTbor2D}). }
+ \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: {\tt MFPT} (mean first passage time, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), {\tt Equilibrium} (equilibrium time, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), {\tt FFTmfpt} (mean first passage time for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by {\tt FFTbor2D}, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, {\tt RNA2Dfold} (mean first passage time, computed as previously explained, but using {\tt RNA2Dfold} in place of {\tt FFTbor2D} to compute $P(x,y)$), \fftbor (mean first passage time, computed for the Markov chain consisting of states $0,1,\ldots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), {\tt BarrierBasins} (equilibrium time, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from {\tt Barriers}), and {\tt FFTeq} (equilibrium time, computed in the same fashion as {\tt BarrierBasins} using a Markov process derived from the energy landscape output by {\tt FFTbor2D}). }
 \label{table:correlation}
 \end{table*}
 
 
 Kinetics algorithms developed by other groups and benchmarked in our study
-are the following: {\tt Kinfold} \cite{flamm},
+are the following: \kinfold \cite{flamm},
 {\tt BarriersBasin} \cite{flammHofacker,wolfingerStadler:kinetics},
 {\tt Kinwalker} \cite{Geis.jmb08}. Below, we give a brief overview of these methods.
 
-{\tt Kinfold} \cite{flamm} is an implementation of Gillespie's
+\kinfold \cite{flamm} is an implementation of Gillespie's
 Algorithm \ref{algo:Gillespie}.
 For benchmarking purposes, we determined the mean first passage time
-from $10^4$ {\tt Kinfold} simulations, each with an upper bound of
+from $10^4$ \kinfold simulations, each with an upper bound of
 $10^8$ Monte Carlo steps in order to ensure convergence of each run.
 {\tt BarriersBasin} is our name for the method described by Wolfinger
 et al. \cite{wolfingerStadler:kinetics}, which first runs
@@ -923,7 +923,7 @@ described kinetics methods in a comparative study. To ensure that mean
 first passage time can be computed from
 $(I - P^{-}_{x_{\infty}})^{-1} \cdot {\bf e}$ by using matrix
 inversion, that spectral decomposition of the rate matrix is possible,
-and to ensure that {\tt Kinfold} simulations would provide sufficient
+and to ensure that \kinfold simulations would provide sufficient
 statistics, we generated a collection of 1,000 random RNA sequences of
 length 20 nt, each having expected compositional frequency of $1/4$
 for A,C,G,U, and each having at most 2,500 distinct secondary
@@ -973,23 +973,23 @@ RNA Vienna Package utility script {\tt relplot.pl}.
 
 
 Figure~\ref{fig:meanStdevKinfoldRuns1000sequences} displays the mean
-and standard deviation for {\tt Kinfold} simulations of folding time
+and standard deviation for \kinfold simulations of folding time
 for each of the 1,000 RNA sequences from our benchmarking data. For
 each sequence, the mean and standard deviation of the time required to
 fold the empty structure to the MFE structure were computed from
-10,000 {\tt Kinfold} runs, each run with an upper bound of $10^8$
+10,000 \kinfold runs, each run with an upper bound of $10^8$
 Monte Carlo steps, thus ensuring that all simulations converged. The
 sequences were then sorted by increasing folding time mean. Standard
 deviation exceeded the mean in $83.9\%$ of the 1,000 cases, indicating
-the enormous variation between separate {\tt Kinfold} runs, even for
+the enormous variation between separate \kinfold runs, even for
 20 nt RNA sequences having at most 2,500 secondary structures. In our
-opinion, {\tt Kinfold} is an expertly crafted implementation of
+opinion, \kinfold is an expertly crafted implementation of
 Gillespie's algorithm for an event driven Monte Carlo simulation of
 one-step RNA secondary structure folding. From the standpoint of
 biophysics and physical chemistry, there is no more reliable
 simulation method, except of course the exact computation of mean
 first passage time using linear algebra. Nevertheless, the enormous
-time required for reliable {\tt Kinfold} estimations and the large
+time required for reliable \kinfold estimations and the large
 standard deviations observed point out the need for a faster method to
 approximate folding time.
 
@@ -1000,7 +1000,7 @@ approximate folding time.
 \includegraphics[width=0.45\textwidth]{figure3a.eps}
 %\includegraphics[width=0.45\textwidth]{FIGURES/kinfoldMeanStdevCropped}
 \includegraphics[width=0.45\textwidth]{figure3b.eps}
-\caption{{\em (Left)} Histogram of {\tt Kinfold} folding times for 20-mer CCGAUUGGCG AAAGGCCACC. The mean [resp. standard deviation] of 10,000 runs of {\tt Kinfold} for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of {\tt Kinfold} folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order. } \label{fig:meanStdevKinfoldRuns1000sequences}
+\caption{{\em (Left)} Histogram of \kinfold folding times for 20-mer CCGAUUGGCG AAAGGCCACC. The mean [resp. standard deviation] of 10,000 runs of \kinfold for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order. } \label{fig:meanStdevKinfoldRuns1000sequences}
 \end{figure*}
 
 
@@ -1011,7 +1011,7 @@ In this section, we display the correlation between (1) the {\em gold
 standard} method {\tt MFPT}, both with and without the Hastings
 modification using equations (\ref{eq:MFPTwithHastings}) and
 (\ref{eq:MFPTwithoutHastings}), (2) the {\em platinum standard} method {\tt
-Equilibrium}, (3) the {\em silver standard} method {\tt Kinfold}, (4) {\tt
+Equilibrium}, (3) the {\em silver standard} method \kinfold, (4) {\tt
 FFTmfpt} with and without the Hastings modification using equations
 (\ref{eq:transitionProbabilityFFTbor2DwithHastings}) and
 (\ref{eq:transitionProbabilityFFTbor2DwithoutHastings}), (5) {\tt
@@ -1023,7 +1023,7 @@ with [resp. without] the Hastings modification are summarized in the
 lower [resp. upper] triangular portion of
 Table~\ref{table:correlation}. It is clear that correlations between
 the mathematically exact methods {\tt MFPT}, {\tt Equilibrium}, and
-approximation methods {\tt Kinfold}, {\tt FFTmfpt}, {\tt FFTeq}, {\tt
+approximation methods \kinfold, {\tt FFTmfpt}, {\tt FFTeq}, {\tt
 RNA2Dfold} are improved when using the Hastings correction.
 
 Figures~\ref{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq},
@@ -1034,7 +1034,7 @@ above. The left panel of
 Figure~\ref{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq}
 shows a scatter plots for gold standard {\tt MFPT} versus platinum
 standard {\tt Equilibrium}, with correlation value 0.5652. The right
-panel of the same figure shows a scatter plot for {\tt Kinfold} versus
+panel of the same figure shows a scatter plot for \kinfold versus
 {\tt Equilibrium}, with correlation 0.7814. Note the persence of two
 clusters in this and some of the other scatter plots. Cluster A
 consists of RNA sequences whose folding time, as determined by {\tt
@@ -1045,24 +1045,24 @@ cluster A. There are no significant differences between RNA sequences
 in clusters A and B with respect to GC-content, sequence logo, minimum
 free energy, number of secondary structures, etc.  The left panel of
 Figure~\ref{fig:scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d}
-shows the scatter plot for {\tt MFPT} versus {\tt Kinfold}, with
+shows the scatter plot for {\tt MFPT} versus \kinfold, with
 correlation 0.7933, and the right panel shows the scatter plot for
 {\tt MFPT} versus {\tt FFTmfpt}, with correlation 0.6035.
 Figure~\ref{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
-shows scatter plots for {\tt FFTmfpt} versus {\tt Kinfold} (left) and
+shows scatter plots for {\tt FFTmfpt} versus \kinfold (left) and
 for {\tt FFTmfpt} versus {\tt FFTeq} (right), with respective
-correlation values 0.7608 and 0.9589. {\tt Kinfold} obviously provides
+correlation values 0.7608 and 0.9589. \kinfold obviously provides
 a better correlation with the exact value of mean first passage time;
-however, since the standard deviation of {\tt Kinfold} runs is as
+however, since the standard deviation of \kinfold runs is as
 large as the mean,\footnote{It follows from spectral decomposition that
 equilibrium time follows an exponential distribution (or sum of
 exponential distributions). Exponential distributions have the property
 that the mean is equal to the standard deviation, hence
-it is not surprising that {\tt Kinfold}
+it is not surprising that \kinfold
 kinetics have this property.} accurate kinetics estimates
-from {\tt Kinfold} require prohibitively large computational time -- indeed, in
+from \kinfold require prohibitively large computational time -- indeed, in
 \cite{wolfingerStadler:kinetics} reliable kinetics for phe-tRNA from
-yeast were obtained by 9,000 {\tt Kinfold} simulations, each for $10^8$
+yeast were obtained by 9,000 \kinfold simulations, each for $10^8$
 steps, requiring 3 months of CPU time on an Intel Pentium 4 running at
 2.4 GHz under Linux. Although the correlation value of 0.6035 between
 {\tt MFPT} and {\tt FFTmfpt} is much less than that obtained by {\tt
@@ -1071,7 +1071,7 @@ in seconds, even for moderate to large RNAs. For this reason, we
 advocate the use of {\tt FFTmfpt} in synthetic biology screens to
 design RNA sequences having certain desired kinetic properties. Once
 promising candidates are found, it is possible to devote additional
-computational time to {\tt Kinfold} simulations for more accurate
+computational time to \kinfold simulations for more accurate
 kinetics.
 
 
@@ -1082,7 +1082,7 @@ kinetics.
 %\includegraphics[width=0.45 \textwidth]{FIGURES/scatterplot_for_rateeq_mfe_only_without_hastings_vs_kinfold_lp_global}
 \includegraphics[width=0.45 \textwidth]{figure4b.eps}
 \caption{ Scatter plots of the natural logarithm of times from {\tt
-MFPT} versus {\tt Equilibrium} (left) and for {\tt Kinfold} versus
+MFPT} versus {\tt Equilibrium} (left) and for \kinfold versus
 {\tt Equilibrium} (right). }
 \label{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq}
 \end{figure}
@@ -1095,7 +1095,7 @@ MFPT} versus {\tt Equilibrium} (left) and for {\tt Kinfold} versus
 %\includegraphics[width=0.45 \textwidth]{FIGURES/scatterplot_for_rnamfpt_with_hastings_vs_fftbor2d_with_hastings}
 \includegraphics[width=0.45 \textwidth]{figure5b.eps}
 \caption{ Scatter plots of the natural logarithm of times from {\tt
-MFPT} versus {\tt Kinfold} (left) and for {\tt MFPT} versus {\tt
+MFPT} versus \kinfold (left) and for {\tt MFPT} versus {\tt
 FFTmfpt} (right). }
 \label{fig:scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d}
 \end{figure}
@@ -1241,14 +1241,14 @@ mean first passage time and platinum standard equilibrium time were
 computed for each sequence.
 Pearson correlation was then computed
 between the folding times of all the methods of {\tt Hermes}, along
-with the current state-of-the-art kinetics programs {\tt Kinfold}
+with the current state-of-the-art kinetics programs \kinfold
 \cite{flamm}, {\tt BarrierBasins} \cite{wolfingerStadler:kinetics},
 {\tt Kinwalker} \cite{Geis.jmb08}.
 
-{\tt Kinfold} is an implementation
+\kinfold is an implementation
 of the Gillespie algorithm \cite{gillespieStochasticSimulation1},
 which essentially samples from an exponential distribution of folding
-times, hence {\tt Kinfold} mean and standard deviation are
+times, hence \kinfold mean and standard deviation are
 approximately equal -- see
 Figure~\ref{fig:meanStdevKinfoldRuns1000sequences}. Elementary
 considerations from statistics indicate that for our benchmarking set
@@ -1258,9 +1258,9 @@ to have a confidence level of 95\% that the average of $n$ {\tt
 Kinfold} runs differs from the real folding time by at most 100 steps.
 Since this is the case for tiny sequences of 20 nt, it follows that
 only enormous computation time can provide reliable folding times for
-larger sequences when using {\tt Kinfold}.
+larger sequences when using \kinfold.
 
-Since the state-of-the-art software {\tt Kinfold}, which implements
+Since the state-of-the-art software \kinfold, which implements
 Gillespie's algorithm, cannot return statistically significant folding
 times unless significant computation time is allotted, it is natural
 to turn to {\em coarse-grained} models, as done by
@@ -1408,7 +1408,7 @@ Foundation.
 In this section, we describe the kinetics algorithms used in our
 comparative study on a benchmarking set of 1000 small RNAs. The
 kinetics algorithms we consider are the following: {\tt MFPT}, {\tt
-Equilibrium}, {\tt Kinfold} \cite{flamm}, {\tt FFTmfpt}, {\tt FFTeq},
+Equilibrium}, \kinfold \cite{flamm}, {\tt FFTmfpt}, {\tt FFTeq},
 {\tt RNA2Dfold}, {\tt FFTbor1D}, {\tt BarrierBasins}
 \cite{wolfingerStadler:kinetics}, {\tt Kinwalker} \cite{Geis.jmb08}.
 Our software suite {\tt Hermes} introduces the new methods {\tt MFPT},
@@ -1499,7 +1499,7 @@ correction. However, the Hastings correction is never used for rate
 matrices, hence we only consider the usual definition of rate matrix
 given in equation (\ref{eq:rateMatrix}).}
 
-\item[Kinfold]: Version 1.3 of {\tt Kinfold} \cite{Flamm:00a}, from
+\item[Kinfold]: Version 1.3 of \kinfold \cite{Flamm:00a}, from
 the Vienna RNA Package (version 2.1.7) was run with the following
 flags:
 \begin{quote}
@@ -1508,7 +1508,7 @@ flags:
 
 %< infile.txt >\& /dev/null
 \end{quote}
-{\tt Kinfold} 1.3 uses the Turner2004 energy model, and the flags in
+\kinfold 1.3 uses the Turner2004 energy model, and the flags in
 the command line indicate that dangles are not considered, that the
 Metropolis rule is employed (rather than the Kawasaki rule), that
 moves consist only of the addition or removal of a single base pair,
@@ -1518,13 +1518,13 @@ sequences of 20 nt used in our benchmarking set, with these flags,
 every run for every sequence properly terminated in the target minimum
 free energy structure. For each sequence, the mean (and standard
 deviation) of $10^4$ runs was determined; this mean is deemed the mean
-first passage time, as estimated by {\tt Kinfold}. Implemented in the
-Vienna RNA Package 2.1.7, {\tt Kinfold} is what may be considered the
+first passage time, as estimated by \kinfold. Implemented in the
+Vienna RNA Package 2.1.7, \kinfold is what may be considered the
 {\em silver standard} value for folding kinetics, since exact
 determination of mean first passage time, using matrix inversion is
 impossible except for sequences not having more than several thousand
 secondary structures. However, due to the stochastic nature of the
-Gillespie algorithm implemented by {\tt Kinfold}, very many runs with
+Gillespie algorithm implemented by \kinfold, very many runs with
 very long run times are required to obtain a reasonable approximation
 of the MFPT.
 
