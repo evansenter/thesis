@@ -52,7 +52,7 @@ p(x) = p_0 + p_1 x + p_2 x^2 + \dots + p_{n-1} x^{n-1},
 
 where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \fft to compute
 the \idft on values $y_0,\dots,y_{n-1}$, where
-$y_k = p(\omega^k)$ and $\omega = e^{2 \pi i/n}$ is the principal \nRoU and $p(x)$ is defined in
+$y_k = p(\omega^k)$ and $\omega = \pRoU$ is the principal \nRoU and $p(x)$ is defined in
 equation (\ref{eq:fftbor:pOfX}). By leveraging
 \nRoUs in conjunction with the \idft the we subvert numeric instability
 issues observed with both Lagrange interpolation and Gaussian elimination.
@@ -282,7 +282,7 @@ rather than the polynomial \emZ{}, defined in equation (\ref{eq:fftbor:zOfX}),
 and performing interpolation with the \fft (FFT) \cite{cormen}
 where \alphaN are
 chosen to be \nRoUs,
-$\alpha_k = e^{2 \pi i k/n}$.
+$\alpha_k = \kRoU$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
 time, rather than the cubic time required by using the Lagrange formula
@@ -450,7 +450,7 @@ $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$ is thus quartic t
 \texorpdfstring{\emZ{i,j}}{}}
 \label{subsec:fftbor:fft}
 
-Let $\omega = e^{2 \pi i/n}$ be the principal \nRoU.
+Let $\omega = \pRoU$ be the principal \nRoU.
 Recall that the Vandermonde matrix $V_{n}$ is defined to be the
 $n \times n$ matrix, whose $i,j$ entry is $\omega^{i \cdot j}$; i.e.
 
@@ -510,7 +510,7 @@ for $j=0,\dots,n-1$.
 Since we defined \bfY in equation (\ref{eq:fftbor:yColumn}) by $\bfY =
 (y_0,\dots,y_{n-1})^{\text T}$, where
 $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$
-and $\alpha_k = \omega^k e^{2 \pi i k/n}$, it follows that the coefficients
+and $\alpha_k = \omega^k \kRoU$, it follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ in the polynomial
 $\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in equation
 (\ref{eq:fftbor:zOfX}) can be computed, at least in principle,
@@ -536,10 +536,10 @@ in the pseudocode on the following page.
 \caption{Pseudocode for \fftbor \rule[1.75ex]{0pt}{0pt}}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ \\
+of probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
-structure \strSt of \seq, integer $m$ \\
-{\sc Output:} & Probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75ex]{0pt}{0pt} \\
+structure \strSt of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Output:} & Probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75ex]{0pt}{0pt} \rule[-1.5ex]{0pt}{0pt} \\
 \hline
 \end{tabular*}
 \begin{algorithmic}[1]
@@ -547,7 +547,7 @@ structure \strSt of \seq, integer $m$ \\
 \State $n \gets \textit{length}(\seq)$
 \For{$k \gets 0, n-1$}
 \State $\omega_k \gets \exp(\frac{2 \pi i k}{n})$
-\Comment{Pre-compute all \nRoU, where $i = \sqrt{-1}$}
+\Comment{Compute all \nRoUs}
 \EndFor
 \For{$k \gets 0, n-1$}
 \State $y_k \gets 10^m \cdot \emZof{}{\omega_k} / \bfZ{}{}$
