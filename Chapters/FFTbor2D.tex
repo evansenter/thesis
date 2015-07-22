@@ -348,8 +348,8 @@ $p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
 $m$ has an upper bound of $8$ -- only the $m=8$ most significant digits
 are computed with \ffttwo.
-(Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx 10^8$)
-It is well-known that
+(Note that the software actually usesbase $2$ precision parameter,
+with maximum of $27$, where $2^{27} \approx 10^8$) It is well-known that
 the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
@@ -372,7 +372,7 @@ $\{ \kRoU : k=0,\dots,n-1 \}$ is a set of pairwise distinct
 \label{lem:ffttwo:lemma1}
 Let \strA,\,\strB denote two distinct, arbitrary but fixed,
 secondary structures of RNA sequence \seq, let \str range over
-all secondary structures of \seq, and let $d_0$ denote $\dBP{\strA}{\strB}$.
+all secondary structures of \seq, and let $d_0$ denote \dBP{\strA}{\strB}.
 If $x=\dBP{\strA}{\str}$ and $y=\dBP{\str}{\strB}$, then
 $y \in \{ d_0-x+2k: k=0,\dots,x\}$.
 
@@ -422,7 +422,7 @@ the distance is odd, then $\emZof{}{-\alpha} = -\emZof{}{\alpha}$.
 
 \begin{lemma}
 \label{lem:ffttwo:lemma4}
-{\sc Lemma 4:} Suppose that $M$ is evenly divisible by $4$,
+Suppose that $M$ is evenly divisible by $4$,
 $\nu = \exp(\frac{2 \pi i}{M})$ is the principal $M$-root of unity, and
 $\frac{M}{4} < k \leq \frac{M}{2}$. Then
 
@@ -565,7 +565,7 @@ full polynomial \emZ{}, since $\emZ{} = x \cdot Y(x^2)$, and the
 coefficients of \emZ{} of even parity are zero.
 
 In the following, we will need the observation, that if the parity of
-base pair distance $\dBP{\strA}{\strB}$ between \strA,\,\strB is
+base pair distance \dBP{\strA}{\strB} between \strA,\,\strB is
 even, then
 
 \begin{align}
@@ -595,89 +595,98 @@ fourth quadrant. More precisely,
 we compute $Z(\nu^k)$, for $k=0,\dots,\frac{M}{4}$, and by Lemmas 2,3,4 infer
 that for $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$, we have
 $Z(\nu^{k})= -1^{d_0} \cdot \overline{Z(\nu^{\frac{M}{2}-k})}$, where
-$d_0 = \dBP{\strA,\strB}$. This is justified in the following.
+$d_0 = \dBP{\strA}{\strB}$. This is justified in the following.
 
 By induction on $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$, we have
+
+\newlength{\maxLengthCases}
+\settowidth{\maxLengthCases}{$\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(\frac{M}{2}-k)}}}$}
+
 \begin{align}
-Y(\omega^k)&= Y(\nu^{2k})  \nonumber \\
-&= \left\{ \begin{array}{ll}
-Z(\nu^{k}) &\mbox{\tiny if
-$\dBP{\strA,\strB} = 0 \bmod 2$}\\
+\begin{split}
+Y(\omega^k) &= Y(\nu^{2k}) \\ &=
+\begin{cases}
+\makebox[\maxLengthCases][l]{\emZof{}{\nu^{k}}}
+& \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
 \frac{1}{\nu^{k}} \cdot Z(\nu^{k})
-&\mbox{\tiny if
-$\dBP{\strA,\strB} = 1 \bmod 2$}\\
-\end{array} \right. \nonumber\\
-&= \left\{ \begin{array}{ll}
-Z(- \overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
-$\dBP{\strA,\strB} = 0 \bmod 2$}\\
-\nu^{-k} \cdot
-Z(-\overline{\nu^{(\frac{M}{2}-k)}})
-&\mbox{\tiny if
-$\dBP{\strA,\strB} = 1 \bmod 2$}\\
-\end{array} \right. \nonumber\\
-&= \left\{ \begin{array}{ll}
-Z(\overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
-$\dBP{\strA,\strB} = 0 \bmod 2$}\\
-\nu^{-k} \cdot
--Z(\overline{\nu^{(\frac{M}{2}-k)}})
-&\mbox{\tiny if
-$\dBP{\strA,\strB} = 1 \bmod 2$}\\
-\end{array} \right.  \nonumber\\
-&= \left\{ \begin{array}{ll}
-\overline{Z(\nu^{(\frac{M}{2}-k)})} &\mbox{\tiny if
-$\dBP{\strA,\strB} = 0 \bmod 2$}\\
--\nu^{-k} \cdot
-\overline{Z(\nu^{(\frac{M}{2}-k)})}
-&\mbox{\tiny if
-$\dBP{\strA,\strB} = 1 \bmod 2$}\\
-\end{array} \right.  \nonumber\\
+& \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
+\end{cases}
+\\ &=
+\begin{cases}
+\emZof{}{-\overline{\nu^{(\frac{M}{2}-k)}}}
+& \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
+\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(\frac{M}{2}-k)}}}
+& \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
+\end{cases}
+\\ &=
+\begin{cases}
+\makebox[\maxLengthCases][l]{\emZof{}{\overline{\nu^{(\frac{M}{2}-k)}}}}
+& \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
+\nu^{-k} \cdot \emZof{}{\overline{\nu^{(\frac{M}{2}-k)}}}
+& \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
+\end{cases}
+\\ &=
+\begin{cases}
+\overline{\emZof{}{\nu^{(\frac{M}{2}-k)}}}
+& \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
+-\nu^{-k} \cdot \overline{\emZof{}{\nu^{(\frac{M}{2}-k)}}}
+& \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
+\end{cases}
+\end{split}
 \end{align}
+
 Line 1 follows by definition, since $\omega=\nu^2$;
-line 2 follows by equations (\ref{eq:evenY}) and
-(\ref{eq:oddY});
-line 3 follows by Lemma 4;
-line 4 follows by Lemma 3.
-Thus if $\dBP{\strA,\strB}$ is even, then
+line 2 follows by equations (\ref{eq:ffttwo:evenY}) and
+(\ref{eq:ffttwo:oddY});
+line 3 follows by Lemma \ref{lem:ffttwo:lemma4};
+line 4 follows by Lemma \ref{lem:ffttwo:lemma3}.
+Thus if \dBP{\strA}{\strB} is even, then
+
 \begin{align}
-\label{eq:trickyRootsOfUnity1}
-y_k = Y(\omega^k) = \left\{
-\begin{array}{ll}
-Z(\nu^k) &\mbox{\tiny for $k=0,\dots,\frac{M}{4}$}\\
-\quad & \quad\\
-\overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$.}\\
-\end{array} \right.
+\label{eq:ffttwo:trickForRoU1}
+y_k = Y(\omega^k) =
+\begin{cases}
+\emZof{}{\nu^k}
+& \text{ for } k=0,\dots,\frac{M}{4} \\
+\overline{\emZof{}{\nu^{\frac{M}{2}-k}}}
+& \text{ for } k=\frac{M}{4}+1,\dots,\frac{M}{2}-1 \\
+\end{cases}
 \end{align}
-while if $\dBP{\strA,\strB}$ is odd, then
+
+while if \dBP{\strA}{\strB} is odd, then
+
 \begin{align}
-\label{eq:trickyRootsOfUnity2}
-y_k = Y(\omega^k) = \left\{
-\begin{array}{ll}
-\nu^{-k} \cdot Z(\nu^k) &\mbox{\tiny for $k=0,\dots,\frac{M}{4}$}\\
-\quad & \quad\\
--\nu^{-k} \cdot \overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$.}\\
-\end{array} \right.
+\label{eq:ffttwo:trickForRoU2}
+y_k = Y(\omega^k) =
+\begin{cases}
+\nu^{-k} \cdot Z(\nu^k)
+& \text{ for } k=0,\dots,\frac{M}{4} \\
+-\nu^{-k} \cdot \overline{\emZof{}{\nu^{\frac{M}{2}-k}}}
+& \text{ for } k=\frac{M}{4}+1,\dots,\frac{M}{2}-1 \\
+\end{cases}
 \end{align}
-It follows that values $y_0,\dots,y_{M/2-1}$ can be obtained by only
+
+It follows that values $y_0,\dots,y_{\frac{M}{2}-1}$ can be obtained by only
 $\frac{M}{4}$ evaluations of \emZ{}.
 
-\begin{figure}[!h]
-\begin{small}
-{\sc Improved Algorithm} for \ffttwo\hfill\break
-{\sc Input:} RNA sequence $\seq=s_1,\dots,s_n$, and distinct secondary
-structures \strA,\,\strB of \seq, and integer $m$. \hfill\break
-{\sc Output:} Probabilities $p(x,y)=\bfZ{x,y}{1,n}/\bfZ{}{}$
-to $m$ significant digits for $x,y=0,\dots,n-1$.
-Let $N$ be the least even number greater than or equal
-to $n$, $M$ be the least number evenly divisible by $4$, which is greater than
-or equal to $(N+1)^2$, $M_0=M/2$, $\nu = \exp(\frac{2\pi i}{M})$,
-$\omega=\nu^2= \exp(\frac{2\pi i}{M_0})$. For $0 \leq k < M^2$, let
-$\pi_1(k) = \lfloor \frac{k}{M} \rfloor$,
-$\pi_2(k) = k - M \cdot \pi_1(k) = k \bmod M$, and note that
-$k=\pi_1(k)\cdot M + \pi_2(k)$.
-\end{small}
-\hfill\break
-\smallskip
-\begin{small}
+% \begin{figure}[!h]
+% \begin{small}
+% {\sc Improved Algorithm} for \ffttwo\hfill\break
+% {\sc Input:} RNA sequence $\seq=s_1,\dots,s_n$, and distinct secondary
+% structures \strA,\,\strB of \seq, and integer $m$. \hfill\break
+% {\sc Output:} Probabilities $p(x,y)=\bfZ{x,y}{1,n}/\bfZ{}{}$
+% to $m$ significant digits for $x,y=0,\dots,n-1$.
+% Let $N$ be the least even number greater than or equal
+% to $n$, $M$ be the least number evenly divisible by $4$, which is greater than
+% or equal to $(N+1)^2$, $M_0=M/2$, $\nu = \exp(\frac{2\pi i}{M})$,
+% $\omega=\nu^2= \exp(\frac{2\pi i}{M_0})$. For $0 \leq k < M^2$, let
+% $\pi_1(k) = \lfloor \frac{k}{M} \rfloor$,
+% $\pi_2(k) = k - M \cdot \pi_1(k) = k \bmod M$, and note that
+% $k=\pi_1(k)\cdot M + \pi_2(k)$.
+% \end{small}
+% \hfill\break
+% \smallskip
+% \begin{small}
 % \mverbatim
 % 1.  for $k=0,\dots,\frac{M}{2}$
 % 2.    compute the $M$-roots of unity $\nu^k,\nu^{-k}$
@@ -714,18 +723,18 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 % 33.    $z_k = \lfloor 10^m \cdot z_k \rfloor \cdot \frac{1}{10^m}$
 % 34.    //truncate to $m$ significant digits
 % |mendverbatim
-\end{small}
-\caption{\small
-Pseudocode to compute the $m$ most significant digits
-for probabilities
-$p_k = \frac{z_{k}}{\bfZ{}{}}=\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$.
-Our program, \ffttwo, supports values of $m = 1,\dots,8$ for the
-precision parameter $m$.
-(Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
-10^8$.)
-}
-\label{pseudocode:interpolatingP}
-\end{figure}
+% \end{small}
+% \caption{\small
+% Pseudocode to compute the $m$ most significant digits
+% for probabilities
+% $p_k = \frac{z_{k}}{\bfZ{}{}}=\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$.
+% Our program, \ffttwo, supports values of $m = 1,\dots,8$ for the
+% precision parameter $m$.
+% (Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
+% 10^8$.)
+% }
+% \label{pseudocode:interpolatingP}
+% \end{figure}
 
 \subsection{Polynomial interpolation to evaluate
 \texorpdfstring{\emZ{i,j}}{}}

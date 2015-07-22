@@ -368,8 +368,9 @@ FFTeq} (right). }
 \label{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
 \end{figure}
 
-\begin{table}
-\label{table:correlation}
+\begin{landscape}
+\begin{table}[!h]
+\centering
 \begin{tabular}
   {|l|llllllll|} \hline \small{Hastings (Yes\textbackslash No)} & \small{MFPT} & \small{Equilibrium} & \small{Kinfold} & \small{FFTmfpt} & \small{RNA2Dfold} & \small{FFTbor} & \small{BarrierBasins} & \small{FFTeq} \\
   \hline \small{MFPT}   & 1      & 0.5683 & 0.7945 & 0.5060 & 0.5110 & 0.5204 & 0.5280 & 0.4472 \\
@@ -384,4 +385,6 @@ FFTeq} (right). }
  \end{tabular}
 
  \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: {\tt MFPT} (mean first passage time, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), {\tt Equilibrium} (equilibrium time, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), {\tt FFTmfpt} (mean first passage time for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by {\tt FFTbor2D}, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, {\tt RNA2Dfold} (mean first passage time, computed as previously explained, but using {\tt RNA2Dfold} in place of {\tt FFTbor2D} to compute $P(x,y)$), \fftbor (mean first passage time, computed for the Markov chain consisting of states $0,1,\ldots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), {\tt BarrierBasins} (equilibrium time, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from {\tt Barriers}), and {\tt FFTeq} (equilibrium time, computed in the same fashion as {\tt BarrierBasins} using a Markov process derived from the energy landscape output by {\tt FFTbor2D}). }
+\label{table:correlation}
  \end{table}
+ \end{landscape}
