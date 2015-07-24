@@ -230,7 +230,7 @@ complex number $\rho \in \mathbb{C}$, and apply
 the following recursion, by setting $\emZof{i,j}{\rho}$ equal to
 
 \begin{align}
-\label{eqn:ffttwo:polyRecNussJacInit}
+\label{eq:ffttwo:polyRecNussJacInit}
 \begin{split}
 &\emZof{i,j-1}{\rho} \cdot \rho^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
@@ -313,7 +313,9 @@ of probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$
 \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & Probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to $m$ significant digits for $r,s=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
+{\sc Output:} & $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to
+$\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,n-1$
+\rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
@@ -328,7 +330,7 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \State $y_k \gets 2^m \cdot \frac{\emZof{}{\omega_k}}{\emZof{}{\omega_0}}$
 \EndFor
 \For{$k \gets 0, n^2-1$}
-\Comment{Compute IDFT from equation (\ref{eq:ajdef})}
+\Comment{Compute IDFT from equation (\ref{eq:ffttwo:aFromY})}
 \State $a_k \gets \frac{1}{n} \sum_{j=0}^{n^2-1} a_j\, \omega^{-kj}$
 \State $p_k \gets 2^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
@@ -455,7 +457,7 @@ of $4$ or more.
 \label{subsec:ffttwo:parity}
 
 Let $n$ denote the length of RNA sequence \seq, and let $N$ denote the
-least {\em even} integer greater than $n$. Since $N$ is even,
+least {\em even} integer greater than or equal to $n$. Since $N$ is even,
 we have $(r+s) \equiv (r\cdot(N+1)+s) \bmod 2$. For distinct
 fixed structures \strA,\,\strB, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
@@ -500,7 +502,7 @@ equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
 \smallskip
 
 In this case, we have
-$\emZ{} = \sum_{k=0}^{\frac{M}{2}-1} z_{2k} x^{2k}$. But then
+$\emZ{} = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}$. But then
 $\emZ{} = Y(u) = \sum_{k=0}^{M_0-1} b_k u^k$,
 where we have made a variable change $u=x^2$, and coefficient changes
 $b_k = a_{2k}$.
@@ -578,26 +580,26 @@ Y(x^2) = \frac{1}{x} \cdot \emZ{}.
 \label{subsec:ffttwo:compconj}
 
 As before, let $M$ be the the least number evenly divisible by $4$, which is
-greater than or equal to $(N+1)^2$, let $\nu = \exp(\frac{2 \pi i}{M})$
-and $\omega=\nu^2 = \exp(\frac{2 \pi i}{M})^2 =
-\exp(\frac{2 \pi i}{M/2})$. Clearly, $\nu$ is a principal complex
-$M$-root of unity, while $\omega$ is a principal complex $\frac{M}{2}$-root
-of unity. Evaluate $\mathcal Z$ for each $\frac{M}{2}$-root of unity
+greater than or equal to $(N+1)^2$, let $M_0=\frac{M}{2}$, let $\nu = \exp(\frac{2 \pi i}{M})$
+and $\omega=\nu^2 = \exp(\frac{2 \pi \cdot 2i}{M}) =
+\exp(\frac{2 \pi i}{M_0})$. Clearly, $\nu$ is a principal complex
+$M$-root of unity, while $\omega$ is a principal complex $M_0$-root
+of unity. Evaluate $\mathcal Z$ for each $M_0$-root of unity
 that belongs to the first quadrant, and apply Lemma \ref{lem:ffttwo:lemma2}
  to infer the values
-of $\mathcal Z$ for each $\frac{M}{2}$-root of unity that belongs to the
+of $\mathcal Z$ for each $M_0$-root of unity that belongs to the
 fourth quadrant. More precisely,
-we compute $\emZof{}{\nu^k}$, for $k=0,\dots,\frac{M}{4}$, and by Lemmas
+we compute $\emZof{}{\nu^k}$, for $k=0,\dots,\frac{M_0}{2}$, and by Lemmas
 \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4} infer
-that for $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$, we have
-$\emZof{}{\nu^{k}}= -1^{d_0} \cdot \overline{\emZof{}{\nu^{\frac{M}{2}-k}}}$,
+that for $k=\frac{M_0}{2}+1,\dots,M_0-1$, we have
+$\emZof{}{\nu^{k}}= -1^{d_0} \cdot \overline{\emZof{}{\nu^{M_0-k}}}$,
 where
 $d_0 = \dBP{\strA}{\strB}$. This is justified in the following.
 
-By induction on $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$, we have
+By induction on $k=\frac{M_0}{2}+1,\dots,M_0-1$, we have
 
 \newlength{\maxLengthCases}
-\settowidth{\maxLengthCases}{$\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(\frac{M}{2}-k)}}}$}
+\settowidth{\maxLengthCases}{$\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(M_0-k)}}}$}
 
 \begin{align}
 \begin{split}
@@ -610,23 +612,23 @@ Y(\omega^k) &= Y(\nu^{2k}) \\ &=
 \end{cases}
 \\ &=
 \begin{cases}
-\emZof{}{-\overline{\nu^{(\frac{M}{2}-k)}}}
+\emZof{}{-\overline{\nu^{(M_0-k)}}}
 & \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
-\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(\frac{M}{2}-k)}}}
+\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(M_0-k)}}}
 & \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
 \end{cases}
 \\ &=
 \begin{cases}
-\makebox[\maxLengthCases][l]{\emZof{}{\overline{\nu^{(\frac{M}{2}-k)}}}}
+\makebox[\maxLengthCases][l]{\emZof{}{\overline{\nu^{(M_0-k)}}}}
 & \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
-\nu^{-k} \cdot \emZof{}{\overline{\nu^{(\frac{M}{2}-k)}}}
+\nu^{-k} \cdot \emZof{}{\overline{\nu^{(M_0-k)}}}
 & \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
 \end{cases}
 \\ &=
 \begin{cases}
-\overline{\emZof{}{\nu^{(\frac{M}{2}-k)}}}
+\overline{\emZof{}{\nu^{(M_0-k)}}}
 & \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
--\nu^{-k} \cdot \overline{\emZof{}{\nu^{(\frac{M}{2}-k)}}}
+-\nu^{-k} \cdot \overline{\emZof{}{\nu^{(M_0-k)}}}
 & \text{if $\dBP{\strA}{\strB} = 1 \bmod 2$} \\
 \end{cases}
 \end{split}
@@ -644,9 +646,9 @@ Thus if \dBP{\strA}{\strB} is even, then
 y_k = Y(\omega^k) =
 \begin{cases}
 \emZof{}{\nu^k}
-& \text{ for } k=0,\dots,\frac{M}{4} \\
-\overline{\emZof{}{\nu^{\frac{M}{2}-k}}}
-& \text{ for } k=\frac{M}{4}+1,\dots,\frac{M}{2}-1 \\
+& \text{ for } k=0,\dots,\frac{M_0}{2} \\
+\overline{\emZof{}{\nu^{M_0-k}}}
+& \text{ for } k=\frac{M_0}{2}+1,\dots,M_0-1 \\
 \end{cases}
 \end{align}
 
@@ -657,14 +659,99 @@ while if \dBP{\strA}{\strB} is odd, then
 y_k = Y(\omega^k) =
 \begin{cases}
 \nu^{-k} \cdot \emZof{}{\nu^k}
-& \text{ for } k=0,\dots,\frac{M}{4} \\
--\nu^{-k} \cdot \overline{\emZof{}{\nu^{\frac{M}{2}-k}}}
-& \text{ for } k=\frac{M}{4}+1,\dots,\frac{M}{2}-1 \\
+& \text{ for } k=0,\dots,\frac{M_0}{2} \\
+-\nu^{-k} \cdot \overline{\emZof{}{\nu^{M_0-k}}}
+& \text{ for } k=\frac{M_0}{2}+1,\dots,M_0-1 \\
 \end{cases}
 \end{align}
 
-It follows that values $y_0,\dots,y_{\frac{M}{2}-1}$ can be obtained by only
+It follows that values $y_0,\dots,y_{M_0-1}$ can be obtained by only
 $\frac{M}{4}$ evaluations of \emZ{}.
+
+\subsection{Polynomial interpolation to evaluate
+\texorpdfstring{\emZ{i,j}}{}}
+\label{subsec:ffttwo:fft}
+
+Now let $M_0=\frac{M}{2}$, let
+$\nu=\exp(\frac{2\pi i}{M})$ be the principal $M$-root of unity, and
+$\omega=\nu^2=\exp(\frac{2\pi i}{M/2})=\exp(\frac{2\pi \cdot 2i}{M})$ be
+the principal $M_0$-root of unity. Recall that the
+Vandermonde matrix $V_{M_0}$ is defined to be the
+$M_0 \times M_0$ matrix, whose $i,j$ entry is
+$\omega^{i \cdot j} = \nu^{2 i \cdot j}$;
+i.e.
+
+\begin{align}
+\label{eq:ffttwo:vandermonde}
+V_{M_0} = \left(
+\begin{array}{rrrrr}
+1 & 1 & 1 & \dots & 1 \\
+1 & \omega & \omega^2 & \dots & \omega^{M_0-1} \\
+1 & \omega^2 & \omega^4 & \dots & \omega^{2(M_0-1)} \\
+1 & \omega^3 & \omega^6 & \dots & \omega^{3(M_0-1)} \\
+\vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & \omega^{M_0-1} & \omega^{2(M_0-1)} & \dots & \omega^{(M_0-1)(M_0-1)} \\
+\end{array}
+\right)
+\end{align}
+
+As described in Chapter \ref{ch:fftbor}, the \fft is the $O(n \log n)$
+algorithm, which computes the Discrete Fourier Transform (DFT), defined
+as the matrix product $\bfY = V_{M_0} {\bf A}$:
+
+\begin{align}
+\label{eq:ffttwo:dftMatrix}
+\left(
+\begin{array}{l}
+y_0 \\
+y_1 \\
+y_2 \\
+\vdots \\
+y_{M_0-1} \\
+\end{array}
+\right)
+= V_n \cdot
+\left(
+\begin{array}{l}
+a_0 \\
+a_1 \\
+a_2 \\
+\vdots \\
+a_{M_0-1} \\
+\end{array}
+\right)
+\end{align}
+
+The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
+and that
+
+\begin{align}
+\label{eq:ffttwo:aFromY}
+a_j &=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k\, \omega^{-kj}
+=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k\, \nu^{-2kj}
+\end{align}
+
+for $j=0,\dots,M_0-1$.
+
+Since we defined \bfY in equation (\ref{eq:ffttwo:yColumn}) by $\bfY =
+(y_0,\dots,y_{M_0-1})^{\text T}$, where
+$y_0=\emZof{}{\alpha_0},\dots,\allowbreak y_{M_0-1}=\emZof{}{\alpha_{M_0-1}}$
+and $\alpha_k = \omega^k
+\exp(\frac{k \cdot 2\pi i}{M_0})$,
+it follows that the coefficients
+$z_k=\bfZ{\pi_1(k),\pi_2(k)}{1,n}$ in the polynomial
+$\emZ{} = z_0 + z_1 x + \dots + z_{M} x^{M}$ defined in
+(\ref{eq:ffttwo:zOfX}) can be computed using the FFT.
+However, in practice we encounter the same issues of numerical instability
+observed in Section \ref{subsec:fftbor:fft}, and adopt a similar approach
+to compute the $m$ most significant
+digits of $\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$,
+where the partition function $\bfZ{}{} = \sum_{S} \boltzf{\str}$ satisfies
+${\bfZ{}{}} = \sum_{x,y} \bfZ{x,y}{1,n}$. This leads to numerical stability,
+allowing \ffttwo to compute the
+$m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\bfZ{}{}}$.
+Pseudocode for \ffttwo which includes the performance enhancements described in
+Section \ref{sec:ffttwo:perf} follows in Figure \ref{fig:ffttwo:algoImproved}.
 
 \begin{figure}[!ht]
 \label{fig:ffttwo:algoImproved}
@@ -677,7 +764,9 @@ of probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$
 \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & Probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to $m$ significant digits for $r,s=0,\dots,N$ \rule[-1.75em]{0pt}{0pt} \\
+{\sc Output:} & $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to
+$\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
+\rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
@@ -728,7 +817,7 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \State $y_k \gets 2^m \cdot \frac{y_k}{\emZof{}{\nu_0}}$
 \EndFor
 \For{$k \gets 0, M_0-1$}
-\Comment{Compute IDFT from equation (\ref{eq:ajdef})}
+\Comment{Compute IDFT from equation (\ref{eq:ffttwo:aFromY})}
 \State $a_k \gets \frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}$
 \EndFor
 \For{$k \gets 0, M-1$}
@@ -768,84 +857,6 @@ Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
 \end{figure}
-
-\subsection{Polynomial interpolation to evaluate
-\texorpdfstring{\emZ{i,j}}{}}
-\label{subsec:ffttwo:fft}
-
-Now let $M_0=\frac{M}{2}$, let
-$\nu=\exp(\frac{2\pi i}{M})$ be the principal $M$-root of unity, and
-$\omega=\nu^2=\exp(\frac{2\pi i}{M/2})=\exp(\frac{2\pi \cdot 2i}{M})$ be
-the principal $M_0$-root of unity. Recall that the
-Vandermonde matrix $V_{M_0}$ is defined to be the
-$M_0 \times M_0$ matrix, whose $i,j$ entry is
-$\omega^{i \cdot j} = \nu^{2 i \cdot j}$;
-i.e.
-$$
-V_{M_0} = \left(
-\begin{array}{rrrrr}
-1&1&1&\dots&1\\
-1&\omega&\omega^2&\dots&\omega^{M_0-1}\\
-1&\omega^2&\omega^4&\dots&\omega^{2(M_0-1)}\\
-1&\omega^3&\omega^6&\dots&\omega^{3(M_0-1)}\\
-\vdots& \vdots& \vdots& \vdots& \vdots\\
-1&\omega^{M_0-1}&\omega^{2(M_0-1)}&\dots&\omega^{(M_0-1)(M_0-1)}\\
-\end{array}
-\right)
-$$
-The Fast Fourier Transform (FFT) is the $O(n \log n)$
-algorithm, which computes the Discrete Fourier Transform (DFT), defined
-as the matrix product ${\bf Y} = V_{M_0} {\bf A}$:
-$$
-\left(
-\begin{array}{l}
-y_0\\
-y_1\\
-y_2\\
-\vdots \\
-y_{M_0-1}\\
-\end{array}
-\right)
-= V_{M_0} \cdot
-\left(
-\begin{array}{l}
-a_0\\
-a_1\\
-a_2\\
-\vdots \\
-a_{M_0-1}\\
-\end{array}
-\right)
-$$
-The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
-and that
-\begin{align}
-\label{eq:ajdef}
-a_j &=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
-=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \nu^{-2kj}
-\end{align}
-for $j=0,\dots,M_0-1$ (for more on FFT, see \cite{cormen}).
-
-Since we defined $\bf Y$ in (\ref{eq:defY}) by ${\bf Y} =
-(y_0,\dots,y_{M_0-1})^T$, where
-$y_0=\emZof{}{\alpha_0},\dots, y_{M_0-1}=\emZof{}{\alpha_{M_0-1}}$ and $\alpha_k = \omega^k
-\exp(\frac{k \cdot 2\pi i}{M_0})$,
-it follows that the coefficients
-$z_k=\bfZ{\pi_1(k),\pi_2(k)}{1,n}$ in the polynomial
-$\emZ{} = z_0 + z_1 x + \dots + z_{M} x^{M}$ defined in
-(\ref{eq:polynomialYann}) can be computed, at least in principle,
-by using the FFT. However, since the values of
-$z_{k}$ are astronomically large, numerical
-instability makes even this approach infeasible for moderate values of $n$.
-Nevertheless, we apply this approach to compute the $m$ most significant
-digits of $\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$,
-where the partition function $\bfZ{}{} = \sum_{S} \exp(-E(\str)/RT)$ satisfies
-${\bfZ{}{}} = \sum_{x,y} \bfZ{x,y}{1,n}$. This leads to numerical stability,
-allowing \ffttwo to compute the
-$m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\bfZ{}{}}$.
-Pseudocode for the complete algorithm, \fftbor, is given in
-%Figure~\ref{pseudocode:interpolatingP}.
-Figure~2.
 
 \section{Benchmarking and performance considerations}
 \label{sec:ffttwo:benchmarking}
