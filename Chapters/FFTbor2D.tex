@@ -26,7 +26,7 @@ in Chapter \ref{ch:hermes}.
 \label{subsec:ffttwo:org}
 
 This chapter is organized in the following fashion. Because the history for
-this work arises naturally from the background described in section
+this work arises naturally from the history provided in Section
 \ref{sec:fftbor:bkgrnd}, we provide only a brief background
 and immediately fall into
 a technical discussion of the underlying algorithm. We first develop the
@@ -38,7 +38,10 @@ the \idft, and map to the 2D energy landscape. We describe two exploitations of
 $P(x)$, a parity condition and complex conjugates which further reduce the
 runtime by a factor of 4. Finally, we contrast this software against \rtwofold,
 and outline the performance characteristics of both softwares and highlight
-the benefits and drawbacks of both.
+the benefits and drawbacks of both. We elect to refrain from describing
+applications of \ffttwo until Chapter \ref{ch:hermes}, where the software is
+applied to quickly approximate \mfpt and \eqt for the folding of RNA molecules
+between any two distinct, user provided structures \strA,\,\strB.
 
 % \section{Background}
 % \label{sec:ffttwo:bkgrnd}
@@ -288,7 +291,7 @@ p(x) =
 where the \fft (FFT) is used to implement the
 interpolation of
 the coefficients using the \idft (DFT), as
-described in section \ref{subsec:ffttwo:fft}.  The following pseudocode
+described in Section \ref{subsec:ffttwo:fft}.  The following pseudocode
 describes how
 to compute the $m$ most significant digits
 for probabilities
@@ -751,7 +754,7 @@ ${\bfZ{}{}} = \sum_{x,y} \bfZ{x,y}{1,n}$. This leads to numerical stability,
 allowing \ffttwo to compute the
 $m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\bfZ{}{}}$.
 Pseudocode for \ffttwo which includes the performance enhancements described in
-Section \ref{sec:ffttwo:perf} follows in Figure \ref{fig:ffttwo:algoImproved}.
+Section \ref{sec:ffttwo:perf} follows below.
 
 \begin{figure}[!ht]
 \label{fig:ffttwo:algoImproved}
@@ -858,8 +861,163 @@ $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
 \end{figure}
 
-\section{Benchmarking and performance considerations}
-\label{sec:ffttwo:benchmarking}
+\section{Performance characteristics of \ffttwo}
+\label{sec:ffttwo:speed}
 
-\section{Applications of the \ffttwo algorithm}
-\label{sec:ffttwo:applications}
+To perform comparative benchmarking between {\tt RNA2Dfold} and {\tt FFTbor2D},
+we took precision parameter $m=8$, and proceeded as follows.
+For each sequence length $n = 20,25,30,\ldots,300$, we generated
+$100$ random sequences using probability $0.25$ for each nucleotide A,C,G,U.
+For a given RNA sequence $\seq$, the metastable structure $A$ was
+taken to be the MFE structure of $\seq$.
+Using {\tt RNAbor}, we determined that value $k_0\geq 10$, for which
+partition function $Z_{k_0}$ constitutes a visible peak in the graphical
+output -- see Figure~2 and 3 of  \cite{Freyhult.b07} for an example.
+Subsequently, metastable structure $B$ was taken to be that structure
+having minimum free energy over all structures, whose base pair distance from
+$A$ was $k_0$.
+
+For all $0 \leq x,y \leq n$, {\tt RNA2Dfold} and {\tt FFTbor2D} were
+benchmarked in the computation of all Boltzmann probabilities
+$p(x,y)= \frac{Z(x,y)}{Z}$, where $x$ [resp. $y$] represents base pair
+distance to metastable structure $A$ [resp. $B$]. Care was taken for
+both software to employ the same energy model (Turner99 energy model,
+no dangles, suppression of minimum free energy structure computations
+for {\tt RNA2Dfold}) and the same number of parallel threads (8 threads
+using OpenMP). Nonetheless, there are slight differences in the energy
+models -- namely, {\tt RNA2Dfold} includes
+mismatch penalties for multiloop stems and for exterior loops, while
+{\tt FFTbor2D} does not. Even in the computation of the partition function
+$Z$, for spliced leader RNA from {\em L. collosoma} of length 56 nt,
+{\tt RNA2Dfold} {\tt -d0} obtains a value of
+$-9.660419$ kcal/mol, while {\tt FFTbor2D} obtains
+$-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
+{\tt RNA2Dfold} {\tt -d0} obtains a value of
+$-22.171785$ kcal/mol, while {\tt FFTbor2D} obtains
+$-22.173213$ kcal/mol.
+Note that the straightforward calculation of the partition function,following McCaskill's algorithm \cite{mcCaskill}makes no use of the FFT engine, and thus the
+differences cannot be due to floating point or precision issues.
+
+For benchmarking purposes,
+to allow for a fair comparison of {\tt FFTbor2D}
+with {\tt RNA2Dfold}, we restricted therange of $x,y$ in the same manner as done in the source code of {\tt RNA2Dfold}.
+In that code, parameters $K$ [resp. $L$] are defined respectively to be the
+sum of the number of base pairs in reference structure $A$
+[resp. reference structure $B$] plus the number of base pairs in
+the maximum matching (Nussinov) structure which contains
+no base pair of $A$ [resp. $B$].
+For $x \geq K, y \geq L$, both {\tt RNA2Dfold} and {\tt FFTbor2D}
+set $p(x,y)=0$.  For the benchmarking results displayed in
+%Figures~\ref{fig:benchmarking1}, \ref{fig:benchmarking2},
+%\ref{fig:benchmarking3}, the values $x,y$ are restricted in
+Figures~3,4,5, the values $x,y$ are restricted in
+{\tt FFTbor2D} to $0 \leq x,y \leq \max(K,L)$, while $0 \leq x \leq K$
+and $0 \leq y \leq L$ in {\tt RNA2Dfold}.
+
+%Figure~\ref{fig:benchmarking1} depicts average run time of {\tt RNA2Dfold}
+Figure~3 depicts average run time of {\tt RNA2Dfold}
+and {\tt FFTbor2D} as a function of RNA sequence length, for random RNA
+sequences of lengths $20-200$ and their metastable structures $A,B$, as
+previously explained.  We see that both programs have
+roughly comparable run times for sequences of length up to approximately
+80 nt, while {\tt FFTbor2D} is demonstrably faster for longer sequences.
+%Figure~\ref{fig:benchmarking2} is an enlargement of
+Figure~4 presents log run time as a function of sequence length, in order
+to more clearly determine the crossover point in performance.
+{\tt RNA2Dfold} is marginally faster for sequences of
+length up to roughly 80 nt, though the difference is in the millisecond
+range.
+%Figure~\ref{fig:benchmarking3}
+Figure~5
+shows that the standard deviation of run times on random sequences is
+tiny for {\tt FFTbor2D} compared with {\tt RNA2Dfold}, where standard
+deviation increases rapidly as a function of sequence length. This figure
+shows that run time of {\tt RNA2Dfold} depends on sequence details, as
+well as sequence length, while the run time of {\tt FFTbor2D} depends only
+on sequence length.
+
+%\begin{figure}[!bpth]
+%\begin{figure}[!thbp]
+\begin{figure}[!t]
+\begin{center}
+% \includegraphics[width=.8\linewidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold}
+\caption{\small
+Run time in seconds for {\tt RNA2Dfold} and {\tt FFTbor2D} on random
+RNA sequences of length $20-200$ nt, where sequence generation and
+choice of metastable structures $A,B$ is described in the text.
+Beyond a length of approximately $80$ nt, {\tt FFTbor2D} is demonstrably
+faster.
+}
+\label{fig:benchmarking1}
+\end{center}
+\end{figure}
+
+
+%\begin{figure}[!bpth]
+\begin{figure}[!b]
+\begin{center}
+% \includegraphics[width=.8\linewidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold_log_scale}
+\caption{\small
+Logarithm of run time in seconds for {\tt RNA2Dfold} and {\tt FFTbor2D}
+on random RNA sequences of length less than $200$ nt, for same data as that
+%in Figure~\ref{fig:benchmarking1}. By taking logarithm of run times, the
+in Figure~3. By taking logarithm of run times, the
+crossover points are apparent,
+where {\tt FFTbor2D} is faster than {\tt RNA2Dfold}. For very small
+sequences, {\tt RNA2Dfold} is faster, though since both programs converge
+in a fraction of a second, this difference is of no practical consequence.
+}
+\label{fig:benchmarking2}
+\end{center}
+\end{figure}
+
+\begin{figure}[!bpth]
+\begin{center}
+% \includegraphics[width=.45\linewidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold_stdev_runtimes}
+% \includegraphics[width=.45\linewidth]{FIGURES/time_min_max_benchmarking_fftbor2d_vs_rna2dfold}
+\caption{\small
+{\em (Left)}
+Standard deviation of run times of {\tt RNA2Dfold} and {\tt FFTbor2D}
+as a function of sequence length $n$.
+{\em (Right)}
+Minimum and maximum run times for {\tt RNA2Dfold} and {\tt FFTbor2D}.
+For each collection of 100 random sequences of length $n$, the minimum
+and maximum run time for a sequence of that length was computed.
+Taken together, these figures clearly show the
+run time dependence of {\tt RNA2Dfold} on particular sequences, while
+the run time of {\tt FFTbor2D} depends only on sequence length, rather than
+sequence details.
+}
+\end{center}
+\label{fig:benchmarking3}
+\end{figure}
+
+
+%\begin{figure}[!tbph]
+\begin{figure}[!t]
+\begin{center}
+% \includegraphics[width=.50\linewidth]{FIGURES/PeterFFTbor2DLcollosoma}
+\hskip 1cm
+% \includegraphics[width=.35\linewidth]{FIGURES/FFTbor2D_prob_contour}
+\caption{\small
+2D projection of energy landscape for Spliced Leader (SL) RNA
+from {\em Leptomonas collosoma}, having
+sequence
+{\tt AACUAAAACA AUUUUUGAAG AACAGUUUCU GUACUUCAUU GGUAUGUAGA GACUUC} and
+metastable secondary structures  $A=$
+{\tiny \tt ..((...((((((..(((((.((((...)))).)))))..))).)))..)).....}, and
+$B=$ {\tiny \tt .......................((((((((((((.....)))))..)))))))..}.
+The $x$-axis (resp. $y$-axis)
+represents base pair distance between metastable structure $A$ (resp. $B$),
+while the $z$-axis represents the ensemble free energy $-RT \log Z_{x,y}$,
+where $Z_{x,y}$ is computed in {\tt FFTbor2D} by $Z_{x,y}= p(x,y) \cdot Z$.
+Low energy positions $(x,y)$ correspond to high Boltzmann probability positions.
+The left panel depicts a heat map of the ensemble free energy,
+while the right panel depicts a contour map with level curves. In analogy
+with mountain climbing, one expects an optimal path to follow along the
+valley regions in traversing the landscape from $A$ to $B$. Data produced
+with {\tt FFTbor2D}; graphics produced using Mathematica.
+}
+\label{fig:heatmapFFTbor2D}
+\end{center}
+\end{figure}
