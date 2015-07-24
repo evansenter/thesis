@@ -320,7 +320,7 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \Function{FFTbor2D}{\seq, \strA, \strB, $m$}
 \State $n \gets \textit{length}(\seq)$
 \For{$k \gets 0, n^2-1$}
-\Comment{Compute all complex $n^2$ roots of unity}
+\Comment{Compute all complex $n^2$-roots of unity}
 \State $\omega_k \gets \exp(\frac{2 \pi i k}{n^2})$
 \EndFor
 \For{$k \gets 0, n^2-1$}
@@ -343,7 +343,7 @@ Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
-$m$ has an upper bound of $27$ -- only the $\lfloor \log_{10}(2^m) \rfloor =8$
+$m$ has an upper bound of $27$ --- only the $\lfloor \log_{10}(2^m) \rfloor =8$
 most significant digits
 are computed with \ffttwo.
 It is well-known that
@@ -692,7 +692,7 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \State $\pi_2(k) \gets k \bmod (N + 1)$
 \EndFor
 \For{$k \gets 0, M-1$}
-\Comment{Compute all complex $M$ and $M_0$ roots of unity}
+\Comment{Compute all complex $M$ and $M_0$-roots of unity}
 \State $\nu_k \gets \exp(\frac{2 \pi i k}{M})$
 \If{$k < M_0$}
 \State $\omega_k \gets \exp(\frac{2 \pi i k}{M_0})$
@@ -761,7 +761,7 @@ Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
-$m$ has an upper bound of $27$ -- only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
+$m$ has an upper bound of $27$ --- only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
 are computed with \ffttwo. It is well-known that
 the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
