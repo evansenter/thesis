@@ -303,35 +303,34 @@ In the next section, we explain a highly non-trivial improvement of
 this algorithm to reduce time by a factor of $4$.
 
 \begin{figure}[!ht]
-\begin{algorithm}[H]
-\label{algo:fftbor:algo}
-\caption{Pseudocode for \ffttwo \rule[1.75ex]{0pt}{0pt}}
+\label{fig:ffttwo:algo}
+\begin{center}
+{\large Pseudocode for \ffttwo} \\
+\end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities \\
-& $p_{rn+s}=p(r,s)=\bfZ{r,s}{1,n}/\bfZ{}{}$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Input:} & RNA sequence $\seq = \seqN$, distinct secondary
-structures \strA, \strB of \seq, \\
-& integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & Probabilities $p_{rn+s}=p(r,s)=\bfZ{r,s}{1,n}/\bfZ{}{}$ to $m$ significant digits for \\
-& $r,s=0,\dots,n-1$ \rule[-1ex]{0pt}{0pt} \\
-\hline
+of probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$
+\rule[-1.5ex]{0pt}{0pt} \\
+{\sc Input:} & RNA sequence $\seq = \seqN$, secondary
+structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Output:} & Probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to $m$ significant digits for $r,s=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
+\hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
 \Function{FFTbor2D}{\seq, \strA, \strB, $m$}
 \State $n \gets \textit{length}(\seq)$
 \For{$k \gets 0, n^2-1$}
-\State $\omega_k \gets \exp(\frac{2 \pi i k}{n^2})$
 \Comment{Compute all complex $n^2$ roots of unity}
+\State $\omega_k \gets \exp(\frac{2 \pi i k}{n^2})$
 \EndFor
 \For{$k \gets 0, n^2-1$}
-\State $y_k \gets 10^m \cdot \emZof{}{\omega_k} / \bfZ{}{}$
-\Comment{Note that \emZof{}{\omega_0} = $\bfZ{}{}$}
+\Comment{Note that $\emZof{}{\omega_0} = \bfZ{}{}$}
+\State $y_k \gets 2^m \cdot \frac{\emZof{}{\omega_k}}{\emZof{}{\omega_0}}$
 \EndFor
 \For{$k \gets 0, n^2-1$}
-\State $p_k \gets \frac{\sum_{j=0}^{n^2-1} a_j \omega^{-kj}}{n}$
-\Comment{Where $a_j$ comes from equation (\ref{xxx})}
-\State $p_k \gets \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+\Comment{Compute IDFT from equation (\ref{eq:ajdef})}
+\State $a_k \frac{1}{n} \sum_{j=0}^{n^2-1} a_j\, \omega^{-kj}$
+\State $p_k \gets 2^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{n^2-1}$
@@ -340,7 +339,6 @@ from equation (\ref{xxx})}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\end{algorithm}
 \caption{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
@@ -354,7 +352,6 @@ the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
-\label{fig:ffttwo:pseudo}
 \end{figure}
 
 \section{Acceleration of the \ffttwo algorithm}
@@ -459,7 +456,7 @@ of $4$ or more.
 \label{subsec:ffttwo:parity}
 
 Let $n$ denote the length of RNA sequence \seq, and let $N$ denote the
-least {\em even} integer greater than or equal to $n$. Since $N$ is even,
+least {\em even} integer greater than $n$. Since $N$ is even,
 we have $(r+s) \equiv (r\cdot(N+1)+s) \bmod 2$. For distinct
 fixed structures \strA,\,\strB, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
@@ -479,7 +476,7 @@ x^{\pi_1(k)\cdot (N+1) + \pi_2(k)} \\
 
 where for the last equality, we have used the fact that
 $k = \pi_1(k)\cdot (N+1)+\pi_2(k)$, well-known from
-row major order of a 2-dimensional array.
+row major order of a 0-indexed 2-dimensional array.
 
 Consider the coefficients of the polynomial
 
@@ -503,7 +500,6 @@ z_k x^k$, whereupon coefficients $z_k=0$ for $k>(N+1)^2$.
 equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
 \smallskip
 
-\noindent
 In this case, we have
 $\emZ{} = \sum_{k=0}^{\frac{M}{2}-1} z_{2k} x^{2k}$. But then
 $\emZ{} = Y(u) = \sum_{k=0}^{M_0-1} b_k u^k$,
@@ -521,7 +517,7 @@ Y(u) = \sum_{k=0}^{M_0-1} b_k u^k = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}.
 Since $Y(x^2)=\emZ{}$, we have
 $Y(\exp(\frac{2\pi i k}{M/2})) =
 Y(\exp(\frac{4\pi i k}{M})) =
-\emZof{}{\exp(\frac{2\pi i k}{M})}$, hence we
+\emZof{}{\exp(\frac{2\pi i k}{M})}$, hence we can
 use the previous recursions (\ref{eq:ffttwo:polyRecNussJac})
 to evaluate \emZof{}{\exp(\frac{2\pi i k}{M})}.  Instead of
 performing $M$ evaluations of \emZ{} at $M$-roots of unity,
@@ -533,10 +529,9 @@ full polynomial \emZ{}, since its coefficients of odd parity are zero.
 
 \medskip
 {\sc Case 2}: All coefficients $z_k$ of even parity in
-equation (\ref{eq:yannPolynomialN}) are zero.
+equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
 \smallskip
 
-\noindent
 In this case, $z_0,z_2,z_4,\dots$ are zero, so
 $\emZ{} = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
 $\emZ{} = x \cdot Y(u)$, where
@@ -588,13 +583,16 @@ greater than or equal to $(N+1)^2$, let $\nu = \exp(\frac{2 \pi i}{M})$
 and $\omega=\nu^2 = \exp(\frac{2 \pi i}{M})^2 =
 \exp(\frac{2 \pi i}{M/2})$. Clearly, $\nu$ is a principal complex
 $M$-root of unity, while $\omega$ is a principal complex $\frac{M}{2}$-root
-of unity. Evaluate $Z(\alpha)$ for each $\frac{M}{2}$-root of unity
-that belongs to the first quadrant, and apply Lemma 2 to infer the values
-of $Z(\alpha)$ for each $\frac{M}{2}$-root of unity that belongs to the
+of unity. Evaluate $\mathcal Z$ for each $\frac{M}{2}$-root of unity
+that belongs to the first quadrant, and apply Lemma \ref{lem:ffttwo:lemma2}
+ to infer the values
+of $\mathcal Z$ for each $\frac{M}{2}$-root of unity that belongs to the
 fourth quadrant. More precisely,
-we compute $Z(\nu^k)$, for $k=0,\dots,\frac{M}{4}$, and by Lemmas 2,3,4 infer
+we compute $\emZof{}{\nu^k}$, for $k=0,\dots,\frac{M}{4}$, and by Lemmas
+\ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4} infer
 that for $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$, we have
-$Z(\nu^{k})= -1^{d_0} \cdot \overline{Z(\nu^{\frac{M}{2}-k})}$, where
+$\emZof{}{\nu^{k}}= -1^{d_0} \cdot \overline{\emZof{}{\nu^{\frac{M}{2}-k}}}$,
+where
 $d_0 = \dBP{\strA}{\strB}$. This is justified in the following.
 
 By induction on $k=\frac{M}{4}+1,\dots,\frac{M}{2}-1$, we have
@@ -659,7 +657,7 @@ while if \dBP{\strA}{\strB} is odd, then
 \label{eq:ffttwo:trickForRoU2}
 y_k = Y(\omega^k) =
 \begin{cases}
-\nu^{-k} \cdot Z(\nu^k)
+\nu^{-k} \cdot \emZof{}{\nu^k}
 & \text{ for } k=0,\dots,\frac{M}{4} \\
 -\nu^{-k} \cdot \overline{\emZof{}{\nu^{\frac{M}{2}-k}}}
 & \text{ for } k=\frac{M}{4}+1,\dots,\frac{M}{2}-1 \\
@@ -668,6 +666,111 @@ y_k = Y(\omega^k) =
 
 It follows that values $y_0,\dots,y_{\frac{M}{2}-1}$ can be obtained by only
 $\frac{M}{4}$ evaluations of \emZ{}.
+
+\begin{figure}[!ht]
+\label{fig:ffttwo:algoImproved}
+\begin{center}
+{\large Pseudocode for improved \ffttwo} \\
+\end{center}
+\begin{tabular*}{\textwidth}{ll}
+{\sc Purpose:} & Computes the $m$ most significant digits
+of probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$
+\rule[-1.5ex]{0pt}{0pt} \\
+{\sc Input:} & RNA sequence $\seq = \seqN$, secondary
+structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Output:} & Probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to $m$ significant digits for $r,s=0,\dots,N$ \rule[-1.75em]{0pt}{0pt} \\
+\hline \rule[0ex]{0pt}{0pt}
+\end{tabular*}
+\begin{algorithmic}[1]
+\Function{FFTbor2D Improved}{\seq, \strA, \strB, $m$}
+\State $n \gets \textit{length}(\seq)$
+\State $N \gets n + (n \bmod 2)$
+\State $M \gets (N + 1)^2 + ((N + 1)^2 \bmod 4)$
+\State $M_0 \gets \frac{M}{2}$
+\For{$k \gets 0, (N + 1)^2-1$}
+\Comment{Note that $k \gets \pi_1(k) \cdot M + \pi_2(k)$}
+\State $\pi_1(k) \gets \lfloor \frac{k}{N + 1} \rfloor$
+\State $\pi_2(k) \gets k \bmod (N + 1)$
+\EndFor
+\For{$k \gets 0, M-1$}
+\Comment{Compute all complex $M$ and $M_0$ roots of unity}
+\State $\nu_k \gets \exp(\frac{2 \pi i k}{M})$
+\If{$k < M_0$}
+\State $\omega_k \gets \exp(\frac{2 \pi i k}{M_0})$
+\EndIf
+\EndFor
+\For{$k \gets 0, M_0-1$}
+\If{$\dBP{\strA}{\strB} \bmod 2 = 0$}
+\Comment{From equation (\ref{eq:ffttwo:trickForRoU1})}
+\If{$k \leq \frac{M_0}{2}$}
+\State $y_k \gets \emZof{}{\nu^k}$
+\Else
+\State $y_k \gets \overline{\emZof{}{\nu^{M_0-k}}}$
+\EndIf
+\Else
+\Comment{From equation (\ref{eq:ffttwo:trickForRoU2})}
+\If{$k \leq \frac{M_0}{2}$}
+\State $y_k \gets \nu^{-k} \cdot \emZof{}{\nu^k}$
+\Else
+\State $y_k \gets -\nu^{-k} \cdot \overline{\emZof{}{\nu^{M_0-k}}}$
+\EndIf
+\EndIf
+\EndFor
+\algstore{ffttwoImproved}
+\end{algorithmic}
+\end{figure}
+\clearpage
+
+\begin{figure}[!ht]
+\begin{algorithmic}[1]
+\algrestore{ffttwoImproved}
+\For{$k \gets 0, M_0-1$}
+\Comment{Note that $\emZof{}{\nu_0} = \bfZ{}{}$}
+\State $y_k \gets 2^m \cdot \frac{y_k}{\emZof{}{\nu_0}}$
+\EndFor
+\For{$k \gets 0, M_0-1$}
+\Comment{Compute IDFT from equation (\ref{eq:ajdef})}
+\State $a_k \gets \frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}$
+\EndFor
+\For{$k \gets 0, M-1$}
+\Comment{Change the polynomial back to degree $M$}
+\If{$\dBP{\strA}{\strB} \bmod 2 = 0$}
+\If{$k \bmod 2 = 0$}
+\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets a_{k/2}$
+\Else
+\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets 0$
+\EndIf
+\Else
+\If{$k \bmod 2 = 0$}
+\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets 0$
+\Else
+\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets a_{\frac{k-1}{2}}$
+\EndIf
+\EndIf
+\EndFor
+\For{$k \gets 0, (N + 1)^2 - 1$}
+\Comment{Truncate to $m$ significant digits}
+\State $p_k \gets 2^{-m} \cdot \lfloor p_k \rfloor$
+\EndFor
+\State \textbf{return} $p_0,\dots,p_{(N + 1)^2 - 1}$
+\Comment{Return all $p(r,s) = p_{r \cdot (N + 1) + s} = \frac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$}
+\EndFunction
+\rule[-0.35ex]{0pt}{0pt}
+\end{algorithmic}
+\caption{
+Pseudocode to compute the $m$ most significant digits
+for probabilities
+$p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
+due to numerical stability issues in the FFT engine, precision parameter
+$m$ has an upper bound of $8$ -- only the $m=8$ most significant digits
+are computed with \ffttwo.
+(Note that the software actually usesbase $2$ precision parameter,
+with maximum of $27$, where $2^{27} \approx 10^8$) It is well-known that
+the FFT requires $O(N \log N)$ time to solve the inverse discrete
+Fourier transform for a polynomial of degree $N$. In our case,
+$N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
+}
+\end{figure}
 
 % \begin{figure}[!h]
 % \begin{small}
@@ -705,6 +808,8 @@ $\frac{M}{4}$ evaluations of \emZ{}.
 % 15. for $k=0,\dots,\frac{M}{2}-1$
 % 16.   $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
 % 17. //compute coefficients of $\frac{Y(x)}{\bfZ{}{}}$ using (\ref{eq:ajdef})
+
+
 % 18. if $\dBP{\strA,\strB}$ even then
 % 19.   for $k=0$ to $M-1$
 % 20.     $r=\pi_1(k)$, $s=\pi_2(k)$

@@ -48,8 +48,15 @@
 \usepackage{seqsplit}
 \usepackage{url}
 \usepackage{xfrac}
+\usepackage{xpatch}
 
 \input{ushyphex}
+
+\algrenewcommand\alglinenumber[1]{{\sffamily\footnotesize#1}}
+
+\makeatletter
+\xpatchcmd{\algorithmic}{\itemsep\z@}{\itemsep=1ex plus1pt}{}{}
+\makeatother
 
 \captionsetup{font=onehalfspacing}
 

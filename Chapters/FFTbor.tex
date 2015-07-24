@@ -531,32 +531,34 @@ defined in equation (\ref{eq:fftbor:pOfX}). For genomics applications, we are
 only interested in the $m$ most significant digits of each $p_k$, as described
 in the pseudocode on the following page.
 
-\begin{algorithm}[H]
-\label{algo:fftbor:algo}
-\caption{Pseudocode for \fftbor \rule[1.75ex]{0pt}{0pt}}
+\begin{figure}[!ht]
+\label{fig:fftbor:algo}
+\begin{center}
+{\large Pseudocode for \fftbor} \\
+\end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ \rule[-1.5ex]{0pt}{0pt} \\
+of probabilities $p_k = \sfrac{\bfZ{k}{1,n}}{\bfZ{}{}}$ \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structure \strSt of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & Probabilities $p_k = \bfZ{k}{1,n} / \bfZ{}{}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75ex]{0pt}{0pt} \rule[-1.5ex]{0pt}{0pt} \\
-\hline
+{\sc Output:} & Probabilities $p_k = \sfrac{\bfZ{k}{1,n}}{\bfZ{}{}}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
+\hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
 \Function{FFTbor}{\seq, \strSt, $m$}
 \State $n \gets \textit{length}(\seq)$
 \For{$k \gets 0, n-1$}
-\State $\omega_k \gets \exp(\frac{2 \pi i k}{n})$
 \Comment{Compute all \nRoUs}
+\State $\omega_k \gets \exp(\frac{2 \pi i k}{n})$
 \EndFor
 \For{$k \gets 0, n-1$}
-\State $y_k \gets 10^m \cdot \emZof{}{\omega_k} / \bfZ{}{}$
-\Comment{Note that \emZof{}{\omega_0} = $\bfZ{}{}$}
+\Comment{Note that $\emZof{}{\omega_0} = \bfZ{}{}$}
+\State $y_k \gets 10^m \cdot \frac{\emZof{}{\omega_k}}{\emZof{}{\omega_0}}$
 \EndFor
 \For{$k \gets 0, n-1$}
-\State $p_k \gets \frac{\sum_{j=0}^{n-1} a_j \omega^{-kj}}{n}$
-\Comment{Where $a_j$ comes from equation (\ref{eq:fftbor:aFromY})}
-\State $p_k \gets \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+\Comment{Compute IDFT from equation (\ref{eq:fftbor:aFromY})}
+\State $a_k \gets \frac{1}{n} \sum_{j=0}^{n-1} y_j\, \omega^{-kj}$
+\State $p_k \gets 10^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{n-1}$
@@ -565,7 +567,8 @@ from equation (\ref{eq:fftbor:probK})}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\end{algorithm}
+\caption{Caption here}
+\end{figure}
 
 \section{Benchmarking and performance considerations}
 \label{sec:fftbor:benchmarking}
