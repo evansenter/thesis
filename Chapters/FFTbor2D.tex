@@ -329,13 +329,12 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \EndFor
 \For{$k \gets 0, n^2-1$}
 \Comment{Compute IDFT from equation (\ref{eq:ajdef})}
-\State $a_k \frac{1}{n} \sum_{j=0}^{n^2-1} a_j\, \omega^{-kj}$
+\State $a_k \gets \frac{1}{n} \sum_{j=0}^{n^2-1} a_j\, \omega^{-kj}$
 \State $p_k \gets 2^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{n^2-1}$
-\Comment{Return all $p_k$ for $0 \leq k < n^2-1$,
-from equation (\ref{xxx})}
+\Comment{Return all $p_k$ for $0 \leq k < n^2$}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
@@ -344,10 +343,10 @@ Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
-$m$ has an upper bound of $8$ -- only the $m=8$ most significant digits
+$m$ has an upper bound of $27$ -- only the $\lfloor \log_{10}(2^m) \rfloor =8$
+most significant digits
 are computed with \ffttwo.
-(Note that the software actually usesbase $2$ precision parameter,
-with maximum of $27$, where $2^{27} \approx 10^8$) It is well-known that
+It is well-known that
 the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
@@ -733,18 +732,18 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \State $a_k \gets \frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}$
 \EndFor
 \For{$k \gets 0, M-1$}
-\Comment{Change the polynomial back to degree $M$}
+\Comment{Change the polynomial back to degree $M-1$}
 \If{$\dBP{\strA}{\strB} \bmod 2 = 0$}
 \If{$k \bmod 2 = 0$}
-\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets a_{k/2}$
+\State $p_{\pi_1(k) \cdot (N+1) + \pi_2(k)} \gets a_{k/2}$
 \Else
-\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets 0$
+\State $p_{\pi_1(k) \cdot (N+1) + \pi_2(k)} \gets 0$
 \EndIf
 \Else
 \If{$k \bmod 2 = 0$}
-\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets 0$
+\State $p_{\pi_1(k) \cdot (N+1) + \pi_2(k)} \gets 0$
 \Else
-\State $p_{\pi_1(k) \cdot n + \pi_2(k)} \gets a_{\frac{k-1}{2}}$
+\State $p_{\pi_1(k) \cdot (N+1) + \pi_2(k)} \gets a_{\frac{k-1}{2}}$
 \EndIf
 \EndIf
 \EndFor
@@ -760,86 +759,15 @@ structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \caption{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
-$p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
+$p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
-$m$ has an upper bound of $8$ -- only the $m=8$ most significant digits
-are computed with \ffttwo.
-(Note that the software actually usesbase $2$ precision parameter,
-with maximum of $27$, where $2^{27} \approx 10^8$) It is well-known that
+$m$ has an upper bound of $27$ -- only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
+are computed with \ffttwo. It is well-known that
 the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
 \end{figure}
-
-% \begin{figure}[!h]
-% \begin{small}
-% {\sc Improved Algorithm} for \ffttwo\hfill\break
-% {\sc Input:} RNA sequence $\seq=s_1,\dots,s_n$, and distinct secondary
-% structures \strA,\,\strB of \seq, and integer $m$. \hfill\break
-% {\sc Output:} Probabilities $p(x,y)=\bfZ{x,y}{1,n}/\bfZ{}{}$
-% to $m$ significant digits for $x,y=0,\dots,n-1$.
-% Let $N$ be the least even number greater than or equal
-% to $n$, $M$ be the least number evenly divisible by $4$, which is greater than
-% or equal to $(N+1)^2$, $M_0=M/2$, $\nu = \exp(\frac{2\pi i}{M})$,
-% $\omega=\nu^2= \exp(\frac{2\pi i}{M_0})$. For $0 \leq k < M^2$, let
-% $\pi_1(k) = \lfloor \frac{k}{M} \rfloor$,
-% $\pi_2(k) = k - M \cdot \pi_1(k) = k \bmod M$, and note that
-% $k=\pi_1(k)\cdot M + \pi_2(k)$.
-% \end{small}
-% \hfill\break
-% \smallskip
-% \begin{small}
-% \mverbatim
-% 1.  for $k=0,\dots,\frac{M}{2}$
-% 2.    compute the $M$-roots of unity $\nu^k,\nu^{-k}$
-% 3.  for $k=0,\dots,\frac{M}{2}-1$
-% 4.    if $\dBP{\strA,\strB}$ even
-% 5.      if $k \leq \frac{M}{4}$
-% 6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity1})
-% 7.      else// $\frac{M}{4}<k<\frac{M}{2}$
-% 8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity1})
-% 9.    else // $\dBP{\strA,\strB}$ is odd
-% 10.     if $k \leq \frac{M}{4}$
-% 11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity2})
-% 12.     else// $\frac{M}{4}<k<\frac{M}{2}$
-% 13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity2})
-% 14. //note that $\bfZ{}{}=\sum_{r,s}\bfZ{r,s}{1,n}=y_0=\Z(\nu^0)$
-% 15. for $k=0,\dots,\frac{M}{2}-1$
-% 16.   $y_k = 10^m \cdot \frac{y_k}{\bfZ{}{}}$ //normalize $y_k$
-% 17. //compute coefficients of $\frac{Y(x)}{\bfZ{}{}}$ using (\ref{eq:ajdef})
-
-
-% 18. if $\dBP{\strA,\strB}$ even then
-% 19.   for $k=0$ to $M-1$
-% 20.     $r=\pi_1(k)$, $s=\pi_2(k)$
-% 21.     if $k$ even
-% 22.       $\frac{\bfZ{r,s}{1,n}}{\bfZ{}{}} = a_{k/2}$ from (\ref{eq:ajdef})
-% 23.     else// $k$ odd
-% 24.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = 0$
-% 25. else // $\dBP{\strA,\strB}$ odd
-% 26.   for $k=0$ to $M-1$
-% 27.     $r=\pi_1(k)$, $s=\pi_2(k)$
-% 28.     if $k$ even
-% 29.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = 0$
-% 30.     else// $k$ odd
-% 31.       $\frac{\bfZ{r,n}{1,n}}{\bfZ{}{}} = a_{(k-1)/2}$ from (\ref{eq:ajdef})
-% 32.  for $k=0$ to $(N+1)^2$
-% 33.    $z_k = \lfloor 10^m \cdot z_k \rfloor \cdot \frac{1}{10^m}$
-% 34.    //truncate to $m$ significant digits
-% |mendverbatim
-% \end{small}
-% \caption{\small
-% Pseudocode to compute the $m$ most significant digits
-% for probabilities
-% $p_k = \frac{z_{k}}{\bfZ{}{}}=\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$.
-% Our program, \ffttwo, supports values of $m = 1,\dots,8$ for the
-% precision parameter $m$.
-% (Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
-% 10^8$.)
-% }
-% \label{pseudocode:interpolatingP}
-% \end{figure}
 
 \subsection{Polynomial interpolation to evaluate
 \texorpdfstring{\emZ{i,j}}{}}
