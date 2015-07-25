@@ -857,18 +857,21 @@ empty structure) and logarithm base $10$ of the mean first passage time.
 \begin{landscape}
 \begin{table}[!h]
 \centering
-\begin{tabular}{|l|rrrrrr|}
-\hline
-~ &$\mu$ &$\sigma$& $\frac{\sigma}{\mu}$& $n$ & MFE & $\log_{10}(\text{MFPT})$\\
-\hline
-$\mu$& 1 & & & & &\\
-$\sigma$&-0.43722448& 1  & & & & \\
-$\frac{\sigma}{\mu}$&-0.691411183&0.943650913&1 & & &\\
-$n$&0.707683898&-0.158951202&-0.364591789&1& & \\
-MFE&-0.569474125&0.739515083&0.759622716&-0.368485646&1 & \\
-$\log_{10}(\text{MFPT})$&-0.036291124&0.48436192&0.376230235&0.405865529&0.399015556& 1 \\
-\hline
-\end{tabular}
+\begin{tabularx}{\linewidth}{c c *{6}{Y}}
+  \toprule
+  ~ &$\mu$ &$\sigma$& $\frac{\sigma}{\mu}$& $n$ & MFE & $\log_{10}(\text{MFPT})$\\
+  \cmidrule(l){2-7}
+  $\mu$& 1 & & & & &\\
+  $\sigma$&-0.43722448& 1  & & & & \\
+  $\frac{\sigma}{\mu}$&-0.691411183&0.943650913&1 & & &\\
+  $n$&0.707683898&-0.158951202&-0.364591789&1& & \\
+  MFE&-0.569474125&0.739515083&0.759622716&-0.368485646&1 & \\
+  $\log_{10}(\text{MFPT})$&-0.036291124&0.48436192&0.376230235&0.405865529&0.399015556& 1 \\
+  % --------------------------------------------------------
+  % REDUCE THE PRECISION OF THIS DATA, LOOKS TERRIBLE!
+  % --------------------------------------------------------
+  \bottomrule
+\end{tabularx}
 \caption{Pearson correlation between various aspects of selenocysteine
 insertion sequences from the seed alignment of Rfam family
 RF00031 \cite{Gardner.nar11}.
@@ -1060,7 +1063,7 @@ and additional evidence is provided to support this claim.
 % \fftbor may provide help to biologists in the selection and
 % prioritization of riboswitch candidates.
 
-% Figure~5 depicts the gene OFF structure of the
+% Figure 5 depicts the gene OFF structure of the
 % xpt G-box purine riboswitch in {\em B. subtilis}, as determined by
 % inline-probing --- this structure was taken from
 % Figure 1 of \cite{breaker:Riboswitch2}.
@@ -1071,7 +1074,7 @@ and additional evidence is provided to support this claim.
 % can be found on the complement strand of GenBank accession number
 % CP002906.1/2165302--2165142 in
 % complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
-% Figure~6 depicts the result of
+% Figure 6 depicts the result of
 % three computational experiments with FFTbor. The left panel displays
 % the expected base pair distance to the following secondary structure
 % \begin{small}
@@ -1085,12 +1088,12 @@ and additional evidence is provided to support this claim.
 % as a function of window offset, where window size equals the size of this
 % target structure. This structure was
 % obtained by removing all leading and trailing unpaired positions
-% from the structure depicted in Figure~5,
+% from the structure depicted in Figure 5,
 % except for the leftmost [resp. rightmost] unpaired position
 % adjacent to the leftmost [resp. rightmost] base-paired position.
 % The reason for removal of the leading and trailing unpaired positions was
 % that the structure of \cite{breaker:Riboswitch2}, depicted in
-% Figure~5, is clearly only partial, as earlier
+% Figure 5, is clearly only partial, as earlier
 % mentioned.  The center panel displays
 % the expected base pair distance to the following secondary structure
 % \begin{small}
@@ -1114,27 +1117,27 @@ and additional evidence is provided to support this claim.
 % \end{small}
 % as a function of window offset, where window size equals the size of this
 % target {\em expression platform} structure.
-% Figure~6 determines the precise location of the
+% Figure 6 determines the precise location of the
 % xpt riboswitch, both aptamer and expression platform.
 
 % If the biologically functional target structure is unknown, one can
 % instead attempt a similar moving window computation, where the target
 % structure is taken to be the minimum free energy structure of the
 % current window contents. In this case, one may hope to determine a
-% bimodal distribution, as displayed in Figure~7.
+% bimodal distribution, as displayed in Figure 7.
 % Given an input RNA sequence, or genomic region, the
 % web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
 % creates a movie as follows, described here for the xpt riboswitch
 % previously discussed.  We extracted the downstream region of
 % Taking the
-% $161$ nt xpt G-box purine riboswitch described in Figure~5,
+% $161$ nt xpt G-box purine riboswitch described in Figure 5,
 % with GenBank accession number CP002906.1/2165302--2165142, we extended
 % to a sequence of length $200$ nt, by appending flanking
 % downstream genomic nucleotides.  Running \fftbor on all
 % prefixes of the resulting sequence of lengths
 % $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
 % \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
-% Figure~5 displays the output of \fftbor on the
+% Figure 5 displays the output of \fftbor on the
 % $166$ nt prefix, clearly showing a bimodal distribution. Attempting to
 % automate the identification of non-unimodal \fftbor output, we have
 % applied the Hartigan-Hartigan dip-test \cite{hartiganDipTest},

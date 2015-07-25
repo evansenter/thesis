@@ -82,7 +82,7 @@ Due to the spatially-mediated structural regulation of purine riboswitches, wher
 
 % \begin{figure}[!ht]
 %   \centering
-%     \includegraphics[width=.75\linewidth]{Figures/Ribofinder/refseq_genome_sizes.pdf}
+%     \includegraphics[width=.75\textwidth]{Figures/Ribofinder/refseq_genome_sizes.pdf}
 %   \caption{Histogram displaying the distribution of genome sizes across the RefSeq data analyzed, comprising 5,172 bacterial genomes. Genome size is shown using a $\log_{10}$ scale.}
 %   \label{fig:genome_sizes}
 % \end{figure}
@@ -122,7 +122,7 @@ The gene-off structure \strOff for a G-box riboswitch is the easier of the two t
 The software \rfold (v2.1.8) allows for the folding of RNA molecules with `loose' constraints. In this model of constrained folding, the resulting structure produced by the software guarantees not to explicitly invalidate any user-provided constraints, but does not guarantee all constraints will be satisfied in the resulting structure. For each of the candidate guanine riboswitches, having \treeFor{\infernal} and \treeFor{\tthp}, we build the following constraint masks:
 
 \begin{center}
-\begin{tabular}{p{0.45\linewidth} | p{0.45\linewidth}}
+\begin{tabular}{p{0.45\textwidth} | p{0.45\textwidth}}
   G-box gene-off constraint mask & G-box gene-on constraint mask \\
   \hline
   \multicolumn{2}{c}{Prohibit basepairing upstream of \treeIdx{p}{1}{i} and downstream of \treeIdx{p}{2}{l}.} \\
@@ -141,9 +141,9 @@ This difficulty with \rfold can be shown by using the constraint-produced struct
 
 % \begin{figure}[!ht]
 %   \centering
-%     \includegraphics[width=.45\linewidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_off.png}
+%     \includegraphics[width=.45\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_off.png}
 %     \hfill
-%     \includegraphics[width=.45\linewidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_on.png}
+%     \includegraphics[width=.45\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_on.png}
 %     \caption{{\em Left:} the computationally predicted gene-off conformation of sequence NC\_014019.1 1427313-1427501, using \ms{RNAfold} from the ViennaRNA 2.1.8 suite, with dangles disabled and the Turner 1999 energies. This sequence is located upstream of the xpt gene in Bacillus megaterium QM B1551. {\em Right:} the gene-on conformation.}
 %   \label{fig:example_ss}
 % \end{figure}

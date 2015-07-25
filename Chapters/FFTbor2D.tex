@@ -36,7 +36,7 @@ model. Recursions in place, we then move to show how these lead to
 a single variable polynomial $P(x)$ whose coeffecients can be computed by
 the \idft, and map to the 2D energy landscape. We describe two exploitations of
 $P(x)$, a parity condition and complex conjugates which further reduce the
-runtime by a factor of 4. Finally, we contrast this software against \rtwofold,
+runtime by a factor of 4. Finally, we contrast this software against \rnatwofold,
 and outline the performance characteristics of both softwares and highlight
 the benefits and drawbacks of both. We elect to refrain from describing
 applications of \ffttwo until Chapter \ref{ch:hermes}, where the software is
@@ -864,7 +864,7 @@ $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 \section{Performance characteristics of \ffttwo}
 \label{sec:ffttwo:speed}
 
-To perform comparative benchmarking between \rtwofold and \ffttwo,
+To perform comparative benchmarking between \rnatwofold and \ffttwo,
 we took precision parameter $m=8$, and proceeded as follows.
 For each sequence length $n = 20,25,30,\ldots,300$, we generated
 $100$ random sequences using probability $0.25$ for each nucleotide
@@ -878,44 +878,44 @@ Subsequently, metastable structure \strB was taken to be that structure
 having minimum free energy over all structures, whose base pair distance from
 \strA was $k_0$.
 
-For all $0 \leq x,y \leq n$, \rtwofold and \ffttwo were
+For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
 benchmarked in the computation of all Boltzmann probabilities
 $p(x,y)= \frac{\bfZ{x,y}{}}{\bfZ{}{}}$, where $x$ [resp. $y$] represents base pair
 distance to metastable structure \strA [resp. \strBresp]. Care was taken for
 both software to employ the same energy model (Turner99 energy model,
 no dangles, suppression of minimum free energy structure computations
-for \rtwofold) and the same number of parallel threads ($8$ threads
+for \rnatwofold) and the same number of parallel threads ($8$ threads
 using OpenMP). Nonetheless, there are slight differences in the energy
-models --- namely, \rtwofold includes
+models --- namely, \rnatwofold includes
 mismatch penalties for multiloop stems and for exterior loops, while
 \ffttwo does not. Even in the computation of the partition function
 $Z$, for spliced leader RNA from {\em L. collosoma} of length $56$ nt,
-\rtwofold \ms{-d0} obtains a value of
+\rnatwofold \ms{-d0} obtains a value of
 $-9.660419$ kcal/mol, while \ffttwo obtains
 $-9.660543$ kcal/mol; similarly, for attenuator RNA of length $73$ nt,
-\rtwofold \ms{-d0} obtains a value of
+\rnatwofold \ms{-d0} obtains a value of
 $-22.171785$ kcal/mol, while \ffttwo obtains
 $-22.173213$ kcal/mol.
 Note that the straightforward calculation of the partition function, following McCaskill's algorithm \cite{mcCaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
 
 For benchmarking purposes,
 to allow for a fair comparison of \ffttwo
-with \rtwofold, we restricted therange of $x,y$ in the same manner as done in the source code of \rtwofold.
+with \rnatwofold, we restricted therange of $x,y$ in the same manner as done in the source code of \rnatwofold.
 In that code, parameters $K$ [resp. $L$] are defined respectively to be the
 sum of the number of base pairs in reference structure \strA
 [resp. \strBresp] plus the number of base pairs in
 the maximum matching (Nussinov) structure which contains
 no base pair of \strA [resp. \strBresp].
-For $x \geq K, y \geq L$, both \rtwofold and \ffttwo
+For $x \geq K, y \geq L$, both \rnatwofold and \ffttwo
 set $p(x,y)=0$.  For the benchmarking results displayed in
 Figures \ref{fig:ffttwo:ffttwoRtwofoldTiming},
 \ref{fig:ffttwo:ffttwoRtwofoldLogScale},
 \ref{fig:ffttwo:ffttwoRtwofoldStdevMinMax},
 the values $x,y$ are restricted in
 \ffttwo to $0 \leq x,y \leq \max(K,L)$, while $0 \leq x \leq K$
-and $0 \leq y \leq L$ in \rtwofold.
+and $0 \leq y \leq L$ in \rnatwofold.
 
-Figure \ref{fig:ffttwo:ffttwoRtwofoldTiming} depicts average run time of \rtwofold
+Figure \ref{fig:ffttwo:ffttwoRtwofoldTiming} depicts average run time of \rnatwofold
 and \ffttwo as a function of RNA sequence length, for random RNA
 sequences of lengths $20$--$200$ and their metastable structures \strA,\,\strB, as
 previously explained.  We see that both programs have
@@ -924,22 +924,22 @@ $80$ nt, while \ffttwo is demonstrably faster for longer sequences.
 Figure \ref{fig:ffttwo:ffttwoRtwofoldLogScale}
 presents $\log_{10}$ run time as a function of sequence length, in order
 to more clearly determine the crossover point in performance.
-\rtwofold is marginally faster for sequences of
+\rnatwofold is marginally faster for sequences of
 length up to roughly $80$ nt, though the difference is in the millisecond
 range.
 Figure \ref{fig:ffttwo:ffttwoRtwofoldStdevMinMax}
 shows that the standard deviation of run times on random sequences is
-tiny for \ffttwo compared with \rtwofold, where standard
+tiny for \ffttwo compared with \rnatwofold, where standard
 deviation increases rapidly as a function of sequence length. This figure
-shows that run time of \rtwofold depends on sequence details, as
+shows that run time of \rnatwofold depends on sequence details, as
 well as sequence length, while the run time of \ffttwo depends only
 on sequence length.
 
 \begin{figure}[!h]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
- \caption{
-Run time in seconds for \rtwofold and \ffttwo on random
+\caption{
+Run time in seconds for \rnatwofold and \ffttwo on random
 RNA sequences of length $20$--$200$ nt, where sequence generation and
 choice of metastable structures \strA,\,\strB is described in the text.
 Beyond a length of approximately $80$ nt, \ffttwo is demonstrably
@@ -951,14 +951,14 @@ faster.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
- \caption{
-Logarithm of run time in seconds for \rtwofold and \ffttwo
+\caption{
+Logarithm of run time in seconds for \rnatwofold and \ffttwo
 on random RNA sequences of length less than $200$ nt, for same data as that
 in Figure \ref{fig:ffttwo:ffttwoRtwofoldTiming}.
 By taking $\log_{10}$ of the run times,
 crossover points are apparent,
-where \ffttwo is faster than \rtwofold. For very small
-sequences, \rtwofold is faster, though since both programs converge
+where \ffttwo is faster than \rnatwofold. For very small
+sequences, \rnatwofold is faster, though since both programs converge
 in a fraction of a second, this difference is of no practical consequence.
 }
 \label{fig:ffttwo:ffttwoRtwofoldLogScale}
@@ -966,18 +966,24 @@ in a fraction of a second, this difference is of no practical consequence.
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=.45\linewidth]{Figures/FFTbor2D/ffttwoRtwofoldStdev.pdf}
-\includegraphics[width=.45\linewidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
- \caption{
-{\em (Left)}
-Standard deviation of run times of \rtwofold and \ffttwo
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.6\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldStdev.pdf}
+\end{subfigure} \\
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.6\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
+\end{subfigure}
+\caption{
+{\em (Top)}
+Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
-{\em (Right)}
-Minimum and maximum run times for \rtwofold and \ffttwo.
+{\em (Bottom)}
+Minimum and maximum run times for \rnatwofold and \ffttwo.
 For each collection of $100$ random sequences of length $n$, the minimum
 and maximum run time for a sequence of that length was computed.
 Taken together, these figures clearly show the
-run time dependence of \rtwofold on particular sequences, while
+run time dependence of \rnatwofold on particular sequences, while
 the run time of \ffttwo depends only on sequence length, rather than
 sequence details.
 }
@@ -986,8 +992,8 @@ sequence details.
 
 \begin{figure}[!h]
 \centering
-\includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
- \caption{
+\includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
+\caption{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
@@ -999,7 +1005,7 @@ The $x$-axis [resp. $y$-axis]
 represents base pair distance between metastable structure \strA [resp.
 \strBresp],
 while the $z$-axis represents the ensemble free energy $-RT \log \bfZ{x,y}{}$,
-where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}= p(x,y) \cdot \bfZ{}{}$.
+where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}=p(x,y) \cdot \bfZ{}{}$.
 Low energy positions $(x,y)$ correspond to high Boltzmann probability positions.
 The left panel depicts a heat map of the ensemble free energy,
 while the right panel depicts a contour map with level curves. In analogy
@@ -1008,4 +1014,26 @@ valley regions in traversing the landscape from \strA to \strB. Data produced
 with \ffttwo; graphics produced using Mathematica.
 }
 \label{fig:ffttwo:ffttwoProbContour}
+\end{figure}
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldProbContour.pdf}
+\quad
+\includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldEnsFreeEnergyContour.pdf}
+\caption{
+2D projection of energy landscape for Spliced Leader (SL) RNA
+from {\em L. collosoma}, as in
+Figure \ref{fig:ffttwo:ffttwoProbContour},
+except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
+is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
+while in the right panel, ensemble free energy is computed from
+the values $\bfZ{x,y}{}=p(x,y) \cdot \bfZ{}{}$, where values $p(x,y)$ are output
+by \rnatwofold.
+The loss of detail in the 2D energy landscape is caused uniquely by
+working with probabilities $p(x,y)$, rather than partition function
+values \bfZ{x,y}{}.
+Data produced with \rnatwofold; graphics produced using Mathematica.
+}
+\label{fig:ffttwo:rtwofoldProbContour}
 \end{figure}

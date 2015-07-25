@@ -1,5 +1,9 @@
 %!TEX root = ../main.tex
 
+\newcommand{\mathbbP}{\mbox{\bf P}}
+\newcommand{\mathbbt}{\mbox{\bf t}}
+\newcommand{\mathbbx}{\mbox{\bf x}}
+
 \chapter{Hermes}
 \label{ch:hermes}
 
@@ -38,17 +42,433 @@ benchmarking of \hermes against other methods, before finally concluding with
 some remarks on the accuracy and applicability of \hermes to computational
 RNA design.
 
-\section{Background}
-\label{sec:hermes:bkgrnd}
+% \section{Background}
+% \label{sec:hermes:bkgrnd}
 
 \section{Traditional approaches for kinetics}
 \label{sec:hermes:kinetics}
 
+To better understand the underlying algorithms behind the software,
+we describe two traditional approaches in kinetics.
+
 \subsection{\Mfpt}
 \label{subsec:hermes:mfpt}
 
+Consider a physical process,
+which when monitored over time, yields the stochastic sequence
+$q_0,q_1,q_2,\dots$ of discrete, observed states. If the transition from
+state $q_t$ to $q_{t+1}$ depends only on $q_t$ at time
+$t$ and not on the historical sequence of prior states visited,
+as often assumed in the case of protein or
+RNA folding, then a Markov chain provides a reasonable
+mathematical model to simulate the process.
+
+A (first-order, time-homogeneous)
+{\em Markov chain} $\mChain = (Q,\pi,P)$ is given by a finite
+set $Q = \{ 1,\dots,n \}$ of states, an initial probability distribution
+$\pi = (\pi_1,\dots,\pi_n)$, and the $n \times n$
+{\em transition probability matrix} $P = (p_{i,j})$.
+At time $t=0$, the initial state of the system is
+$q_t=i$ with probability $\pi_i$, and at discrete time
+$t=1,2,3,\dots$, the system makes a transition from state
+$i$ to state $j$ with probability $p_{i,j}$; i.e.
+the conditional probability $Pr[ q_{t+1} = j | q_t=i] = p_{i,j}$.
+Define the {\em population occupancy frequency} of visiting state
+$i$ at time $t$ by $p_{i}(t) = Pr[q_t=i]$.  Denote
+$p_{i,j}^{(t)} = Pr[q_t = j | q_0 = i]$ and notice that
+the $(i,j)$-th entry of the $t$-th power $P^t$ of matrix $P$  equals
+$p_{i,j}^{(t)}$.
+
+The {\em \mfpt} (MFPT) or
+{\em \hit} for the Markov chain \mChain,
+starting from initial state \xStart and proceeding
+to the target state \xEnd, is defined
+as the sum, taken over all paths $\rho$
+from \xStart to \xEnd, of the path length $\textit{length}(\rho)$
+times the probability
+of path $\rho$, where $\textit{length}(\rho_0,\dots,\rho_n)$ is defined to
+be $n$. In other words,
+${\text MFPT} = \sum_{\rho} Pr[\rho] \cdot \textit{length}(\rho)$, where
+the sum is taken over sequences $\rho=\rho_0,\dots,\rho_n$ of states
+where $\rho_0=\xStart$ and $\rho_n=\xEnd$, and no state is visited more
+than once in the path $\rho$.
+
+Given the target state \xEnd, MFPT can be exactly
+determined by computing the inverse
+$(I - P^{-}_{\xEnd})^{-1}$, where $I$ is the $(n-1)\times (n-1)$ identity
+matrix and $P^{-}_{\xEnd}$
+denotes the $(n-1)\times (n-1)$ matrix obtained from the
+Markov chain transition probability matrix $P$,
+by deleting the row and column with index \xEnd.
+Letting ${\bf e}$ denote the
+$(n-1) \times 1$ column vector consisting entirely of $1$'s, it can be
+shown that \mfpt from state \xStart to state \xEnd
+is the \xStart-th coordinate
+of column vector
+$(I - P^{-}_{\xEnd})^{-1} \cdot {\bf e}$ \cite{meyerMFPT}.
+
+The {\em stationary} probability distribution \statDist
+is a row vector such that $\pSt \cdot P = \pSt$; i.e.
+$\pSt_j = \sum_{i}^n \pSt_i \cdot p_{i,j}$, for all $1\leq j \leq n$.
+It can be shown that the stationary probability $\pSt_i$ is the limit,
+as $m$ tends to infinity, of the frequency of visiting state $i$ in a
+random walk of length $m$ on Markov chain \mChain.
+It is well-known that the stationary distribution exists and is unique
+for any finite aperiodic irreducible Markov chain \cite{cloteBackofen:book}.
+
+The Metropolis Monte Carlo algorithm \cite{metropolis:MonteCarlo} can
+be used to simulate a random walk from initial state \xStart to target state
+\xEnd, when energies are associated with the states, as is the case in
+macromolecular folding, where free energies can be determined for
+protein and RNA conformations from mean field theory, quantum theory,
+or experimental measurements. In such cases, a {\em move set}
+defines the set $N_x$ of conformations reachable in unit time
+from conformation $x$, and the transition probability matrix
+$P = (p_{x,y})$ is defined as follows:
+
+\begin{align}
+\label{eq:hermes:mfptXitionProb}
+p_{x,y} =
+\begin{cases}
+\frac{1}{|N_x|} \cdot \min\left( 1, \boltzYmX \right)
+& \text{if $y \in N_x$} \\
+1 - \sum_{k \in N_x} p_{x,k} & \text{if $x=y$} \\
+0 & \text{if $y \not\in N_x$, and $x \ne y$} \\
+\end{cases}
+\end{align}
+
+If $\pSt_x \cdot p_{x,y} = \pSt_y \cdot p_{y,x}$ holds for all distinct
+$x,y \in Q$, then
+{\em detailed balance} is said to hold, or equivalently the Markov
+chain \mChain is said to be {\em reversible}.
+If transitional probabilities
+are defined as in equation (\ref{eq:hermes:mfptXitionProb}), and if neighborhood
+size is constant ($|N_x|=|N_y|$ for all $x,y$), then it is well-known
+that the stationary probability distribution
+\statDist is the Boltzmann distribution; i.e.
+
+\begin{align}
+\label{eq:hermes:stationaryBoltzmannProb}
+\pSt_k = \frac{\boltzf{k}}{Z}
+\end{align}
+
+where $E(k)$ is the energy of conformation $k$ at temperature $T$,
+$R$ is the universal gas constant,
+$T$ is absolute temperature, and the {\em partition function}
+$Z = \sum_{k=1}^n \boltzf{k}$ is a normalization constant
+\cite{waterman:book,cloteBackofen:book}. If neighborhood size is not
+constant, as in the case where states are RNA secondary structures and transitions
+are restricted to the addition or removal of a single base pair, then
+by {\em Hasting's trick}, an equivalent Markov chain can be defined which
+satisfies detailed balance -- see equation (\ref{eq:hermes:MFPTwithHastings}).
+
+Following Anfinsen's experimental work on the denaturation and
+refolding of bovine pancreatic ribonuclease \cite{anfinsen},
+the native conformation is assumed to be the ground state having
+minimum free energy. These results justify the use of the Monte Carlo
+Algorithm \ref{algo:MonteCarlo} in macromolecular kinetics and
+structure prediction.
+% \medskip
+
+\begin{figure}[!ht]
+\label{fig:hermes:mcmc}
+% \hrule \rule[0ex]{0pt}{0pt}
+\begin{center}
+{\large Pseudocode for the Metropolis Monte Carlo algorithm} \\
+\end{center}
+\begin{tabular*}{\textwidth}{ll}
+{\sc Purpose:} & Compute discrete time $t$ to move from
+\xStart to \xEnd, with upper limit of \tMax \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Input:} & Starting state \xStart, target state \xEnd and
+upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Output:} & Discrete time $t$ taken to reach \xEnd from \xStart
+\rule[-1.75em]{0pt}{0pt} \\
+\hline \rule[0ex]{0pt}{0pt}
+\end{tabular*}
+\begin{algorithmic}[1]
+\Function{Metropolis}{\xStart, \xEnd, \tMax}
+\State $t \gets 0$
+\State $x \gets \xStart$
+\While{$x \neq \xEnd$ AND $t < \tMax$}
+\State $y \in N_x$
+\If{$E(y) < E(x)$}
+\Comment{Greedy move}
+\State $x \gets y$
+\Else
+\Comment{Metropolis move}
+\State $z \in (0,1)$
+\If{$z < \boltzYmX$}
+\State $x \gets y$
+\EndIf
+\EndIf
+\State $t \gets t+1$
+\EndWhile
+\State \textbf{return} $t$
+\Comment{Return discrete time $t$ to travel from \xStart to \xEnd}
+\EndFunction
+\rule[-0.35ex]{0pt}{0pt}
+\end{algorithmic}
+\caption{Caption here}
+\end{figure}
+
+The \mfpt from state $x$ to state $y$ can
+be approximated by repeated runs of the Monte Carlo algorithm.
+In particular, \v{S}ali, Shakhnovich, and Karplus used such Monte Carlo
+simulations to investigate the Levinthal paradox of how a protein
+can fold to its native state within milliseconds to seconds.
+By repeated Monte Carlo simulations using a protein lattice model,
+\v{S}ali et al. observed that a large energy difference between
+the ground state
+and the first misfolded state appears to be correlated with fast folding.
+
 \subsection{\Eqt}
 \label{subsec:hermes:eq}
+
+A continuous time {\em Markov process} $\mChain=(Q,\pi,P(t))$
+is given by a finite set $Q= \{1,\dots,n\}$ of states, the
+initial probability distribution $\pi$,
+and the $n\times n$ matrix $P(t)=(p_{i,j}(t))$ of
+probability transition functions.
+
+% \footnote{Only in the
+% current section does $P(t)$ denote the Markov process
+% transition probability matrix.  In all later sections of the paper,
+% $P(t) = (P_1(t),\dots,P_n(t))$ will denote the population occupancy
+% frequency function, defined in (\ref{eq:hermes:populationOccupancyEquation}).
+% In Markov processes, the rate matrix $R$ is used rather than the transition
+% probability matrix $P(t)$, so there will be no ambiguity in later
+% reserving $P(t)$ to denote the population occupancy function.}
+
+Letting $q_t$ denote the state at (continuous)
+time $t$, the probability that the initial state $q_0$ at time $0$ is
+$k$ is $\pi_k$, while
+
+\begin{align}
+\label{eq:hermes:markovProcess}
+p_{i,j}(t) = Pr[q_{t} = j| q_0 = i].
+\end{align}
+
+The matrix $P'(t)$ of derivatives, defined by
+
+\begin{align}
+  P'(t) = \left(
+\begin{array}{ccc}
+\frac{d p_{1,1}}{d t}(t) & \dots  & \frac{d p_{1,n}}{d t}(t)\\
+\vdots & \ddots & \vdots \\
+ \frac{d p_{n,1}}{d t}(t) & \dots  & \frac{d p_{n,n}}{d t}(t)\\
+\end{array}
+\right),
+\end{align}
+
+can be shown to satisfy
+
+\begin{align}
+P'(t) = P(t) \cdot R
+\end{align}
+
+where $R = (r_{i,j})$ is an $n \times n$ {\em rate matrix} with the
+property that each diagonal entry is $-1$ times the row sum
+
+\begin{align}
+r_{i,i} = - \sum_{j\ne i} r_{i,j}.
+\end{align}
+
+Define the {\em population occupancy} distribution
+$p(t) = (p_1(t),\dots,p_n(t))$ by
+
+\begin{align}
+\label{eq:hermes:markovProcessPopulationFreq}
+p_i(t) = Pr[q(t) = i] = \sum_{k=1}^n\pi_k p_{k,i}(t)
+\end{align}
+
+where $q(t)$ denotes the state of the Markov process
+at (continuous) time $t$.
+
+In the case of macromolecular folding, where Markov process states
+are molecular conformations and conformational energies are available,
+it is typical to define the rate matrix
+$R = (r_{x,y})$ as follows:
+
+\begin{align}
+\label{eq:hermes:eqXitionRate}
+r_{x,y} =
+\begin{cases}
+\min\left( 1, \boltzYmX \right)
+& \text{if $y \in N_x$} \\
+-\sum_{k \in N_x} p_{x,k} & \text{if $x=y$} \\
+0 & \text{if $y \not\in N_x$, and $x \ne y$} \\
+\end{cases}
+\end{align}
+
+The {\em master equation} is defined by the matrix differential equation
+
+\begin{align}
+\label{eq:hermes:masterEquationMatrix}
+\frac{d p(t)}{dt} = p(t) \cdot R
+\end{align}
+
+or equivalently, for all $1 \leq x \leq n$,
+
+\begin{align}
+\label{eq:hermes:masterEquation}
+\frac{d p_x(t)}{dt} = \sum_{y=1}^n\, (p_y(t) \cdot r_{y,x} - p_x(t) \cdot
+r_{x,y})\; = \sum_{x \ne y}\, (p_y(t) \cdot r_{y,x} - p_x(t) \cdot r_{x,y}).
+\end{align}
+
+As in the case of Markov chains,
+\statDist is defined to be
+the stationary distribution if
+$\pSt \cdot P(t)= \pSt$; i.e. $\pSt_k = Pr[ q(0) = k ]$ implies that
+$Pr[ q(t) = k] = \pSt_k$ for all $t \in \mathbb{R}$ and
+$1 \leq k \leq n$.
+Define the {\em equilibrium distribution} \statDist
+to be the unique solution for $p(t)$, when the master equation
+(\ref{eq:hermes:masterEquation}) is set to equal zero; i.e.
+
+\begin{align}
+\label{eq:hermes:equilibriumTime}
+\sum_{x \ne y} \pSt_x \cdot r_{x,y} = \sum_{x \ne y} \pSt_y \cdot r_{y,x}.
+\end{align}
+
+If the equilibrium distribution exists, then necessarily it is equal to
+the stationary distribution. A Markov process is said
+to satisfy detailed balance if $\pSt_x \cdot r_{x,y} = \pSt_y \cdot r_{y,x}$,
+for all $1 \leq x,y \leq n$, where the rate matrix $R = (r_{x,y})$.
+
+The rate equation $R$ for is usually defined
+as in (\ref{eq:hermes:eqXitionRate}) for
+Markov processes which model macromolecular folding,
+hence it is easy to see that
+such Markov processes satisfy detailed balance and moreover that
+the equilibrium distribution is the
+Boltzmann distribution; i.e.  $\pSt_x = \boltzf{x}$ for
+all $1 \leq x \leq n$.
+Since detailed balance ensures that the eigenvalues of the rate matrix $R$ are
+real, one can solve the matrix differential equation
+(\ref{eq:hermes:masterEquation}) by diagonalizing the rate matrix, and thus obtain
+the solution
+
+\begin{align}
+\label{eq:hermes:populationOccupancyEquation}
+p(t) = \sum_{k=1}^n c_k {\bf v}_k e^{\lambda_k t}
+\end{align}
+
+where $p(t) = (p_1(t),\dots,p_n(t))$, and the
+values $c_k$ are determined by the initial population occupancy
+distribution $p(0)$ at time $0$. Here
+${\bf v}_k$ denotes the $k$th eigenvector and
+$\lambda_k$ the $k$th eigenvalue. In particular,
+$c_k = \left(p(0) \cdot T^{-1})\right)_k$, where the $j$-th row of $T$
+is the $j$-th left eigenvector of $R$,
+and $p(0)$ is the population occupancy distribution
+at time $t=0$. If the eigenvalues are labeled in decreasing
+order, then $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n$,
+and the largest eigenvalue $\lambda_1=0$ has eigenvector \pSt, corresponding
+to the equilibrium population occupancy distribution, which in this case
+is the Boltzmann distribution. The
+remaining $n-1$ eigenvalues are negative, and their corresponding eigenvectors
+correspond to nonequilibrium kinetic {\em relaxation modes}.
+
+In our software \hermes, we prefer to work with column vectors and
+right eigenvectors due to our usage of the GSL scientific computing library,
+and so the population occupancy frequency
+$p(t)$ is defined to be the column vector
+$p(t)=(p_1(t),\dots,p_n(t))^{\text T}$. Let
+$\mathbbt^1,\dots,\mathbbt^n$ be the right eigenvectors and
+$\lambda_1,\dots,\lambda_n$ be the corresponding right eigenvalues of the
+transpose $R^{\text T}$ of the rate matrix.
+Letting $T$ be the $n\times n$ matrix, whose columns are
+$\mathbbt^1,\dots,\mathbbt^n$, using standard matrix algebra
+\cite{matrixTheory}, it can be shown that
+
+\begin{align}
+\label{eq:hermes:solutionMasterEquation}
+p(t) = \sum_{j=1}^n (T^{-1}
+\mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
+\end{align}
+
+The {\em \eqt} can be directly computed by using a
+nonlinear solver to solve for $t$ in
+
+\begin{align}
+\label{eq:hermes:solutionEquilibriumTime}
+\pSt = \sum_{j=1}^n (T^{-1}
+\mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
+\end{align}
+
+where $\statDist^{\text T}$ and $\pSt_k = \frac{\boltzf{k}}{Z}$.
+However, we have found it more
+expedient to compute the {\em \eqt} as the smallest $t_0$,
+such that for $t \in \{t_0+1,t_0+2,t_0+3,t_0+4\}$, the absolute difference
+$|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$, for $\epsilon =
+10^{-4}$, where \xEnd is the target RNA structure (usually taken
+to be the minimum free energy structure, though this is not necessary for
+the software). We also considered defining the \eqt to be the
+smallest $t_0$, such that for $t \in \{t_0+1,t_0+2,t_0+3,t_0+4\}$, the
+absolute difference $|p(t)[x] - p(t_0)[x]| < \epsilon$ for all $x \in
+Q$; however, results suggest that this definition is inferior
+to that just given, perhaps due to numerical instability issues when
+$Q$ is taken to be the set of all secondary structures for sequences in
+the benchmarking set described later.
+
+In \cite{gillespieStochasticSimulation1} Gillespie described
+a very influential algorithm to simulate a finite Markov process.
+The pseudocode, is given in Algorithm \ref{algo:Gillespie}.
+Though Gillespie's original application was for chemical kinetics,
+Flamm et al. adapted the method for the kinetics of RNA secondary structure
+folding, as implemented in \kinfold \cite{flammPhD,flamm}.
+% \medskip
+
+\begin{figure}[!ht]
+\label{fig:hermes:gillespie}
+% \hrule \rule[0ex]{0pt}{0pt}
+\begin{center}
+{\large Pseudocode for the Gillespie algorithm} \\
+\end{center}
+\begin{tabular*}{\textwidth}{ll}
+{\sc Purpose:} & Compute continuous time $t$ to move from
+\xStart to \xEnd, with a limit of \tMax \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Input:} & Starting state \xStart, target state \xEnd and
+upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
+{\sc Output:} & Continuous time $t$ taken to reach \xEnd from \xStart
+\rule[-1.75em]{0pt}{0pt} \\
+\hline \rule[0ex]{0pt}{0pt}
+\end{tabular*}
+\begin{algorithmic}[1]
+\Function{Gillespie}{\xStart, \xEnd, \tMax}
+\State $t \gets 0$
+\State $x \gets \xStart$
+\While{$x \neq \xEnd$ AND $t < \tMax$}
+\State $\Phi \gets 0$
+\Comment{$\Phi$ is the {\em flux} out of $x$}
+\For{$y \in N_x$}
+\State $r_{x,y} \gets \min\left(1,\boltzYmX\right)$
+\State $\Phi \gets \Phi + r_{x,y}$
+\EndFor
+\For{$y \in N_x$}
+\State $r_{x,y} \gets \frac{r_{x,y}}{\Phi}$
+\EndFor
+\State $z_1 \in (0,1)$
+\State $t \gets t + (-\frac{1}{\Phi} \ln(z_1))$
+\Comment{Update $t$ to reflect time spent in state $x$}
+\State $z_2 \in (0,1)$
+\State $s \gets 0$
+\For{$y \in N_x$}
+\Comment{Use roulette wheel to select new state for $x$}
+\State $s \gets s + r_{x,y}$
+\If{$z_2 \leq s$}
+\State $x \gets y$
+\State \textbf{break}
+\EndIf
+\EndFor
+\EndWhile
+\State \textbf{return} $t$
+\Comment{Return continuous time $t$ to travel from \xStart to \xEnd}
+\EndFunction
+\rule[-0.35ex]{0pt}{0pt}
+\end{algorithmic}
+\caption{Caption here}
+\end{figure}
 
 \section{Software within the \hermes suite}
 \label{sec:hermes:layout}
@@ -64,8 +484,8 @@ The data and figures presented in this article were generated with the
 source code hosted at the first URL, and we make no guarantee as to
 the stability of development branches in our Git repository.
 
-External dependencies for the software include a C (resp. C++)
-compiler supporting the GNU99 language specification (resp. C++98),
+External dependencies for the software include a C [resp. C++]
+compiler supporting the GNU99 language specification [resp. C++98],
 FFTW implementation of Fast Fourier Transform \cite{FFTW05} ($\geq
 3.3.4$) \url{http://www.fftw.org/}, Gnu Scientific Library GSL ($\geq
 1.15$) \url{http://www.gnu.org/software/gsl/}, Vienna RNA Package
@@ -79,7 +499,7 @@ suite.
 
 \hermes is organized into three independent directories: (1)
 \ffttwo, (2) \rnamfpt, and (3) \rnaeq (see
-Figure~\ref{fig:organizationHermes}). These packages compile into both
+Figure \ref{fig:hermes:organizationHermes}). These packages compile into both
 standalone executables and archive files. The archives provide a DRY
 API which allow the development of novel applications using source
 from across the \hermes package without having to copy-and-paste
@@ -90,11 +510,33 @@ are simple C drivers that use functions from \ffttwo, \rnamfpt and
 deal with intermediary data transformation, I/O between calls or
 slow-down due to a scripting language driver such as Python or R.
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Hermes/softwareOrg.pdf}
+\caption{Overall organization of
+\hermes. \ffttwo, \rnamfpt, and \rnaeq are three distinct software
+packages we have developed, which compile into both standalone
+executables and archive files, providing a DRY API that allow novel
+applications development using source from each of the packages,
+without having to copy-and-paste relevant functions. The applications
+\fftmfpt and \ffteq are C drivers that use data structures and functions from
+\ffttwo, \rnamfpt and \rnaeq. \fftmfpt computes the mean first
+passage time (MFPT) for an RNA secondary structure to fold from an
+initial structure, such as the empty structure or a given metastable
+structure, into a target structure, such as the minimum free energy
+(MFE) structure or possibly the Rfam \cite{Gardner.nar11} consensus
+structure. \ffteq uses spectral decomposition to compute the equilibrium time and the
+fraction of the population of RNA structures that are
+equal to a given target structure, as a function of time.
+}
+\label{fig:hermes:organizationHermes}
+\end{figure}
+
 \subsection{Exact \mfpt with \rnamfpt}
 \label{subsec:hermes:rnamfpt}
 
-\rnamfpt computes the {\em mean first passage time} (MFPT), sometimes
-referred to as the {\em hitting time} of a Markov chain, by using
+\rnamfpt computes the {\em \mfpt} (MFPT), sometimes
+referred to as the {\em \hit} of a Markov chain, by using
 matrix inversion \cite{meyerMFPT} --- see
 Section~\ref{section:algo}. The program takes as input a
 comma separated value (CSV) file containing the non-zero positions and
@@ -103,7 +545,7 @@ values of a 2D probability grid; i.e. a CSV format file having columns {\em i},
 correspond to the {\em 0-indexed} row-ordered position in the rate
 matrix and the final column {\em p} is the probability $p_{i,j}$
 of a transition from {\em i} to {\em j}.  From this input, the
-mean first passage time is constructed by matrix inversion.
+\mfpt is constructed by matrix inversion.
 Because this program was designed with the original intent
 of handling 2D-probability grids, all vertexes are uniquely identified
 by index tuples (which conceptually correspond to positioning in a 2D
@@ -122,9 +564,9 @@ first passage time for the corresponding Markov chain.
 \subsection{Approximate \mfpt with \fftmfpt}
 \label{subsec:hermes:fftmfpt}
 
-\fftmfpt approximates the mean first passage time of a given RNA
+\fftmfpt approximates the \mfpt of a given RNA
 sequence folding from input structure A to B, by {\em exactly}
-computing the mean first passage time from state $(0,d_0)$ to state
+computing the \mfpt from state $(0,d_0)$ to state
 $(d_0,0)$ in the 2D probability grid obtained from running
 \ffttwo. Here, $d_0$ is the base pair distance between structures
 $A,B$, and the MFPT is computed for the Markov chain, whose states are
@@ -148,13 +590,13 @@ is constructed for the underlying Markov process. Alternatively,
 \rnaeq can accept as input an arbitrary rate matrix. Performing
 spectral decomposition of the column-ordered rate matrix that
 underlies the corresponding Markov process, \rnaeq computes either
-the equilibrium time or population occupancy frequencies.
+the \eqt or population occupancy frequencies.
 Additionally, \rnaeq can call the
 Vienna RNA Package program \rnasub \cite{Wuchty.b99}, with a
 user-specified upper bound to the energy difference with the minimum
 free energy. With this option, the rate matrix is
 constructed for the Markov process, whose states consist of all
-the structures returned by \rnaeq, and the equilibrium time or
+the structures returned by \rnaeq, and the \eqt or
 population occupancy frequencies are computed. Due to the time
 and memory required for this option, we do not expect it to be used except for
 small sequences.
@@ -169,15 +611,42 @@ necessary for eigendecomposition is derived from the 2D-energy
 landscape. Vertices in the rate matrix represent a subset of
 structures compatible with the input sequence as modeled by
 \ffttwo, which makes the graph size more tractable than structural
-sampling with {\tt RNAsubopt}, even with constraints.
+sampling with \rnasub, even with constraints.
 
 \subsubsection{Population occupancy curves with \ffteq}
 \label{subsubsec:hermes:popcurve}
 
-\subsubsection{Approximating equilibrium time from occupancy curves}
+\begin{figure}
+\centering
+% \includegraphics[width=0.9\textwidth]{figure8a.pdf}
+\caption{
+Population occupancy curves computed with \ffteq for the
+56 nt conformational switch {\em L. collosoma} spliced leader RNA,
+with sequence AACUAAAACA AUUUUUGAAG AACAGUUUCU GUACUUCAUU GGUAUGUAGA
+GACUUC. The dot bracket format for the MFE structure, as computed by
+version 2.1.7 of {\tt RNAfold -d0}, is {\tt
+.......................((((((((((((.....)))))..)))))))..} with free
+energy $-8.6$ kcal/mol, while that of the the alternate suboptimal
+structure is {\tt
+..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} with free
+energy $-7.5$ kcal/mol. In the case of the MFE structure, the
+equilibrium occupancy $P(t_{\infty})$, which \hermes approximates
+as $0.17893806$ should equal the Boltzmann probability $0.17909227$,
+since the MFE structure is the only structure at distance $x_0$ [resp.
+$y_0$] from the reference structures $A$ (empty
+structure) [resp. $B$ (MFE structure)]. As well, if there are few
+other low energy structures at the same base pair distance $x_1$
+[resp. $y_1$] from $A$ [resp. $B$] as that of the alternate suboptimal
+structure, then we expect that the occupancy probability $0.03003426$
+for the $(x_1,y_1)$ be approximately the Boltzmann probability
+$0.03005854$ of the alternate structure.}
+\label{fig:hermes:populationOccupancySplicedLeader}
+\end{figure}
+
+\subsubsection{Approximating \eqt from occupancy curves}
 \label{subsubsec:hermes:eqestimate}
 
-The computation of an equilibrium time value from the eigendecomposition of the rate matrixis a rather thorny issue. (something about the non-linear solver approach not working, same as in FFTbor w/ numeric instability)
+The computation of an \eqt value from the eigendecomposition of the rate matrixis a rather thorny issue. (something about the non-linear solver approach not working, same as in FFTbor w/ numeric instability)
 
 \section{Correlations of kinetics data across software}
 \label{sec:hermes:corr}
@@ -189,7 +658,7 @@ In this section, we describe a
 benchmarking set of 1,000 small RNAs used to benchmark the previously
 described kinetics methods in a comparative study. To ensure that mean
 first passage time can be computed from
-$(I - P^{-}_{x_{\infty}})^{-1} \cdot {\bf e}$ by using matrix
+$(I - P^{-}_{\xEnd})^{-1} \cdot {\bf e}$ by using matrix
 inversion, that spectral decomposition of the rate matrix is possible,
 and to ensure that \kinfold simulations would provide sufficient
 statistics, we generated a collection of 1,000 random RNA sequences of
@@ -205,25 +674,25 @@ energy of $-6.4$ kcal/mol. Statistics for the free energies of the
 $10.695$, standary deviation is $4.804$, maximum is $25.00$, minimum
 is $-6.40$. A histogram for the free energy of all secondary
 structures of ACGCGACGUGCACCGCACGU is depicted in
-%Figure~\ref{fig:freeEnergyHistogramSecStrACGCGACGUGCACCGCACGU}.
-the left panel of Figure~\ref{fig:PLMVd}. The right panel of the
+the left panel of Figure \ref{fig:hermes:plmv}. The right panel of the
 same figure depicts the minimum free energy structure of the
 54 nt hammerhead type III ribozyme from Peach Latent Mosaic Viroid
 (PLMVd), discussed later. This secondary structure is identical
 to the consensus structure from Rfam 11.0 \cite{Gardner.nar11}.
 
 
-\begin{figure*} [!h]
-\begin{center}
-% \includegraphics[width=0.45\linewidth]{figure2a.eps}
-% \includegraphics[width=0.45\linewidth]{figure2b.eps}
-\caption{\small
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.525\textwidth]{Figures/Hermes/plmvDist.pdf}
+\quad
+\includegraphics[width=0.375\textwidth]{Figures/Hermes/plmvStr.pdf}
+\caption{
 {\em (Left)} Histogram of free energies of secondary structures of
 ACGCGACGUGCACCGCACGU, which range from $-6.5$ to $+25$ kcal/mol, with
 mean of $10.695$ kcal/mol.
 {\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
 Viroid (PLMVd) AJ005312.1/282-335, which is identical to the consensus
-structure from Rfam 11.0 \cite{Gardner.nar11}. {\tt RNAfold} from
+structure from Rfam 11.0 \cite{Gardner.nar11}. \rfold from
 Vienna RNA Package 2.1.7 with energy parameters from the Turner 1999
 model were used, since the minimum free energy structure determined by
 the more recent Turner 2004 energy parameters
@@ -233,11 +702,10 @@ of divergence in the base pairing status at each positions for the
 low energy ensemble of structures, is indicated by color, using the
 RNA Vienna Package utility script {\tt relplot.pl}.
 }
-\label{fig:PLMVd}
-\end{center}
-\end{figure*}
+\label{fig:hermes:plmv}
+\end{figure}
 
-Figure~\ref{fig:meanStdevKinfoldRuns1000sequences} displays the mean
+Figure \ref{fig:hermes:kinfoldMeanStdev} displays the mean
 and standard deviation for \kinfold simulations of folding time
 for each of the 1,000 RNA sequences from our benchmarking data. For
 each sequence, the mean and standard deviation of the time required to
@@ -258,65 +726,67 @@ time required for reliable \kinfold estimations and the large
 standard deviations observed point out the need for a faster method to
 approximate folding time.
 
-\begin{figure*}
+\begin{figure}
 \centering
-% \includegraphics[width=0.45\textwidth]{figure3a.eps}
-% \includegraphics[width=0.45\textwidth]{figure3b.eps}
-\caption{{\em (Left)} Histogram of \kinfold folding times for 20-mer CCGAUUGGCG AAAGGCCACC. The mean [resp. standard deviation] of 10,000 runs of \kinfold for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order. } \label{fig:meanStdevKinfoldRuns1000sequences}
-\end{figure*}
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldTimeDist.pdf}
+\quad
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldMeanStdev.pdf}
+\caption{{\em (Left)} Histogram of \kinfold folding times for 20-mer CCGAUUGGCG AAAGGCCACC. The mean [resp. standard deviation] of 10,000 runs of \kinfold for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order.}
+\label{fig:hermes:kinfoldMeanStdev}
+\end{figure}
 
 \subsubsection{Pearson correlation coefficients for various kinetics packages}
 \label{subsubsec:hermes:corrtable}
 
 In this section, we display the correlation between (1) the {\em gold
-standard} method {\tt MFPT}, both with and without the Hastings
-modification using equations (\ref{eq:MFPTwithHastings}) and
-(\ref{eq:MFPTwithoutHastings}), (2) the {\em platinum standard} method {\tt
+standard} method \rnamfpt, both with and without the Hastings
+modification using equations (\ref{eq:hermes:MFPTwithHastings}) and
+(\ref{eq:hermes:MFPTwithoutHastings}), (2) the {\em platinum standard} method {\tt
 Equilibrium}, (3) the {\em silver standard} method \kinfold, (4) {\tt
 FFTmfpt} with and without the Hastings modification using equations
-(\ref{eq:transitionProbabilityFFTbor2DwithHastings}) and
-(\ref{eq:transitionProbabilityFFTbor2DwithoutHastings}), (5) {\tt
-FFTeq} which computes equilibrium time for the 2D-grid, (6) {\tt
-RNA2Dfold } with and without the Hastings modification using equations
-(\ref{eq:transitionProbabilityFFTbor2DwithHastings}) and
-(\ref{eq:transitionProbabilityFFTbor2DwithoutHastings}). Correlations
+(\ref{eq:hermes:transitionProbabilityFFTbor2DwithHastings}) and
+(\ref{eq:hermes:transitionProbabilityFFTbor2DwithoutHastings}), (5) \ffteq
+which computes \eqt for the 2D-grid, (6) \rnatwofold
+with and without the Hastings modification using equations
+(\ref{eq:hermes:transitionProbabilityFFTbor2DwithHastings}) and
+(\ref{eq:hermes:transitionProbabilityFFTbor2DwithoutHastings}). Correlations
 with [resp. without] the Hastings modification are summarized in the
 lower [resp. upper] triangular portion of
 Table~\ref{table:correlation}. It is clear that correlations between
-the mathematically exact methods {\tt MFPT}, {\tt Equilibrium}, and
-approximation methods \kinfold, {\tt FFTmfpt}, {\tt FFTeq}, {\tt
-RNA2Dfold} are improved when using the Hastings correction.
+the mathematically exact methods \rnamfpt, \rnaeq, and
+approximation methods \kinfold, \fftmfpt, \ffteq, \rnatwofold are
+improved when using the Hastings correction.
 
-Figures~\ref{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq},
-\ref{fig:scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d},
-\ref{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
+Figures~\ref{fig:hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold},
+\ref{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt},
+\ref{fig:hermes:scatterplotFftMfptVsKinfoldAndFftEq}
 depict scatterplots for kinetics obtained by some of the algorithms
 above. The left panel of
-Figure~\ref{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq}
-shows a scatter plots for gold standard {\tt MFPT} versus platinum
-standard {\tt Equilibrium}, with correlation value 0.5652. The right
+Figure \ref{fig:hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold}
+shows a scatter plots for gold standard \rnamfpt versus platinum
+standard \rnaeq, with correlation value 0.5652. The right
 panel of the same figure shows a scatter plot for \kinfold versus
-{\tt Equilibrium}, with correlation 0.7814. Note the persence of two
+\rnaeq, with correlation 0.7814. Note the persence of two
 clusters in this and some of the other scatter plots. Cluster A
-consists of RNA sequences whose folding time, as determined by {\tt
-MFPT} or {\tt Equilibrium}, is rapid --- specifically, the natural
+consists of RNA sequences whose folding time, as determined by \rnamfpt
+or \rnaeq, is rapid --- specifically, the natural
 logarithm of the MFPT is at most 7.5. Cluster B consists of the
 remaining RNA sequences, whose folding time is longer than that of
 cluster A. There are no significant differences between RNA sequences
 in clusters A and B with respect to GC-content, sequence logo, minimum
 free energy, number of secondary structures, etc.  The left panel of
-Figure~\ref{fig:scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d}
-shows the scatter plot for {\tt MFPT} versus \kinfold, with
+Figure \ref{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
+shows the scatter plot for \rnamfpt versus \kinfold, with
 correlation 0.7933, and the right panel shows the scatter plot for
-{\tt MFPT} versus {\tt FFTmfpt}, with correlation 0.6035.
-Figure~\ref{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
-shows scatter plots for {\tt FFTmfpt} versus \kinfold (left) and
-for {\tt FFTmfpt} versus {\tt FFTeq} (right), with respective
+\rnamfpt versus \fftmfpt, with correlation 0.6035.
+Figure \ref{fig:hermes:scatterplotFftMfptVsKinfoldAndFftEq}
+shows scatter plots for \fftmfpt versus \kinfold {\em (Left)} and
+for \fftmfpt versus \ffteq {\em (Right)}, with respective
 correlation values 0.7608 and 0.9589. \kinfold obviously provides
-a better correlation with the exact value of mean first passage time;
+a better correlation with the exact value of \mfpt;
 however, since the standard deviation of \kinfold runs is as
 large as the mean,\footnote{It follows from spectral decomposition that
-equilibrium time follows an exponential distribution (or sum of
+\eqt follows an exponential distribution (or sum of
 exponential distributions). Exponential distributions have the property
 that the mean is equal to the standard deviation, hence
 it is not surprising that \kinfold
@@ -326,65 +796,69 @@ from \kinfold require prohibitively large computational time --- indeed, in
 yeast were obtained by 9,000 \kinfold simulations, each for $10^8$
 steps, requiring 3 months of CPU time on an Intel Pentium 4 running at
 2.4 GHz under Linux. Although the correlation value of 0.6035 between
-{\tt MFPT} and {\tt FFTmfpt} is much less than that obtained by {\tt
-Kinfold}, the runtime required by our method {\tt FFTmfpt} is measured
+\rnamfpt and \fftmfpt is much less than that obtained by {\tt
+Kinfold}, the runtime required by our method \fftmfpt is measured
 in seconds, even for moderate to large RNAs. For this reason, we
-advocate the use of {\tt FFTmfpt} in synthetic biology screens to
+advocate the use of \fftmfpt in synthetic biology screens to
 design RNA sequences having certain desired kinetic properties. Once
 promising candidates are found, it is possible to devote additional
 computational time to \kinfold simulations for more accurate
 kinetics.
 
 
-\begin{figure}
+\begin{figure}[!h]
 \centering
-% \includegraphics[width=0.45 \textwidth]{figure4a.eps}
-% \includegraphics[width=0.45 \textwidth]{figure4b.eps}
-\caption{ Scatter plots of the natural logarithm of times from {\tt
-MFPT} versus {\tt Equilibrium} (left) and for \kinfold versus
-{\tt Equilibrium} (right). }
-\label{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq}
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsRnaEq.pdf}
+\quad
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaEqKinfold.pdf}
+\caption{ Scatter plots of the natural logarithm of times from \rnamfpt
+versus \rnaeq {\em (Left)} and for \kinfold versus
+\rnaeq {\em (Right)}. }
+\label{fig:hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[!h]
 \centering
-% \includegraphics[width=0.45 \textwidth]{figure5a.eps}
-% \includegraphics[width=0.45 \textwidth]{figure5b.eps}
-\caption{ Scatter plots of the natural logarithm of times from {\tt
-MFPT} versus \kinfold (left) and for {\tt MFPT} versus {\tt
-FFTmfpt} (right). }
-\label{fig:scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d}
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsKinfold.pdf}
+\quad
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsFftMfptHastings.pdf}
+\caption{ Scatter plots of the natural logarithm of times from \rnamfpt
+versus \kinfold {\em (Left)} and for \rnamfpt versus {\tt
+FFTmfpt} {\em (Right)}. }
+\label{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[!h]
 \centering
-% \includegraphics[width=0.45 \textwidth]{figure6a.eps}
-% \includegraphics[width=0.45 \textwidth]{figure6b.eps}
-\caption{ Scatter plots of the natural logarithm of times from {\tt
-Kinfold} versus {\tt FFTmfpt} (left) and for {\tt FFTmfpt} versus {\tt
-FFTeq} (right). }
-\label{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldFftMfptHastings.pdf}
+\quad
+\includegraphics[width=0.45\textwidth]{Figures/Hermes/fftMfptFftEq.pdf}
+\caption{ Scatter plots of the natural logarithm of times from \kinfold
+versus \fftmfpt {\em (Left)} and for \fftmfpt versus \ffteq
+{\em (Right)}. }
+\label{fig:hermes:scatterplotFftMfptVsKinfoldAndFftEq}
 \end{figure}
 
 \begin{landscape}
 \begin{table}[!h]
 \centering
-\begin{tabular}
-  {|l|llllllll|} \hline \small{Hastings (Yes\textbackslash No)} & \small{MFPT} & \small{Equilibrium} & \small{Kinfold} & \small{FFTmfpt} & \small{RNA2Dfold} & \small{FFTbor} & \small{BarrierBasins} & \small{FFTeq} \\
-  \hline \small{MFPT}   & 1      & 0.5683 & 0.7945 & 0.5060 & 0.5110 & 0.5204 & 0.5280 & 0.4472 \\
-  \small{Equilibrium}   & 0.5798 & 1      & 0.7814 & 0.7043 & 0.7025 & 0.5080 & 0.5979 & 0.6820 \\
-  \small{Kinfold}       & 0.7933 & 0.7507 & 1      & 0.7312 & 0.7358 & 0.6241 & 0.6328 & 0.6445 \\
-  \small{FFTmfpt}       & 0.6035 & 0.7935 & 0.7608 & 1      & 0.9980 & 0.5485 & 0.8614 & 0.9589 \\
-  \small{RNA2Dfold}     & 0.6076 & 0.7919 & 0.7655 & 0.9983 & 1      & 0.5584 & 0.8538 & 0.9515 \\
-  \small{FFTbor}        & 0.5416 & 0.5218 & 0.6241 & 0.5748 & 0.5855 & 1      & 0.3450 & 0.4229 \\
-  \small{BarrierBasins} & 0.6346 & 0.6578 & 0.6328 & 0.8310 & 0.8217 & 0.3450 & 1      & 0.9149 \\
-  \small{FFTeq}         & 0.5614 & 0.7916 & 0.6966 & 0.9670 & 0.9590 & 0.4757 & 0.8940 & 1      \\
-  \hline
- \end{tabular}
-
- \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: {\tt MFPT} (mean first passage time, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), {\tt Equilibrium} (equilibrium time, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), {\tt FFTmfpt} (mean first passage time for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by {\tt FFTbor2D}, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, {\tt RNA2Dfold} (mean first passage time, computed as previously explained, but using {\tt RNA2Dfold} in place of {\tt FFTbor2D} to compute $P(x,y)$), \fftbor (mean first passage time, computed for the Markov chain consisting of states $0,1,\ldots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), {\tt BarrierBasins} (equilibrium time, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from {\tt Barriers}), and {\tt FFTeq} (equilibrium time, computed in the same fashion as {\tt BarrierBasins} using a Markov process derived from the energy landscape output by {\tt FFTbor2D}). }
+\begin{tabularx}{\linewidth}{c c *{8}{Y}}
+  \toprule
+  \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\ms{BarriersEq}} & \small{\ffteq} \\
+  \cmidrule(l){2-9}
+  \small{\rnamfpt}   & 1      & 0.5683 & 0.7945 & 0.5060 & 0.5110 & 0.5204 & 0.5280 & 0.4472 \\
+  \small{\rnaeq}   & 0.5798 & 1      & 0.7814 & 0.7043 & 0.7025 & 0.5080 & 0.5979 & 0.6820 \\
+  \small{\kinfold}       & 0.7933 & 0.7507 & 1      & 0.7312 & 0.7358 & 0.6241 & 0.6328 & 0.6445 \\
+  \small{\fftmfpt}       & 0.6035 & 0.7935 & 0.7608 & 1      & 0.9980 & 0.5485 & 0.8614 & 0.9589 \\
+  \small{\rnatwofold}     & 0.6076 & 0.7919 & 0.7655 & 0.9983 & 1      & 0.5584 & 0.8538 & 0.9515 \\
+  \small{\fftbor}        & 0.5416 & 0.5218 & 0.6241 & 0.5748 & 0.5855 & 1      & 0.3450 & 0.4229 \\
+  \small{\ms{BarriersEq}} & 0.6346 & 0.6578 & 0.6328 & 0.8310 & 0.8217 & 0.3450 & 1      & 0.9149 \\
+  \small{\ffteq}         & 0.5614 & 0.7916 & 0.6966 & 0.9670 & 0.9590 & 0.4757 & 0.8940 & 1      \\
+  \bottomrule
+ \end{tabularx}
+ \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), {\tt BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from {\tt Barriers}), and \ffteq (\eqt, computed in the same fashion as {\tt BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }
 \label{table:correlation}
  \end{table}
  \end{landscape}

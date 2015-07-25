@@ -410,8 +410,8 @@ as those given in \cite{hofacker:FastFolding}.
 We now turn to our parametric versions of the partition function.
 
 \begin{figure}[htp]
-%\centerline{\includegraphics[width=0.6\linewidth]{feynmanDiagram}}
-\centerline{\includegraphics[width=0.6\linewidth]{figure1}}
+%\centerline{\includegraphics[width=0.6\textwidth]{feynmanDiagram}}
+\centerline{\includegraphics[width=0.6\textwidth]{figure1}}
 \caption{Feynman diagram of original recursions from McCaskill's
 algorithm \cite{mcCaskill} to compute the partition function.
 Dashed lines present intervals of unpaired bases, and shaded
@@ -710,7 +710,7 @@ method was due to Zuker \cite{Zuk89a}, as implemented in {\tt mfold}
 who for certain base pairs $(i,j)$ computed the minimum
 free erergy structure containing $(i,j)$ that was sufficiently distinct
 from previously generated suboptimal structures.
-Next, the program {\tt RNAsubopt} of Wuchty et al.
+Next, the program \rnasub of Wuchty et al.
 \cite{wuchtyFontanaHofackerSchuster} generated all secondary structures
 within a user-specified energy above the minimum free energy.
 In contrast the program {\tt Sfold} \cite{Ding.nar03} samples from
@@ -718,7 +718,7 @@ the low energy Boltzmann ensemble of structures; indeed, our implementation
 of sampling in {\rnahairpin} is a modification of the method of
 Ding and Lawrence \cite{Ding.nar03}. (Note that the {\tt Sfold} algorithm
 is implemented in the Vienna RNA Package program
-{\tt RNAsubopt} with flag {\tt -p}; as well the program
+\rnasub with flag {\tt -p}; as well the program
 {\tt RNAstructure} \cite{mathewsConstraints} also supports sampling.)
 The program {\tt RNAshapes} of Steffen et al.
 \cite{giegerich:shapesBioinf} computes the minimum free energy structure
@@ -727,7 +727,7 @@ The program {\tt RNAbor} of Freyhult et al. \cite{Freyhult.b07}
 computes, for each $k$,
 the minimum free energy structure $MFE(k)$ having base pair
 distance $k$ from a user-specified reference structure, while the
-program {\tt RNA2Dfold} of Lorenz et al. \cite{hofacker:RNAbor2D}
+program \rnatwofold of Lorenz et al. \cite{hofacker:RNAbor2D}
 computes, for each $k,\ell$, the minimum free energy structure
 $MFE(k,\ell)$ having base pair
 distance $k$ [resp. $\ell$] from a first [resp. second]
@@ -1014,7 +1014,7 @@ were used with {\tt libSVM} \cite{libSVM}.
 
 Table~\ref{table:AUC} summarizes the area under curve (AUC) values for
 ROC curves for the three different SVM classifiers HP, HP/M, HP/M/O,
-while Figure~\ref{fig:SVMforU2andPurineRiboswitch} depicts the corresponding
+while Figure \ref{fig:SVMforU2andPurineRiboswitch} depicts the corresponding
 ROC curves. Note that in all cases, inclusion of multiloop order probabilities
 as features does not add any discriminatory power, and even in certain cases
 reduces the AUC. This is fortunate, since {\rnamlorder} cannot be
@@ -1032,7 +1032,7 @@ under curve values for support vector machines (SVM) over that for relevance
 vector machines (RVM). A value greater [resp. less] than unity in the
 table indicates that SVM outperforms [resp. underperforms] RVM using the
 same features.
-Figure~\ref{fig:RF00027aucSVMversusRVM} shows an unexpected situation
+Figure \ref{fig:RF00027aucSVMversusRVM} shows an unexpected situation
 for the 5-fold (stratified) cross-validation experiments of the Rfam family
 RF00027, Using the feature set consisting of only 21 hairpin
 formation probabilities $p_h(0),\ldots,p_h(20)$, the ratio of SVM/RVM AUC
@@ -1046,11 +1046,11 @@ indicating that RVM outperforms SVM.
 
 \begin{figure*}[tbhp]
 \centering
-%\includegraphics[width=0.45 \linewidth]{svm_rf00004_roc_curve_overlay}
-\includegraphics[width=0.45 \linewidth]{figure3a}
+%\includegraphics[width=0.45 \textwidth]{svm_rf00004_roc_curve_overlay}
+\includegraphics[width=0.45 \textwidth]{figure3a}
 \hskip 1cm
-%\includegraphics[width=0.45 \linewidth]{svm_rf00167_roc_curve_overlay}
-\includegraphics[width=0.45 \linewidth]{figure3b}
+%\includegraphics[width=0.45 \textwidth]{svm_rf00167_roc_curve_overlay}
+\includegraphics[width=0.45 \textwidth]{figure3b}
 \caption{
 Receiver operating characteristic (ROC) curves for the performance of
 support vector machine binary classification using a
@@ -1090,11 +1090,11 @@ Rfam family RF00167 (purine riboswitch).
 
 \begin{figure*}[tbhp]
 \centering
-%\includegraphics[width=0.45 \linewidth]{roc_rf00027_h_roc_curve_overlay}
-\includegraphics[width=0.45 \linewidth]{figure4a}
+%\includegraphics[width=0.45 \textwidth]{roc_rf00027_h_roc_curve_overlay}
+\includegraphics[width=0.45 \textwidth]{figure4a}
 \hskip 1cm
-%\includegraphics[width=0.45 \linewidth]{roc_rf00027_hmo_roc_curve_overlay}
-\includegraphics[width=0.45 \linewidth]{figure4b}
+%\includegraphics[width=0.45 \textwidth]{roc_rf00027_hmo_roc_curve_overlay}
+\includegraphics[width=0.45 \textwidth]{figure4b}
 \caption{Receiver operating characteristic (ROC) curves for
 5-fold cross-validation for sequences from the seed alignment of
 RF00027.

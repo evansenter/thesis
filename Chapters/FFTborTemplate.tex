@@ -168,7 +168,7 @@ By graphing the probabilities $p_k$ as a function of $k$,
 we expect to see one or more peaks at base pair distance $k$ when
 there is a meta-stable (low energy) structure $S$
 at base pair distance $k$ from \strSt.
-See Figure~1 for an illustration.
+See Figure 1 for an illustration.
 
 \subsection*{Recursions for structural neighbors}
 
@@ -609,7 +609,7 @@ expression platform candidates.
 \subsubsection*{Kinetic folding speed and energy landscape ruggedness}
 
 The output of \fftbor, as shown in
-Figure~2, is a probability distribution,
+Figure 2, is a probability distribution,
 where the $x$-axis represents the base pair distance from an arbitrary,
 but fixed secondary structure \strSt, and the $y$-axis represents the
 Boltzmann probability $p(k) = \frac{Z_k}{Z}$ that a secondary structure
@@ -617,7 +617,7 @@ has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
 of the sort artistically rendered in the well-known
-energy landscape depicted in Figure~1  of \cite{Wolynes.ptam05}.
+energy landscape depicted in Figure 1  of \cite{Wolynes.ptam05}.
 In the sequel, we may call the \fftbor probability distribution a
 {\em structural neighbor profile}, or simply {\em structural profile}
 \strSt.
@@ -626,7 +626,7 @@ A hypothesis behind theoretical work in biomolecular folding theory in
 is that kinetic folding slows down as the energy landscape becomes more
 {\em rugged}. This is borne out in our computational experiments for RNA
 using \fftbor, as reported
-in Figure~2.
+in Figure 2.
 
 We randomly chose two TPP riboswitch
 aptamers from the seed alignment for
@@ -639,7 +639,7 @@ nt sequence
 UAUAAGUCCA AGGGGUGCCA AUUGGCUGAG AUGGUUUUAA CCAAUCCCUU
 UGAACCUGAU CCGGUUAAUA CCGGCGUAGG AAUGGAUUUU CUCUACAGC.
 Rfam consensus and minimum free energy structures for both sequences are
-depicted in Figure~3.
+depicted in Figure 3.
 Despite the fact that there is no sequence homology according to
 pairwise BLAST \cite{BLAST}, this figure clearly demonstrates that
 consensus and
@@ -707,9 +707,9 @@ to output a list of sequences,
 whose minimum free energy structure is a designated target structure.
 Subsequently, using \fftbor, one could prioritize sequences in terms
 of \fftbor structural profile, on the grounds that sequences with a profile
-similar to the right panel of Figure~2
+similar to the right panel of Figure 2
 are likely to fold more rapidly than those whose profile resembles
-the left panel of Figure~2.
+the left panel of Figure 2.
 
 In order to more systematically determine the relation between kinetic
 folding speed and the ruggedness of an energy landscape near the MFE structure,
@@ -764,9 +764,9 @@ correlation of  $0.48436192$ with one-tailed
 $p$-value of $0.00018249$ between the
 standard deviation of the \fftbor output (when starting from the
 empty structure) and logarithm base $10$ of the mean first passage time.
-Table~1 and Figure~4 explain this phenomenon in detail.
+Table~1 and Figure 4 explain this phenomenon in detail.
 
-In the right panel of Figure~4, we
+In the right panel of Figure 4, we
 applied \fftbor to each of the two randomly chosen TPP riboswitch
 aptamers BX842649.1/277414-277318 and AACY022101973.1/389-487, starting
 from the empty reference structure $S^*=\emptyset$.
@@ -832,7 +832,7 @@ Although this problem remains open, we report here how
 \fftbor may provide help to biologists in the selection and
 prioritization of riboswitch candidates.
 
-Figure~5 depicts the gene OFF structure of the
+Figure 5 depicts the gene OFF structure of the
 xpt G-box purine riboswitch in {\em B. subtilis}, as determined by
 inline-probing -- this structure was taken from
 Figure 1 of \cite{breaker:Riboswitch2}.
@@ -843,7 +843,7 @@ base pairs could be added. By using
 can be found on the complement strand of GenBank accession number
 CP002906.1/c2165302-2165142 in
 complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
-Figure~6 depicts the result of
+Figure 6 depicts the result of
 three computational experiments with FFTbor. The left panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
@@ -857,12 +857,12 @@ the expected base pair distance to the following secondary structure
 as a function of window offset, where window size equals the size of this
 target structure. This structure was
 obtained by removing all leading and trailing unpaired positions
-from the structure depicted in Figure~5,
+from the structure depicted in Figure 5,
 except for the leftmost [resp. rightmost] unpaired position
 adjacent to the leftmost [resp. rightmost] base-paired position.
 The reason for removal of the leading and trailing unpaired positions was
 that the structure of \cite{breaker:Riboswitch2}, depicted in
-Figure~5, is clearly only partial, as earlier
+Figure 5, is clearly only partial, as earlier
 mentioned.  The center panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
@@ -886,27 +886,27 @@ the expected base pair distance to the following secondary structure
 \end{small}
 as a function of window offset, where window size equals the size of this
 target {\em expression platform} structure.
-Figure~6 determines the precise location of the
+Figure 6 determines the precise location of the
 xpt riboswitch, both aptamer and expression platform.
 
 If the biologically functional target structure is unknown, one can
 instead attempt a similar moving window computation, where the target
 structure is taken to be the minimum free energy structure of the
 current window contents. In this case, one may hope to determine a
-bimodal distribution, as displayed in Figure~7.
+bimodal distribution, as displayed in Figure 7.
 Given an input RNA sequence, or genomic region, the
 web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
 creates a movie as follows, described here for the xpt riboswitch
 previously discussed.  We extracted the downstream region of
 Taking the
-161 nt xpt G-box purine riboswitch described in Figure~5,
+161 nt xpt G-box purine riboswitch described in Figure 5,
 with GenBank accession number CP002906.1/c2165302-2165142, we extended
 to a sequence of length 200 nt, by appending flanking
 downstream genomic nucleotides.  Running \fftbor on all
 prefixes of the resulting sequence of lengths
 $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
 \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
-Figure~5 displays the output of \fftbor on the
+Figure 5 displays the output of \fftbor on the
 166 nt prefix, clearly showing a bimodal distribution. Attempting to
 automate the identification of non-unimodal \fftbor output, we have
 applied the Hartigan-Hartigan dip-test \cite{hartiganDipTest},
@@ -964,7 +964,7 @@ As visible from the defining recursions, the algorithmic time complexity of
 {\tt RNAbor} is $O(n^5)$ and space complexity is $O(n^3)$, where $n$ is
 the length of input RNA sequence. In contrast, the time complexity of
 \fftbor is $O(n^4)$ and space complexity is $O(n^2)$.
-Figure~8 displays run time curves for both
+Figure 8 displays run time curves for both
 {\tt RNAbor} and \fftbor, when the initial structure \strSt is
 taken to be either the empty structure or the minimum free energy
 (MFE) structure.
@@ -993,12 +993,12 @@ multi-platform shared-memory parallel programming environment, that supports
 parallelizations of C/C++ code -- see \url{http://openmp.org/}.
 Using OpenMP primitives, we created multiple threads to evaluate the polynomial
 $\Z(x)$ on different complex $n$th roots of unity. The table in the left
-panel of Figure~9
+panel of Figure 9
 and Table~2 together present benchmarks,
 executed on
 a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
 of \fftbor as a function of the number of cores.
-The table in Figure~9 describes average
+The table in Figure 9 describes average
 run time in seconds ($\pm$ one standard deviation) for running \fftbor
 on random RNA of length 200,250,300,400,450,500 with either 1 or 2 cores.
 Table~2 presents similar data for running
@@ -1285,7 +1285,7 @@ is $2.22528791$  [resp. $1.98565959$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
 AB030643.1/4176-4241 [resp.  AL645723.11/192421-192359].
 The right panel of this figure should be compared with
-Figure~2.
+Figure 2.
 These anecdotal results bear up the correlation between standard deviation
 $\sigma$ and logMFPT described in Table~1.
 }
@@ -1322,7 +1322,7 @@ current window contents have base pair distance $k$ from the target
 (or initial) structure \strSt. In each case, the size of the window was
 set to equal the length of \strSt.
 {\em (Left)} Target structure \strSt comprises the entire secondary
-of the xpt riboswitch, as depicted in Figure~5, with the
+of the xpt riboswitch, as depicted in Figure 5, with the
 exception that the leading and trailing unpaired positions were removed,
 as explained in the text -- see displayed dot bracket structure in
 (\ref{eq:xpt1}).
