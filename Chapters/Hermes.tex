@@ -105,7 +105,7 @@ $(I - P^{-}_{\xEnd})^{-1} \cdot {\bf e}$ \cite{meyerMFPT}.
 
 The {\em stationary} probability distribution \statDist
 is a row vector such that $\pSt \cdot P = \pSt$; i.e.
-$\pSt_j = \sum_{i}^n \pSt_i \cdot p_{i,j}$, for all $1\leq j \leq n$.
+$\pSt_j = \sum_{i}^n \pSt_i\, \cdot\, p_{i,j}$, for all $1\leq j \leq n$.
 It can be shown that the stationary probability $\pSt_i$ is the limit,
 as $m$ tends to infinity, of the frequency of visiting state $i$ in a
 random walk of length $m$ on Markov chain \mChain.
@@ -146,7 +146,7 @@ that the stationary probability distribution
 
 \begin{align}
 \label{eq:hermes:stationaryBoltzmannProb}
-\pSt_k = \frac{\boltzf{k}}{Z}
+\pSt_k = \frac{\boltzf{k}}{\bfZ{}{}}
 \end{align}
 
 where $E(k)$ is the energy of conformation $k$ at temperature $T$,
@@ -165,11 +165,11 @@ the native conformation is assumed to be the ground state having
 minimum free energy. These results justify the use of the Monte Carlo
 Algorithm \ref{algo:MonteCarlo} in macromolecular kinetics and
 structure prediction.
-% \medskip
+\medskip
 
 \begin{figure}[!ht]
 \label{fig:hermes:mcmc}
-% \hrule \rule[0ex]{0pt}{0pt}
+\hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for the Metropolis Monte Carlo algorithm} \\
 \end{center}
@@ -207,6 +207,7 @@ upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
 \end{algorithmic}
 \caption{The function {\sc Metropolis} implements a discrete time simulation
 of folding trajectories for a Markov chain.}
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
 The \mfpt from state $x$ to state $y$ can
@@ -432,11 +433,11 @@ The pseudocode, is given in Algorithm \ref{algo:Gillespie}.
 Though Gillespie's original application was for chemical kinetics,
 Flamm et al. adapted the method for the kinetics of RNA secondary structure
 folding, as implemented in \kinfold \cite{flammPhD,flamm}.
-% \medskip
+\medskip
 
 \begin{figure}[!ht]
 \label{fig:hermes:gillespie}
-% \hrule \rule[0ex]{0pt}{0pt}
+\hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for the Gillespie algorithm} \\
 \end{center}
@@ -484,6 +485,7 @@ upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
 \end{algorithmic}
 \caption{The function {\sc Gillespie} implements a continuous time simulation of
 folding trajectories for a Markov process.}
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
 \section{Software within the \hermes suite}
@@ -513,7 +515,7 @@ outlining the configuration and compilation process for the \hermes
 suite.
 
 \hermes is organized into three independent directories:
-\ffttwo, \rnamfpt, and \rnaeq (see
+{\em (1)\;} \ffttwo, {\em (2)\;} \rnamfpt, and {\em (3)\;} \rnaeq (see
 Figure \ref{fig:hermes:organizationHermes}). These packages compile into both
 standalone executables and archive files. The archives provide an
 API which allow the development of novel applications using source
@@ -561,9 +563,10 @@ Section \ref{subsec:hermes:mfpt}. The program takes as input a
 comma separated value (CSV) file containing the non-zero positions and
 values of a 2D probability grid; i.e. a CSV format file having columns {\em i},
 {\em j}, and {\em p}. The first two columns, {\em i} and {\em j}
-correspond to the {\em 0-indexed} row-ordered position in the probability grid,  and the final column {\em p} is the stationary probability $p_{i,j}$.
+correspond to the 0-indexed row-ordered position in the probability grid, and
+the final column {\em p} is the stationary probability $p_{i,j}$.
 From this input, the probability transition matrix is constructed using
-equation \ref{eq:hermes:xitionProbFfttwoWithoutHastings} and the
+equation (\ref{eq:hermes:xitionProbFfttwoWithoutHastings}) and the
 \mfpt is computed by matrix inversion.
 
 Given RNA sequence \seq and secondary structure $x$,
@@ -951,6 +954,7 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
 \EndFunction
 \algstore{eqEst}
 \end{algorithmic}
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 \clearpage
 
@@ -997,6 +1001,7 @@ $w$. {\sc SoftBound} is a helper function that uses binary search to find the
 starting time $t'$ from which the window starts. {\sc WindowEq} returns a
 boolean value if the state of interest $x$ varies by no more than $\epsilon$
 across the window $w$ starting at time $t$.}
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
 In using the approach outlined in Figure \ref{fig:hermes:eqEst}, the correlation

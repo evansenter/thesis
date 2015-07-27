@@ -49,7 +49,7 @@ to present an application of \fftbor, in the area of RNA folding kinetics.
 p(x) = p_0 + p_1 x + p_2 x^2 + \dots + p_{n-1} x^{n-1},
 \end{align}
 
-where $p_k$ is defined as $p_k = \frac{Z_k}{Z}$. We employ the \fft to compute
+where $p_k$ is defined as $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$. We employ the \fft to compute
 the \idft on values $y_0,\dots,y_{n-1}$, where
 $y_k = p(\omega^k)$ and $\omega = \pRoU$ is the principal \nRoU and $p(x)$ is defined in
 equation (\ref{eq:fftbor:pOfX}). By leveraging
@@ -430,6 +430,7 @@ values $\emZof{}{\alpha_0},\dots,\emZof{}{\alpha_{n-1}}$, each time re-using the
 the computation resources used to determine the (column) vector
 
 \begin{align}
+\setstretch{1.3}
 \label{eq:fftbor:yColumn}
 \bfY = (y_0,\dots,y_{n-1})^{\text T} =
 \left(
@@ -521,8 +522,8 @@ instability makes even this approach infeasible for values of $n$
 that exceed 56 (data not shown).
 Nevertheless, our approach can be modified as follows.
 Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
-$y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\dots,
-y_{n}=\frac{\emZof{}{\alpha_n}}{\emZ{}}$, and
+$y_1=\frac{\emZof{}{\alpha_1}}{\bfZ{}{}},\dots,
+y_{n}=\frac{\emZof{}{\alpha_n}}{\bfZ{}{}}$, and
 \bfZ{}{} is the partition function defined in equation (\ref{eq:fftbor:partFunc}).
 Using the \fft to compute the \idft, it follows from equation
 (\ref{eq:fftbor:aFromY}) that we can compute the probabilities $p_0,\dots,p_{n-1}$
@@ -570,7 +571,11 @@ from equation (\ref{eq:fftbor:probK})}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{Caption here}
+\caption{The function {\sc FFTbor} computes the $m$ most significant digits
+of $p_0,\dots,p_{n-1}$, where $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$. This algorithm
+operates in \On{4} time and \On{2} space, a significant improvement over its
+predecessor \rnabor.}
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
 \section{Benchmarking and performance considerations}
@@ -825,10 +830,12 @@ we define the notion of \ebpd to a designated
 structure. Let \strSt be an arbitrary secondary structure of the RNA sequence
 $\seq = \seqN$.
 The expected base pair distance to \strSt is defined by
+
 \begin{align}
 E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
 \sum_{\str} P(\str) \cdot \dBP{\str}{\strSt}
 \end{align}
+
 where
 $\mathbb{S}(\seqN)$ denotes the set of secondary structures for
 $\seq = \seqN$, $P(\str) = \frac{\boltzf{\str}}{\bfZ{}{}}$ is the Boltzmann
@@ -880,7 +887,7 @@ empty structure) and logarithm base 10 of the mean first passage time.
   % puts data.chomp.split(/\\/).map { |line| line.split("&")[1..-1].map { |item| item.gsub(/\s+/, "") }.reject { |item| item.empty? }.map { |number| "%.4f" % number.to_f }.join(" & ") + " \\\\" }.join(?\n)
   \bottomrule
 \end{tabularx}
-\caption{Pearson correlation between various aspects of selenocysteine
+\caption{\small Pearson correlation between various aspects of selenocysteine
 insertion sequences from the seed alignment of Rfam family
 RF00031 \cite{Gardner.nar11}.
 For each of the 61 RNA sequences, we ran \fftbor, starting
@@ -892,17 +899,17 @@ taken over 50 runs, of the number of Monte Carlo steps taken to fold
 the empty structure into the MFE structure, where an absolute upper bound
 of 5 million steps was allowed in the simulation.  From the output of
 \fftbor, we computed
-{\em (1)}
+{\em (1)\;}
 the mean number ($\mu$) of base pairs per structure, taken over
 the ensemble of all secondary structures for the given sequence,
-{\em (2)}
+{\em (2)\;}
 the standard deviation ($\sigma$) of the number of base pairs per structure,
-{\em (3)}
+{\em (3)\;}
 the coefficient of variation $\frac{\sigma}{\mu}$,
-{\em (4)}
+{\em (4)\;}
 the RNA sequence length $n$,
 and
-{\em (5)}
+{\em (5)\;}
 the minimum free energy (MFE).  Additionally, we computed the
 logarithm base 10 of mean first passage
 time ($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
@@ -1158,8 +1165,34 @@ and additional evidence is provided to support this claim.
 % prefixes, where the user can start/stop the movie,
 % move forward/backward, or download all raw data output by \fftbor.
 
-\section{Performance characteristics of \fftbor}
+\section{Performance characteristics of \fftbor and \rnabor}
 \label{sec:fftbor:speed}
+
+As visible from the defining recursions, the algorithmic time complexity of
+\rnabor is \On{5} and space complexity is \On{3}, where $n$ is
+the length of input RNA sequence. In contrast, the time complexity of
+\fftbor is \On{4} and space complexity is \On{2}.
+Figure \ref{fig:fftbor:benchmarking} displays run time curves for both
+\rnabor and \fftbor, when the initial structure \strSt is
+taken to be either the empty structure or the minimum free energy
+(MFE) structure.
+
+Here, we compare the run time of \rnabor \cite{Freyhult.b07} and
+the (unparallelized version of) \fftbor, using
+a Dell Power Edge 1950, 2 x Intel Xeon E5430 Quad
+core with 2.80 GHz and 16 GB RAM. For $n = 20,40,60,\dots,300$, in step
+size of 20 nt, we generated $n$ random RNA sequences of length $n$ with equal
+probability for each nucleotide A,C,G,U (i.e. a $0$th order Markov chain).
+For values of $n \leq 200$, 100 random sequences of length
+$n$ were generated, while for values of $220 \leq n \leq 300$, only
+10 sequences of length $n$ were generated.
+RNA sequences larger than 300 nt were not tested,
+due to \On{3} memory constraints required by \rnabor.
+For each RNA sequence, \rnabor and \fftbor were both run,
+each starting with empty initial structure \strSt, and also
+with initial sequence \strSt taken to be the MFE structure.
+Each data point in the table comprises the average run time for three
+independent evaluations.
 
 \begin{figure}[!h]
 \centering
@@ -1175,4 +1208,42 @@ rather than the empty structure. Notice the radical improvement in the
 run time of \fftbor over that of \rnabor.
 }
 \label{fig:fftbor:benchmarking}
+\end{figure}
+
+\subsection{OpenMP parallelization of \fftbor}
+\label{subsec:fftbor:openmp}
+
+OpenMP is a simple and flexible
+multi-platform shared-memory parallel programming environment, that supports
+parallelizations of C/C++ code---see \url{http://openmp.org/}.
+Using OpenMP primitives, we created multiple threads to evaluate the polynomial
+\emZ{} on different \nRoUs. Figure \ref{fig:fftbor:benchmarkingParallel}
+presents benchmarks, executed on
+a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
+of \fftbor as a function of the number of cores.
+The left panel of Figure \ref{fig:fftbor:benchmarkingParallel} describes average
+run time in seconds ($\pm$ one standard deviation) for running \fftbor
+on random RNA of length $200,250,300,400,450,500$ with either 1 or 2 cores.
+The right panel of Figure \ref{fig:fftbor:benchmarkingParallel}
+presents similar data for running
+\fftbor on $2,3,6,4,12,15,20$ cores.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarkingOpenMP.pdf}
+\caption{{\em (Left)} Table showing parallel run times in seconds
+for \fftbor, using
+OpenMP {\tt http://openmp.org/}. Column headers 1 and 2 indicate
+the number of cores used in the computational experiment.
+For each sequence length $200,\dots,500$,
+five random RNAs were generated using equal probability for each nucleotide
+A,C,G,U. Run time in seconds, plus or minus one standard deviation, are
+given for a 24-core
+AMD Opteron 6172 with 2.10GHz and 64GB RAM, with only 1 (resp. 2) cores
+used.
+{\em (Right)} Graph showing parallel run time of \fftbor on
+an AMD Opteron 6172 with 2.10GHz and 64GB RAM, using respectively
+1,2,3,4,6,9,12,15,20 cores.
+}
+\label{fig:fftbor:benchmarkingParallel}
 \end{figure}

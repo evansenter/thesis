@@ -14,8 +14,8 @@ which computes the paramerized partition function for an input RNA sequence
 \seq. \ffttwo computes the two-dimensional coarse energy landscape for \seq
 given two compatible input secondary structures \strA and \strB, where position
 $(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
-probability for those structures \str which have $\dBP(\str, \strA)=x$ and
-$\dBP(\str, \strB)=y$ (where $\dBP$ is as defined in equation
+probability for those structures \str which have $\dBP{\str}{\strA}=x$ and
+$\dBP{\str}{\strB}=y$ (where $d_{\text{BP}}$ is as defined in equation
 \ref{eq:fftbor:dBP}). By again leveraging the \fft, \ffttwo runs in \On{5}
 time and only uses \On{2} space---a significant improvement over previous
 approaches. This permits the output energy landscape to be used in a
@@ -207,10 +207,12 @@ Inductively we define $\emZ{i,j}$ to equal
 
 \begin{align}
 \label{eq:ffttwo:polyRecNussJac}
+\begin{split}
 &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{s_k,s_j \in \bpSet,\\i\le k<j}}
 \left(\boltzNuss{k,j}\cdot
 \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
+\end{split}
 \end{align}
 
 where $\alpha_0 = 1$ if $j$ is base-paired in $\strA_{[i,j]}$ and 0 otherwise,
@@ -220,13 +222,13 @@ $\alpha(k) =
 $\beta(k) =
 \dBP{\strB_{[i,j]}}{\strB_{[i,k-1]} \cup \strB_{[k+1,j-1]} \cup \{ (k,j) \}}$.
 
-The proof is given in supplementary information.
+% The proof is given in supplementary information.
 \end{theorem}
 
 Note that if one were to compute all terms of the polynomial $\emZ{1,n}$
 by explicitly performing polynomial multiplications,
 then the computation would require \On{7} time and \On{4} space, the
-same time complexity of \cite{hofacker:RNAbor2D}.
+same time complexity of \rnatwofold \cite{hofacker:RNAbor2D}.
 Instead of explicitly performing polynomial expansion in {\em variable} $x$,
 we instantiate $x$ to a
 complex number $\rho \in \mathbb{C}$, and apply
@@ -268,9 +270,7 @@ y_{n^2-1} \\
 \right)
 \end{align}
 
-where
-
-$y_0=\emZof{}{\rho_0},\dots,y_{n^2-1}=\emZof{}{\rho_{n^2-1}})$ are thus
+where $y_0=\emZof{}{\rho_0},\dots,y_{n^2-1}=\emZof{}{\rho_{n^2-1}})$ are thus
 quintic time \On{5} and quadratic space \On{2}.
 
 \subsection{Polynomial interpolation}
@@ -305,11 +305,11 @@ The pseudocode for the algorithm to compute $p(x)$ is given in
 Figure \ref{algo:ffttwo:algo}.
 In the next section, we explain a highly non-trivial improvement of
 this algorithm to reduce time by a factor of 4.
-% \medskip
+\medskip
 
 \begin{figure}[!ht]
 \label{fig:ffttwo:algo}
-% \hrule \rule[0ex]{0pt}{0pt}
+\hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for \ffttwo} \\
 \end{center}
@@ -359,6 +359,7 @@ the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
 \section{Acceleration of the \ffttwo algorithm}
@@ -509,7 +510,7 @@ equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
 
 In this case, we have
 $\emZ{} = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}$. But then
-$\emZ{} = Y(u) = \sum_{k=0}^{M_0-1} b_k u^k$,
+$\emZ{} = \emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k$,
 where we have made a variable change $u=x^2$, and coefficient changes
 $b_k = a_{2k}$.
 By evaluating $M_0=\frac{M}{2}$ many complex
@@ -518,20 +519,20 @@ use polynomial interpolation to determine all coefficients $b_k$ of
 the polynomial
 
 \begin{align}
-Y(u) = \sum_{k=0}^{M_0-1} b_k u^k = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}.
+\emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}.
 \end{align}
 
-Since $Y(x^2)=\emZ{}$, we have
-$Y(\exp(\frac{2\pi i k}{M/2})) =
-Y(\exp(\frac{4\pi i k}{M})) =
+Since $\emYof{}{x^2}=\emZ{}$, we have
+$\emYof{}{\exp(\frac{2\pi i k}{M/2})} =
+\emYof{}{\exp(\frac{4\pi i k}{M})} =
 \emZof{}{\exp(\frac{2\pi i k}{M})}$, hence we can
 use the previous recursions (\ref{eq:ffttwo:polyRecNussJac})
 to evaluate \emZof{}{\exp(\frac{2\pi i k}{M})}.  Instead of
 performing $M$ evaluations of \emZ{} at $M$-roots of unity,
-this requires only $M_0=M/2$ evaluations of $Y(u)$ at
+this requires only $M_0=M/2$ evaluations of $\emYof{}{u}$ at
 $M_0$-roots of unity; i.e. only half the number of
 evaluations of \emZ{} are necessary to
-obtain the coefficients of $Y(x)$. But then, we immediately obtain the
+obtain the coefficients of $\emYof{}{x}$. But then, we immediately obtain the
 full polynomial \emZ{}, since its coefficients of odd parity are zero.
 
 \medskip
@@ -541,29 +542,29 @@ equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
 
 In this case, $z_0,z_2,z_4,\dots$ are zero, so
 $\emZ{} = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
-$\emZ{} = x \cdot Y(u)$, where
-$Y(u)= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
+$\emZ{} = x \cdot \emYof{}{u}$, where
+$\emYof{}{u}= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
 a variable change $u=x^2$, and coefficient changes
 $b_k = z_{2k+1}$. Similarly to Case 1,
 we can interpolate the $M_0$ coefficients of the polynomial
-$Y(u) = \sum_{k=0}^{M_0-1} b_k u^k$
+$\emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k$
 by evaluating $M_0$ many complex $M_0$-roots
-of unity.  Since $\emZ{}=x \cdot Y(x^2)$, $Y(x^2) = x^{-1} \cdot \emZ{}$,
+of unity.  Since $\emZ{}=x \cdot \emYof{}{x^2}$, $\emYof{}{x^2} = x^{-1} \cdot \emZ{}$,
 so
-$Y(\exp(\frac{2\pi i k}{M/2})) = Y(\exp(\frac{4\pi ki}{M})) =
+$\emYof{}{\exp(\frac{2\pi i k}{M/2})} = \emYof{}{\exp(\frac{4\pi ki}{M})} =
 \exp(\frac{-2\pi i k}{M}) \cdot
 \emZof{}{\exp(\frac{2\pi i k}{M})}$, employing
 the previous recursions (\ref{eq:ffttwo:polyRecNussJac})
 to evaluate \emZof{}{\exp(\frac{2\pi i k}{M})}.  Note, that unlike the
-Case 1, since $\emZ{} = x \cdot Y(x^2)$, we have
-$Y(x^2)=\frac{\emZ{}}{x}$, which explains the presence of additional factor
+Case 1, since $\emZ{} = x \cdot \emYof{}{x^2}$, we have
+$\emYof{}{x^2}=\frac{\emZ{}}{x}$, which explains the presence of additional factor
 $\exp(\frac{-2\pi i k}{M}))$ in Case 2.  Thus, instead of
 performing $M$ evaluations of \emZ{} at $M$-roots of unity,
-we perform only $M_0=\frac{M}{2}$ evaluations of $Y(u)$ at
+we perform only $M_0=\frac{M}{2}$ evaluations of $\emYof{}{u}$ at
 $M_0$-roots of unity; i.e. only half the number of
 evaluations of \emZ{} are necessary to
-obtain the coefficients of $Y(x)$. But then, we immediately obtain the
-full polynomial \emZ{}, since $\emZ{} = x \cdot Y(x^2)$, and the
+obtain the coefficients of $\emYof{}{x}$. But then, we immediately obtain the
+full polynomial \emZ{}, since $\emZ{} = x \cdot \emYof{}{x^2}$, and the
 coefficients of \emZ{} of even parity are zero.
 
 In the following, we will need the observation, that if the parity of
@@ -572,14 +573,14 @@ even, then
 
 \begin{align}
 \label{eq:ffttwo:evenY}
-Y(x^2) = \emZ{}
+\emYof{}{x^2} = \emZ{}
 \end{align}
 
 while if the parity is odd, then
 
 \begin{align}
 \label{eq:ffttwo:oddY}
-Y(x^2) = \frac{1}{x} \cdot \emZ{}.
+\emYof{}{x^2} = \frac{1}{x} \cdot \emZ{}.
 \end{align}
 
 \subsection{Optimization due to complex conjugates}
@@ -610,7 +611,7 @@ By induction on $k=\frac{M_0}{2}+1,\dots,M_0-1$, we have
 \begin{align}
 \setstretch{1.3}
 \begin{split}
-Y(\omega^k) &= Y(\nu^{2k}) \\ &=
+\emYof{}{\omega^k} &= \emYof{}{\nu^{2k}} \\ &=
 \begin{cases}
 \makebox[\maxLengthCases][l]{\emZof{}{\nu^{k}}}
 & \text{if $\dBP{\strA}{\strB} = 0 \bmod 2$} \\
@@ -651,7 +652,7 @@ Thus if \dBP{\strA}{\strB} is even, then
 \begin{align}
 \setstretch{1.3}
 \label{eq:ffttwo:trickForRoU1}
-y_k = Y(\omega^k) =
+y_k = \emYof{}{\omega^k} =
 \begin{cases}
 \emZof{}{\nu^k}
 & \text{ for } k=0,\dots,\frac{M_0}{2} \\
@@ -665,7 +666,7 @@ while if \dBP{\strA}{\strB} is odd, then
 \begin{align}
 \setstretch{1.3}
 \label{eq:ffttwo:trickForRoU2}
-y_k = Y(\omega^k) =
+y_k = \emYof{}{\omega^k} =
 \begin{cases}
 \nu^{-k} \cdot \emZof{}{\nu^k}
 & \text{ for } k=0,\dots,\frac{M_0}{2} \\
@@ -763,11 +764,11 @@ allowing \ffttwo to compute the
 $m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\bfZ{}{}}$.
 Pseudocode for \ffttwo which includes the performance enhancements described in
 Section \ref{sec:ffttwo:perf} follows below.
-% \medskip
+\medskip
 
 \begin{figure}[!ht]
 \label{fig:ffttwo:algoImproved}
-% \hrule \rule[0ex]{0pt}{0pt}
+\hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for improved \ffttwo} \\
 \end{center}
@@ -819,6 +820,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \EndFor
 \algstore{ffttwoImproved}
 \end{algorithmic}
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 \clearpage
 
@@ -869,6 +871,7 @@ the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
+\rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
 \section{Performance characteristics of \ffttwo}
@@ -978,11 +981,11 @@ in a fraction of a second, this difference is of no practical consequence.
 \centering
 \begin{subfigure}[h]{\textwidth}
 \centering
-\includegraphics[width=.6\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldStdev.pdf}
+\includegraphics[width=.65\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldStdev.pdf}
 \end{subfigure} \\
 \begin{subfigure}[h]{\textwidth}
 \centering
-\includegraphics[width=.6\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
+\includegraphics[width=.65\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
 \end{subfigure}
 \caption{
 {\em (Top)}
