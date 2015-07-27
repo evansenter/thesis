@@ -21,9 +21,9 @@ In this paper, we introduce the software suite, \hermes, which
 provides fast, novel algorithms for RNA secondary structure kinetics.
 Using the fast Fourier transform to efficiently compute the Boltzmann
 probability that a secondary structure $S$ of a given RNA sequence has
-base pair distance $x$ [resp. $y$] from reference structure $A$ [resp.
-$B$], \hermes computes the exact kinetics of folding from $A$ to
-$B$ in this coarse-grained model. In particular, \hermes computes
+base pair distance $x$ [resp. $y$] from reference structure \strA [resp.
+\strB], \hermes computes the exact kinetics of folding from \strA to
+\strB in this coarse-grained model. In particular, \hermes computes
 the mean first passage time from the transition probability matrix by
 using matrix inversion, and also computes the equilibrium time from the
 rate matrix by using spectral decomposition.
@@ -146,7 +146,7 @@ In contrast to the previous methods, \hermes computes the mean
 first passage time (MFPT) and {\em equilibrium time} for a
 coarse-grained Markov chain consisting of the ensemble of all
 secondary structures having base pair distance $x$ [resp. $y$] from
-reference structures $A$ [resp. $B$] of a given RNA sequence.
+reference structures \strA [resp. \strB] of a given RNA sequence.
 Mean first passage time (MFPT) is computed exactly by matrix inversion,
 and equilibrium time is computed using spectral decomposition of the rate
 matrix for the coarse-grained master equation.
@@ -249,10 +249,10 @@ of column vector
 $(I - P^{-}_{x_{\infty}})^{-1} \cdot {\bf e}$ \cite{meyerMFPT}.
 
 
-The {\em stationary} probability distribution $p^* = (p^*_1,\ldots,p^*_n)$
-is a row vector such that $p^* \cdot P = p^*$; i.e.
-$p^*_j = \sum_{i}^n p^*_i \cdot p_{i,j}$, for all $1\leq j \leq n$.
-It can be shown that the stationary probability $p^*_i$ is the limit,
+The {\em stationary} probability distribution $\pSt = (\pSt_1,\ldots,\pSt_n)$
+is a row vector such that $\pSt \cdot P = \pSt$; i.e.
+$\pSt_j = \sum_{i}^n \pSt_i \cdot p_{i,j}$, for all $1\leq j \leq n$.
+It can be shown that the stationary probability $\pSt_i$ is the limit,
 as $m$ tends to infinity, of the frequency of visiting state $i$ in a
 random walk of length $m$ on Markov chain $\mathbb{M}$.
 It is well-known that the stationary distribution exists and is unique
@@ -267,7 +267,7 @@ or experimental measurements. In such cases, a {\em move set}
 defines the set $N_x$ of conformations reachable in unit time
 from conformation $x$, and the transition probability matrix
 $P = (p_{x,y})$ is defined as follows:
-\begin{eqnarray}
+\begin{align}
 \label{eq:transitionProb1}
 p_{x,y} = \left\{
 \begin{array}{ll}
@@ -276,9 +276,9 @@ p_{x,y} = \left\{
 1 - \sum_{u \in N_x} p_{x,u} &\mbox{if $x=y$}\\
 0 &\mbox{if $y \not\in N_x$, and $x \ne y$}
 \end{array} \right.
-\end{eqnarray}
+\end{align}
 
-If $p^*_x \cdot p_{x,y} = p^*_y \cdot p_{y,x}$ holds for all distinct
+If $\pSt_x \cdot p_{x,y} = \pSt_y \cdot p_{y,x}$ holds for all distinct
 $x,y \in Q$, then
 {\em detailed balance} is said to hold, or equivalently the Markov
 chain $\mathbb{M}$ is said to be {\em reversible}.
@@ -286,11 +286,11 @@ If transitional probabilities
 are defined as in (\ref{eq:transitionProb1}), and if neighborhood
 size is constant ($|N_x|=|N_y|$ for all $x,y$), then it is well-known
 that the stationary probability distribution
-$p^*=(p^*_1,\ldots,p^*_n)$ is the Boltzmann distribution; i.e.
-\begin{eqnarray}
+$\pSt=(\pSt_1,\ldots,\pSt_n)$ is the Boltzmann distribution; i.e.
+\begin{align}
 \label{eq:stationaryBoltzmannProb}
-p^*_i = \frac{\exp(-E(i)/RT)}{Z}
-\end{eqnarray}
+\pSt_i = \frac{\exp(-E(i)/RT)}{Z}
+\end{align}
 where $E(k)$ is the energy of conformation $k$ at temperature $T$,
 $R$ is the universal gas constant,
 $T$ is absolute temperature, and the {\em partition function}
@@ -357,10 +357,10 @@ reserving $P(t)$ to denote the population occupancy function.}
 Letting $q_t$ denote the state at (continuous)
 time $t$, the probability that the initial state $q_0$ at time $0$ is
 $k$ is $\pi_k$, while
-\begin{eqnarray}
+\begin{align}
 \label{eq:MarkovProcess}
 p_{i,j}(t) = Pr[q_{t} = j| q_0 = i] .
-\end{eqnarray}
+\end{align}
 The matrix $P'(t)$ of derivatives, defined by
 \begin{displaymath}
   P'(t) = \left(
@@ -382,10 +382,10 @@ r_{i,i} = - \sum_{j\ne i} r_{i,j}.
 \end{displaymath}
 Define the {\em population occupancy} distribution
 $p(t) = (p_1(t),\ldots,p_n(t))$ by
-\begin{eqnarray}
+\begin{align}
 \label{eq:markovProcessPopulationFreq}
 p_i(t) = Pr[q(t) = i] = \sum_{k=1}^n\pi_k p_{k,i}(t)
-\end{eqnarray}
+\end{align}
 where $q(t)$ denotes the state of the Markov process
 at (continuous) time $t$.
 
@@ -393,7 +393,7 @@ In the case of macromolecular folding, where Markov process states
 are molecular conformations and conformational energies are available,
 it is typical to define the rate matrix
 $R = (r_{x,y})$ as follows:
-\begin{eqnarray}
+\begin{align}
 \label{eq:transitionProb2}
 r_{x,y} = \left\{
 \begin{array}{ll}
@@ -402,36 +402,36 @@ r_{x,y} = \left\{
 - \sum_{u \in N_x} p_{x,u} &\mbox{if $x=y$}\\
 0 &\mbox{if $y \not\in N_x$, and $x \ne y$}.
 \end{array} \right.
-\end{eqnarray}
+\end{align}
 The {\em master equation} is defined by the matrix differential equation
-\begin{eqnarray}
+\begin{align}
 \label{eq:masterEquationMatrix}
 \frac{d p(t)}{dt} = p(t) \cdot R
-\end{eqnarray}
+\end{align}
 or equivalently, for all $1 \leq x \leq n$,
-\begin{eqnarray}
+\begin{align}
 \label{eq:masterEquation}
 \frac{d p_x(t)}{dt} = \sum_{y=1}^n (p_y(t) \cdot r_{y,x} - p_x(t) \cdot r_{x,y})
   = \sum_{x \ne y} (p_y(t) \cdot r_{y,x} - p_x(t) \cdot r_{x,y}) .
-\end{eqnarray}
+\end{align}
 
 As in the case of Markov chains,
-$p^* = (p^*_1,\ldots,p^*_n)$ is defined to be
+$\pSt = (\pSt_1,\ldots,\pSt_n)$ is defined to be
 the stationary distribution if
-$p^* \cdot P(t)= p^*$; i.e.  $p^*_k = Pr[ q(0) = k ]$ implies that
-$Pr[ q(t) = k] = p^*_k$ for all $t \in \mathbb{R}$ and
+$\pSt \cdot P(t)= \pSt$; i.e.  $\pSt_k = Pr[ q(0) = k ]$ implies that
+$Pr[ q(t) = k] = \pSt_k$ for all $t \in \mathbb{R}$ and
 $1 \leq k \leq n$.
-Define the {\em equilibrium distribution} $p^* = (p^*_1,\ldots,p^*_n)$
+Define the {\em equilibrium distribution} $\pSt = (\pSt_1,\ldots,\pSt_n)$
 to be the unique solution for $p(t)$, when the master equation
 (\ref{eq:masterEquation}) is set to equal zero; i.e.
-\begin{eqnarray}
+\begin{align}
 \label{eq:equilibriumTime}
-\sum_{x \ne y} p^*_x \cdot r_{x,y} = \sum_{x \ne y} p^*_y \cdot r_{y,x}.
-\end{eqnarray}
+\sum_{x \ne y} \pSt_x \cdot r_{x,y} = \sum_{x \ne y} \pSt_y \cdot r_{y,x}.
+\end{align}
 
 If the equilibrium distribution exists, then necessarily it is equal to
 the stationary distribution. A Markov process is said
-to satisfy detailed balance if $p^*_x \cdot r_{x,y} = p^*_y \cdot r_{y,x}$,
+to satisfy detailed balance if $\pSt_x \cdot r_{x,y} = \pSt_y \cdot r_{y,x}$,
 for all $1 \leq x,y \leq n$, where the rate matrix $R = (r_{x,y})$.
 
 The rate equation $R$ for is usually defined
@@ -440,16 +440,16 @@ Markov processes which model macromolecular folding,
 hence it is easy to see that
 such Markov processes satisfy detailed balance and moreover that
 the equilibrium distribution is the
-Boltzmann distribution; i.e.  $p^*_x = \exp(-E(x)/RT)$ for
+Boltzmann distribution; i.e.  $\pSt_x = \exp(-E(x)/RT)$ for
 all $1 \leq x \leq n$.
 Since detailed balance ensures that the eigenvalues of the rate matrix $R$ are
 real, one can solve the matrix differential equation
 (\ref{eq:masterEquation}) by diagonalizing the rate matrix, and thus obtain
 the solution
-\begin{eqnarray}
+\begin{align}
 \label{eq:populationOccupancyEquation}
 p(t) = \sum_{k=1}^n c_k {\bf v}_k e^{\lambda_k t}
-\end{eqnarray}
+\end{align}
 where $p(t) = (p_1(t),\ldots,p_n(t))$, and the
 values $c_k$ are determined by the initial population occupancy
 distribution $p(0)$ at time $0$. Here
@@ -460,7 +460,7 @@ is the $j$-th left eigenvector of $R$,
 and $p(0)$ is the population occupancy distribution
 at time $t=0$. If the eigenvalues are labeled in decreasing
 order, then $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n$,
-and the largest eigenvalue $\lambda_1=0$ has eigenvector $p^*$, corresponding
+and the largest eigenvalue $\lambda_1=0$ has eigenvector $\pSt$, corresponding
 to the equilibrium population occupancy distribution, which in this case
 is the Boltzmann distribution. The
 remaining $n-1$ eigenvalues are negative, and their corresponding eigenvectors
@@ -476,19 +476,19 @@ transpose $R^T$ of the rate matrix.
 Letting $T$ be the $n\times n$ matrix, whose columns are
 $\mathbbt^1,\ldots,\mathbbt^n$, using standard matrix algebra
 \cite{matrixTheory}, it can be shown that
-\begin{eqnarray}
+\begin{align}
 \label{eq:solutionMasterEquation}
 p(t) &=& \sum_{j=1}^n (T^{-1}
 \mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
-\end{eqnarray}
+\end{align}
 The {\em equilibrium time} can be directly computed by using a
 nonlinear solver to solve for $t$ in
-\begin{eqnarray}
+\begin{align}
 \label{eq:solutionEquilibriumTime}
-p^* &=& \sum_{j=1}^n (T^{-1}
+\pSt &=& \sum_{j=1}^n (T^{-1}
 \mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
-\end{eqnarray}
-where $p^*= (p^*_1,\ldots,p^*_n)^T$ and $p^*_k = \frac{\exp(-E(k)/RT)}{Z}$.
+\end{align}
+where $\pSt= (\pSt_1,\ldots,\pSt_n)^T$ and $\pSt_k = \frac{\exp(-E(k)/RT)}{Z}$.
 However, we have found it more
 expedient to compute the {\em equilibrium time} as the smallest $t_0$,
 such that for $t \in \{t_0+1,t_0+2,t_0+3,t_0+4\}$, the absolute difference
@@ -584,11 +584,11 @@ What follows is a brief overview of the three core applications
 programs (\fftmfpt, \ffteq). For an exhaustive list of
 command-line options, please see the corresponding help files.
 
-Given an RNA sequence $\seq$ of length $n$ and two reference
+Given an RNA sequence \seq of length $n$ and two reference
 structures $A,B$, the algorithm \ffttwo \cite{Senter.jmb14}
 computes for each $0 \leq x,y \leq n$ the Boltzmann probability
 $P(x,y) = \frac{Z(x,y)}{Z}$ of all structures having base pair
-distance $x$ to $A$ [resp. $y$ to $B$]. Although the algorithm for the
+distance $x$ to \strA [resp. $y$ to \strB]. Although the algorithm for the
 software \ffttwo is unchanged from that of \cite{Senter.jmb14},
 the software described in this
 paper has been heavily refactored to provide a user-facing API,
@@ -597,17 +597,17 @@ homogeneous with the rest of the \hermes suite. As with the rest of
 or the later Turner 2004 energy parameters
 \cite{Turner.nar10}, taken respectively
 from the files rna\_turner1999.par and  rna\_turner2004.par in Vienna
-RNA Package. \ffttwo takes as input an RNA sequence $\seq$ and two
+RNA Package. \ffttwo takes as input an RNA sequence \seq and two
 secondary structures $A,B$ of the input RNA sequence -- both given
 in dot-bracket
 notation. Alternatively, \ffttwo can also process a file of RNAs,
 where data for each RNA appears in the form: FASTA comment, sequence,
-structure $A$, structure $B$ -- each on a separate line. In return,
+structure \strA, structure \strB -- each on a separate line. In return,
 for each RNA, the program returns as output a 2D probability grid
 whose value at
 grid position $(x,y)$ is the Boltzmann probability of all secondary
-structures compatible with $\seq$ having base pair distance $x$ (resp.
-$y$) from $A$ (resp. $B$).
+structures compatible with \seq having base pair distance $x$ (resp.
+$y$) from \strA (resp. \strB).
 
 \rnamfpt computes the {\em mean first passage time} (MFPT), sometimes
 referred to as the {\em hitting time} of a Markov chain, by using
@@ -667,8 +667,8 @@ $A,B$, and the MFPT is computed for the Markov chain, whose states are
 the non-empty 2D probability grid points, and whose transition
 probabilities are defined by $p_{(x,y),(x',y')} =
 \frac{P(x',y')}{P(x,y)}$. As we report in this paper, given an RNA
-sequence $\seq$, if $A$ is the empty structure and $B$ the MFE
-structure of $\seq$, then \fftmfpt output is well correlated with the
+sequence \seq, if \strA is the empty structure and \strB the MFE
+structure of \seq, then \fftmfpt output is well correlated with the
 exact MFPT in folding the empty structure to the MFE structure, where
 transitions between structures involve the addition or removal of a
 single base pair.
@@ -701,14 +701,14 @@ sampling with \rnasub, even with constraints.
 %
 %Given a continuous time Markov process $\mathbb{M}$ with rate matrix
 %$R=(r_{x,y})$, the master equation is
-%\begin{eqnarray}
-%\label{eq:masterEquation} \frac{dP_x(t)}{dt} = \sum_{y} (p^*_y \cdot
-%r_{y,x} - p^*_x \cdot r_{x,y}) = \sum_{x \ne y} (p^*_y \cdot r_{y,x} -
-%p^*_x \cdot r_{x,y})
-%\end{eqnarray}
+%\begin{align}
+%\label{eq:masterEquation} \frac{dP_x(t)}{dt} = \sum_{y} (\pSt_y \cdot
+%r_{y,x} - \pSt_x \cdot r_{x,y}) = \sum_{x \ne y} (\pSt_y \cdot r_{y,x} -
+%\pSt_x \cdot r_{x,y})
+%\end{align}
 %where if $n=|X|$ then $P(t)=(P_1(t),\ldots,P_n(t))$ denotes the
 %population (row) vector at time $t$. Equilibrium occurs when the
-%master equation equals 0; i.e. $\frac{dP(t)}{dt} = p^* \cdot R = 0$.
+%master equation equals 0; i.e. $\frac{dP(t)}{dt} = \pSt \cdot R = 0$.
 %Now let $P(t)$ denote the column vector
 %$P(t)=(P_1(t),\ldots,P_n(t))^T$, and let
 %$\mathbbt^1,\ldots,\mathbbt^n$ be the eigenvectors and
@@ -716,10 +716,10 @@ sampling with \rnasub, even with constraints.
 %rate matrix. Letting $T$ be the $n\times n$ matrix, whose columns are
 %$\mathbbt^1,\ldots,\mathbbt^n$, using standard matrix algebra
 %\cite{matrixTheory}, it can be shown that
-%\begin{eqnarray}
+%\begin{align}
 %\label{eq:solutionMasterEquation} P(t) &=& \sum_{j=1}^n (T^{-1}
 %\mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
-%\end{eqnarray}
+%\end{align}
 %The {\em equilibrium time} can be directly computed by using a
 %nonlinear solver to solve for $t$ in
 %(\ref{eq:solutionMasterEquation}); however, we have found it more
@@ -729,7 +729,7 @@ sampling with \rnasub, even with constraints.
 %10^{-4}$. We also considered defining the equilibrium time to be the
 %smallest $t_0$, such that for $t \in \{t_0+1,t_0+2,t_0+3\}$, the
 %absolute difference $|P(t)[x] - P(t_0)[x]| < \epsilon$ for all $x \in
-%SS(\seq)$; however, results suggest that this definition is inferior
+%\str$; however, results suggest that this definition is inferior
 %to that just given, perhaps due to numerical instability issues. This
 %alternative definition remains available through the command-line
 %options, but due to its weak performance we have omitted the data
@@ -801,7 +801,7 @@ for each 20-mer in the benchmarking set.
 \fftmfpt computes the mean first passage time
 for the coarse-grained model with macrostates $M(x,y)$, consisting of
 all secondary structures having base pair distance $x$ from reference
-structure $A$ and distance $y$ from reference structure $B$.
+structure \strA and distance $y$ from reference structure \strB.
 \ffttwo is used in \hermes to compute the Boltzmann probabilities
 $p(x,y) = \frac{Z(x,y)}{Z}$ for the coarse-grained model consisting of
 macrostates $M(x,y)$. Transition probabilities are computed by
@@ -816,7 +816,7 @@ for this model, which is even more coarse-grained than that of \fftmfpt.
 \ffteq computes the equilibrium time
 for the coarse-grained model with macrostates $M(x,y)$, consisting of
 all secondary structures having base pair distance $x$ from reference
-structure $A$ and distance $y$ from reference structure $B$. As in
+structure \strA and distance $y$ from reference structure \strB. As in
 \fftmfpt, the program
 \ffttwo is used to compute the Boltzmann probabilities
 $p(x,y) = \frac{Z(x,y)}{Z}$ for the coarse-grained model consisting of
@@ -895,16 +895,16 @@ also includes the method we call here by \rnatwofold.
 Given reference structures $A,B$, the \rnatwofold  program
 \cite{hofacker:RNAbor2D,Lorenz.amb11} computes for each integer
 $x,y$, the minimum free energy structure and partition function
-among all secondary structures having base pair distance $x$ to $A$
-and $y$ to $B$.\footnote{\rnatwofold generalizes an earlier algorithm
+among all secondary structures having base pair distance $x$ to \strA
+and $y$ to \strB.\footnote{\rnatwofold generalizes an earlier algorithm
 {\tt RNAbor} \cite{Freyhult.b07,Freyhult.nar07}, which computes the
 minimum free energy structure and partition function among all structures
-having base pair distance $x$ to reference structure $A$.}
+having base pair distance $x$ to reference structure \strA.}
 \ffttwo \cite{Senter.jmb14} is a much faster program, using the
 fast Fourier transform, which
 computes the partition function (but not the minimum free energy
-structure) over all structures having base pair distance $x$ to $A$ and
-$y$ to $B$. By the kinetics method dubbed
+structure) over all structures having base pair distance $x$ to \strA and
+$y$ to \strB. By the kinetics method dubbed
 \rnatwofold, we mean that we applied
 \rnatwofold from Vienna RNA Package 2.1.7
 \cite{hofacker:RNAbor2D,Lorenz.amb11} in order
@@ -1124,10 +1124,10 @@ Hermes}, which consists of the three software packages, \ffttwo,
 {\tt RNAmfpt}, and {\tt RNAeq},  together with two C drivers,
 \fftmfpt and \ffteq.
 
-Given an RNA sequence $\seq$,  \ffttwo computes the Boltzmann probability
-$p(x,y) = \frac{Z(x,y)}{Z}$ of secondary structures of $\seq$, whose base
-pair distance from initial structure $A$ is $x$ and from target structure
-$B$ is $y$. \ffttwo is an enhancement of the algorithm
+Given an RNA sequence \seq,  \ffttwo computes the Boltzmann probability
+$p(x,y) = \frac{Z(x,y)}{Z}$ of secondary structures of \seq, whose base
+pair distance from initial structure \strA is $x$ and from target structure
+\strB is $y$. \ffttwo is an enhancement of the algorithm
 described in \cite{Senter.jmb14}, shown there
 to run both in theory and in practice much faster than \rnatwofold
 \cite{hofacker:RNAbor2D},
@@ -1138,8 +1138,8 @@ compute Boltzmann probabilities $p(x,y)$ by polynomial interpolation.
 {\tt RNAmfpt} computes the mean first passage time for the
 coarse-grained Markov chain,
 consisting of the macrostates $M(x,y)$ of all secondary structures,
-whose base pair distance is $x$ [resp. $y$] from initial structure $A$
-[resp. target structure $B$].
+whose base pair distance is $x$ [resp. $y$] from initial structure \strA
+[resp. target structure \strB].
 Given an initial state $A=(x_0,y_0)$, a
 target state $B=(x_1,y_1)$, and the 2D grid of positions $(x,y)$
 and probabilities $p(x,y)$ as computed by \ffttwo and
@@ -1157,8 +1157,8 @@ $(I - P^{-}_{x_{\infty}})^{-1} = \displaystyle\sum_{k=0}^{\infty}
 As in the case of {\tt RNAmfpt}, {\tt RNAeq}
 computes the equilibrium time for the coarse-grained Markov process,
 consisting of the macrostates $M(x,y)$ of all secondary structures,
-whose base pair distance is $x$ [resp. $y$] from initial structure $A$
-[resp. target structure $B$].
+whose base pair distance is $x$ [resp. $y$] from initial structure \strA
+[resp. target structure \strB].
 Given an initial state $A=(x_0,y_0)$, a
 target state $B=(x_1,y_1)$, and the 2D grid of positions $(x,y)$
 and probabilities $p(x,y)$ as returned by \ffttwo and
@@ -1183,8 +1183,8 @@ the C-drivers \fftmfpt and \ffteq respectively compute
 the mean first passage time (MFPT) and
 equilibrium time (ET) for the coarse-grained Markov chain on the
 macrostates $M(x,y)$ of all secondary structures whose base pair
-distance is $x$ [resp. $y$] from initial structure $A$ [resp. target
-structure $B$]. This is done by calling \ffttwo, in order to
+distance is $x$ [resp. $y$] from initial structure \strA [resp. target
+structure \strB]. This is done by calling \ffttwo, in order to
 determine the 2D probabilities, from which the transition probability
 matrix or respectively rate matrix are determined, and then calling
 {\tt RNAmfpt} or respectively {\tt RNAeq}.
@@ -1198,19 +1198,19 @@ matrix or respectively rate matrix are determined, and then calling
 \caption{\small {\em (Left)}
 As first pointed out in \cite{hofacker:RNAbor2D}, the
 set of grid points $(x,y)$, for which a secondary structure $S$ has
-base pair distance $x$ from reference structure $A$ and base pair
-distance $y$ from reference structure $B$, forms a kind of
+base pair distance $x$ from reference structure \strA and base pair
+distance $y$ from reference structure \strB, forms a kind of
 checkerboard image. For the 56 nt spliced leader RNA from {\em L.
 collosoma} \cite{lecuyerCrothers}, with sequence AACUAAAACA AUUUUUGAAG
-AACAGUUUCU GUACUUCAUU GGUAUGUAGA GACUUC, and reference structure $A$
+AACAGUUUCU GUACUUCAUU GGUAUGUAGA GACUUC, and reference structure \strA
 given by {\tt
 ..((...((((((..(((((.((((...)))).)))))..))).)))..)).....}, and
-reference structure $B$ given by {\tt
+reference structure \strB given by {\tt
 .......................((((((((((((.....)))))..)))))))..}, we obtain
 the possible grid points depicted in this figure.
 The $x$-axis (resp. $y$-axis)
-represents base pair distance between initial structure $A$ (resp. target
-structure $B$).
+represents base pair distance between initial structure \strA (resp. target
+structure \strB).
 Consideration of the triangle inequality and parity condition
 (see text) ensure that partition function values $Z(x,y)$ and Boltzmann
 probabilities $p(x,y) = \frac{Z(x,y)}{Z}$ are zero for all
@@ -1292,8 +1292,8 @@ investigated in \cite{lecuyerCrothers}, a determined by
 In contrast, \hermes is a fully automated software suite which
 computes mean first passage time and equilibrium time with respect to
 the coarse-grained model that consists of macrostates $M(x,y)$ of all
-structures having base pair distance $x$ to initial structure $A$ and
-$y$ to target structure $B$. Additionally, \hermes provides
+structures having base pair distance $x$ to initial structure \strA and
+$y$ to target structure \strB. Additionally, \hermes provides
 a number of other functionalities useful for RNA kinetics. Since
 \hermes includes \ffttwo, which uses the fast Fourier transform
 to compute probabilities $p(x,y)$ of macrostates $M(x,y)$, the resulting
@@ -1327,10 +1327,10 @@ energy $-7.5$ kcal/mol. In the case of the MFE structure, the
 equilibrium occupancy $P(t_{\infty})$, which \hermes approximates
 as $0.17893806$ should equal the Boltzmann probability $0.17909227$,
 since the MFE structure is the only structure at distance $x_0$ [resp.
-$y_0$] from the reference structures $A$ (empty
-structure) [resp. $B$ (MFE structure)]. As well, if there are few
+$y_0$] from the reference structures \strA (empty
+structure) [resp. \strB (MFE structure)]. As well, if there are few
 other low energy structures at the same base pair distance $x_1$
-[resp. $y_1$] from $A$ [resp. $B$] as that of the alternate suboptimal
+[resp. $y_1$] from \strA [resp. \strB] as that of the alternate suboptimal
 structure, then we expect that the occupancy probability $0.03003426$
 for the $(x_1,y_1)$ be approximately the Boltzmann probability
 $0.03005854$ of the alternate structure.
@@ -1419,47 +1419,47 @@ compute folding kinetics from an arbitrary initial structure to an
 arbitrary final structure, in the benchmarking comparison, we consider
 only folding from the empty structure to the MFE structure.
 \begin{description}
-\item[MFPT]: Given RNA sequence $\seq$ and secondary structure $x$,
+\item[MFPT]: Given RNA sequence \seq and secondary structure $x$,
 let $N(x)$ denote the set of neighboring secondary structures of
-$\seq$, whose base pair distance with $x$ is one. Define the Markov
-chain $\mathcal{M}(\seq)=(SS(\seq),P)$, where $SS(\seq)$ denotes the
-set of all secondary structures of $\seq$, $p^*(x)$ is the stationary
-probability of structure $x$, defined by $p^*(x)=\exp(-E(x)/RT)/Z$,
+\seq, whose base pair distance with $x$ is one. Define the Markov
+chain $\mathcal{M}(\seq)=(\str,P)$, where $\str$ denotes the
+set of all secondary structures of \seq, $\pSt(x)$ is the stationary
+probability of structure $x$, defined by $\pSt(x)=\exp(-E(x)/RT)/Z$,
 $Z=\sum_{x} \exp(-E(x)/RT)$, and the transition probability matrix $P
 = ( p_{x,y} )$ is defined either with or without the Hastings
 modification as follows.
 
 {\em With} the Hastings modification,
-\begin{eqnarray}
+\begin{align}
 \label{eq:MFPTwithHastings} p_{x,y} = \left\{
 \begin{array}{ll}
-\frac{1}{|N(x)|} \cdot \min(1, \frac{p^*(y)}{p^*(x)} \cdot
+\frac{1}{|N(x)|} \cdot \min(1, \frac{\pSt(y)}{\pSt(x)} \cdot
 \frac{N(x)}{N(y)}) &\mbox{if $y \in N(x)$}\\
 0 &\mbox{if $x \ne y, y \not\in N(x)$}\\
 1 - \sum_{\substack{z \in N(x)}} p_{x,z} &\mbox{if $x=y$}\\
 \end{array}
 \right.
-\end{eqnarray}
+\end{align}
 
 {\em Without} the Hastings modification,
-\begin{eqnarray}
+\begin{align}
 \label{eq:MFPTwithoutHastings} p_{x,y} = \left\{
 \begin{array}{ll}
-\frac{1}{|N(x)|} \cdot \min(1, \frac{p^*(y)}{p^*(x)} ) &\mbox{if $y
+\frac{1}{|N(x)|} \cdot \min(1, \frac{\pSt(y)}{\pSt(x)} ) &\mbox{if $y
 \in N(x)$}\\
 0 &\mbox{if $x \ne y, y \not\in N(x)$}\\
 1 - \sum_{\substack{z \in N(z)}} p_{x,z} &\mbox{if $x=y$}\\
 \end{array}
 \right.
-\end{eqnarray}
+\end{align}
 The exact value of mean first passage time (MFPT) can be computed as
 follows. Let $x_0$ [resp. $x_{\infty}$] denote the empty structure
-[resp. MFE structure] for sequence $\seq$ (here we have implicitly
+[resp. MFE structure] for sequence \seq (here we have implicitly
 identified integer indices with secondary structures). Let
 $\widetilde{P}_{x_{\infty}}$ be the matrix obtained from $P$ by
 removal of the row and column with index $x_{\infty}$, and $I$ denote
-the $(n-1)\times(n-1)$ identity matrix, where $n=|SS(\seq)|$ is the
-number of secondary structures of $\seq$. Let $e$ denote the vector of
+the $(n-1)\times(n-1)$ identity matrix, where $n=|\str|$ is the
+number of secondary structures of \seq. Let $e$ denote the vector of
 size $n-1$, each of whose coordinates is $1$. It is well-known
 \cite{meyerMFPT} that for each $k\ne x_{\infty}$, the $k$th coordinate
 of the vector $(I - \widetilde{P}_{x_{\infty}})^{-1} \cdot {\bf e}$ is
@@ -1471,27 +1471,27 @@ mean first passage time is mathematically exact, we consider that MFPT
 to be the {\em gold standard} value for RNA folding kinetics.
 
 \item[Equilibrium]: Define the continuous Markov process
-$\mathcal{M}=(SS(\seq),R)$, where $R$ is the {\em rate matrix} defined
+$\mathcal{M}=(\str,R)$, where $R$ is the {\em rate matrix} defined
 by
-\begin{eqnarray}
+\begin{align}
 \label{eq:rateMatrix} k_{x,y} = \left\{
 \begin{array}{ll}
 
-%\frac{1}{|N(x)|} \cdot \min(1, \frac{p^*(y)}{p^*(x)} )
-\min(1, \frac{p^*(y)}{p^*(x)} ) &\mbox{if $y \in N(x)$}\\
+%\frac{1}{|N(x)|} \cdot \min(1, \frac{\pSt(y)}{\pSt(x)} )
+\min(1, \frac{\pSt(y)}{\pSt(x)} ) &\mbox{if $y \in N(x)$}\\
 0 &\mbox{if $x \ne y, y \not\in N(x)$}\\
 - \sum_{\substack{z \in N(z)}} p_{x,z} &\mbox{if $x=y$}\\
 \end{array}
 \right.
-\end{eqnarray}
-Clearly the rate matrix satisfies {\em detailed balance}; i.e. $p^*(x)
-\cdot k_{x,y} = p^*(y) \cdot k_{y,x}$ for all distinct $x,y \in
-SS(\seq)$. In fact, the rate matrix for Markov processes is usually
+\end{align}
+Clearly the rate matrix satisfies {\em detailed balance}; i.e. $\pSt(x)
+\cdot k_{x,y} = \pSt(y) \cdot k_{y,x}$ for all distinct $x,y \in
+\str$. In fact, the rate matrix for Markov processes is usually
 defined as above, precisely to ensure detailed balance, which then
 implies that all eigenvalues of the rate matrix are real, thus
 permitting explicit solution of the population occupancy frequency for
 all states.\footnote{We additionally considered a Hastings correction
-for the rate matrix, where $k_{x,y} = \min(1, \frac{p^*(y)}{p^*(x)}
+for the rate matrix, where $k_{x,y} = \min(1, \frac{\pSt(y)}{\pSt(x)}
 \cdot \frac{N(x)}{N(y)})$. The correlation in
 Table~\ref{table:correlation} for equilibrium time computed from this
 modified rate matrix is somewhat better than without the Hastings
@@ -1528,36 +1528,36 @@ Gillespie algorithm implemented by \kinfold, very many runs with
 very long run times are required to obtain a reasonable approximation
 of the MFPT.
 
-\item[FFTmfpt]: Given an RNA sequence $\seq$, the algorithm {\tt
+\item[FFTmfpt]: Given an RNA sequence \seq, the algorithm {\tt
 FFTbor2D} \cite{Senter.jmb14} computes the probabilities $p(x,y) =
-\frac{Z(x,y)}{Z}$ of secondary structures of $\seq$ to have base pair
-distance $x$ [resp. $y$] to secondary structure $A$ [resp. $B$], where
-$A$ is taken to be the empty structure and $B$ is the MFE structure.
+\frac{Z(x,y)}{Z}$ of secondary structures of \seq to have base pair
+distance $x$ [resp. $y$] to secondary structure \strA [resp. \strB], where
+\strA is taken to be the empty structure and \strB is the MFE structure.
 Let $d_{BP}(S,T)$ denote the base pair distance between structures
 $S,T$. Then $Z(x,y) = \sum_S \exp(-E(S)/RT)$, where the sum is over
 structures $S$, such that $d_{BP}(A,S)=x$, and $d_{BP}(B,S)=y$; as
 well the partition function $Z =\sum_S \exp(-E(S)/RT)$, where the sum
-is over all seconddary structures $S$ of the sequence $\seq$.
+is over all seconddary structures $S$ of the sequence \seq.
 
-Let $d_0= d_{BP}(A,B)$, the base pair distance between initial structure
-$A$ and target structure $B$.  Let $n$ denote the length of sequence $\seq$.
+Let $d_0= \dBP{\strA}{\strB}$, the base pair distance between initial structure
+\strA and target structure \strB.  Let $n$ denote the length of sequence \seq.
 Define the Markov chain $\mathcal{M}_1(\seq) = (Q_1,P_1)$, where
-\begin{eqnarray}
+\begin{align}
 \label{eq:defQ1} Q_1 &=& \{ (x,y) : 0 \leq x,y \leq n, (x+y \bmod 2)
 = (d_0 \bmod 2), \\ % Parity condition
 & & (d_0 \leq x+y), (x \leq d_0 + y), (y \leq d_0 + x). \nonumber %
 Triangle inequality
-\end{eqnarray}
+\end{align}
 For reference, we say that the {\em parity condition} holds for
 $(x,y)$ if
-\begin{eqnarray}
+\begin{align}
 \label{eq:parityCondition} (x+y \bmod 2) = (d_0 \bmod 2).
-\end{eqnarray}
+\end{align}
 We say that the {\em triangle inequality} holds for $(x,y)$ if
-\begin{eqnarray}
+\begin{align}
 \label{eq:triangleInequality} (d_0 \leq x+y), (x \leq d_0 + y), (y
 \leq d_0 + x)
-\end{eqnarray}
+\end{align}
 Figure \ref{fig:checkerboardGridPointsSplicedLeader} displays the
 space of possible grid points $(x,y)$ for spliced leader RNA from {\em
 L. collosoma} with two reference structures.
@@ -1567,8 +1567,8 @@ exactly one base pair, Markov chain transitions are allowed to occur
 only between states $(x,y),(u,v) \in Q_1$, such that $u=x\pm 1$, $v =
 y \pm 1$. However, we have found that for some RNA sequences, there is
 no non-zero probability path from $(0,d_0)$ to $(d_0,0)$
-(corresponding to a folding pathway from structure $A$ to
-$B$).\footnote{Since \ffttwo computes probabilities $p(x,y)$ by
+(corresponding to a folding pathway from structure \strA to
+\strB).\footnote{Since \ffttwo computes probabilities $p(x,y)$ by
 polynomial interpolation using the fast Fourier transform, any
 probability less than $10^{-8}$ is set to $0$. Also with {\tt
 RNA2Dfold}, it may arise that there is no non-zero probability path
@@ -1576,17 +1576,17 @@ from structure $(0,d_0)$ to $(d_0,0)$.}
 
 To address this situation, we proceed as follows. Let $\epsilon =
 10^{-8}$ and for all $(x,y) \in Q_1$, modify probabilities $p(x,y)$ by
-\begin{eqnarray}
+\begin{align}
 \label{eq:modifyNormalizeCellProb} p(x,y) &=& \frac{p(x,y) +
 \epsilon/|Q_1|}{1+\epsilon }.
-\end{eqnarray}
+\end{align}
 This operation corresponds to adding the negligeable value of
 $\epsilon=10^{-8}$ to the total probability, thus ensuring that there
 are paths of non-zero probability between any two states. After this
 $\epsilon$-modification and renormalization, {\em when using the
 Hastings modification}, the transition probabilities $P( (u,v) | (x,y)
 )$ are given by
-\begin{eqnarray}
+\begin{align}
 \label{eq:transitionProbabilityFFTbor2DwithHastings} P( (u,v) |(x,y)
 ) = \left\{
 \begin{array}{ll}
@@ -1597,14 +1597,14 @@ Hastings modification}, the transition probabilities $P( (u,v) | (x,y)
 $(x,y) =(u,v)$}\\
 \end{array}
 \right.
-\end{eqnarray}
+\end{align}
 Here the set $N(x,y)$ of adjacent neighbors is defined by $N(x,y) = \{
 (u,v) \in Q_1 : u = x \pm 1, v = y \pm 1 \}$, and the stationary
 probability $p(x,y)$ is obtained from \ffttwo.
 
 {\em Without the Hastings modification}, the transition probabilities
 $P( (u,v) | (x,y) )$ are instead given by
-\begin{eqnarray}
+\begin{align}
 \label{eq:transitionProbabilityFFTbor2DwithoutHastings} P( (u,v)
 |(x,y) ) = \left\{
 \begin{array}{ll}
@@ -1614,14 +1614,14 @@ $(u,v) \ne (x,y)$}\\
 $(x,y) =(u,v)$}\\
 \end{array}
 \right.
-\end{eqnarray}
+\end{align}
 
 \item[FFTeq]: This method consists of computing the equilibrium time
 from the master equation for the coarse-grain Markov process
 $\mathcal{M}=(Q_1,R)$, where $Q_1$ is defined in equation
 (\ref{eq:defQ1}), and the rate matrix $R = ( k( (x,y), (u,v) ) )$ is
 defined by
-\begin{eqnarray}
+\begin{align}
 \label{eq:rateProbabilityFFTbor2DwithoutHastings} k( (x,y), (u,v) ) =
 \left\{
 \begin{array}{ll}
@@ -1630,14 +1630,14 @@ defined by
 $(x,y) =(u,v)$}\\
 \end{array}
 \right.
-\end{eqnarray}
+\end{align}
 Equilibrium time is then computed for this Markov process.
 
 \item[RNA2Dfold]: The program \rnatwofold of Vienna RNA Package
 2.1.7 was run to compute the probabilities $p(x,y) = \frac{Z(x,y)}{Z}$
-of secondary structures of $\seq$ to have base pair distance $x$
-[resp. $y$] to secondary structure $A$ [resp. $B$], where $A$ is the
-empty structure and $B$ is the minimum free energy structure. As in
+of secondary structures of \seq to have base pair distance $x$
+[resp. $y$] to secondary structure \strA [resp. \strB], where \strA is the
+empty structure and \strB is the minimum free energy structure. As in
 the case for \ffttwo,
 Figure \ref{fig:checkerboardGridPointsSplicedLeader} displays the
 checkerboard image of possible grid points $(x,y)$ for spliced leader
@@ -1664,20 +1664,20 @@ to modify the free energy in the following manner.
 
 Letting $G$ denote ensemble free energy $-RT \ln Z$, as computed by
 {\tt RNAfold} and \rnatwofold,
-\begin{eqnarray*}
+\begin{align*}
 p &=& \exp(-E/RT)/\exp(-G/RT) \\
 &=& \exp(-[ E-G] /RT)
-\end{eqnarray*}
+\end{align*}
 hence it follows that $-RT \ln p = E-G$ and $E = G-RT \ln p$.
 
 By adding $\epsilon=10^{-8}/|Q_1|$ to every probability in every state
 $(x,y) \in Q_1$, the $\epsilon$-modified and renormalized probability
 corresponding to $p$ is $\frac{p+\epsilon/|Q_1|}{1+ \epsilon}$ and so
 the corresponding new energy term is
-\begin{eqnarray}
+\begin{align}
 \label{eq:modifiedEnergyTerm} Enew &=& G- RT \ln( \frac{p+\epsilon}{1
 + \epsilon \cdot |Q_1|} ).
-\end{eqnarray}
+\end{align}
 It follows that we are forced to use probabilities in any case, and so
 we encounter the above-mentioned loss of accuracy.
 

@@ -52,36 +52,11 @@
 \usepackage{url}
 \usepackage{xfrac}
 \usepackage{xpatch}
-
 \input{ushyphex}
-
-\newcolumntype{Y}{>{\centering\arraybackslash}X}
-
-\algrenewcommand\alglinenumber[1]{{\sffamily\footnotesize#1}}
 
 \makeatletter
 \xpatchcmd{\algorithmic}{\itemsep\z@}{\itemsep=.75ex plus1pt}{}{}
 \makeatother
-
-\captionsetup{font={stretch=1.3}}
-
-\titleformat{\chapter}[display]
-{\normalfont\Large\filcenter}
-{\titlerule[1pt]
-\vspace{1pt}
-\titlerule
-\vspace{1pc}
-\LARGE\chaptertitlename\:\thechapter}
-{1.8pc}
-{\titlerule
-\vspace{1pc}
-\Huge}
-\titleformat*{\section}{\normalfont\fontsize{17}{20}\selectfont}
-\titleformat*{\subsection}{\normalfont\fontsize{14}{17}\selectfont}
-\titleformat*{\subsubsection}{\normalfont\fontsize{14}{17}\selectfont}
-\titlespacing{\section}{0pt}{*2}{*2}
-\titlespacing{\subsection}{0pt}{*1.5}{*1.5}
-\titlespacing{\subsubsection}{0pt}{*1}{*1}
 
 \begin{document}
 

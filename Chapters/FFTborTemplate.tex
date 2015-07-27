@@ -87,13 +87,13 @@ such that if $(i,j)$ and $(x,y)$ both belong to $S$, then $i=x \iff j=y$
 and $i<x<j \iff i<y<j$ (no pseudoknots are allowed).
 
 The secondary structure $S$ is {\em compatible}
-with $\seq$ if for every base pair $(i,j)$ in $S$, the pair
+with \seq if for every base pair $(i,j)$ in $S$, the pair
 $(s_i,s_j)$ is contained in the set
 $\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}$
 of six Watson-Crick and wobble base pairs. Often we write that
-$S$ is a secondary structure {\em on} $\seq$, or equivalently,
-a secondary structure {\em of} $\seq$,
-in place of stating that $S$ is compatible with $\seq$.
+$S$ is a secondary structure {\em on} \seq, or equivalently,
+a secondary structure {\em of} \seq,
+in place of stating that $S$ is compatible with \seq.
 Throughout this paper, by {\em structure}, we always mean a
 secondary structure which is compatible with an arbitrary, but fixed
 RNA sequence $\seq=s_1,\ldots,s_n$.
@@ -110,7 +110,7 @@ Structures $S,T$ are said to be $k$-{\em neighbors} if $d_{BP}(S,T) = k$.
 
 For $1\leq i \leq j \leq n$, let
 $S_{[i,j]}$ denote the restriction of $S$ to interval
-$[i,j]$ of $\seq$, i.e. the set of base pairs
+$[i,j]$ of \seq, i.e. the set of base pairs
 %
 $S_{[i,j]} = \{ (x,y) \,:\, i \leq  x < y \leq j,  (x,y) \in S \}$.
 %
@@ -122,7 +122,7 @@ d_{BP}(S_{[i,j]},T_{[i,j]})= |\{ (x,y): i \leq x<y\leq j,
 (x,y) \in S-T \mbox{ or } (x,y) \in T-S \}| = k.
 \]
 In the following,
-we often omit the sequence $\seq$ and initial secondary structure \strSt in our
+we often omit the sequence \seq and initial secondary structure \strSt in our
 notation, since these are arbitrary, but fixed.
 In particular, we write $\z{k}{i}{j} = \z{k}{i}{j}(\seq,S^*)$ --
 see following paragraph for definitions.
@@ -172,8 +172,8 @@ See Figure 1 for an illustration.
 
 \subsection*{Recursions for structural neighbors}
 
-For the rest of the paper, we consider both $\seq$ as well as the
-secondary structure \strSt on $\seq$ to be fixed. We now recall the
+For the rest of the paper, we consider both \seq as well as the
+secondary structure \strSt on \seq to be fixed. We now recall the
 recursions from Freyhult et al. \cite{Freyhult.ab05} to determine
 the partition function $\z{k}{i}{j}$ with
 respect to the Nussinov-Jacobson
@@ -211,7 +211,7 @@ $\z{k}{i}{j}$ for $k > 0$ and $j > i+\theta$ is
   \exp(-E_0(r,j)/RT) \cdot \z{w}{i}{r-1} \z{w'}{r+1}{j-1},
   \label{eq:N}
 \end{equation}
-where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence $\seq$,
+where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence \seq,
 and otherwise $E_0(r,j) = +\infty$. Additionally,
 $b_0 = 1$ if $j$ is base-paired
 in $S^*_{[i,j]}$ and $0$ otherwise, and
@@ -235,7 +235,7 @@ $(r,j)$.
 
 \section*{Methods}
 
-Given RNA sequence $\seq$ and compatible initial structure \strSt,
+Given RNA sequence \seq and compatible initial structure \strSt,
 we define the {\em polynomial}
 \begin{eqnarray}
 \label{eq:polynomialYann}
@@ -292,13 +292,13 @@ Details now follow.
 \label{section:recursionsForPolynomialZij}
 
 Given an initial secondary structure \strSt of a
-given RNA sequence $\seq$, our goal is to compute
+given RNA sequence \seq, our goal is to compute
 \begin{align}
 \label{eq:defZk}
 \z{k}{1}{n} &= \sum_{\substack{S \text{ such that }\\ d_{BP}(S,S^*)=k}}
 e^{\frac{-E_0(S)}{RT}}
 \end{align}
-where $S$ can be any structure compatible with $\seq$.
+where $S$ can be any structure compatible with \seq.
 As previously mentioned, the recurrence relation for {\tt RNAbor}
 with respect to the Nussinov energy model $E_0$ is
 \begin{align}
@@ -492,7 +492,7 @@ in the pseudocode below.
 This pseudocode computes the $m$ most significant digits
 of probabilities $p_k = \frac{\z{k}{1}{n}}{{\bf Z}}$. \hfill\break
 {\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and initial secondary
-structure \strSt of $\seq$, and integer $m$. \hfill\break
+structure \strSt of \seq, and integer $m$. \hfill\break
 {\sc Output:} Probabilities $p_k=\z{k}{1}{n}/{\bf Z}$ to $m$ significant digits for $k=0,\ldots,n-1$. \hfill\break
 \smallskip
 \mverbatim
@@ -728,7 +728,7 @@ $\mathbb{S}(a_1,\ldots,a_n)$ denotes the set of secondary structures for
 $\seq = a_1,\dots,a_n$, $P(S) = \frac{\exp(-E(S)/RT)}{Z}$ is the Boltzmann
 probability of $S$, and
 $d_{\mbox{\sc bp}}(S,S^*)$ denotes base pair distance between $S$ and \strSt.
-If we run \fftbor on an input sequence $\seq$ and secondary structure
+If we run \fftbor on an input sequence \seq and secondary structure
 \strSt, then clearly
 $E[ \{ d_{\mbox{\sc bp}}(S,S^*): S \in \mathbb{S}(a_1,\ldots,a_n)\} ]  =
 \sum_{k} k \cdot p(k)$, where $p(k)=\frac{Z_k}{Z}$, obtained from the
@@ -948,8 +948,8 @@ defined by
 \[
 \delta(P,Q) = \frac{\sum_{x \in \Omega} |p_x - q_x|}{2}.
 \]
-The {\em density of states} for an RNA sequence $\seq$ with respect to
-an initial structure \strSt of $\seq$ is defined to be the probability
+The {\em density of states} for an RNA sequence \seq with respect to
+an initial structure \strSt of \seq is defined to be the probability
 distribution
 $P = (p_0,\ldots,p_{n-1})$ where $p_k = \z{k}{1}{n}/{\bf Z}$.
 In all our tests, for RNA of length up to 400 nt, we found the total

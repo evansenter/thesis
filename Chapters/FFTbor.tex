@@ -188,7 +188,7 @@ The base case for \bfZ{k}{i,j} is given by
 \bfZ{0}{i,j} = 1, \text{ for } i \le j,
 \end{align}
 
-since the only $0$-neighbor to a structure \strSt
+since the only 0-neighbor to a structure \strSt
 is the structure \strSt itself, and
 
 \begin{align}
@@ -212,7 +212,7 @@ sequence shorter than $\theta + 2$ nucleotides, and so there are no
 where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence \seq,
 and otherwise $E_0(r,j) = +\infty$. Additionally,
 $b_0 = 1$ if $j$ is base-paired
-in $\strSt_{[i,j]}$ and $0$ otherwise, and
+in $\strSt_{[i,j]}$ and 0 otherwise, and
 $b(r)=\dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
 This holds since in a secondary
 structure $T_{[i,j]}$ on \seqIJ that is a \kNbr of
@@ -241,7 +241,7 @@ we define the {\em polynomial}
 
 where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of equation
 (\ref{eq:fftbor:maxDist}) and the fact that the minimum number of
-unpaired bases in a hairpin loop $\theta$ is $3$, we know that $c_n=0$,
+unpaired bases in a hairpin loop $\theta$ is 3, we know that $c_n=0$,
 so that \emZ{} is a polynomial of degree strictly less than $n$.
 If we evaluate the polynomial \emZ{} for $n$ distinct values
 
@@ -317,7 +317,7 @@ with respect to the Nussinov energy model $E_0$ is
 
 where $E_0(r,j)=-1$ if $r$ and $j$ can base-pair and otherwise
 $+\infty$, and
-$b_0 = 1$ if $j$ is base paired in $\strSt_{[i,j]}$ and $0$ otherwise, and
+$b_0 = 1$ if $j$ is base paired in $\strSt_{[i,j]}$ and 0 otherwise, and
 $b(r)=\dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup\{(r,j)\}}$.
 The following theorem shows that an analogous recursion can be used to compute
 the {\em polynomial} $\emZ{i,j}$ defined by
@@ -368,7 +368,7 @@ $j>i+\theta$ we have the recurrence relation
 \right).
 \end{align}
 
-where $b_0 = 1$ if $j$ is base-paired in $\strSt_{[i,j]}$ and $0$ otherwise, and
+where $b_0 = 1$ if $j$ is base-paired in $\strSt_{[i,j]}$ and 0 otherwise, and
 $b(r) =
 \dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup \{(r,j)\}}$.
 \end{theorem}
@@ -455,6 +455,7 @@ $n \times n$ matrix, whose $i,j$ entry is $\omega^{i \cdot j}$; i.e.
 
 \begin{align}
 \label{eq:fftbor:vandermonde}
+\setstretch{1.3}
 V_n =
 \left(
 \begin{array}{rrrrr}
@@ -474,6 +475,7 @@ as the matrix product $\bfY = V_n {\bf A}$:
 
 \begin{align}
 \label{eq:fftbor:dftMatrix}
+\setstretch{1.3}
 \left(
 \begin{array}{l}
 y_0 \\
@@ -495,7 +497,7 @@ a_{n-1} \\
 \right)
 \end{align}
 
-On page $837$ of \cite{cormen}, it is shown that the
+On page 837 of \cite{cormen}, it is shown that the
 $(i,j)$ entry of $V_n^{-1}$ is $\frac{\omega^{-j i}}{n}$
 and that
 
@@ -516,7 +518,7 @@ $\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in equation
 by using the \fft. It turns out, however, that the values of
 \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
-that exceed $56$ (data not shown).
+that exceed 56 (data not shown).
 Nevertheless, our approach can be modified as follows.
 Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
 $y_1=\frac{\emZof{}{\alpha_1}}{\emZ{}},\dots,
@@ -529,9 +531,11 @@ $p(x) = p_0 + p_1 x + \dots + p_{n-1}x^{n-1}$
 defined in equation (\ref{eq:fftbor:pOfX}). For genomics applications, we are
 only interested in the $m$ most significant digits of each $p_k$, as described
 in the pseudocode on the following page.
+\medskip
 
 \begin{figure}[!ht]
 \label{fig:fftbor:algo}
+\hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for \fftbor} \\
 \end{center}
@@ -628,6 +632,8 @@ and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
 $(\aMbi)^k = C-Di$. Indeed, we have the following.
 
 \begin{align}
+\setstretch{1.3}
+\begin{split}
 (\aPbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (bi)^k \\
 (bi)^k  &= \left\{
 \begin{array}{rl}
@@ -636,9 +642,12 @@ i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
 -b^k   & \text{if $k \equiv 2 \bmod 4$} \\
 -i b^k & \text{if $k \equiv 3 \bmod 4$} \\
 \end{array} \right.
+\end{split}
 \end{align}
 
 \begin{align}
+\setstretch{1.3}
+\begin{split}
 (\aMbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (-bi)^k \\
 (-bi)^k &= \left\{
 \begin{array}{rl}
@@ -647,6 +656,7 @@ b^k   & \text{if $k \equiv 0 \bmod 4$} \\
 -b^k  & \text{if $k \equiv 2 \bmod 4$} \\
 ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
 \end{array} \right.
+\end{split}
 \end{align}
 
 It follows that each term of the form
@@ -688,7 +698,7 @@ in Figure \ref{fig:fftbor:tppDistributions}.
 We randomly chose two TPP riboswitch
 aptamers from the seed alignment for
 Rfam family RF00059. The first sequence has EMBL accession code
-BX842649.1/277414--277318 and is comprised of the $97$ nt sequence
+BX842649.1/277414--277318 and is comprised of the 97 nt sequence
 \seqsplit{%
   ACCUGACGCUAGGGGUGUUGGUGAAUUCACCGACUGAGAAUAACCCUUU%
   GAACCUGAUAGAGAUAAUGCUCGCGCAGGGAAGCAAGAAUAGAAAGAU%
@@ -711,15 +721,15 @@ The MFE structures differ
 from the consensus structures principally by the addition of base pairs not
 determined by covariation in the Rfam alignment.
 Indeed, if we let $\str_0,\str_1$
-denote the Rfam consensus structure resp. MFE structure for the $97$ nt
+denote the Rfam consensus structure resp. MFE structure for the 97 nt
 sequence with EMBL accession code BX842649.1/277414--277318, then
-$\str_0 \setminus \str_1$ has $4$ base pairs, and $\str_1 \setminus \str_0$
- has $7$
+$\str_0 \setminus \str_1$ has 4 base pairs, and $\str_1 \setminus \str_0$
+ has 7
 base pairs. If we let $\strT_0,\strT_1$
-denote the Rfam consensus structure resp. MFE structure for the $99$ nt
+denote the Rfam consensus structure resp. MFE structure for the 99 nt
 sequence with EMBL accession code
 AACY022101973.1/389--487, then
-$\strT_0 \setminus \strT_1$ has $1$ base pair, and $\strT_1 \setminus \strT_0$ has $5$
+$\strT_0 \setminus \strT_1$ has 1 base pair, and $\strT_1 \setminus \strT_0$ has 5
 base pairs.
 
 \begin{figure}[!h]
@@ -761,12 +771,12 @@ Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\bfZ{}{}}$, where
 \bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
 whose base pair distance from the MFE structure is exactly $k$.
 {\em (Left)}
-The $97$ nt sequence BX842649.1/277414--277318 appears to have a rugged energy
+The 97 nt sequence BX842649.1/277414--277318 appears to have a rugged energy
 landscape near its minimum free energy structure, with distinct
 low energy structures that may compete with the MFE structure during the
 folding process.
 {\em (Right)}
-The $99$ nt sequence, AACY022101973.1/389--487 appears to have a smooth energy
+The 99 nt sequence, AACY022101973.1/389--487 appears to have a smooth energy
 landscape near its MFE structure, with no distinct low energy structures
 to might compete with the MFE structure.
 Based on the \fftbor output or {\em structural profile} near MFE
@@ -794,14 +804,14 @@ experiment, we took MFPT to be the average number of Monte Carlo steps
 taken by \kinfold, each step consisting of the addition or removal
 of a single base pair (or shift --- see \cite{flamm}), to fold the
 empty structure into the MFE
-structure, where the average was taken over $30$ runs, with an absolute
+structure, where the average was taken over 30 runs, with an absolute
 maximum number of Monte Carlo steps taken to be $500,000$.
 The first sequence, BX842649.1/277414--277318, converged within $500,000$
-steps only for $20$ out of $30$ runs. Assigning the maximum step count of
-$500,000$ for the $10$ runs that did not converge, we found a mean first
+steps only for 20 out of 30 runs. Assigning the maximum step count of
+$500,000$ for the 10 runs that did not converge, we found a mean first
 passage time of $311,075.06$ steps for this sequence.
 The second sequence, AACY022101973.1/389--487, converged within $500,000$
-steps in $29$ out of $30$ runs, and we found a mean first passage time of
+steps in 29 out of 30 runs, and we found a mean first passage time of
 $61,575.69$ steps for this sequence. From computational experiments of this
 type, it is suggestive that \fftbor may prove useful in synthetic
 biology,
@@ -832,7 +842,7 @@ program output.  If \strSt is the empty structure, then \fftbor output
 is simply the probability distribution of the number of base pairs per
 secondary structure, taken over the Boltzmann ensemble of all structures.
 
-For the benchmarking assay, we took all $61$ selenocysteine insertion sequence
+For the benchmarking assay, we took all 61 selenocysteine insertion sequence
 (SECIS) sequences from the seed alignment of Rfam family RF00031
 \cite{Gardner.nar11}. Average length was $64.32 \pm 2.83$ nt.
 For each sequence, we ran both \fftbor (when starting
@@ -840,7 +850,7 @@ from the empty structure rather than the MFE structure) and a Monte Carlo
 folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
 Using the Monte Carlo algorithm, we
 determined the \mfpt (MFPT), defined as the average
-taken over $50$ runs, of the number of Monte Carlo steps taken to fold
+taken over 50 runs, of the number of Monte Carlo steps taken to fold
 the empty structure into the MFE structure, where an absolute upper bound
 of 5 million steps was allowed in the simulation.
 
@@ -852,35 +862,33 @@ sequence. Surprisingly, we found that there is a significant
 correlation of  $0.48436192$ with one-tailed
 $p$-value of $0.00018249$ between the
 standard deviation of the \fftbor output (when starting from the
-empty structure) and logarithm base $10$ of the mean first passage time.
+empty structure) and logarithm base 10 of the mean first passage time.
 
 \begin{landscape}
 \begin{table}[!h]
 \centering
-\begin{tabularx}{\linewidth}{c c *{6}{Y}}
+\begin{tabularx}{\linewidth}{c *{6}{R}}
   \toprule
-  ~ &$\mu$ &$\sigma$& $\frac{\sigma}{\mu}$& $n$ & MFE & $\log_{10}(\text{MFPT})$\\
+  ~ & \small{$\mu$} & \small{$\sigma$} & \small{$\sfrac{\sigma}{\mu}$} & \small{$n$} & \small{MFE} & \small{$\log_{10}(\text{MFPT})$} \\
   \cmidrule(l){2-7}
-  $\mu$& 1 & & & & &\\
-  $\sigma$&-0.43722448& 1  & & & & \\
-  $\frac{\sigma}{\mu}$&-0.691411183&0.943650913&1 & & &\\
-  $n$&0.707683898&-0.158951202&-0.364591789&1& & \\
-  MFE&-0.569474125&0.739515083&0.759622716&-0.368485646&1 & \\
-  $\log_{10}(\text{MFPT})$&-0.036291124&0.48436192&0.376230235&0.405865529&0.399015556& 1 \\
-  % --------------------------------------------------------
-  % REDUCE THE PRECISION OF THIS DATA, LOOKS TERRIBLE!
-  % --------------------------------------------------------
+  \small{$\mu$} & 1 & & & & \\
+  \small{$\sigma$} & -0.4372 & 1 & & & \\
+  \small{$\sfrac{\sigma}{\mu}$} & -0.6914 & 0.9437 & 1 & & & \\
+  \small{$n$} & 0.7077 & -0.1590 & -0.3646 & 1 & &  \\
+  \small{MFE} & -0.5695 & 0.7395 & 0.7596 & -0.3685 & 1 & \\
+  \small{$\log_{10}(\text{MFPT})$} & -0.0363 & 0.4844 & 0.3762 & 0.4059 & 0.3990 & 1 \\
+  % puts data.chomp.split(/\\/).map { |line| line.split("&")[1..-1].map { |item| item.gsub(/\s+/, "") }.reject { |item| item.empty? }.map { |number| "%.4f" % number.to_f }.join(" & ") + " \\\\" }.join(?\n)
   \bottomrule
 \end{tabularx}
 \caption{Pearson correlation between various aspects of selenocysteine
 insertion sequences from the seed alignment of Rfam family
 RF00031 \cite{Gardner.nar11}.
-For each of the $61$ RNA sequences, we ran \fftbor, starting
+For each of the 61 RNA sequences, we ran \fftbor, starting
 from empty initial structure \strSt, and we ran a Monte Carlo
 folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
 Using the Monte Carlo algorithm, we
 determined the \mfpt (MFPT), defined as the average
-taken over $50$ runs, of the number of Monte Carlo steps taken to fold
+taken over 50 runs, of the number of Monte Carlo steps taken to fold
 the empty structure into the MFE structure, where an absolute upper bound
 of 5 million steps was allowed in the simulation.  From the output of
 \fftbor, we computed
@@ -896,9 +904,9 @@ the RNA sequence length $n$,
 and
 {\em (5)}
 the minimum free energy (MFE).  Additionally, we computed the
-logarithm base $10$ of mean first passage
-time ($\log_{10}(\text{MFPT})$), taken over $50$ Monte Carlo runs per sequence
-(log base $10$ of the standard deviation of number of Monte Carlo
+logarithm base 10 of mean first passage
+time ($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
+(log base 10 of the standard deviation of number of Monte Carlo
 steps per run was approximately
 9\% of $\log_{10}(\text{MFPT})$ on average). The table shows the correlation between each of
 these aspects.
@@ -954,7 +962,7 @@ having exactly $k$ base pairs.
 For the selenocysteine (SECIS) element AB030643.1/4176--4241 from Rfam family
 RF00031, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
-$0.727618$, while the logarithm base $10$ of the mean first passage time ($\log_{10}(\text{MFPT})$)
+$0.727618$, while the logarithm base 10 of the mean first passage time ($\log_{10}(\text{MFPT})$)
 is $4.75$.
 {\em (Center)}
 For the selenocysteine (SECIS) element
@@ -962,13 +970,13 @@ AL645723.11/192421--192359 from Rfam family
 RF00031, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
 $2.679446$, while $\log_{10}(\text{MFPT})$ is $5.69$.
-Among the $61$ sequences in the seed alignment of RF00031,
+Among the 61 sequences in the seed alignment of RF00031,
 AB030643.1/4176--4241 was the fastest folder, while
 AL645723.11/192421--192359 was the slowest folder.
 {\em (Right)}
 Superimposition of output of \fftbor for two TPP riboswitch aptamers: the
-$97$ nt sequence BX842649.1/277414--277318 and the
-$99$ nt sequence AACY022101973.1/389--487, both obtained when
+97 nt sequence BX842649.1/277414--277318 and the
+99 nt sequence AACY022101973.1/389--487, both obtained when
 taking the empty structure for the initial structure \strSt.
 The mean $\mu$ for the \fftbor structural profile near the empty
 structure is $23.0203$  [resp. $27.5821$], the
@@ -1001,11 +1009,11 @@ sequences, starting from the empty structure.  The mean $\mu_1$ and standard
 deviation $\sigma_1$ for the \fftbor distribution for randomized BX842649 are
 respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
 AACY022101973 are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
-maximum of $500,000$ steps with $30$ replicates (as explained in the text), we
+maximum of $500,000$ steps with 30 replicates (as explained in the text), we
 found
-that for randomized BX842649, all $30$ runs converged yielding a mean first passage
+that for randomized BX842649, all 30 runs converged yielding a mean first passage
 time (MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
-randomized AACY022101973, only $15$ out of $30$ runs converged within $500,000$ steps,
+randomized AACY022101973, only 15 out of 30 runs converged within $500,000$ steps,
 and discounting these nonconvergent data, we obtain an average mean first passage
 time (MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
 test provides more anecdotal evidence supporting our hypothesis that small
@@ -1070,7 +1078,7 @@ and additional evidence is provided to support this claim.
 % Note that this structure is only partial, since there are regions
 % with no base pairs depicted, despite the fact that additional
 % base pairs could be added. By using
-% {\tt blastn}, it is found that this $161$ nt purine riboswitch
+% {\tt blastn}, it is found that this 161 nt purine riboswitch
 % can be found on the complement strand of GenBank accession number
 % CP002906.1/2165302--2165142 in
 % complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
@@ -1130,15 +1138,15 @@ and additional evidence is provided to support this claim.
 % creates a movie as follows, described here for the xpt riboswitch
 % previously discussed.  We extracted the downstream region of
 % Taking the
-% $161$ nt xpt G-box purine riboswitch described in Figure 5,
+% 161 nt xpt G-box purine riboswitch described in Figure 5,
 % with GenBank accession number CP002906.1/2165302--2165142, we extended
-% to a sequence of length $200$ nt, by appending flanking
+% to a sequence of length 200 nt, by appending flanking
 % downstream genomic nucleotides.  Running \fftbor on all
 % prefixes of the resulting sequence of lengths
 % $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
 % \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
 % Figure 5 displays the output of \fftbor on the
-% $166$ nt prefix, clearly showing a bimodal distribution. Attempting to
+% 166 nt prefix, clearly showing a bimodal distribution. Attempting to
 % automate the identification of non-unimodal \fftbor output, we have
 % applied the Hartigan-Hartigan dip-test \cite{hartiganDipTest},
 % implemented in {\tt R}; however,
@@ -1157,7 +1165,7 @@ and additional evidence is provided to support this claim.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarking.pdf}
 \caption{Run times in seconds for \rnabor and \fftbor, on random RNA
-of length $20,40,60,\dots,300$ in step size of $20$ nt. Each algorithm
+of length $20,40,60,\dots,300$ in step size of 20 nt. Each algorithm
 was run with the empty initial structure \strSt, see rows
 \rnabor (empty), \fftbor (empty), and with the minimum free
 energy structure as the initial structure \strSt, see rows

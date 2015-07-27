@@ -3,9 +3,36 @@
 % --------------------------------------------------
 \renewcommand*\ttdefault{txtt}
 
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+\algrenewcommand\alglinenumber[1]{{\sffamily\footnotesize#1}}
+
+\captionsetup{font={stretch=1.3}}
+
+\titleformat{\chapter}[display]
+{\normalfont\Large\filcenter}
+{\titlerule[1pt]
+\vspace{1pt}
+\titlerule
+\vspace{1pc}
+\LARGE\chaptertitlename\:\thechapter}
+{1.8pc}
+{\titlerule
+\vspace{1pc}
+\Huge}
+\titleformat*{\section}{\normalfont\fontsize{17}{20}\selectfont}
+\titleformat*{\subsection}{\normalfont\fontsize{14}{17}\selectfont}
+\titleformat*{\subsubsection}{\normalfont\fontsize{14}{17}\selectfont}
+\titlespacing{\section}{0pt}{*-1}{*2}
+\titlespacing{\subsection}{0pt}{*.75}{*1.5}
+\titlespacing{\subsubsection}{0pt}{*.5}{*1}
+
 % --------------------------------------------------
 % Software
 % --------------------------------------------------
+\newcommand{\barriers}{\ms{barriers}}
 \newcommand{\fftbor}{\ms{FFTbor}}
 \newcommand{\ffteq}{\ms{FFTeq}}
 \newcommand{\fftmfpt}{\ms{FFTmfpt}}
@@ -22,6 +49,7 @@
 \newcommand{\rnamfpt}{\ms{RNAmfpt}}
 \newcommand{\rnasub}{\ms{RNAsubopt}}
 \newcommand{\rnatwofold}{\ms{RNA2Dfold}}
+\newcommand{\treekin}{\ms{treekin}}
 \newcommand{\tthp}{\ms{TransTermHP}}
 
 % --------------------------------------------------
@@ -71,13 +99,15 @@
 \newcommand{\aPbi}{\ensuremath{a+bi}\xspace}
 \newcommand{\bfY}{\ensuremath{{\bf Y}}\xspace}
 \newcommand{\bfZ}[2]{\ensuremath{{\bf Z}^{#1}_{#2}}\xspace}
-\newcommand{\boltzYmX}{\ensuremath{\exp(-\frac{E(y)-E(x)}{RT})}\xspace}
 \newcommand{\boltzf}[1]{\ensuremath{\exp(-E(#1)/RT)}\xspace}
 \newcommand{\boltzF}[1]{\ensuremath{e^{\frac{-E(#1)}{RT}}}\xspace}
 \newcommand{\boltzNuss}[1]{\ensuremath{e^{\frac{-E_0(#1)}{RT}}}\xspace}
+\newcommand{\boltzYmX}{\ensuremath{\exp(-\frac{E(y)-E(x)}{RT})}\xspace}
 \newcommand{\emZof}[2]{\ensuremath{{\mathcal Z}_{#1}(#2)}\xspace}
 \newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
 \newcommand{\kRoU}{\ensuremath{e^{2 \pi i k/n}}\xspace}
+\newcommand{\mathbbP}{\mbox{\bf P}}
+\newcommand{\mathbbt}{\mbox{\bf t}}
 \newcommand{\mChain}{\ensuremath{\mathbb{M}}\xspace}
 \newcommand{\nRoUs}{complex $n$th roots of unity\xspace}
 \newcommand{\nRoU}{complex $n$th root of unity\xspace}
@@ -85,6 +115,8 @@
 \newcommand{\pRoU}{\ensuremath{e^{2 \pi i/n}}\xspace}
 \newcommand{\pSt}{\ensuremath{p^*}\xspace}
 \newcommand{\statDist}{\ensuremath{p^*=(p^*_1,\dots,p^*_n)}\xspace}
+\newcommand{\tD}[1]{\ensuremath{t_{#1\Delta}}\xspace}
+\newcommand{\tMin}{\ensuremath{T_{\min}}\xspace}
 \newcommand{\tMax}{\ensuremath{T_{\max}}\xspace}
-\newcommand{\xStart}{\ensuremath{x_0}\xspace}
 \newcommand{\xEnd}{\ensuremath{x_\infty}\xspace}
+\newcommand{\xStart}{\ensuremath{x_0}\xspace}
