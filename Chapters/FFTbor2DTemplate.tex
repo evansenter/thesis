@@ -70,17 +70,17 @@ appear to have been among the first
 to have considered the computational problem of determining optimal and
 near-optimal {\em folding pathways} between two metastable secondary
 structures $A,B$ of a given RNA sequence.  In \cite{flammPhD}, Flamm
-developed an event-driven Monte Carlo simulation, {\tt Kinfold},
+developed an event-driven Monte Carlo simulation, \kinfold,
 to determine expected
 folding time between two reference structures, including the mean first
 passage time to fold into the minimum free energy structure.
 %In \cite{Xayaphoummine.nar05}, Xayaphoummine et al. described the
 %{\tt Kinefold} web server, for Monte Carlo kinetic folding of an RNA sequence
 %into a metastable pseudoknotted structure.
-Using {\tt RNAsubopt}  \cite{Wuchty.b99}, Flamm et al.
+Using \rnasub  \cite{Wuchty.b99}, Flamm et al.
 \cite{flamm} designed the exponential
 time exact algorithm, {\tt barriers}, that computes the optimal folding
-pathway between metastable structures $A$ and $B$. Since {\tt barriers}
+pathway between metastable structures \strA and \strB. Since {\tt barriers}
 may not converge, due to its reliance on the enumeration of possibly
 exponentially many structures, in \cite{Dotu.nar10} we developed a
 local search (tabu) method that rapidly returns near-optimal folding
@@ -120,59 +120,59 @@ base pairs $(i,j)$, containing neither base triples nor pseudoknots.
 %it is not the case that $i<k<j<\ell$ (nonexistence of pseudoknots).
 The number of base pairs in $S$ is denoted by $|S|$.
 The secondary structure $S$ is {\em compatible}
-with $\seq$ if for every base pair $(i,j)$ in $S$, the pair
+with \seq if for every base pair $(i,j)$ in $S$, the pair
 $(s_i,s_j)$ is contained in the set
 %$\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}$
 $\mathbb{B}$
 of six canonical (Watson-Crick and wobble) base pairs.
 Throughout this paper, by {\em structure}, we always mean a
 secondary structure which is compatible with an arbitrary, but fixed
-RNA sequence $\seq$.
+RNA sequence \seq.
 
-If $A,B$ are secondary structures of $\seq$, then the {\em base pair distance},
-$d_{BP}(A,B)$, is defined to be the $|A-B|+|B-A|$, i.e. the number of
+If $A,B$ are secondary structures of \seq, then the {\em base pair distance},
+\dBP{\strA}{\strB}, is defined to be the $|A-B|+|B-A|$, i.e. the number of
 base pairs belonging to one structure but not the other.
 Structures $S,T$ are said to be $k$-{\em neighbors} if $d_{BP}(S,T) = k$.
 In \cite{Freyhult.b07}, we described recursions for an $O(n^5)$ time and
 $O(n^3)$ algorithm, {\tt RNAbor}, that computes the Boltzmann probability
 $p_k$ of structures to have base pair distance $k$ from a given reference
-structure $A$. In \cite{fftbor}, we described an $O(n^4)$ time and
+structure \strA. In \cite{fftbor}, we described an $O(n^4)$ time and
 $O(n^2)$ space algorithm, by using polynomial interpolation with the
 fast Fourier transform (FFT).
 In \cite{hofacker:RNAbor2D}, Lorenz et al. generalized
 the recursions  of {\tt RNAbor} \cite{Freyhult.b07}
 to yield recursions for an $O(n^7)$ time and $O(n^4)$ space
-algorithm, {\tt RNA2Dfold},
+algorithm, \rnatwofold,
 that computes the Boltzmann probability $p(x,y)$ that a structure has
-base pair distance $x$ from reference structure $A$, and distance
-$y$ from another reference structure $B$.
-The goal of this paper is to describe a new algorithm, {\tt FFTbor2D},
+base pair distance $x$ from reference structure \strA, and distance
+$y$ from another reference structure \strB.
+The goal of this paper is to describe a new algorithm, \ffttwo,
 using polynomial interpolation with the FFT, to
-reduce the worst case complexity of {\tt RNA2Dfold} to
+reduce the worst case complexity of \rnatwofold to
 $O(n^5)$ time and $O(n^2)$ space. As well, we provide an
 illustrative application by computing the mean first passage time
 between metastable structures $A,B$ of spliced leader RNA from
-{\em L. collosoma} on the 2D energy landscape computed by {\tt FFTbor2D}.
+{\em L. collosoma} on the 2D energy landscape computed by \ffttwo.
 
 The general idea of using
 interpolation to compute partition function values was first suggested
 by Waldisp\"uhl and Ponty in the context of the
 {\tt RNAmutants} program \cite{waldispuhlPontyRecomb}. Subsequently,
 we used the Fast Fourier Transform (FFT) in our algorithm
-{\tt FFTbor} \cite{fftbor}  to interpolate the
+\fftbor \cite{fftbor}  to interpolate the
 probabilities $p_k$ that structures from the Boltzmann
-ensemble have base pair distance $k$ from a target structure $S^*$.
+ensemble have base pair distance $k$ from a target structure \strSt.
 This paper extends the result from \cite{fftbor} to two dimensions; i.e.
-in the algorithm {\tt FFTbor2D},
+in the algorithm \ffttwo,
 we interpolate the probabilities $p(x,y)$ that
 structures from the Boltzmann ensemble have base pair distance
-$x$ [resp. $y$] from target structure $A$ [resp. $B$].
+$x$ [resp. $y$] from target structure \strA [resp. \strB].
 
 \subsection{Plan of paper}
 
 The plan for the rest of this paper is as follows. In
 Section~\ref{section:approach}, we develop the quintic
-$O(n^5)$ time and quadratic $O(n^2)$ space algorithm {\tt FFTbor2D},
+$O(n^5)$ time and quadratic $O(n^2)$ space algorithm \ffttwo,
 which uses dynamic programming to evaluate a complex polynomial
 $\Z(x)$ at quadratically many complex roots of unity, and then use the fast
 Fourier transform (FFT) to compute the coefficients of $\Z(x)$ by
@@ -183,26 +183,26 @@ by a factor of $4$. Although this section is rather technical, the
 main result entails a significant improvement in the algorithm
 run time.
 In Section~\ref{section:benchmarking}, we present bencharking results,
-comparing the run times of {\tt FFTbor2D} and {\tt RNA2Dfold}
+comparing the run times of \ffttwo and \rnatwofold
 (developed by Lorenz et al.  \cite{hofacker:RNAbor2D}).
-In Section~\ref{section:kinetics}, we apply {\tt FFTbor2D} to determine
+In Section~\ref{section:kinetics}, we apply \ffttwo to determine
 the mean first passage time (MFPT) along the 2D energy grid in folding
 between two metastable structures of {\em L. collosoma} spliced leader
 RNA.
 Finally, in Secton~\ref{section:discussion}, we we describe
-differences in the algorithms {\tt RNA2Dfold} and
-and {\tt FFTbor2D}, and mention relative strengths of each software
+differences in the algorithms \rnatwofold and
+and \ffttwo, and mention relative strengths of each software
 depending on the envisioned application.
 
 \section{Polynomial interpolation using the FFT}
 \label{section:approach}
 
-For expository clarity, we describe {\tt FFTbor2D} and all recursions
+For expository clarity, we describe \ffttwo and all recursions
 in terms of the Nussinov energy model \cite{nussinovJacobson}, where
 the energy $E_0(i,j)$ of a base pair $(i,j)$ is defined to be $-1$, and the
 energy $E(S)$ of a secondary structure $S$ is $-1$ times the number $|S|$
 of base pairs in structure $S$.  Nevertheless, the implementation of
-{\tt FFTbor2D} involves the full Turner energy model \cite{xia:RNA}, where
+\ffttwo involves the full Turner energy model \cite{xia:RNA}, where
 free energy $E(S)$ depends on negative, stabilizing energy contributions
 from base stacking, and positive, destabilizing energy contributions due to
 loss of entropy in loops.
@@ -210,18 +210,18 @@ loss of entropy in loops.
 Given reference secondary structures $A,B$ of a
 given RNA sequence $\seq=s_1,\ldots,s_n$, our goal is to compute
 \begin{align}
-\label{eqn:defZk}
+\label{eq:defZk}
 \z{x,y}{1}{n} &= \sum_{\substack{S \text{ such that }\\
 d_{BP}(S,A)=x, d_{BP}(S,B)=y}} e^{\frac{-E(S)}{RT}}
 \end{align}
 for all $0\leq x,y < n$, where $R$ is the universal gas constant, $T$
 absolute temperature, $E(S)$ denotes the free energy of $S$, and $S$ ranges
-over all secondary structures that are compatible with $\seq$. As mentioned,
+over all secondary structures that are compatible with \seq. As mentioned,
 we emphasize that for expository reasons alone, the Nussinov energy model is
 used in the recursions in this paper, although full recursions and
-the implementation of {\tt FFTbor2D} involve the Turner energy model.
+the implementation of \ffttwo involve the Turner energy model.
 
-For any secondary structure $S$ of $\seq$, and any values
+For any secondary structure $S$ of \seq, and any values
 $1\leq i\leq j \leq n$, the restriction $S_{[i,j]}$ is defined to be the
 collection of base pairs of $S$, lying within interval $[i,j]$; i.e.
 $S_{[i,j]} = \{ (k,\ell) : i \leq k < \ell \leq j\}$.
@@ -229,10 +229,10 @@ In \cite{hofacker:RNAbor2D}, Lorenz et al. generalized
 the dynamic programming recursions of our earlier work \cite{Freyhult.b07},
 to yield recursions
 for the partition function $\z{x,y}{i}{j}$ in equation
-(\ref{eqn:defZk}).  In the context of the Nussinov model,
+(\ref{eq:defZk}).  In the context of the Nussinov model,
 $\z{x,y}{i}{j}$ is equal to
 \begin{eqnarray}
-\label{eqn:RNAborNussRecursion}
+\label{eq:RNAborNussRecursion}
 &\z{(x-\alpha_0),(y-\beta_0)}{i}{j-1} +  \\
 &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}
@@ -253,7 +253,7 @@ Given RNA sequence $\seq = s_1,\ldots,s_n$
 and two arbitrary, but fixed reference
 structures $A,B$, we define the {\em polynomial}
 \begin{eqnarray}
-\label{eqn:polynomialYann}
+\label{eq:polynomialYann}
 \Z(x) = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  z_{rn+s} x^{r\cdot n + s}
 \end{eqnarray}
 where (constant) coefficients
@@ -266,7 +266,7 @@ where $E(S)$ denotes the free energy of $S$.
 If we evaluate the polynomial $\Z(x)$ at $n^2$ distinct pairs of values
 $a_0,\ldots,a_{n^2-1}$ in
 \begin{eqnarray}
-\label{eqn:ZofX}
+\label{eq:ZofX}
 \Z(a_{0}) = z_{0},\ldots, \Z(a_{n^2-1}) = z_{n^2-1},
 \end{eqnarray}
 %then Lagrange polynomial interpolation  \cite{LagrangeInterpolation}
@@ -277,17 +277,17 @@ robustness, we will perform polynomial interpolation by using Vandermonde
 matrices and the fast Fourier transform (FFT).
 
 The following theorem shows that a
-recursion, analogous to equation (\ref{eqn:RNAborNussRecursion}),
+recursion, analogous to equation (\ref{eq:RNAborNussRecursion}),
 can be used to compute
 the {\em polynomial} $\Z_{i,j}(x)$ defined by
 \begin{eqnarray}
-\label{eqn:defZijpolynomial}
+\label{eq:defZijpolynomial}
 \Z_{i,j}(x) &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
 z_{rn+s}(i,j) x^{rn+s}
 =\sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
 \end{eqnarray}
 %\begin{eqnarray}
-%\label{eqn:defZijpolynomial}
+%\label{eq:defZijpolynomial}
 %\Z_{i,j}(x) &=& \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}
 %z_{rn+s}(i,j) x^{rn+s}  \nonumber \\
 %\Z_{i,j}(x) &=& \sum_{k=0}^{n^2-1} z_{k}(i,j) x^{k}
@@ -300,9 +300,9 @@ e^{\frac{-E(S)}{RT}}.
 \]
 Here, in the summation, $S$ runs over structures on $s_i,\ldots,s_j$, which
 are $r$-neighbors of the restriction $A_{[i,j]}$ of reference structure
-$A$ to interval $[i,j]$, and simultaneously
+\strA to interval $[i,j]$, and simultaneously
 $s$-neighbors of the restriction $B_{[i,j]}$ of reference structure
-$B$ to interval $[i,j]$.
+\strB to interval $[i,j]$.
 \medskip
 
 \noindent
@@ -320,7 +320,7 @@ z_{rn+s}(i,j)= \z{r,s}{i}{j}.
 %$j>i+\theta$ we have the recurrence relation
 %given by $\Z_{i,j}(x)$ equals
 %\begin{eqnarray}
-%\label{eqn:polynomialRecursionNussJac}
+%\label{eq:polynomialRecursionNussJac}
 %\Z_{i,j}(x) &= \Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0} + \\
 %&\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -330,7 +330,7 @@ z_{rn+s}(i,j)= \z{r,s}{i}{j}.
 %end of Peter
 Inductively we define $\Z_{i,j}(x)$ to equal
 \begin{eqnarray}
-\label{eqn:polynomialRecursionNussJac}
+\label{eq:polynomialRecursionNussJac}
 &\Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -353,7 +353,7 @@ we instantiate $x$ to a
 complex number $\rho \in \mathbb{C}$, and apply
 the following recursion, by setting $\Z_{i,j}(\rho)$ equal to
 %\begin{eqnarray}
-%\label{eqn:RNAborNussRecursionInstantiated}
+%\label{eq:RNAborNussRecursionInstantiated}
 %\Z_{i,j}(\rho) &= &\Z_{i,j-1}(\rho) \cdot \rho^{\alpha_0n+\beta_0} +
 %\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
 %\left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -361,7 +361,7 @@ the following recursion, by setting $\Z_{i,j}(\rho)$ equal to
 %\cdot \rho^{\alpha(k)n+\beta(k)} \right).
 %\end{eqnarray}
 \begin{eqnarray}
-\label{eqn:RNAborNussRecursionInstantiated}
+\label{eq:RNAborNussRecursionInstantiated}
 &\Z_{i,j-1}(\rho) \cdot \rho^{\alpha_0n+\beta_0} + \\
 &\sum_{\substack{(s_k,s_j) \in \mathbb{B},\\i\le k<j}}
 \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
@@ -376,7 +376,7 @@ $O(n^2)$ space for the next computation of $\Z(\rho_i)$.
 It follows that
 the computation resources used to determine the (column) vector
 \begin{eqnarray}
-\label{eqn:defY}
+\label{eq:defY}
 {\bf Y} = (y_0,\ldots,y_{n^2-1})^T =
 \left(
 \begin{array}{l}
@@ -393,12 +393,12 @@ quintic time $O(n^5)$ and quadratic space $O(n^2)$.
 
 \subsection{Polynomial interpolation}
 Our plan is to determine the coefficients of the polynomial
-$\Z(x)$ in equation (\ref{eqn:polynomialYann}) by
+$\Z(x)$ in equation (\ref{eq:polynomialYann}) by
 polynomial interpolation.  For reasons of numerical stability,
 we instead determine the coefficients of the polynomial $\p(x)$,
 defined by
 \begin{eqnarray}
-\label{eqn:polynomialYannP}
+\label{eq:polynomialYannP}
 \p(x) =
 \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}  \p_{rn+s}
  x^{r\cdot n + s} =
@@ -418,16 +418,16 @@ Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so line 6 involving the FFT requires time $O(n^2 \log n)$.
 
 The pseudocode for the algorithm to compute $\p(x)$ is given in
-%Figure~\ref{fig:fftbor}.
-Figure~1.
+%Figure \ref{fig:fftbor}.
+Figure 1.
 In the next section, we explain a highly non-trivial improvement of
 this algorithm to reduce time by a factor of $4$.
 
 \begin{figure}[!h]
 \begin{small}
-{\sc Algorithm} for {\tt FFTbor2D}\hfill\break
+{\sc Algorithm} for \ffttwo\hfill\break
 {\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and distinct secondary
-structures $A,B$ of $\seq$, and integer $m$. \hfill\break
+structures $A,B$ of \seq, and integer $m$. \hfill\break
 {\sc Output:} Probabilities $p_{rn+s} = p(r,s)=\z{r,s}{1}{n}/{\bf Z}$
 to $m$ significant digits for $x,y=0,\ldots,n-1$.
 Let $i$ denote $\sqrt{-1}$, $\alpha = \exp(\frac{2\pi i}{n^2})$ and
@@ -454,7 +454,7 @@ for probabilities
 $p_{rn+s} = \frac{\z{r,s}{1}{n}}{{\bf Z}}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
 $m$ has an upper bound of $8$ -- only the $m=8$ most significant digits
-are computed with {\tt FFTbor2D}.
+are computed with \ffttwo.
 (Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
 10^8$.)
 It is well-known that
@@ -480,8 +480,8 @@ We have the following.
 
 \noindent
 {\sc Lemma 1:} Let $A,B$ denote two distinct, arbitrary but fixed,
- secondary structures of RNA sequence $\seq$, let $S$ range over
-all secondary structures of $\seq$, and let $d_0$ denote $d_{BP}(A,B)$.
+ secondary structures of RNA sequence \seq, let $S$ range over
+all secondary structures of \seq, and let $d_0$ denote \dBP{\strA}{\strB}.
 If $x=d_{BP}(A,S)$ and $y=d_{BP}(S,B)$, then
 $y \in \{ d_0-x+2k: k=0,\ldots,x\}$.
 \medskip
@@ -494,12 +494,12 @@ $(x,y)$ are $(0,d_0), (1,d_0-1), (1,d_0+1),
 (3,d_0-3), (3,d_0-1), (3, d_0+1), (3,d_0+3), \cdots$.
 As a corollary, we have the {\em parity condition}, that
 \begin{eqnarray}
-\label{eqn:parity}
-d_{BP}(A,S)+d_{BP}(S,B) \equiv d_{BP}(A,B) \bmod 2
+\label{eq:parity}
+d_{BP}(A,S)+d_{BP}(S,B) \equiv \dBP{\strA}{\strB} \bmod 2
 \end{eqnarray}
 first noticed in \cite{hofacker:RNAbor2D}, as well as
 the triangle inequality
-$d_{BP}(A,S)+d_{BP}(S,B) \geq d_{BP}(A,B)$
+$d_{BP}(A,S)+d_{BP}(S,B) \geq \dBP{\strA}{\strB}$
 for base pair distance, probably folklore.
 %but explicitly mentioned in \cite{Moulton.jcb00}.
 Lorenz et al. \cite{hofacker:RNAbor2D} exploited the parity condition
@@ -508,20 +508,20 @@ the efficiency of the naive  implementation of the
 $O(n^7)$ time and $O(n^4)$ space algorithm to compute
 the partition function, $\z{r,s}{1}{n}$,
 and minimum free energy structure, $MFE^{r,s}_{1,n}$, over all
-structures having base pair distance $r$ to $A$ and $s$ to $B$.
+structures having base pair distance $r$ to \strA and $s$ to \strB.
 The following lemma is not difficult to establish.
 \medskip
 
 \noindent
 {\sc Lemma 2:} If $\Z(x)$ is the complex polynomial defined in
-equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+equation~(\ref{eq:polynomialYann}), then for any complex $n$th root of
 unity $\alpha$, it is the case that $\Z(\overline{\alpha}) =
 \overline{\Z(\alpha)}$.
 \medskip
 
 \noindent
 {\sc Lemma 3:}
-Let $\Z(x)$ be defined by equation (\ref{eqn:polynomialYann}), and
+Let $\Z(x)$ be defined by equation (\ref{eq:polynomialYann}), and
 let $\alpha \in \mathbb{C}$ be any complex number.
 If the base pair distance between reference
 structures $A,B$ is even, then $Z(-\alpha)=Z(\alpha)$, while if
@@ -553,25 +553,25 @@ Lemma 2 entails that we require only half again the number of evaluations of
 $\Z(x)$, since the remainder can be inferred by taking the complex conjugate.
 Lemma 1 and Lemma 2, along with a
 precomputation of powers of the complex roots of unity, lead to a
-large performance speed-up in our implementation of {\tt FFTbor2D} -- indeed,
+large performance speed-up in our implementation of \ffttwo -- indeed,
 by a factor of $4$ or more. Though the intuitive idea of how to obtain
 this speedup by a factor of four may be apparent, the technical details
-leading to the pseudocode of {\tt FFTbor2D}, presented in
-%Figure~\ref{pseudocode:interpolatingP}, are rather tricky. These details
-Figure~2, are rather tricky. These details
+leading to the pseudocode of \ffttwo, presented in
+%Figure \ref{pseudocode:interpolatingP}, are rather tricky. These details
+Figure 2, are rather tricky. These details
 are presented in the next two subsections, which can be skipped by the
 reader wishing to move on to the algorithm itself.
 \medskip
 
 \subsection{Time reduction due to Lemma 1}
-Let $n$ denote the length of RNA sequence $\seq$, and let $N$ denote the
+Let $n$ denote the length of RNA sequence \seq, and let $N$ denote the
 least {\em even} integer greater than or equal to $n$. Since $N$ is even,
 we have $(r+s) \equiv (r\cdot(N+1)+s) \bmod 2$. For distinct
 fixed structures $A,B$, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
 $\pi_2(k) = k \bmod (N+1)$, and define the polynomial
 \begin{eqnarray*}
-\label{eqn:polynomialPeter}
+\label{eq:polynomialPeter}
 \Z(x) &=& \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{r\cdot N + s}\\
 &=&
 \sum_{k=0}^{(N+1)^2-1} z_{\pi_1(k)\cdot (N+1) + \pi_2(k)}
@@ -585,7 +585,7 @@ row major order of a 2-dimensional array.
 
 Consider the coefficients of the polynomial
 \begin{eqnarray}
-\label{eqn:yannPolynomialN}
+\label{eq:yannPolynomialN}
 \Z(x) = \sum_{r=0}^{N} \sum_{s=0}^{N} z_{rN+s} x^{rN+s}
 = \sum_{k=0}^{(N+1)^2-1} z_k x^k.
 \end{eqnarray}
@@ -601,7 +601,7 @@ z_k x^k$, whereupon coefficients $z_k=0$ for $k>(N+1)^2$.
 
 \noindent
 {\sc Case 1}: All coefficients $z_k$ of odd parity in
-equation (\ref{eqn:yannPolynomialN}) are zero.
+equation (\ref{eq:yannPolynomialN}) are zero.
 \smallskip
 
 \noindent
@@ -624,7 +624,7 @@ Since $Y(x^2)=Z(x)$, we have
 $Y(\exp(\frac{2\pi k i}{M/2})) =
 Y(\exp(\frac{4\pi k i}{M})) =
 Z(\exp(\frac{2\pi k i}{M}))$, hence we
-use the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+use the previous recursions (\ref{eq:polynomialRecursionNussJac})
 to evaluate $Z(\exp(\frac{2\pi ki}{M})$.  Instead of
 performing $M$ evaluations of $Z(x)$ at $M$-roots of unity,
 this requires only $M_0=M/2$ evaluations of $Y(u)$ at
@@ -636,7 +636,7 @@ full polynomial $\Z(x)$, since its coefficients of odd  parity are zero.
 
 \noindent
 {\sc Case 2}: All coefficients $z_k$ of even parity in
-equation (\ref{eqn:yannPolynomialN}) are zero.
+equation (\ref{eq:yannPolynomialN}) are zero.
 \smallskip
 
 \noindent
@@ -654,7 +654,7 @@ so
 $Y(\exp(\frac{2\pi ki}{M/2})) = Y(\exp(\frac{4\pi ki}{M})) =
 \exp(\frac{-2\pi ki}{M}) \cdot
 \Z(\exp(\frac{2\pi ki}{M}))$, employing
-the previous recursions (\ref{eqn:polynomialRecursionNussJac})
+the previous recursions (\ref{eq:polynomialRecursionNussJac})
 to evaluate $\Z(\exp(\frac{2\pi ki}{M})$.  Note, that unlike the
 Case 1, since $Z(x)=x \cdot Y(x^2)$, we have
 $Y(x^2)=\frac{\Z(x)}{x}$, which explains the presence of additional factor
@@ -668,16 +668,16 @@ full polynomial $\Z(x)$, since $\Z(x) = x \cdot Y(x^2)$, and the
 coefficients of $\Z(x)$ of even parity are zero.
 
 In the following, we will need the observation, that if the parity of
-base pair distance $d_{BP}(A,B)$ between $A,B$ is
+base pair distance \dBP{\strA}{\strB} between $A,B$ is
 even, then
 \begin{eqnarray}
-\label{eqn:evenY}
+\label{eq:evenY}
 Y(x^2) = \Z(x)
 \end{eqnarray}
 while if the parity is odd,
 then
 \begin{eqnarray}
-\label{eqn:oddY}
+\label{eq:oddY}
 Y(x^2) = \frac{1}{x} \cdot \Z(x).
 \end{eqnarray}
 
@@ -694,51 +694,51 @@ fourth quadrant. More precisely,
 we compute $Z(\nu^k)$, for $k=0,\ldots,\frac{M}{4}$, and by Lemmas 2,3,4 infer
 that for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$, we have
 $Z(\nu^{k})= -1^{d_0} \cdot \overline{Z(\nu^{\frac{M}{2}-k})}$, where
-$d_0 = d_{BP}(A,B)$. This is justified in the following.
+$d_0 = \dBP{\strA}{\strB}$. This is justified in the following.
 
 By induction on $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$, we have
 \begin{eqnarray*}
 Y(\omega^k)&=& Y(\nu^{2k})  \nonumber \\
 &=& \left\{ \begin{array}{ll}
 Z(\nu^{k}) &\mbox{\tiny if
-$d_{BP}(A,B) = 0 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 0 \bmod 2$}\\
 \frac{1}{\nu^{k}} \cdot Z(\nu^{k})
 &\mbox{\tiny if
-$d_{BP}(A,B) = 1 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 1 \bmod 2$}\\
 \end{array} \right. \nonumber\\
 &=& \left\{ \begin{array}{ll}
 Z(- \overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
-$d_{BP}(A,B) = 0 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 0 \bmod 2$}\\
 \nu^{-k} \cdot
 Z(-\overline{\nu^{(\frac{M}{2}-k)}})
 &\mbox{\tiny if
-$d_{BP}(A,B) = 1 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 1 \bmod 2$}\\
 \end{array} \right. \nonumber\\
 &=& \left\{ \begin{array}{ll}
 Z(\overline{\nu^{(\frac{M}{2}-k)}}) &\mbox{\tiny if
-$d_{BP}(A,B) = 0 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 0 \bmod 2$}\\
 \nu^{-k} \cdot
 -Z(\overline{\nu^{(\frac{M}{2}-k)}})
 &\mbox{\tiny if
-$d_{BP}(A,B) = 1 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 1 \bmod 2$}\\
 \end{array} \right.  \nonumber\\
 &=& \left\{ \begin{array}{ll}
 \overline{Z(\nu^{(\frac{M}{2}-k)})} &\mbox{\tiny if
-$d_{BP}(A,B) = 0 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 0 \bmod 2$}\\
 -\nu^{-k} \cdot
 \overline{Z(\nu^{(\frac{M}{2}-k)})}
 &\mbox{\tiny if
-$d_{BP}(A,B) = 1 \bmod 2$}\\
+$\dBP{\strA}{\strB} = 1 \bmod 2$}\\
 \end{array} \right.  \nonumber\\
 \end{eqnarray*}
 Line 1 follows by definition, since $\omega=\nu^2$;
-line 2 follows by equations (\ref{eqn:evenY}) and
-(\ref{eqn:oddY});
+line 2 follows by equations (\ref{eq:evenY}) and
+(\ref{eq:oddY});
 line 3 follows by Lemma 4;
 line 4 follows by Lemma 3.
-Thus if $d_{BP}(A,B)$ is even, then
+Thus if \dBP{\strA}{\strB} is even, then
 \begin{eqnarray}
-\label{eqn:trickyRootsOfUnity1}
+\label{eq:trickyRootsOfUnity1}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
 Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
@@ -746,9 +746,9 @@ Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
 \overline{Z(\nu^{\frac{M}{2}-k})} &\mbox{\tiny for $k=\frac{M}{4}+1,\ldots,\frac{M}{2}-1$.}\\
 \end{array} \right.
 \end{eqnarray}
-while if $d_{BP}(A,B)$ is odd, then
+while if \dBP{\strA}{\strB} is odd, then
 \begin{eqnarray}
-\label{eqn:trickyRootsOfUnity2}
+\label{eq:trickyRootsOfUnity2}
 y_k = Y(\omega^k) = \left\{
 \begin{array}{ll}
 \nu^{-k} \cdot Z(\nu^k) &\mbox{\tiny for $k=0,\ldots,\frac{M}{4}$}\\
@@ -762,9 +762,9 @@ $\frac{M}{4}$ evaluations of $\Z(x)$.
 
 \begin{figure}[!h]
 \begin{small}
-{\sc Improved Algorithm} for {\tt FFTbor2D}\hfill\break
+{\sc Improved Algorithm} for \ffttwo\hfill\break
 {\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and distinct secondary
-structures $A,B$ of $\seq$, and integer $m$. \hfill\break
+structures $A,B$ of \seq, and integer $m$. \hfill\break
 {\sc Output:} Probabilities $p(x,y)=\z{x,y}{1}{n}/{\bf Z}$
 to $m$ significant digits for $x,y=0,\ldots,n-1$.
 Let $N$ be the least even number greater than or equal
@@ -782,34 +782,38 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 1.  for $k=0,\ldots,\frac{M}{2}$
 2.    compute the $M$-roots of unity $\nu^k,\nu^{-k}$
 3.  for $k=0,\ldots,\frac{M}{2}-1$
-4.    if $d_{BP}(A,B)$ even
+4.    if \dBP{\strA}{\strB} even
 5.      if $k \leq \frac{M}{4}$
-6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity1})
+6.        $y_k = Y(\omega^k)=\Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity1})
 7.      else// $\frac{M}{4}<k<\frac{M}{2}$
-8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity1})
-9.    else // $d_{BP}(A,B)$ is odd
+8.        $y_k = Y(\omega^k)=\overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity1})
+9.    else // \dBP{\strA}{\strB} is odd
 10.     if $k \leq \frac{M}{4}$
-11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eqn:trickyRootsOfUnity2})
+11.       $y_k = Y(\omega^k)=\nu^{-k} \cdot \Z(\nu^k)$ by (\ref{eq:trickyRootsOfUnity2})
 12.     else// $\frac{M}{4}<k<\frac{M}{2}$
-13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eqn:trickyRootsOfUnity2})
+13.       $y_k = Y(\omega^k)= -1 \cdot \nu^{-k} \cdot \overline{\Z(\nu^{M/2-k})}$ by (\ref{eq:trickyRootsOfUnity2})
 14. //note that ${\bf Z}=\sum_{r,s}\z{r,s}{1}{n}=y_0=\Z(\nu^0)$
 15. for $k=0,\ldots,\frac{M}{2}-1$
 16.   $y_k = 10^m \cdot \frac{y_k}{{\bf Z}}$ //normalize $y_k$
-17. //compute coefficients of $\frac{Y(x)}{{\bf Z}}$ using (\ref{eqn:ajdef})
-18. if $d_{BP}(A,B)$ even then
+
+
+17. //compute coefficients of $\frac{Y(x)}{{\bf Z}}$ using (\ref{eq:ajdef})
+
+
+18. if \dBP{\strA}{\strB} even then
 19.   for $k=0$ to $M-1$
 20.     $r=\pi_1(k)$, $s=\pi_2(k)$
 21.     if $k$ even
-22.       $\frac{\z{r,s}{1}{n}}{{\bf Z}} = a_{k/2}$ from (\ref{eqn:ajdef})
+22.       $\frac{\z{r,s}{1}{n}}{{\bf Z}} = a_{k/2}$ from (\ref{eq:ajdef})
 23.     else// $k$ odd
 24.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = 0$
-25. else // $d_{BP}(A,B)$ odd
+25. else // \dBP{\strA}{\strB} odd
 26.   for $k=0$ to $M-1$
 27.     $r=\pi_1(k)$, $s=\pi_2(k)$
 28.     if $k$ even
 29.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = 0$
 30.     else// $k$ odd
-31.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = a_{(k-1)/2}$ from (\ref{eqn:ajdef})
+31.       $\frac{\z{r,n}{1}{n}}{{\bf Z}} = a_{(k-1)/2}$ from (\ref{eq:ajdef})
 32.  for $k=0$ to $(N+1)^2$
 33.    $z_k = \lfloor 10^m \cdot z_k \rfloor \cdot \frac{1}{10^m}$
 34.    //truncate to $m$ significant digits
@@ -819,7 +823,7 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_k = \frac{z_{k}}{{\bf Z}}=\frac{\z{\pi_1(k),\pi_2(k)}{1}{n}}{{\bf Z}}$.
-Our program, {\tt FFTbor2D}, supports values of $m = 1,\ldots,8$ for the
+Our program, \ffttwo, supports values of $m = 1,\ldots,8$ for the
 precision parameter $m$.
 (Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx
 10^8$.)
@@ -878,20 +882,20 @@ $$
 The $(i,j)$ entry of $V_{M_0}^{-1}$ is $\frac{\omega^{-j i}}{M_0}$
 and that
 \begin{eqnarray}
-\label{eqn:ajdef}
+\label{eq:ajdef}
 a_j &=&\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}
 =\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \nu^{-2kj}
 \end{eqnarray}
 for $j=0,\ldots,M_0-1$ (for more on FFT, see \cite{cormen}).
 
-Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+Since we defined $\bf Y$ in (\ref{eq:defY}) by ${\bf Y} =
 (y_0,\ldots,y_{M_0-1})^T$, where
 $y_0=\Z(\alpha_0),\ldots, y_{M_0-1}=\Z(\alpha_{M_0-1})$ and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{M_0})$,
 it follows that the coefficients
 $z_k=\z{\pi_1(k),\pi_2(k)}{1}{n}$ in the polynomial
 $\Z(x) = z_0 + z_1 x + \cdots + z_{M} x^{M}$ defined in
-(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+(\ref{eq:polynomialYann}) can be computed, at least in principle,
 by using the FFT. However, since the values of
 $z_{k}$ are astronomically large, numerical
 instability makes even this approach infeasible for moderate values of $n$.
@@ -899,98 +903,98 @@ Nevertheless, we apply this approach to compute the $m$ most significant
 digits of $\frac{\z{\pi_1(k),\pi_2(k)}{1}{n}}{{\bf Z}}$,
 where the partition function ${\bf Z} = \sum_{S} \exp(-E(S)/RT)$ satisfies
 ${{\bf Z}} = \sum_{x,y} \z{x,y}{1}{n}$. This leads to numerical stability,
-allowing {\tt FFTbor2D} to compute the
+allowing \ffttwo to compute the
 $m$ most significant digits of $p(x,y) = \frac{\z{x,y}{1}{n}}{{\bf Z}}$.
-Pseudocode for the complete algorithm, {\tt FFTbor}, is given in
-%Figure~\ref{pseudocode:interpolatingP}.
-Figure~2.
+Pseudocode for the complete algorithm, \fftbor, is given in
+%Figure \ref{pseudocode:interpolatingP}.
+Figure 2.
 
 
 \section{Benchmarking}
 \label{section:benchmarking}
 
-To perform comparative benchmarking between {\tt RNA2Dfold} and {\tt FFTbor2D},
+To perform comparative benchmarking between \rnatwofold and \ffttwo,
 we took precision parameter $m=8$, and proceeded as follows.
 For each sequence length $n = 20,25,30,\ldots,300$, we generated
 $100$ random sequences using probability $0.25$ for each nucleotide A,C,G,U.
-For a given RNA sequence $\seq$, the metastable structure $A$ was
-taken to be the MFE structure of $\seq$.
+For a given RNA sequence \seq, the metastable structure \strA was
+taken to be the MFE structure of \seq.
 Using {\tt RNAbor}, we determined that value $k_0\geq 10$, for which
 partition function $Z_{k_0}$ constitutes a visible peak in the graphical
-output -- see Figure~2 and 3 of  \cite{Freyhult.b07} for an example.
-Subsequently, metastable structure $B$ was taken to be that structure
+output -- see Figure 2 and 3 of  \cite{Freyhult.b07} for an example.
+Subsequently, metastable structure \strB was taken to be that structure
 having minimum free energy over all structures, whose base pair distance from
-$A$ was $k_0$.
+\strA was $k_0$.
 
-For all $0 \leq x,y \leq n$, {\tt RNA2Dfold} and {\tt FFTbor2D} were
+For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
 benchmarked in the computation of all Boltzmann probabilities
 $p(x,y)= \frac{Z(x,y)}{Z}$, where $x$ [resp. $y$] represents base pair
-distance to metastable structure $A$ [resp. $B$]. Care was taken for
+distance to metastable structure \strA [resp. \strB]. Care was taken for
 both software to employ the same energy model (Turner99 energy model,
 no dangles, suppression of minimum free energy structure computations
-for {\tt RNA2Dfold}) and the same number of parallel threads (8 threads
+for \rnatwofold) and the same number of parallel threads (8 threads
 using OpenMP). Nonetheless, there are slight differences in the energy
-models -- namely, {\tt RNA2Dfold} includes
+models -- namely, \rnatwofold includes
 mismatch penalties for multiloop stems and for exterior loops, while
-{\tt FFTbor2D} does not. Even in the computation of the partition function
+\ffttwo does not. Even in the computation of the partition function
 $Z$, for spliced leader RNA from {\em L. collosoma} of length 56 nt,
-{\tt RNA2Dfold} {\tt -d0} obtains a value of
-$-9.660419$ kcal/mol, while {\tt FFTbor2D} obtains
+\rnatwofold {\tt -d0} obtains a value of
+$-9.660419$ kcal/mol, while \ffttwo obtains
 $-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
-{\tt RNA2Dfold} {\tt -d0} obtains a value of
-$-22.171785$ kcal/mol, while {\tt FFTbor2D} obtains
+\rnatwofold {\tt -d0} obtains a value of
+$-22.171785$ kcal/mol, while \ffttwo obtains
 $-22.173213$ kcal/mol.
 Note that the straightforward calculation of the partition function,following McCaskill's algorithm \cite{mcCaskill}makes no use of the FFT engine, and thus the
 differences cannot be due to floating point or precision issues.
 
 For benchmarking purposes,
-to allow for a fair comparison of {\tt FFTbor2D}
-with {\tt RNA2Dfold}, we restricted therange of $x,y$ in the same manner as done in the source code of {\tt RNA2Dfold}.
+to allow for a fair comparison of \ffttwo
+with \rnatwofold, we restricted therange of $x,y$ in the same manner as done in the source code of \rnatwofold.
 In that code, parameters $K$ [resp. $L$] are defined respectively to be the
-sum of the number of base pairs in reference structure $A$
-[resp. reference structure $B$] plus the number of base pairs in
+sum of the number of base pairs in reference structure \strA
+[resp. reference structure \strB] plus the number of base pairs in
 the maximum matching (Nussinov) structure which contains
-no base pair of $A$ [resp. $B$].
-For $x \geq K, y \geq L$, both {\tt RNA2Dfold} and {\tt FFTbor2D}
+no base pair of \strA [resp. \strB].
+For $x \geq K, y \geq L$, both \rnatwofold and \ffttwo
 set $p(x,y)=0$.  For the benchmarking results displayed in
 %Figures~\ref{fig:benchmarking1}, \ref{fig:benchmarking2},
 %\ref{fig:benchmarking3}, the values $x,y$ are restricted in
 Figures~3,4,5, the values $x,y$ are restricted in
-{\tt FFTbor2D} to $0 \leq x,y \leq \max(K,L)$, while $0 \leq x \leq K$
-and $0 \leq y \leq L$ in {\tt RNA2Dfold}.
+\ffttwo to $0 \leq x,y \leq \max(K,L)$, while $0 \leq x \leq K$
+and $0 \leq y \leq L$ in \rnatwofold.
 
-%Figure~\ref{fig:benchmarking1} depicts average run time of {\tt RNA2Dfold}
-Figure~3 depicts average run time of {\tt RNA2Dfold}
-and {\tt FFTbor2D} as a function of RNA sequence length, for random RNA
+%Figure \ref{fig:benchmarking1} depicts average run time of \rnatwofold
+Figure 3 depicts average run time of \rnatwofold
+and \ffttwo as a function of RNA sequence length, for random RNA
 sequences of lengths $20-200$ and their metastable structures $A,B$, as
 previously explained.  We see that both programs have
 roughly comparable run times for sequences of length up to approximately
-80 nt, while {\tt FFTbor2D} is demonstrably faster for longer sequences.
-%Figure~\ref{fig:benchmarking2} is an enlargement of
-Figure~4 presents log run time as a function of sequence length, in order
+80 nt, while \ffttwo is demonstrably faster for longer sequences.
+%Figure \ref{fig:benchmarking2} is an enlargement of
+Figure 4 presents log run time as a function of sequence length, in order
 to more clearly determine the crossover point in performance.
-{\tt RNA2Dfold} is marginally faster for sequences of
+\rnatwofold is marginally faster for sequences of
 length up to roughly 80 nt, though the difference is in the millisecond
 range.
-%Figure~\ref{fig:benchmarking3}
-Figure~5
+%Figure \ref{fig:benchmarking3}
+Figure 5
 shows that the standard deviation of run times on random sequences is
-tiny for {\tt FFTbor2D} compared with {\tt RNA2Dfold}, where standard
+tiny for \ffttwo compared with \rnatwofold, where standard
 deviation increases rapidly as a function of sequence length. This figure
-shows that run time of {\tt RNA2Dfold} depends on sequence details, as
-well as sequence length, while the run time of {\tt FFTbor2D} depends only
+shows that run time of \rnatwofold depends on sequence details, as
+well as sequence length, while the run time of \ffttwo depends only
 on sequence length.
 
 %\begin{figure}[!bpth]
 %\begin{figure}[!thbp]
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=.8\linewidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold}
+\includegraphics[width=.8\textwidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold}
 \caption{\small
-Run time in seconds for {\tt RNA2Dfold} and {\tt FFTbor2D} on random
+Run time in seconds for \rnatwofold and \ffttwo on random
 RNA sequences of length $20-200$ nt, where sequence generation and
 choice of metastable structures $A,B$ is described in the text.
-Beyond a length of approximately $80$ nt, {\tt FFTbor2D} is demonstrably
+Beyond a length of approximately $80$ nt, \ffttwo is demonstrably
 faster.
 }
 \label{fig:benchmarking1}
@@ -1001,15 +1005,15 @@ faster.
 %\begin{figure}[!bpth]
 \begin{figure}[!b]
 \begin{center}
-\includegraphics[width=.8\linewidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold_log_scale}
+\includegraphics[width=.8\textwidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold_log_scale}
 \caption{\small
-Logarithm of run time in seconds for {\tt RNA2Dfold} and {\tt FFTbor2D}
+Logarithm of run time in seconds for \rnatwofold and \ffttwo
 on random RNA sequences of length less than $200$ nt, for same data as that
-%in Figure~\ref{fig:benchmarking1}. By taking logarithm of run times, the
-in Figure~3. By taking logarithm of run times, the
+%in Figure \ref{fig:benchmarking1}. By taking logarithm of run times, the
+in Figure 3. By taking logarithm of run times, the
 crossover points are apparent,
-where {\tt FFTbor2D} is faster than {\tt RNA2Dfold}. For very small
-sequences, {\tt RNA2Dfold} is faster, though since both programs converge
+where \ffttwo is faster than \rnatwofold. For very small
+sequences, \rnatwofold is faster, though since both programs converge
 in a fraction of a second, this difference is of no practical consequence.
 }
 \label{fig:benchmarking2}
@@ -1018,19 +1022,19 @@ in a fraction of a second, this difference is of no practical consequence.
 
 \begin{figure}[!bpth]
 \begin{center}
-\includegraphics[width=.45\linewidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold_stdev_runtimes}
-\includegraphics[width=.45\linewidth]{FIGURES/time_min_max_benchmarking_fftbor2d_vs_rna2dfold}
+\includegraphics[width=.45\textwidth]{FIGURES/time_benchmarking_fftbor2d_vs_rna2dfold_stdev_runtimes}
+\includegraphics[width=.45\textwidth]{FIGURES/time_min_max_benchmarking_fftbor2d_vs_rna2dfold}
 \caption{\small
 {\em (Left)}
-Standard deviation of run times of {\tt RNA2Dfold} and {\tt FFTbor2D}
+Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
 {\em (Right)}
-Minimum and maximum run times for {\tt RNA2Dfold} and {\tt FFTbor2D}.
+Minimum and maximum run times for \rnatwofold and \ffttwo.
 For each collection of 100 random sequences of length $n$, the minimum
 and maximum run time for a sequence of that length was computed.
 Taken together, these figures clearly show the
-run time dependence of {\tt RNA2Dfold} on particular sequences, while
-the run time of {\tt FFTbor2D} depends only on sequence length, rather than
+run time dependence of \rnatwofold on particular sequences, while
+the run time of \ffttwo depends only on sequence length, rather than
 sequence details.
 }
 \end{center}
@@ -1041,9 +1045,9 @@ sequence details.
 %\begin{figure}[!tbph]
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=.50\linewidth]{FIGURES/PeterFFTbor2DLcollosoma}
+\includegraphics[width=.50\textwidth]{FIGURES/PeterFFTbor2DLcollosoma}
 \hskip 1cm
-\includegraphics[width=.35\linewidth]{FIGURES/FFTbor2D_prob_contour}
+\includegraphics[width=.35\textwidth]{FIGURES/FFTbor2D_prob_contour}
 \caption{\small
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em Leptomonas collosoma}, having
@@ -1053,15 +1057,15 @@ metastable secondary structures  $A=$
 {\tiny \tt ..((...((((((..(((((.((((...)))).)))))..))).)))..)).....}, and
 $B=$ {\tiny \tt .......................((((((((((((.....)))))..)))))))..}.
 The $x$-axis (resp. $y$-axis)
-represents base pair distance between metastable structure $A$ (resp. $B$),
+represents base pair distance between metastable structure \strA (resp. \strB),
 while the $z$-axis represents the ensemble free energy $-RT \log Z_{x,y}$,
-where $Z_{x,y}$ is computed in {\tt FFTbor2D} by $Z_{x,y}= p(x,y) \cdot Z$.
+where $Z_{x,y}$ is computed in \ffttwo by $Z_{x,y}= p(x,y) \cdot Z$.
 Low energy positions $(x,y)$ correspond to high Boltzmann probability positions.
 The left panel depicts a heat map of the ensemble free energy,
 while the right panel depicts a contour map with level curves. In analogy
 with mountain climbing, one expects an optimal path to follow along the
-valley regions in traversing the landscape from $A$ to $B$. Data produced
-with {\tt FFTbor2D}; graphics produced using Mathematica.
+valley regions in traversing the landscape from \strA to \strB. Data produced
+with \ffttwo; graphics produced using Mathematica.
 }
 \label{fig:heatmapFFTbor2D}
 \end{center}
@@ -1076,19 +1080,19 @@ with {\tt FFTbor2D}; graphics produced using Mathematica.
 
 In this section, we describe folding kinetics along the 2D energy
 grid, as depicted in
-%Figure~\ref{fig:heatmapFFTbor2D}.
-Figure~6.
+%Figure \ref{fig:heatmapFFTbor2D}.
+Figure 6.
 Consider the
 56 nt {\em L. collosoma} spliced leader RNA \cite{lecuyerCrothers},
 described in the Introduction, having
 sequence AACUAAAACA AUUUUUGAAG AACAGUUUCU GUACUUCAUU GGUAUGUAGA
 GACUUC.
-Let $A$ denote the minimum free energy structure of spliced leader,
+Let \strA denote the minimum free energy structure of spliced leader,
 using Turner 1999 energies as implemented in Vienna RNA Package 1.8.5:
 \begin{quote}
 {\tt ..((...((((((..(((((.((((...)))).)))))..))).)))..)).....},
 \end{quote}
-and let $B$ denote the low energy alternate structure for spliced leader:
+and let \strB denote the low energy alternate structure for spliced leader:
 \begin{quote}
 {\tt .......................((((((((((((.....)))))..)))))))..}.
 \end{quote}
@@ -1096,7 +1100,7 @@ Using the program {\em Switch Design} ({\tt switch.pl}) described in
 \cite{Flamm.r01}, we generated 20,000 sequences, for which structures
 $A,B$ are metastable. For spliced leader RNA as well as for each of
 these 20,000 sequences, we computed the corresponding
-probability profile $p(x,y)$ using {\tt FFTbor2D},
+probability profile $p(x,y)$ using \ffttwo,
 and subsequently defined the Markov chain ${\mathbb{M}}(\seq) = (Q,M)$, where
 $Q = \{ (x,y) : 0 \leq x,y \leq n, \mbox{ and } p(x,y)>0 \}$
 is the set of states, and the
@@ -1110,13 +1114,13 @@ M_{(x,y), (u,v)} = \left\{ \begin{array}{ll}
 &\mbox{if $(u,v) = (x,y)$. }\\
 \end{array} \right.
 \end{eqnarray*}
-Let $d_0=d_{BP}(A,B)$ denote the base pair distance between the metastable
+Let $d_0=\dBP{\strA}{\strB}$ denote the base pair distance between the metastable
 structures $A,B$, and let $M^{-}_{(d_0,0)}$ denote the matrix obtained from
 $M$ by removing both the and column corresponding to $(0,d_0)$.
 For spliced leader and each of the 20,000 sequences obtained from
 {\em Switch Design}, we determined the {\em mean first passage time} (MFPT)
-from state $(0,d_0)$, corresponding to metastable structure $A$,
- to state $(d_0,0)$, corresponding to metastable structure $B$,  by
+from state $(0,d_0)$, corresponding to metastable structure \strA,
+ to state $(d_0,0)$, corresponding to metastable structure \strB,  by
 computing $(I - M^{-}_{(d_0,0)})^{-1} \cdot {\bf e}$, where
 $I$ denotes the identity matrix, and ${\bf e}$ denotes the column vector
 composed entirely of ones \cite{meyerMFPT}. Using LAPACK \cite{LAPACK}
@@ -1124,17 +1128,17 @@ for matrix inversion, we found that
 {\em L. collosoma} spliced leader RNA has a
 MFPT on the 2D energy grid, which is smaller than only $2.855\%$ of the
 20,000 sequnces generated by {\em Switch Design}, thus constituting a
-$Z$-score of $1.989$ for the kinetics of folding from $A$ to $B$
-%(see left panel of Figure~\ref{fig:histogramMFPT}).
-(see left panel of Figure~7).
+$Z$-score of $1.989$ for the kinetics of folding from \strA to \strB
+%(see left panel of Figure \ref{fig:histogramMFPT}).
+(see left panel of Figure 7).
 This result seems to suggest that spliced leader could be
 under evolutionary pressure for {\em slow} folding between these
 metastable structures, if we take
-MFPT from $(0,d_0)$ to $(d_0,0)$ as a surrogate for {\tt Kinfold} \cite{flamm}
-folding time from $A$ to $B$ -- an interpretation which seems to be
+MFPT from $(0,d_0)$ to $(d_0,0)$ as a surrogate for \kinfold \cite{flamm}
+folding time from \strA to \strB -- an interpretation which seems to be
 consistent with the functional role of spliced leader as described
 in the Introduction.
-Since accurate {\tt Kinfold} kinetics requires many simulations,
+Since accurate \kinfold kinetics requires many simulations,
 each requiring enormous time \cite{wolfingerStadler:kinetics},
 our method may prove useful in synthetic biology, in prioritizing
 computationally designed RNA sequences for subsequent
@@ -1148,24 +1152,24 @@ $30.357\%$, which constitutes a $Z$-score of
 $+2.50$; i.e. the overwhelming majority of the 20,000 sequences generated
 by {\em Switch Design} have higher GC-content than that of spliced leader
 RNA from {\em L. collosoma}, as shown in the right panel of
-%Figure~\ref{fig:histogramMFPT}.
-Figure~7.
+%Figure \ref{fig:histogramMFPT}.
+Figure 7.
 
 \begin{figure}[!tbph]
 \begin{center}
-%\includegraphics[width=.8\linewidth]{FIGURES/mfptsRelativeFreqsArrow}
-%\includegraphics[width=.8\linewidth]{FIGURES/log_histogram_for_switch_design_using_fftbor}
-\includegraphics[width=.45\linewidth]{FIGURES/log_histogram_for_switch_design_using_fftbor}
-\includegraphics[width=.45\linewidth]{FIGURES/gc_content_histogram_for_real_spliced_leader_vs_switch_design}
+%\includegraphics[width=.8\textwidth]{FIGURES/mfptsRelativeFreqsArrow}
+%\includegraphics[width=.8\textwidth]{FIGURES/log_histogram_for_switch_design_using_fftbor}
+\includegraphics[width=.45\textwidth]{FIGURES/log_histogram_for_switch_design_using_fftbor}
+\includegraphics[width=.45\textwidth]{FIGURES/gc_content_histogram_for_real_spliced_leader_vs_switch_design}
 \caption{\small
 {\em (Left)}
 Histogram of log base 10 mean first passage times,
 computed by $(I - M^{-}_{(d_0,0)})^{-1} \cdot {\bf e}$ (see text),
-for a collection of 20,000 RNA sequences $\seq$, each of has a metastable
-structure at the minimum free energy structure $A$ of
+for a collection of 20,000 RNA sequences \seq, each of has a metastable
+structure at the minimum free energy structure \strA of
 {\em L. collosoma} spliced leader RNA, given by
 {\tiny \tt ..((...((((((..(((((.((((...)))).)))))..))).)))..)).....},
-as well as a metastable structure at the alternate structure $B$,
+as well as a metastable structure at the alternate structure \strB,
 given by
 {\tiny \tt .......................((((((((((((.....)))))..)))))))..}.
 These sequences were generated by the program {\em Switch Design}
@@ -1176,7 +1180,7 @@ is indicated by the arrow in figure, corresponding to a $Z$-score of
 %$1.98907157392517831$, which suggests
 $1.989$, which suggests
 that spliced leader RNA may be under evolutionary pressure
-for slow folding kinetics from $A$ to $B$.
+for slow folding kinetics from \strA to \strB.
 {\em (Right)} Histogram of GC-content of the 20,000 sequences generated
 by {\em Switch Design}. Note that GC-content of spliced leader RNA is
 %$0.30357142857142855$ (exact value)
@@ -1197,18 +1201,18 @@ $+2.50$.
 \section{Discussion}
 \label{section:discussion}
 
-Given an RNA sequence $\seq$ and two reference secondary structures $A,B$,
-the algorithm, {\tt FFTbor2D}, computes the partition
+Given an RNA sequence \seq and two reference secondary structures $A,B$,
+the algorithm, \ffttwo, computes the partition
 function $Z(x,y)$, defined to be the sum of Boltzmann factors
 $\exp(-E(S)/RT)$ over all secondary structures $S$, having base pair
-distance $x$ to  $A$ and distance $y$ to $B$, where
-$0 \leq x,y \leq n$ and $n$ denotes the length $\seq$.
+distance $x$ to  \strA and distance $y$ to \strB, where
+$0 \leq x,y \leq n$ and $n$ denotes the length \seq.
 Using polynomial interpolation with the FFT and exploiting the observations
-of Lemmas 1,2, {\tt FFTbor2D} has worst case complexity
+of Lemmas 1,2, \ffttwo has worst case complexity
 $O(n^5)$ time and $O(n^2)$ space. This worst case
 algorithmic complexity is two orders of magnitude faster and requires two
 orders of magnitude less space than the worst case complexity of the
-algorithm {\tt RNA2Dfold} of Lorenz et al. \cite{hofacker:RNAbor2D}.
+algorithm \rnatwofold of Lorenz et al. \cite{hofacker:RNAbor2D}.
 This run time complexity bound is not only theoretical, but entails
 a significant practical speedup, as depicted in
 Figures 3,4 and 5.
@@ -1216,13 +1220,13 @@ Figures 3,4 and 5.
 %\ref{fig:benchmarking5}.
 
 An important advantage of
-{\tt RNA2Dfold} over {\tt FFTbor2D} is that the former can additionally
+\rnatwofold over \ffttwo is that the former can additionally
 compute the structures $M_{x,y}$ having minimum free energy over all
-structures that are $x$-neighbors of metastable $A$ and simultaneously
-$y$-neighbors of metastable $B$. (There is a similar advantage of {\tt RNAbor}
-\cite{Freyhult.b07} over the faster {\tt FFTbor} \cite{fftbor}.)
-As well, {\tt RNA2Dfold} directly computes the partition function values
-$Z_{x,y}$, while {\tt FFTbor2D} estimates $Z_{x,y}$ by computing
+structures that are $x$-neighbors of metastable \strA and simultaneously
+$y$-neighbors of metastable \strB. (There is a similar advantage of {\tt RNAbor}
+\cite{Freyhult.b07} over the faster \fftbor \cite{fftbor}.)
+As well, \rnatwofold directly computes the partition function values
+$Z_{x,y}$, while \ffttwo estimates $Z_{x,y}$ by computing
 $p(x,y) \cdot Z$. This difference entails a significant loss of precision,
 when depicting the energy landscape.
 
@@ -1230,50 +1234,50 @@ when depicting the energy landscape.
 %\begin{figure}[!tbph]
 \begin{figure}[!t]
 \begin{center}
-\includegraphics[width=.35\linewidth]{FIGURES/RNA2Dfold_ensFreeEnergy_Lcollosoma}
+\includegraphics[width=.35\textwidth]{FIGURES/RNA2Dfold_ensFreeEnergy_Lcollosoma}
 \hskip 1cm
-\includegraphics[width=.35\linewidth]{FIGURES/RNA2Dfold_prob_Lcollosoma}
+\includegraphics[width=.35\textwidth]{FIGURES/RNA2Dfold_prob_Lcollosoma}
 \caption{\small
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em Leptomonas collosoma}, as in
-%Figure~\ref{fig:heatmapFFTbor2D}
-Figure~6,
+%Figure \ref{fig:heatmapFFTbor2D}
+Figure 6,
 except that in the left panel, ensemble free energy $-RT \log Z_{x,y}$
-is computed from the values of $Z_{x,y}$ output by {\tt RNA2Dfold},
+is computed from the values of $Z_{x,y}$ output by \rnatwofold,
 while in the right panel, ensemble free energy is computed from
 the values $Z_{x,y} = p(x,y) \cdot Z$, where values $p(x,y)$ are output
-by {\tt RNA2Dfold}.
+by \rnatwofold.
 The loss of detail in the 2D energy landscape is caused uniquely by
 working with probabilities $p(x,y)$, rather than partition function
 values $Z_{x,y}$.
-Data produced with {\tt RNA2Dfold}; graphics produced using Mathematica.
+Data produced with \rnatwofold; graphics produced using Mathematica.
 }
 \label{fig:heatmapRNA2Dfold}
 \end{center}
 \end{figure}
 
-%The right panel of Figure~\ref{fig:heatmapFFTbor2D} depicts a contour
-The right panel of Figure~6 depicts a contour
+%The right panel of Figure \ref{fig:heatmapFFTbor2D} depicts a contour
+The right panel of Figure 6 depicts a contour
 heat map of the 2D energy landscape for spliced leader RNA from
-{\em L. collosoma}, as computed by {\tt FFTbor2D}.
+{\em L. collosoma}, as computed by \ffttwo.
 This figure should be compared with the left panel of
-%Figure~\ref{fig:heatmapRNA2Dfold}
-Figure~8, which depicts a contour heat map of the 2D energy landscape for
-the same RNA, as computed by {\tt RNA2Dfold}.
+%Figure \ref{fig:heatmapRNA2Dfold}
+Figure 8, which depicts a contour heat map of the 2D energy landscape for
+the same RNA, as computed by \rnatwofold.
 Notice the additional detail in this figure, due
-to the fact that {\tt RNA2Dfold} directly computes $Z_{x,y}$, while
-{\tt FFTbor2D} computes Boltzmann probabilities $p(x,y)$ by interpolation,
+to the fact that \rnatwofold directly computes $Z_{x,y}$, while
+\ffttwo computes Boltzmann probabilities $p(x,y)$ by interpolation,
 allowing one to subsequently compute $Z_{x,y} = p(x,y) \cdot Z$.
 The additional detail of the energy landscape is lost in the right panel of
-%Figure~\ref{fig:heatmapRNA2Dfold}
-Figure~8, obtained by computing ensemble free energy by
+%Figure \ref{fig:heatmapRNA2Dfold}
+Figure 8, obtained by computing ensemble free energy by
 $-RT \log p(x,y) + RT \log cdot Z$, where $p(x,y)$ is parsed from
-{\tt RNA2Dfold} output.  It follows that the loss of detail in
+\rnatwofold output.  It follows that the loss of detail in
 2D energy landscape is due solely to the fact that probabilities $p(x,y)$ are
-computed by {\tt FFTbor2D}, rather than partition function values
+computed by \ffttwo, rather than partition function values
 $Z_{x,y}$. Given numerical stability issues involving the FFT engine,
-{\tt FFTbor2D} can only estimate the probabilities $p(x,y)$ to within
-$m=8$ significant places. Nevertheless, our algorithm {\tt FFTbor2D}
+\ffttwo can only estimate the probabilities $p(x,y)$ to within
+$m=8$ significant places. Nevertheless, our algorithm \ffttwo
 was developed with the intended application in synthetic biology, where
 one wishes to prioritize RNA candidate sequences with respect to kinetics.
-For such applications, the speedup of {\tt FFTbor2D} is an important asset.
+For such applications, the speedup of \ffttwo is an important asset.

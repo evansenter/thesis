@@ -3,10 +3,36 @@
 % --------------------------------------------------
 \renewcommand*\ttdefault{txtt}
 
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+
+\algrenewcommand\alglinenumber[1]{{\sffamily\footnotesize#1}}
+
+\captionsetup{font={stretch=1.3}}
+
+\titleformat{\chapter}[display]
+{\normalfont\Large\filcenter}
+{\titlerule[1pt]
+\vspace{1pt}
+\titlerule
+\vspace{1pc}
+\LARGE\chaptertitlename\:\thechapter}
+{1.8pc}
+{\titlerule
+\vspace{1pc}
+\Huge}
+\titleformat*{\section}{\normalfont\fontsize{17}{20}\selectfont}
+\titleformat*{\subsection}{\normalfont\fontsize{14}{17}\selectfont}
+\titleformat*{\subsubsection}{\normalfont\fontsize{14}{17}\selectfont}
+\titlespacing{\section}{0pt}{*-1}{*2}
+\titlespacing{\subsection}{0pt}{*.75}{*1.5}
+\titlespacing{\subsubsection}{0pt}{*.5}{*1}
+
 % --------------------------------------------------
 % Software
 % --------------------------------------------------
-\newcommand{\ms}[1]{\mbox{\tt #1}\xspace}
+\newcommand{\barriers}{\ms{barriers}}
 \newcommand{\fftbor}{\ms{FFTbor}}
 \newcommand{\ffteq}{\ms{FFTeq}}
 \newcommand{\fftmfpt}{\ms{FFTmfpt}}
@@ -14,50 +40,83 @@
 \newcommand{\foldalign}{\ms{FoldAlign}}
 \newcommand{\hermes}{\ms{Hermes}}
 \newcommand{\infernal}{\ms{Infernal}}
+\newcommand{\kinfold}{\ms{Kinfold}}
+\newcommand{\ms}[1]{\mbox{\tt #1}\xspace}
 \newcommand{\rfinder}{\ms{Ribofinder}}
 \newcommand{\rfold}{\ms{RNAfold}}
+\newcommand{\rnabor}{\ms{RNAbor}}
 \newcommand{\rnaeq}{\ms{RNAeq}}
 \newcommand{\rnamfpt}{\ms{RNAmfpt}}
-\newcommand{\rtwofold}{\ms{RNA2Dfold}}
+\newcommand{\rnasub}{\ms{RNAsubopt}}
+\newcommand{\rnatwofold}{\ms{RNA2Dfold}}
+\newcommand{\treekin}{\ms{treekin}}
 \newcommand{\tthp}{\ms{TransTermHP}}
 
 % --------------------------------------------------
-% Software and terminology
+% Terminology
 % --------------------------------------------------
 \newcommand{\bpd}{base pair distance\xspace}
-\newcommand{\fft}{Fast Fourier Transform\xspace}
-\newcommand{\idft}{inverse Discrete Fourier Transform\xspace}
+\newcommand{\ebpd}{expected base pair distance\xspace}
 \newcommand{\Eqt}{Equilibrium time\xspace}
 \newcommand{\eqt}{equilibrium time\xspace}
-\newcommand{\mfe}{minimum free energy\xspace}
+\newcommand{\fft}{Fast Fourier Transform\xspace}
+\newcommand{\hit}{hitting time\xspace}
+\newcommand{\Hit}{Hitting time\xspace}
+\newcommand{\idft}{inverse Discrete Fourier Transform\xspace}
 \newcommand{\mfes}{minimum free energy structure\xspace}
+\newcommand{\mfe}{minimum free energy\xspace}
 \newcommand{\Mfpt}{Mean first passage time\xspace}
 \newcommand{\mfpt}{mean first passage time\xspace}
-\newcommand{\Rb}{Riboswitch\xspace}
-\newcommand{\rb}{riboswitch\xspace}
 \newcommand{\Rbs}{Riboswitches\xspace}
 \newcommand{\rbs}{riboswitches\xspace}
+\newcommand{\Rb}{Riboswitch\xspace}
+\newcommand{\rb}{riboswitch\xspace}
 
 % --------------------------------------------------
 % RNA notation
 % --------------------------------------------------
+\newcommand{\alphaN}{\ensuremath{\alpha_0,\dots,\alpha_{n-1}}\xspace}
+\newcommand{\bpSet}{\ensuremath{\mathbb{B}}}
+\newcommand{\dBP}[2]{\ensuremath{d_{\text{BP}}(#1,\,#2)}\xspace}
+\newcommand{\kNbrs}{$k$-{\em neighbors}\xspace}
+\newcommand{\kNbr}{$k$-{\em neighbor}\xspace}
+\newcommand{\seqIJ}{\ensuremath{s_i,\dots,s_j}\xspace}
+\newcommand{\seqN}{\ensuremath{s_1,\dots,s_n}\xspace}
 \newcommand{\seq}{{\bf s}\xspace}
-\newcommand{\str}{\strS}
-\newcommand{\strSt}{\ensuremath{\strS^*}\xspace}
-\newcommand{\strletter}[1]{\ensuremath{\mathcal #1}\xspace}
 \newcommand{\strA}{\strletter{A}}
+\newcommand{\strBresp}{\ensuremath{\mathcal B}}
 \newcommand{\strB}{\strletter{B}}
+\newcommand{\strletter}[1]{\ensuremath{\mathcal #1}\xspace}
+\newcommand{\strSt}{\ensuremath{\strS^*}\xspace}
 \newcommand{\strS}{\strletter{S}}
 \newcommand{\strT}{\strletter{T}}
-\newcommand{\dBP}[1]{\ensuremath{d_{\text{BP}}(#1)}\xspace}
-\newcommand{\kNbr}[1]{$k$-{\em neighbor}\xspace}
-\newcommand{\kNbrs}[1]{$k$-{\em neighbors}\xspace}
+\newcommand{\str}{\strS}
 
 % --------------------------------------------------
 % Math notation
 % --------------------------------------------------
-\newcommand{\On}[1]{\ensuremath{O(n^{#1})}\xspace}
+\newcommand{\aMbi}{\ensuremath{a-bi}\xspace}
+\newcommand{\aPbi}{\ensuremath{a+bi}\xspace}
+\newcommand{\bfY}{\ensuremath{{\bf Y}}\xspace}
 \newcommand{\bfZ}[2]{\ensuremath{{\bf Z}^{#1}_{#2}}\xspace}
-\newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
 \newcommand{\boltzf}[1]{\ensuremath{\exp(-E(#1)/RT)}\xspace}
-\newcommand{\boltzF}[1]{\ensuremath{\exp^{\frac{-E(#1)}{RT}}}\xspace}
+\newcommand{\boltzF}[1]{\ensuremath{e^{\frac{-E(#1)}{RT}}}\xspace}
+\newcommand{\boltzNuss}[1]{\ensuremath{e^{\frac{-E_0(#1)}{RT}}}\xspace}
+\newcommand{\boltzYmX}{\ensuremath{\exp(-\frac{E(y)-E(x)}{RT})}\xspace}
+\newcommand{\emZof}[2]{\ensuremath{{\mathcal Z}_{#1}(#2)}\xspace}
+\newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
+\newcommand{\kRoU}{\ensuremath{e^{2 \pi i k/n}}\xspace}
+\newcommand{\mathbbP}{\mbox{\bf P}}
+\newcommand{\mathbbt}{\mbox{\bf t}}
+\newcommand{\mChain}{\ensuremath{\mathbb{M}}\xspace}
+\newcommand{\nRoUs}{complex $n$th roots of unity\xspace}
+\newcommand{\nRoU}{complex $n$th root of unity\xspace}
+\newcommand{\On}[1]{\ensuremath{O(n^{#1})}\xspace}
+\newcommand{\pRoU}{\ensuremath{e^{2 \pi i/n}}\xspace}
+\newcommand{\pSt}{\ensuremath{p^*}\xspace}
+\newcommand{\statDist}{\ensuremath{p^*=(p^*_1,\dots,p^*_n)}\xspace}
+\newcommand{\tD}[1]{\ensuremath{t_{#1\Delta}}\xspace}
+\newcommand{\tMin}{\ensuremath{T_{\min}}\xspace}
+\newcommand{\tMax}{\ensuremath{T_{\max}}\xspace}
+\newcommand{\xEnd}{\ensuremath{x_\infty}\xspace}
+\newcommand{\xStart}{\ensuremath{x_0}\xspace}

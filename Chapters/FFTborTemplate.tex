@@ -7,7 +7,7 @@
 \lhead{Chapter X. \emph{FFTbor}}
 
 Using complex roots of unity and the Fast Fourier Transform, we
-design a new thermodynamics-based algorithm, {\tt FFTbor}, that
+design a new thermodynamics-based algorithm, \fftbor, that
 computes the Boltzmann probability that secondary structures differ
 by $k$ base pairs from an arbitrary initial structure of a given RNA
 sequence. The algorithm, which runs in quartic time $O(n^4)$ and quadratic space
@@ -24,13 +24,13 @@ In \cite{Freyhult.b07}, we developed a dynamic programming algorithm,
 each integer $k$, the Boltzmann probability $p_k = \frac{Z_k}{Z}$
 of the subensemble of structures
 whose base pair distance to a given {\em initial}, or
-{\em reference}, structure $S^*$ is $k$.\footnote{As later
+{\em reference}, structure \strSt is $k$.\footnote{As later
 explained, $Z$ denotes the partition function, defined as the sum of
 all Boltzmann factors $\exp(-E(S)/RT)$, over all secondary structures $S$
 of a given RNA sequence, and $R$ denotes the  universal
 gas constant and $T$ absolute temperature. Similarly $Z_k$ denotes the
 sum of all Boltzmann factors of all structures $S$, whose base pair distance
-to the initial structure $S^*$ is exactly $k$.}
+to the initial structure \strSt is exactly $k$.}
 {\tt RNAbor} stores the value of the (partial)
 partition functions $Z_k(i,j)$ for all $1 \leq i \leq j \leq n$ and
 $0 \leq k \leq n$, each of which requires quadratic time to compute.
@@ -40,18 +40,18 @@ This restriction is somewhat mitigated by the fact that
 in \cite{CloteLouLorenz}, we showed how to use sampling
 \cite{Ding.nar03} to efficiently approximate
 {\tt RNAbor} in cubic time $O(n^3)$ and quadratic space $O(n^2)$,
-{\em provided} that the starting structure $S^*$ is the minimum free
+{\em provided} that the starting structure \strSt is the minimum free
 energy (MFE) structure. We expect that a more efficient version of
 {\tt RNAbor} could be used in applications in genomics and synthetic
 biology, to detect potential conformational switches --
 RNA sequences containing two or more (distinct) metastable structures.
 
-In this paper, we describe a radically different algorithm, {\tt FFTbor},
+In this paper, we describe a radically different algorithm, \fftbor,
 prounounced {\em FFT neighbor},
 that uses polynomial interpolation to compute the
 coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
 \begin{eqnarray}
-\label{eqn:PofX}
+\label{eq:PofX}
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
 \end{eqnarray}
 where $p_k$ is defined by $p_k = \frac{Z_k}{Z}$.
@@ -60,8 +60,8 @@ interpolation formula and in Gaussian elimination, we employ
 the Fast Fourier Transform (FFT) to compute the inverse Discrete Fourier
 Transform (DFT) on values $y_0,\ldots,y_{n-1}$, where $y_k = p(\omega^k)$ and
 $\omega = e^{2 \pi i/n}$ is the principal $n$th complex root of unity and
-$p(x)$ is defined in (\ref{eqn:PofX}). This
-gives rise to an improved version of {\tt RNAbor}, denoted {\tt FFTbor},
+$p(x)$ is defined in (\ref{eq:PofX}). This
+gives rise to an improved version of {\tt RNAbor}, denoted \fftbor,
 which runs in time $O(n^4)$ and space $O(n^2)$.
 Once two metastable structures $S_1,S_2$ are identified, we can
 subsequently evaluate the feasibility of transition between
@@ -87,13 +87,13 @@ such that if $(i,j)$ and $(x,y)$ both belong to $S$, then $i=x \iff j=y$
 and $i<x<j \iff i<y<j$ (no pseudoknots are allowed).
 
 The secondary structure $S$ is {\em compatible}
-with $\seq$ if for every base pair $(i,j)$ in $S$, the pair
+with \seq if for every base pair $(i,j)$ in $S$, the pair
 $(s_i,s_j)$ is contained in the set
 $\mathbb{B} = \{(A,U), (U,A), (G,C), (C,G), (G,U), (U,G)\}$
 of six Watson-Crick and wobble base pairs. Often we write that
-$S$ is a secondary structure {\em on} $\seq$, or equivalently,
-a secondary structure {\em of} $\seq$,
-in place of stating that $S$ is compatible with $\seq$.
+$S$ is a secondary structure {\em on} \seq, or equivalently,
+a secondary structure {\em of} \seq,
+in place of stating that $S$ is compatible with \seq.
 Throughout this paper, by {\em structure}, we always mean a
 secondary structure which is compatible with an arbitrary, but fixed
 RNA sequence $\seq=s_1,\ldots,s_n$.
@@ -110,7 +110,7 @@ Structures $S,T$ are said to be $k$-{\em neighbors} if $d_{BP}(S,T) = k$.
 
 For $1\leq i \leq j \leq n$, let
 $S_{[i,j]}$ denote the restriction of $S$ to interval
-$[i,j]$ of $\seq$, i.e. the set of base pairs
+$[i,j]$ of \seq, i.e. the set of base pairs
 %
 $S_{[i,j]} = \{ (x,y) \,:\, i \leq  x < y \leq j,  (x,y) \in S \}$.
 %
@@ -122,15 +122,15 @@ d_{BP}(S_{[i,j]},T_{[i,j]})= |\{ (x,y): i \leq x<y\leq j,
 (x,y) \in S-T \mbox{ or } (x,y) \in T-S \}| = k.
 \]
 In the following,
-we often omit the sequence $\seq$ and initial secondary structure $S^*$ in our
+we often omit the sequence \seq and initial secondary structure \strSt in our
 notation, since these are arbitrary, but fixed.
 In particular, we write $\z{k}{i}{j} = \z{k}{i}{j}(\seq,S^*)$ --
 see following paragraph for definitions.
 
 
 Given an RNA sequence $\seq=s_1,\ldots,s_n$ and compatible secondary structure
-$S^*$, let ${\bf Z}^k$ denote the sum
-of the Boltzmann factors $\exp(-E(S)/RT)$ of all $k$-neighbors $S$ of  $S^*$;
+\strSt, let ${\bf Z}^k$ denote the sum
+of the Boltzmann factors $\exp(-E(S)/RT)$ of all $k$-neighbors $S$ of  \strSt;
 i.e.
 \[
 {\bf Z}^k = \z{k}{1}{n} =
@@ -142,15 +142,15 @@ energy \cite{turner,xia:RNA}
 of $S$, $R = 0.00198$ kcal/mol denotes the universal
 gas constant and $T$ denotes absolute temperature.
 Since the maximum base pair distance between a given initial
-structure $S^*$ and any other structure $S$ on RNA sequence
+structure \strSt and any other structure $S$ on RNA sequence
 $\seq = s_1,\ldots,s_n$ must satisfy
 \begin{eqnarray}
-\label{eqn:upperBound}
+\label{eq:upperBound}
 d_{BP}(S,S^*) \leq |S^*| + \lfloor \frac{n-\theta}{2} \rfloor \leq n
 \end{eqnarray}
 it follows that the full partition function
 \begin{eqnarray}
-\label{eqn:mcCaskillPartitionFun}
+\label{eq:mcCaskillPartitionFun}
 {\bf Z}=\z{}{1}{n} = \sum_{k=0}^n \z{k}{1}{n}.
 \end{eqnarray}
 Moreover, since $\theta=3$,
@@ -159,7 +159,7 @@ $\z{0}{1}{n},\ldots,\z{n-1}{1}{n}$ -- this observation will later prove useful.
 The Boltzmann probability
 $P[d_{BP}(S,S^*) = k]$
 that a secondary structure $S$ has base pair distance $k$ from the initial
-structure $S^*$ can be defined from the partition function by
+structure \strSt can be defined from the partition function by
 \[
 %p(k) :=\frac{{\bf Z}^k}{{\bf Z}}.
 p(k) :=\frac{\z{k}{1}{n}}{\z{}{1}{n}}.
@@ -167,13 +167,13 @@ p(k) :=\frac{\z{k}{1}{n}}{\z{}{1}{n}}.
 By graphing the probabilities $p_k$ as a function of $k$,
 we expect to see one or more peaks at base pair distance $k$ when
 there is a meta-stable (low energy) structure $S$
-at base pair distance $k$ from $S^*$.
-See Figure~1 for an illustration.
+at base pair distance $k$ from \strSt.
+See Figure 1 for an illustration.
 
 \subsection*{Recursions for structural neighbors}
 
-For the rest of the paper, we consider both $\seq$ as well as the
-secondary structure $S^*$ on $\seq$ to be fixed. We now recall the
+For the rest of the paper, we consider both \seq as well as the
+secondary structure \strSt on \seq to be fixed. We now recall the
 recursions from Freyhult et al. \cite{Freyhult.ab05} to determine
 the partition function $\z{k}{i}{j}$ with
 respect to the Nussinov-Jacobson
@@ -182,10 +182,10 @@ $-1$ times the number of base pairs; i.e. $E_0(S) = -1 \cdot |S|$.
 Although we describe here the recursions for the Nussinov-Jacobson
 model, for the sake of
 simplicity of exposition, both {\tt RNAbor}
-\cite{Freyhult.ab05} as well as our current software {\tt FFTbor},
+\cite{Freyhult.ab05} as well as our current software \fftbor,
 concern the Turner energy model, consisting of free energy parameters for
 stacked bases, hairpins, bulges, internal loops and multiloops. The full
-recursions for {\tt FFTbor} are described for the
+recursions for \fftbor are described for the
 the Turner energy model in the appendix.
 
 The base case for $\z{k}{i}{j}$ is given by
@@ -193,8 +193,8 @@ The base case for $\z{k}{i}{j}$ is given by
   \z{0}{i}{j} = 1,\, \mbox{ for $i \le j$,}
   \label{eq:Zinit1}
 \end{equation}
-since the only $0$-neighbor to a structure $S^*$
-is the structure $S^*$ itself, and
+since the only $0$-neighbor to a structure \strSt
+is the structure \strSt itself, and
 \begin{equation}
   \z{k}{i}{j} = 0,\, \mbox{for $k > 0$, $i \le j \leq
     i+\theta$},
@@ -211,7 +211,7 @@ $\z{k}{i}{j}$ for $k > 0$ and $j > i+\theta$ is
   \exp(-E_0(r,j)/RT) \cdot \z{w}{i}{r-1} \z{w'}{r+1}{j-1},
   \label{eq:N}
 \end{equation}
-where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence $\seq$,
+where $E_0(r,j) = -1$ if positions $r,j$ can pair in sequence \seq,
 and otherwise $E_0(r,j) = +\infty$. Additionally,
 $b_0 = 1$ if $j$ is base-paired
 in $S^*_{[i,j]}$ and $0$ otherwise, and
@@ -235,26 +235,26 @@ $(r,j)$.
 
 \section*{Methods}
 
-Given RNA sequence $\seq$ and compatible initial structure $S^*$,
+Given RNA sequence \seq and compatible initial structure \strSt,
 we define the {\em polynomial}
 \begin{eqnarray}
-\label{eqn:polynomialYann}
+\label{eq:polynomialYann}
 \Z(x) = \sum_{k=0}^n c_k x^k
 \end{eqnarray}
 where coefficients $c_k=\z{k}{1}{n}$. Moreover, because of
-(\ref{eqn:upperBound}) and the fact that the minimum number of
+(\ref{eq:upperBound}) and the fact that the minimum number of
 unpaired bases in a hairpin loop $\theta$ is $3$, we know that $c_n=0$,
 so that $\Z(x)$ is a polynomial of degree strictly less than $n$.
 If we evaluate the polynomial $\Z(x)$ for $n$ distinct values
 \begin{eqnarray}
-\label{eqn:ZofX}
+\label{eq:ZofX}
 \Z(a_1) = y_1,\ldots, \Z(a_{n}) = y_{n},
 \end{eqnarray}
 then the Lagrange polynomial interpolation formula guarantees that
 $\Z(x) = \sum_{k=1}^n y_k P_k(x)$, where the polynomials $P_k(x)$ have degree
 at most $n-1$ and are given by the Lagrange formula
 \begin{eqnarray}
-\label{eqn:LagrangeInterpolation}
+\label{eq:LagrangeInterpolation}
 P_k(x) = \frac{\prod_{i\ne k} (x-x_i)}{\prod_{i \ne k} (x_k-x_i)}.
 \end{eqnarray}
 Since the polynomials $P_k(x)$ can be explicitly computed, it follows that
@@ -275,8 +275,8 @@ astronomically large values of the partition functions
 $\z{k}{1}{n}$, for $0 \leq k < n$. After many unsuccessful
 approaches including scaling (see Supplementary Information),
 we obtained excellent results by
-interpolating the polynomial $p(x)$, defined in equation~(\ref{eqn:PofX}),
-rather than the polynomial $\Z(x)$, defined in equation~(\ref{eqn:ZofX}),
+interpolating the polynomial $p(x)$, defined in equation~(\ref{eq:PofX}),
+rather than the polynomial $\Z(x)$, defined in equation~(\ref{eq:ZofX}),
 and performing interpolation with the Fast Fourier Transform (FFT) \cite{cormen}
 where $\alpha_0,\ldots,\alpha_{n-1}$ are
 chosen to be $n$th complex roots of unity,
@@ -284,25 +284,25 @@ $\alpha_k = e^{\frac{2 \pi k}{n}}$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
 time, rather than the cubic time required by using the Lagrange formula
-(\ref{eqn:LagrangeInterpolation}) or by Gaussian elimination. Fewer
+(\ref{eq:LagrangeInterpolation}) or by Gaussian elimination. Fewer
 numerical operations implies increased numerical stability in our application.
 Details now follow.
 
 \subsection*{Recursions to compute the polynomial $\Z_{i,j}(x)$}
 \label{section:recursionsForPolynomialZij}
 
-Given an initial secondary structure $S^*$ of a
-given RNA sequence $\seq$, our goal is to compute
+Given an initial secondary structure \strSt of a
+given RNA sequence \seq, our goal is to compute
 \begin{align}
-\label{eqn:defZk}
+\label{eq:defZk}
 \z{k}{1}{n} &= \sum_{\substack{S \text{ such that }\\ d_{BP}(S,S^*)=k}}
 e^{\frac{-E_0(S)}{RT}}
 \end{align}
-where $S$ can be any structure compatible with $\seq$.
+where $S$ can be any structure compatible with \seq.
 As previously mentioned, the recurrence relation for {\tt RNAbor}
 with respect to the Nussinov energy model $E_0$ is
 \begin{align}
-\label{eqn:RNAborNussRecursion}
+\label{eq:RNAborNussRecursion}
 \z{k}{i}{j} &= \z{k-b_0}{i}{j-1} + \sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}\left(e^{\frac{-E_0(r,j)}{RT}}\sum_{w+w'=k-b(r)}
 \z{w}{i}{r-1}  \z{w'}{r+1}{j-1} \right)
 \end{align}
@@ -313,7 +313,7 @@ $b(r)=d_{BP}(S^*_{[i,j]}, S^*_{[i,r-1]} \cup S^*_{[r+1,j-1]} \cup\{(r,j)\})$.
 The following theorem shows that an analogous recursion can be used to compute
 the {\em polynomial} $\Z_{i,j}(x)$ defined by
 \begin{eqnarray}
-\label{eqn:defZijpolynomial}
+\label{eq:defZijpolynomial}
 \Z_{i,j}(x) = \sum_{k=0}^n c_k(i,j) x^k
 \end{eqnarray}
 where
@@ -323,7 +323,7 @@ e^{\frac{-E_0(S)}{RT}}.
 \]
 Here, in the summation, $S$ runs over structures on $s_i,\ldots,s_j$, which
 are $k$-neighbors of the restriction $S^*_{[i,j]}$ of initial structure
-$S^*$ to interval $[i,j]$, and
+\strSt to interval $[i,j]$, and
 $E_0(S)=-1 \cdot |S|$ denotes the Nussinov-Jacobson energy of $S$.
 \medskip
 
@@ -339,7 +339,7 @@ where
 Then  for $i\leq j \leq i+\theta$, $\Z_{i,j}(x)=1$ and for
 $j>i+\theta$ we have the recurrence relation
 \begin{eqnarray}
-\label{eqn:polynomialRecursionNussJac}
+\label{eq:polynomialRecursionNussJac}
 \Z_{i,j}(x) &= \Z_{i,j-1}(x) \cdot x^{b_0} +
 \sum_{\substack{s_r s_j \in \mathbb{B},\\i\le r<j}}
 \left(e^{\frac{-E_0(r,j)}{RT}}\cdot
@@ -354,8 +354,8 @@ $b(r)=d_{BP}(S^*_{[i,j]}, S^*_{[i,r-1]} \cup S^*_{[r+1,j-1]} \cup\{(r,j)\})$.
 First, some notation is necessary. Recall that if $F$ is an arbitrary
 polynomial [resp. analytic] function, then $[x^k] F(x)$
 denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
-Taylor expansion of $F$] -- for instance, in equation~(\ref{eqn:PofX}),
-$[x^k]p(x) = p_k$, and in equation~(\ref{eqn:ZofX}), $[x^k]\Z(x) = c_k(i,j)$.
+Taylor expansion of $F$] -- for instance, in equation~(\ref{eq:PofX}),
+$[x^k]p(x) = p_k$, and in equation~(\ref{eq:ZofX}), $[x^k]\Z(x) = c_k(i,j)$.
 
 By definition, it is clear that $\Z_{i,j}(x)=1$ if $i\leq j \leq i+\theta$,
 where we recall that $\theta = 3$ is the minimum number of unpaired bases in
@@ -384,7 +384,7 @@ Instead of explicitly performing polynomial expansion in {\em variable} $x$,
 we instantiate $x$ to a fixed complex number $\alpha \in \mathbb{C}$, and apply
 the following recursion for this instantiation:
 \begin{eqnarray}
-\label{eqn:RNAborNussRecursionInstantiated}
+\label{eq:RNAborNussRecursionInstantiated}
 \Z_{i,j}(\alpha) &= &\Z_{i,j-1}(\alpha) \cdot \alpha^{b_0} +
 \sum_{\substack{(s_r,s_j) \in \mathbb{B},\\i\le r<j}}
 \left(e^{\frac{-E_0(r,j)}{RT}}\cdot
@@ -397,7 +397,7 @@ values $\Z(\alpha_0),\ldots, \Z(\alpha_{n-1})$, each time re-using the
 $O(n^2)$ space for the next computation of $\Z(\alpha_k)$. It follows that
 the computation resources used to determine the (column) vector
 \begin{eqnarray}
-\label{eqn:defY}
+\label{eq:defY}
 {\bf Y} = (y_0,\ldots,y_{n-1})^T =
 \left(
 \begin{array}{l}
@@ -458,18 +458,18 @@ On page 837 of  \cite{cormen}, it is shown that the
 $(i,j)$ entry of $V_n^{-1}$ is $\frac{\omega^{-j i}}{n}$
 and that
 \begin{eqnarray}
-\label{eqn:ajdef}
+\label{eq:ajdef}
 a_j &=&\frac{1}{n} \sum_{k=0}^{n-1} y_k \omega^{-kj}
 \end{eqnarray}
 for $j=0,\ldots,n-1$.
 
-Since we defined $\bf Y$ in (\ref{eqn:defY}) by ${\bf Y} =
+Since we defined $\bf Y$ in (\ref{eq:defY}) by ${\bf Y} =
 (y_0,\ldots,y_{n-1})^T$, where
 $y_0=\Z(\alpha_0),\ldots, y_{n-1}=\Z(\alpha_{n-1})$ and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{n})$, it follows that the coefficients
 $c_k=\z{k}{1}{n}$ in the polynomial
 $\Z(x) = c_0 + c_1 x + \cdots + c_{n-1} x^{n-1}$ defined in
-(\ref{eqn:polynomialYann}) can be computed, at least in principle,
+(\ref{eq:polynomialYann}) can be computed, at least in principle,
 by using the FFT. It turns out, however, that the values of
 $\z{k}{1}{n}$ are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
@@ -477,42 +477,42 @@ that exceed $56$ (data not shown).
 Nevertheless, our approach can be modified as follows.
 Define $\bf Y$ by ${\bf Y} = (y_1,\ldots,y_n)^T$, where
 $y_1=\frac{\Z(\alpha_1)}{Z},\ldots, y_{n}=\frac{\Z(\alpha_{n})}{Z}$, and
-$Z$ is the partition function defined in (\ref{eqn:mcCaskillPartitionFun}).
+$Z$ is the partition function defined in (\ref{eq:mcCaskillPartitionFun}).
 Using the FFT to compute the inverse DFT, it follows from
-(\ref{eqn:ajdef}) that we can compute the probabilities $p_0,\ldots,p_{n-1}$
+(\ref{eq:ajdef}) that we can compute the probabilities $p_0,\ldots,p_{n-1}$
 that are coefficients of the polynomial
 $p(x)=p_0+p_1 x + \cdots + p_{n-1}x^{n-1}$
-defined in equation~(\ref{eqn:PofX}). For genomics applications, we are
+defined in equation~(\ref{eq:PofX}). For genomics applications, we are
 only interested in the $m$ most significant digits of each $p_k$, as described
 in the pseudocode below.
 \medskip
 
 \noindent
-{\sc Algorithm} for {\tt FFTbor}\hfill\break
+{\sc Algorithm} for \fftbor\hfill\break
 This pseudocode computes the $m$ most significant digits
 of probabilities $p_k = \frac{\z{k}{1}{n}}{{\bf Z}}$. \hfill\break
 {\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and initial secondary
-structure $S^*$ of $\seq$, and integer $m$. \hfill\break
+structure \strSt of \seq, and integer $m$. \hfill\break
 {\sc Output:} Probabilities $p_k=\z{k}{1}{n}/{\bf Z}$ to $m$ significant digits for $k=0,\ldots,n-1$. \hfill\break
 \smallskip
 \mverbatim
 1.  generate roots of unity $\omega^k$ for $k=0,\ldots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
 2.  note that the partition function ${\bf Z}=y_0=\Z(\omega^0)$
 3.  for $k=0$ to $n-1$
-4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eqn:RNAborNussRecursionInstantiated})
+4.    compute $y_k = \Z(\omega^k)$ using recursion (\ref{eq:RNAborNussRecursionInstantiated})
 5.    $y_k = 10^m \cdot \frac{y_k}{{\bf Z}}$ //normalize $y_k$
-6.  compute $P = (p_0,\ldots,p_{n-1})^T$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eqn:ajdef})
+6.  compute $P = (p_0,\ldots,p_{n-1})^T$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eq:ajdef})
 7.  for $k=0$ to $n-1$
 8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
 9.    //truncate to $m$ most significant digits
 |mendverbatim
 \medskip
 
-\subsubsection*{Speed-up in our implementation of {\tt FFTbor}}
+\subsubsection*{Speed-up in our implementation of \fftbor}
 
 In this subsection, we show that we need only evaluate the polynomial
 $\Z(x)$, as defined in
-equation~(\ref{eqn:polynomialYann}), for $n/2$ of the complex $n$th roots
+equation~(\ref{eq:polynomialYann}), for $n/2$ of the complex $n$th roots
 of unity. It is first necessary to recall the definition of complex
 conjugate.
 Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
@@ -522,7 +522,7 @@ $i = \sqrt{-1}$,  then $\overline{z} = a-bi$.
 
 \noindent
 {\sc Lemma 1:} If $\Z(x)$ is the complex polynomial defined in
-equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
+equation~(\ref{eq:polynomialYann}), then for any complex $n$th root of
 unity $\alpha$, it is the case that $\Z(\overline{\alpha}) =
 \overline{\Z(\alpha)}$. In other words, if $\alpha$ is a complex $n$th root
 of unity of the form $a+bi$, where $a,b \in \mathbb{R}$ and $b>0$, and
@@ -555,7 +555,7 @@ $c_k\in \mathbb{R}$ are real numbers representing the partition function
 $\z{k}{1}{n}$ over
 all secondary structures of a given RNA sequence $s_1,\ldots,s_n$,
 whose base pair distance from initial structure
-$S^*$ is $k$. Thus, in order to prove the lemma, it suffices to show
+\strSt is $k$. Thus, in order to prove the lemma, it suffices to show
 that for all values $k=0,\ldots,n-1$, if $a+bi$ is a complex $n$th
 root of unity, where $a,b \in \mathbb{R}$
 and $b>0$, and if $(a+bi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
@@ -594,13 +594,13 @@ many of the complex $n$th roots of unity -- namely, those of the form
 $a+bi$, where $b \geq 0$. The remaining values of $\Z(x)$ are obtained by
 taking conplex conjugates of the first $n/2$ values. This, along with a
 precomputation of powers of the complex $n$th roots of unity, leads to an
-enormous performance speed-up in our implementation of {\tt FFTbor}.
+enormous performance speed-up in our implementation of \fftbor.
 
 \section*{Results}
-\subsection*{Applications of {\tt FFTbor}}
+\subsection*{Applications of \fftbor}
 \label{section:applications}
 
-In this section, we consider two applications of {\tt FFTbor}:
+In this section, we consider two applications of \fftbor:
 {\em (i)} correlation between kinetic folding speed and the {\em ruggedness}
 of the energy landscape near the minimum free energy structure,
 {\em (ii)} computational detection of riboswitch
@@ -608,25 +608,25 @@ expression platform candidates.
 
 \subsubsection*{Kinetic folding speed and energy landscape ruggedness}
 
-The output of {\tt FFTbor}, as shown in
-Figure~2, is a probability distribution,
+The output of \fftbor, as shown in
+Figure 2, is a probability distribution,
 where the $x$-axis represents the base pair distance from an arbitrary,
-but fixed secondary structure $S^*$, and the $y$-axis represents the
+but fixed secondary structure \strSt, and the $y$-axis represents the
 Boltzmann probability $p(k) = \frac{Z_k}{Z}$ that a secondary structure
-has base pair distance $k$ from $S^*$. Arguably, this probability distribution
+has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
-landscape near structure $S^*$,
+landscape near structure \strSt,
 of the sort artistically rendered in the well-known
-energy landscape depicted in Figure~1  of \cite{Wolynes.ptam05}.
-In the sequel, we may call the {\tt FFTbor} probability distribution a
+energy landscape depicted in Figure 1  of \cite{Wolynes.ptam05}.
+In the sequel, we may call the \fftbor probability distribution a
 {\em structural neighbor profile}, or simply {\em structural profile}
-$S^*$.
+\strSt.
 A hypothesis behind theoretical work in biomolecular folding theory in
 \cite{Bryngelson.p95}
 is that kinetic folding slows down as the energy landscape becomes more
 {\em rugged}. This is borne out in our computational experiments for RNA
-using {\tt FFTbor}, as reported
-in Figure~2.
+using \fftbor, as reported
+in Figure 2.
 
 We randomly chose two TPP riboswitch
 aptamers from the seed alignment for
@@ -639,7 +639,7 @@ nt sequence
 UAUAAGUCCA AGGGGUGCCA AUUGGCUGAG AUGGUUUUAA CCAAUCCCUU
 UGAACCUGAU CCGGUUAAUA CCGGCGUAGG AAUGGAUUUU CUCUACAGC.
 Rfam consensus and minimum free energy structures for both sequences are
-depicted in Figure~3.
+depicted in Figure 3.
 Despite the fact that there is no sequence homology according to
 pairwise BLAST \cite{BLAST}, this figure clearly demonstrates that
 consensus and
@@ -660,26 +660,26 @@ AACY022101973.1/389-487, then
 $T_0 \setminus T_1$ has $1$ base pair, and $T_1\setminus T_0$ has $5$
 base pairs.
 
-We ran {\tt FFTbor} on each of the TPP riboswitch aptamer
+We ran \fftbor on each of the TPP riboswitch aptamer
 sequences, with the MFE structure of each
-sequence taken as the initial structure $S^*$ for that sequence.  For the
-first sequence, BX842649.1/277414-277318, the {\tt FFTbor} output
+sequence taken as the initial structure \strSt for that sequence.  For the
+first sequence, BX842649.1/277414-277318, the \fftbor output
 suggests that there are low energy structures
 at a distance from the MFE structure, which might compete with the MFE
 structure and hence slow the kinetics of folding. In contrast, for the
-second sequence, AACY022101973.1/389-487, the {\tt FFTbor} output suggests
+second sequence, AACY022101973.1/389-487, the \fftbor output suggests
 that there are no such competing low energy structures, hence
 the second sequence should fold more quickly than the first.
 
 To test the hypothesis that folding is slower for rugged energy landscapes,
-we ran the kinetic folding software, {\tt Kinfold} \cite{flamm},
+we ran the kinetic folding software, \kinfold \cite{flamm},
 on each of the two TPP riboswitch aptamer sequences,
 BX842649.1/277414-277318 and AACY022101973.1/389-487,
 to determine the {\em mean first passage time} (MFPT) to
 fold into the MFE structure, when starting from the empty structure.
 In this computational
 experiment, we took MFPT to be the average number of Monte Carlo steps
-taken by {\tt Kinfold}, each step consisting of the addition or removal
+taken by \kinfold, each step consisting of the addition or removal
 of a single base pair (or shift -- see \cite{flamm}), to fold the
 empty structure into the MFE
 structure, where the average was taken over $30$ runs, with an absolute
@@ -691,7 +691,7 @@ passage time of $311,075.06$ steps for this sequence.
 The second sequence, AACY022101973.1/389-487, converged within $500,000$
 steps in 29 out of 30 runs, and we found a mean first passage time of
 $61,575.69$ steps for this sequence. From computational experiments of this
-type, it is suggestive that {\tt FFTbor} may prove useful in synthetic
+type, it is suggestive that \fftbor may prove useful in synthetic
 biology,
 where one would like to design rapidly folding RNA molecules that
 fold into a designated target structure.\footnote{See
@@ -705,21 +705,21 @@ solution of RNA inverse folding, {\tt RNAiFold}
 (submitted, \url{http://bioinformatics.bc.edu/clotelab/RNAiFold/}),
 to output a list of sequences,
 whose minimum free energy structure is a designated target structure.
-Subsequently, using {\tt FFTbor}, one could prioritize sequences in terms
-of {\tt FFTbor} structural profile, on the grounds that sequences with a profile
-similar to the right panel of Figure~2
+Subsequently, using \fftbor, one could prioritize sequences in terms
+of \fftbor structural profile, on the grounds that sequences with a profile
+similar to the right panel of Figure 2
 are likely to fold more rapidly than those whose profile resembles
-the left panel of Figure~2.
+the left panel of Figure 2.
 
 In order to more systematically determine the relation between kinetic
 folding speed and the ruggedness of an energy landscape near the MFE structure,
 we need to numerically quantify ruggedness. To this end, in the following
 we define the notion of {\em expected base pair distance} to a designated
-structure. Let $S^*$ be an arbitrary secondary structure of the RNA sequence
+structure. Let \strSt be an arbitrary secondary structure of the RNA sequence
 $\seq = a_1,\dots,a_n$.
-The expected base pair distance to $S^*$ is defined by
+The expected base pair distance to \strSt is defined by
 \begin{eqnarray}
-\label{eqn:expectedBasePairDist}
+\label{eq:expectedBasePairDist}
 E[ \{ d_{\mbox{\sc bp}}(S,S^*): S \in \mathbb{S}(a_1,\ldots,a_n)\} ]  =
 \sum_{S} P(S) \cdot d_{\mbox{\sc bp}}(S,S^*)
 \end{eqnarray}
@@ -727,19 +727,19 @@ where
 $\mathbb{S}(a_1,\ldots,a_n)$ denotes the set of secondary structures for
 $\seq = a_1,\dots,a_n$, $P(S) = \frac{\exp(-E(S)/RT)}{Z}$ is the Boltzmann
 probability of $S$, and
-$d_{\mbox{\sc bp}}(S,S^*)$ denotes base pair distance between $S$ and $S^*$.
-If we run {\tt FFTbor} on an input sequence $\seq$ and secondary structure
-$S^*$, then clearly
+$d_{\mbox{\sc bp}}(S,S^*)$ denotes base pair distance between $S$ and \strSt.
+If we run \fftbor on an input sequence \seq and secondary structure
+\strSt, then clearly
 $E[ \{ d_{\mbox{\sc bp}}(S,S^*): S \in \mathbb{S}(a_1,\ldots,a_n)\} ]  =
 \sum_{k} k \cdot p(k)$, where $p(k)=\frac{Z_k}{Z}$, obtained from the
-program output.  If $S^*$ is the empty structure, then {\tt FFTbor} output
+program output.  If \strSt is the empty structure, then \fftbor output
 is simply the probability distribution of the number of base pairs per
 secondary structure, taken over the Boltzmann ensemble of all structures.
 
 For the benchmarking assay, we took all 61 selenocysteine insertion sequence
 (SECIS) sequences from the seed alignment of Rfam family RF00031
 \cite{Gardner.nar11}. Average length was $64.32 \pm 2.83$ nt.
-For each sequence, we ran both {\tt FFTbor} and a Monte Carlo
+For each sequence, we ran both \fftbor and a Monte Carlo
 folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
 Using the Monte Carlo algorithm, we
 determined the mean first passage time (MFPT), defined as the average
@@ -752,33 +752,33 @@ by using the Hartigan-Hartigan {\em dip} test of unimodality
 expected base pair distance from MFE structure, total variation distance
 between FFTbor output and the exponential distribution estimated by
 the method of moments \cite{zar:biostatistics}, etc.,
-we ran {\tt FFTbor}
+we ran \fftbor
 when starting from the empty structure (rather than the MFE structure)
 as initial structure.
-As mentioned above, in this case, {\tt FFTbor} output is simply
+As mentioned above, in this case, \fftbor output is simply
 the probability distribution
 for the number of base pairs per structure, taken over the ensemble
 of all secondary structure for the input RNA
 sequence. Surprisingly, we found that there is a significant
 correlation of  $0.48436192$ with one-tailed
 $p$-value of $0.00018249$ between the
-standard deviation of the {\tt FFTbor} output (when starting from the
+standard deviation of the \fftbor output (when starting from the
 empty structure) and logarithm base $10$ of the mean first passage time.
-Table~1 and Figure~4 explain this phenomenon in detail.
+Table~1 and Figure 4 explain this phenomenon in detail.
 
-In the right panel of Figure~4, we
-applied {\tt FFTbor} to each of the two randomly chosen TPP riboswitch
+In the right panel of Figure 4, we
+applied \fftbor to each of the two randomly chosen TPP riboswitch
 aptamers BX842649.1/277414-277318 and AACY022101973.1/389-487, starting
 from the empty reference structure $S^*=\emptyset$.
-The mean for the {\tt FFTbor} structural profile near the empty
+The mean for the \fftbor structural profile near the empty
 structure is $mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
-standard deviation $\sigma$ for the {\tt FFTbor} structural profile
-is $\sigma_1=2.22528791$  [resp. $\sigma_2=1.98565959$], and the {\tt Kinfold} MFPT is
+standard deviation $\sigma$ for the \fftbor structural profile
+is $\sigma_1=2.22528791$  [resp. $\sigma_2=1.98565959$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
-AB030643.1/4176-4241 [resp.  AL645723.11/192421-192359]. This anecdotal evidence supports the hypothesis that small standard deviation in {\tt FFTbor} distribution is correlated with fast folding.
+AB030643.1/4176-4241 [resp.  AL645723.11/192421-192359]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
 
 Additionally, in following a suggestion of one of the anonymous referees, we randomized the TPP riboswitches BX842649.1/277414-277318 and AACY022101973.1/389-487 by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
-\cite{altschulErikson:dinucleotideShuffle}, and then applied {\tt FFTbor} to these sequences, starting from the empty structure.  The mean $\mu_1$ and standard deviation $\sigma_1$ for the {\tt FFTbor} distribution for randomized BX842649 are respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized AACY022101973 are $\mu_2= 24.39$ and $\sigma_2=24.00$. Running Kinfold, with a maximum of 500,000 steps with 30 replicates (as explained in the text), we found that for randomized BX842649, all 30 runs converged yielding a mean first passage time (MFPT) of 13022.58  with standard deviation of 15221.78. In contrast for randomized AACY022101973, only 15 out of 30 runs converged within 500,000 steps, and discounting these nonconvergent data, we obtain an average mean first passage time (MFPT) of 94446.93  with standard deviation of 157107.43. This additional test provides more anecdotal evidence supporting our hypothesis that small standard deviation $\sigma$ in FFTbor probability density is correlated with fast folding, as measured by MFPT.
+\cite{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these sequences, starting from the empty structure.  The mean $\mu_1$ and standard deviation $\sigma_1$ for the \fftbor distribution for randomized BX842649 are respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized AACY022101973 are $\mu_2= 24.39$ and $\sigma_2=24.00$. Running Kinfold, with a maximum of 500,000 steps with 30 replicates (as explained in the text), we found that for randomized BX842649, all 30 runs converged yielding a mean first passage time (MFPT) of 13022.58  with standard deviation of 15221.78. In contrast for randomized AACY022101973, only 15 out of 30 runs converged within 500,000 steps, and discounting these nonconvergent data, we obtain an average mean first passage time (MFPT) of 94446.93  with standard deviation of 157107.43. This additional test provides more anecdotal evidence supporting our hypothesis that small standard deviation $\sigma$ in FFTbor probability density is correlated with fast folding, as measured by MFPT.
 %
 %The dinucleotide shuffle for BX842649 was
 %AAUGAGCCAAGAAAUGAUUAUAUUGAAAUUCUGUAGAACGCACUGACCCAUGGGAAAGCUGUAGCGACUGGAAGAGCCCGAGUCGGGAGGACUACUU
@@ -829,10 +829,10 @@ the Shine-Dalgarno sequence \cite{tuckerBreaker:review}. Determination of
 the precise location and structure of the expression platform is difficult
 due to low conserved sequence identity (in-house computations, data not shown).
 Although this problem remains open, we report here how
-{\tt FFTbor} may provide help to biologists in the selection and
+\fftbor may provide help to biologists in the selection and
 prioritization of riboswitch candidates.
 
-Figure~5 depicts the gene OFF structure of the
+Figure 5 depicts the gene OFF structure of the
 xpt G-box purine riboswitch in {\em B. subtilis}, as determined by
 inline-probing -- this structure was taken from
 Figure 1 of \cite{breaker:Riboswitch2}.
@@ -843,12 +843,12 @@ base pairs could be added. By using
 can be found on the complement strand of GenBank accession number
 CP002906.1/c2165302-2165142 in
 complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
-Figure~6 depicts the result of
+Figure 6 depicts the result of
 three computational experiments with FFTbor. The left panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
 \begin{eqnarray}
-\label{eqn:xpt1}
+\label{eq:xpt1}
 %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGAGCAAUGGAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
 \bf
 .((((((((...(((((((.......)))))))........((((((.......))))))..))))))))........(((((........)))))............((((((((((((((.......)))))))))))))).
@@ -857,17 +857,17 @@ the expected base pair distance to the following secondary structure
 as a function of window offset, where window size equals the size of this
 target structure. This structure was
 obtained by removing all leading and trailing unpaired positions
-from the structure depicted in Figure~5,
+from the structure depicted in Figure 5,
 except for the leftmost [resp. rightmost] unpaired position
 adjacent to the leftmost [resp. rightmost] base-paired position.
 The reason for removal of the leading and trailing unpaired positions was
 that the structure of \cite{breaker:Riboswitch2}, depicted in
-Figure~5, is clearly only partial, as earlier
+Figure 5, is clearly only partial, as earlier
 mentioned.  The center panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
 \begin{eqnarray}
-\label{eqn:xpt2}
+\label{eq:xpt2}
 %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGA
 \bf
 .((((((((...(((((((.......)))))))........((((((.......))))))..)))))))).
@@ -878,7 +878,7 @@ target {\em aptamer} structure. Similarly, the right panel displays
 the expected base pair distance to the following secondary structure
 \begin{small}
 \begin{eqnarray}
-\label{eqn:xpt3}
+\label{eq:xpt3}
 %GAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
 \bf
 .(((((........)))))............((((((((((((((.......)))))))))))))).
@@ -886,29 +886,29 @@ the expected base pair distance to the following secondary structure
 \end{small}
 as a function of window offset, where window size equals the size of this
 target {\em expression platform} structure.
-Figure~6 determines the precise location of the
+Figure 6 determines the precise location of the
 xpt riboswitch, both aptamer and expression platform.
 
 If the biologically functional target structure is unknown, one can
 instead attempt a similar moving window computation, where the target
 structure is taken to be the minimum free energy structure of the
 current window contents. In this case, one may hope to determine a
-bimodal distribution, as displayed in Figure~7.
+bimodal distribution, as displayed in Figure 7.
 Given an input RNA sequence, or genomic region, the
 web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
 creates a movie as follows, described here for the xpt riboswitch
 previously discussed.  We extracted the downstream region of
 Taking the
-161 nt xpt G-box purine riboswitch described in Figure~5,
+161 nt xpt G-box purine riboswitch described in Figure 5,
 with GenBank accession number CP002906.1/c2165302-2165142, we extended
 to a sequence of length 200 nt, by appending flanking
-downstream genomic nucleotides.  Running {\tt FFTbor} on all
+downstream genomic nucleotides.  Running \fftbor on all
 prefixes of the resulting sequence of lengths
 $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
 \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
-Figure~5 displays the output of {\tt FFTbor} on the
+Figure 5 displays the output of \fftbor on the
 166 nt prefix, clearly showing a bimodal distribution. Attempting to
-automate the identification of non-unimodal {\tt FFTbor} output, we have
+automate the identification of non-unimodal \fftbor output, we have
 applied the Hartigan-Hartigan dip-test \cite{hartiganDipTest},
 implemented in {\tt R}; however,
 the dip-test appears to be too sensitive, in that a probability distribution
@@ -917,7 +917,7 @@ it appears overwhelmingly to be unimodal (data not shown). It is for this
 reason that the web server
 \url{http://bioinformatics.bc.edu/clotelab/FFTbor} produces a movie of
 prefixes, where the user can start/stop the movie,
-move forward/backward, or download all raw data output by {\tt FFTbor}.
+move forward/backward, or download all raw data output by \fftbor.
 
 %---------------NOT USED ------------------------------
 %In a separate computational experiment, we used
@@ -932,7 +932,7 @@ move forward/backward, or download all raw data output by {\tt FFTbor}.
 %regions NC000964 complement 625839..626239, NC000964 625768..626168,
 %NC000964 693610..694010, NC000964 697553..697953,
 %NC000964 complement 2319222..2319622, NC000964 4004369..4004769.
-%We found that {\tt FFTbor} output was clearly bimodal on only three of the six
+%We found that \fftbor output was clearly bimodal on only three of the six
 %regions. Figure
 %---------------------------------------------
 
@@ -948,29 +948,29 @@ defined by
 \[
 \delta(P,Q) = \frac{\sum_{x \in \Omega} |p_x - q_x|}{2}.
 \]
-The {\em density of states} for an RNA sequence $\seq$ with respect to
-an initial structure $S^*$ of $\seq$ is defined to be the probability
+The {\em density of states} for an RNA sequence \seq with respect to
+an initial structure \strSt of \seq is defined to be the probability
 distribution
 $P = (p_0,\ldots,p_{n-1})$ where $p_k = \z{k}{1}{n}/{\bf Z}$.
 In all our tests, for RNA of length up to 400 nt, we found the total
 variation distance between $P$, as computed to 6 decimal places by
-{\tt RNAbor} and by {\tt FFTbor}, to be $0$. It follows that {\tt FFTbor}
+{\tt RNAbor} and by \fftbor, to be $0$. It follows that \fftbor
 can reliably be used in place of {\tt RNAbor} to determine Boltzmann
 probabilities $p(k) = P\left( d_{BP}(S,S^*)=k \right)$.
 
-\subsubsection*{Run time comparison of {\tt RNAbor} and {\tt FFTbor}}
+\subsubsection*{Run time comparison of {\tt RNAbor} and \fftbor}
 
 As visible from the defining recursions, the algorithmic time complexity of
 {\tt RNAbor} is $O(n^5)$ and space complexity is $O(n^3)$, where $n$ is
 the length of input RNA sequence. In contrast, the time complexity of
-{\tt FFTbor} is $O(n^4)$ and space complexity is $O(n^2)$.
-Figure~8 displays run time curves for both
-{\tt RNAbor} and {\tt FFTbor}, when the initial structure $S^*$ is
+\fftbor is $O(n^4)$ and space complexity is $O(n^2)$.
+Figure 8 displays run time curves for both
+{\tt RNAbor} and \fftbor, when the initial structure \strSt is
 taken to be either the empty structure or the minimum free energy
 (MFE) structure.
 
 Here, we compare the run time of {\tt RNAbor} \cite{Freyhult.b07} and
-the (unparallelized version of) {\tt FFTbor}, using
+the (unparallelized version of) \fftbor, using
 a Dell Power Edge 1950, 2 x Intel Xeon E5430 Quad
 core with 2.80 GHz and 16 GB RAM. For $n = 20,40,60,\ldots, 300$, in step
 size of 20 nt, we generated $n$ random RNA sequences of length $n$ with equal
@@ -980,36 +980,36 @@ $n$ were generated, while for values of $220 \leq n \leq 300$, only
 $10$ sequences of length $n$ were generated.
 RNA sequences larger than 300 nt were not tested,
 due to $O(n^3)$ memory constraints required by {\tt RNAbor}.
-For each RNA sequence, {\tt RNAbor} and {\tt FFTbor} were both run,
-each starting with empty initial structure $S^*$, and also
-with initial sequence $S^*$ taken to be the MFE structure.
+For each RNA sequence, {\tt RNAbor} and \fftbor were both run,
+each starting with empty initial structure \strSt, and also
+with initial sequence \strSt taken to be the MFE structure.
 Each data point in the table comprises the average run time for three
 independent evaluations.
 
-\subsubsection*{OpenMP parallelization of {\tt FFTbor}}
+\subsubsection*{OpenMP parallelization of \fftbor}
 
 OpenMP is a simple and flexible
 multi-platform shared-memory parallel programming environment, that supports
 parallelizations of C/C++ code -- see \url{http://openmp.org/}.
 Using OpenMP primitives, we created multiple threads to evaluate the polynomial
 $\Z(x)$ on different complex $n$th roots of unity. The table in the left
-panel of Figure~9
+panel of Figure 9
 and Table~2 together present benchmarks,
 executed on
 a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
-of {\tt FFTbor} as a function of the number of cores.
-The table in Figure~9 describes average
-run time in seconds ($\pm$ one standard deviation) for running {\tt FFTbor}
+of \fftbor as a function of the number of cores.
+The table in Figure 9 describes average
+run time in seconds ($\pm$ one standard deviation) for running \fftbor
 on random RNA of length 200,250,300,400,450,500 with either 1 or 2 cores.
 Table~2 presents similar data for running
-{\tt FFTbor} on 2,3,6,4,12,15,20 cores.
-Although {\tt FFTbor} clearly has quartic $O(n^4)$ run time as a function of
+\fftbor on 2,3,6,4,12,15,20 cores.
+Although \fftbor clearly has quartic $O(n^4)$ run time as a function of
 RNA sequence length, least-squares fit
 of run times from
 Table~2 instead
 shows a quadratic
 run time for RNA sequences of length up to $500$ nt. There appears to be
-a {\em power law} dependence of {\tt FFTbor}
+a {\em power law} dependence of \fftbor
 speedup, as a function of number of cores. For instance, for random RNA of
 length 200 nt, least-squares fit of the data from the table yields
 a run time of $105.29 x^{-0.923}$ with  $R^2$ value of
@@ -1031,46 +1031,46 @@ on the complex $n$th roots of unity $1,e^{2 \pi i/n},\ldots,
 e^{2 \pi i (n-1)/n}$,
 where the coefficients $c_k=\z{k}{1}{n}$ are equal to the sum of
 Boltzmann factors over all secondary structures of a given RNA
-sequence, whose base pair distance to a given initial structure $S^*$
+sequence, whose base pair distance to a given initial structure \strSt
 is $k$.  Recall the definition of polynomial
 \begin{eqnarray}
 p(x) = \frac{\Z(x)}{\z{}{1}{n}} = \sum_{k=0}^n p_k x^k
 \end{eqnarray}
 obtained from $\Z(x)$, whose coefficients are Boltzmann
 probabilities $p_k=\frac{\z{k}{1}{n}}{\z{}{1}{n}}$ that a secondary
-structure has base pair distance $k$ to $S^*$.
+structure has base pair distance $k$ to \strSt.
 By using the fast Fourier transform to compute the inverse
 discrete transform, we can approximate  to $m$ decimal places the coefficients
 $p_k=\frac{\z{k}{1}{n}}{\z{}{1}{n}} =\frac{c_k}{\z{}{1}{n}}$ of $p(x)$, and
 thus the $m$ most significant positions of
 $c_k=\z{k}{1}{n}=p_k \cdot \z{}{1}{n}$. Interpolation is performed for
 $p(x)$, rather than $\Z(x)$, due to issues concerning numerical instability.
-The computational advantage of {\tt FFTbor} over its predecessor
+The computational advantage of \fftbor over its predecessor
 {\tt RNAbor} \cite{Freyhult.b07} is that
 the new algorithm runs in quartic time $O(n^4)$ and quadratic space
 $O(n^2)$, in contrast to the $O(n^5)$ run time and $O(n^3)$ space
 required by {\tt RNAbor}. We have additionally provided a
-parallelization of {\tt FFTbor} using OpenMP primitives.
+parallelization of \fftbor using OpenMP primitives.
 Additionally, we have
-described applications of {\tt FFTbor} to determine the
+described applications of \fftbor to determine the
 correlation between kinetic folding speed and the {\em ruggedness}
 of the energy landscape, and to predict the location of riboswitch
 expression platform candidates.
 
 It is important to point out that
 the algorithm and software {\tt RNAbor} is more general than
-that of {\tt FFTbor} -- in particular, {\tt RNAbor} not only computes the
+that of \fftbor -- in particular, {\tt RNAbor} not only computes the
 partition function values $\z{k}{1}{n}$, for all $0 \leq k \leq n$, but as
 well as computes the
 structures $S_k$, defined to be the minimum free energy structure over all
-$k$-neighbors of initial structure $S^*$.
-In contrast, {\tt FFTbor} only computes the $m$ most significant digits of
+$k$-neighbors of initial structure \strSt.
+In contrast, \fftbor only computes the $m$ most significant digits of
 the probabilities $p_k = \z{k}{1}{n}/{\bf Z}$, for $0 \leq k \leq n$, where
 by multiplication of $p_k$ by the partition function $Z=\z{}{1}{n}$,
 one obtains an approximation of the partition function values $\z{k}{1}{n}$.
-There is no possibility that {\tt FFTbor} can compute the structures $S_k$,
-nor can at present we see how to use {\tt FFTbor} to sample structures from
-the Boltzmann ensemble of structures having base pair distance $k$ from $S^*$.
+There is no possibility that \fftbor can compute the structures $S_k$,
+nor can at present we see how to use \fftbor to sample structures from
+the Boltzmann ensemble of structures having base pair distance $k$ from \strSt.
 
 In \cite{CloWalBehSte05,Waldispuhl.pcb08}, we introduced the a related
 {\em parametric} RNA structure algorithm, {\tt RNAmutants}, which computes
@@ -1084,19 +1084,19 @@ future, we intent to apply interpolation and the FFT to similarly provide a
 more efficient version of {\tt RNAmutants}. Nevertheless, this future,
 more efficient version will be incapable of efficiently sampling low
 energy structures over $k$-point mutants, analogous to the current
-differences between {\tt RNAbor} and {\tt FFTbor}.
+differences between {\tt RNAbor} and \fftbor.
 
 
 \section*{Acknowledgements}
 
-{\tt FFTbor} depends heavily on the
+\fftbor depends heavily on the
 use of the Fast Fourier Transform implementation FFTW of Frigo and Johnson
 \cite{FFTW05} at \url{http://www.fftw.org/}.
 
-%As well, {\tt FFTbor} accesses
+%As well, \fftbor accesses
 %free energy parameters from Vienna RNA Package \cite{hofacker:ViennaWebServer}.
 %Comparison of the output of
-%{\tt FFTbor} and {\tt paRNAss} \cite{Voss.b04} was compared for the set
+%\fftbor and {\tt paRNAss} \cite{Voss.b04} was compared for the set
 %of conformational switches made available at
 %\url{http://bibiserv.techfak.uni-bielefeld.de/parnass/examples.html}.
 
@@ -1129,7 +1129,7 @@ use of the Fast Fourier Transform implementation FFTW of Frigo and Johnson
 %\includegraphics[width=0.3\textwidth]{figure1A}
 %\includegraphics[width=0.3\textwidth]{figure1B}
 %\includegraphics[width=0.3\textwidth]{figure1C}
-\caption{{\tt FFTbor} output for the RNA attenuator for the
+\caption{\fftbor output for the RNA attenuator for the
 phenylalanyl-tRNA synthetase (pheST) operon in
 {\em E. coli} K-12 substr. DH10B, located adjacent to the
 phenylalanyl-tRNA synthetase operon leader, with GenBank accession code
@@ -1142,9 +1142,9 @@ CP000948.1/1887748-1887820 (complement).
 %CP000948.1/1887748-1887820 (complement).
 %-------------------
 The $x$-axis represents
-base pair distance to the minimum free energy structure $S^*$; $y$-axis
+base pair distance to the minimum free energy structure \strSt; $y$-axis
 represents Boltzmann probability $p(k)$ that a structure has base pair
-distance $k$ to $S^*$.
+distance $k$ to \strSt.
 {\em (Left)} Probability
 $P\left( d_{BP}(S,S^*) = k \right)$
 that base pair distance to MFE structure is $k$.
@@ -1162,10 +1162,10 @@ of probability that base pair distance to MFE structure is $k$.
 
 \begin{figure*}[!h]
 \centering
-%\includegraphics[width=0.45\textwidth]{figure2A}
+% \includegraphics[width=0.45\textwidth]{figure2A}
 %\includegraphics[width=0.45\textwidth]{figure2B}
 %
-\caption{Output from {\tt FFTbor} on two randomly selected
+\caption{Output from \fftbor on two randomly selected
 thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
 \cite{Gardner.nar11}. The $x$-axis represents base pair distance from the
 minimum free energy structure for each given sequence; the $y$-axis represents
@@ -1181,14 +1181,14 @@ folding process.
 The 99 nt sequence, AACY022101973.1/389-487 appears to have a smooth energy
 landscape near its MFE structure, with no distinct low energy structures
 to might compete with the MFE structure.
-Based on the {\tt FFTbor} output or {\em structural profile} near MFE
-structure $S^*$, one might expect
+Based on the \fftbor output or {\em structural profile} near MFE
+structure \strSt, one might expect
 folding time for the first sequence to increase due to competition from
 metastable structures, while one might expect the second sequence to have
 rapid folding time.
 %
 Computational Monte Carlo folding experiments bear out this fact.
-{\tt Kinfold} \cite{flamm} simulations clearly show that the second
+\kinfold \cite{flamm} simulations clearly show that the second
 sequence folds
 at least four times more quickly than the first sequence. See text for
 details.}
@@ -1251,8 +1251,8 @@ as shown in this figure.
 %\includegraphics[width=0.30\textwidth]{figure4C}
 %
 \caption{This figure represents the
-graphical output of {\tt FFTbor}, when the empty structure is chosen as
-initial structure $S^*$.
+graphical output of \fftbor, when the empty structure is chosen as
+initial structure \strSt.
 The $x$-axis represents the number of base pairs per structure,
 taken over the ensemble of all secondary structures for the given RNA
 sequence; the $y$-axis represents Boltzmann probability $p(k) = \frac{Z_k}{Z}$,
@@ -1274,18 +1274,18 @@ Among the 61 sequences in the seed alignment of RF00031,
 AB030643.1/4176-4241 was the fastest folder, while
 AL645723.11/192421-192359 was the slowest folder.
 {\em (Right)}
-Superimposition of output of {\tt FFTbor} for two TPP riboswitch aptamers: the
+Superimposition of output of \fftbor for two TPP riboswitch aptamers: the
 97 nt sequence BX842649.1/277414-277318 and the
 99 nt sequence AACY022101973.1/389-487, both obtained when
-taking the empty structure for the initial structure $S^*$.
-The mean $\mu$ for the {\tt FFTbor} structural profile near the empty
+taking the empty structure for the initial structure \strSt.
+The mean $\mu$ for the \fftbor structural profile near the empty
 structure is $23.0203$  [resp. $27.5821$], the
-standard deviation $\sigma$ for the {\tt FFTbor} structural profile
-is $2.22528791$  [resp. $1.98565959$], and the {\tt Kinfold} MFPT is
+standard deviation $\sigma$ for the \fftbor structural profile
+is $2.22528791$  [resp. $1.98565959$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
 AB030643.1/4176-4241 [resp.  AL645723.11/192421-192359].
 The right panel of this figure should be compared with
-Figure~2.
+Figure 2.
 These anecdotal results bear up the correlation between standard deviation
 $\sigma$ and logMFPT described in Table~1.
 }
@@ -1316,22 +1316,22 @@ from that in Figure 1A of \cite{breaker:Riboswitch2}.
 a function of window offset position in the $5'$ untranslated region (UTR)
 of the xpt gene of {\em B. subtilis}; i.e. GenBank accession code
 CP002906.1/c2165402-2165042 {\em B. subtilis} subsp. subtilis RO-NN-1.
-In a moving window application, {\tt FFTbor} computed the Boltzmann
+In a moving window application, \fftbor computed the Boltzmann
 probability $p(k)$ that secondary structures of the
 current window contents have base pair distance $k$ from the target
-(or initial) structure $S^*$. In each case, the size of the window was
-set to equal the length of $S^*$.
-{\em (Left)} Target structure $S^*$ comprises the entire secondary
-of the xpt riboswitch, as depicted in Figure~5, with the
+(or initial) structure \strSt. In each case, the size of the window was
+set to equal the length of \strSt.
+{\em (Left)} Target structure \strSt comprises the entire secondary
+of the xpt riboswitch, as depicted in Figure 5, with the
 exception that the leading and trailing unpaired positions were removed,
 as explained in the text -- see displayed dot bracket structure in
-(\ref{eqn:xpt1}).
-{\em (Center)} Target structure $S^*$ comprises only the aptamer
+(\ref{eq:xpt1}).
+{\em (Center)} Target structure \strSt comprises only the aptamer
 secondary structure, as displayed in dot bracket structure in
-(\ref{eqn:xpt2}).
-{\em (Right)} Target structure $S^*$ comprises only the expression platform
+(\ref{eq:xpt2}).
+{\em (Right)} Target structure \strSt comprises only the expression platform
 secondary structure, as displayed in dot bracket structure in
-(\ref{eqn:xpt3}). The number of points displayed on the $x$-axis differs
+(\ref{eq:xpt3}). The number of points displayed on the $x$-axis differs
 in each case, since the window size differs, as explained above.
 The very well-defined minimum in each panel corresponds to the exact
 location of the entire riboswitch (left panel), aptamer (center panel)
@@ -1373,15 +1373,15 @@ from $70,72,74,\ldots,200$.
 \begin{center}
 %\includegraphics[width=0.85\textwidth]{figure8}
 \end{center}
-\caption{Run times in seconds for {\tt RNAbor} and {\tt FFTbor}, on random RNA
+\caption{Run times in seconds for {\tt RNAbor} and \fftbor, on random RNA
 of length $20,40,60,\ldots,300$ in step size of 20 nt. Each algorithm
-was run with the empty initial structure $S^*$, see rows
-{\tt RNAbor} (empty), {\tt FFTbor} (empty), and with the minimum free
-energy structure as the initial structure $S^*$, see rows
-{\tt RNAbor} (MFE) and {\tt FFTbor} (MFE). Note that for both {\tt RNAbor}
-and {\tt FFTbor}, the run time increases when $S^*$ is the MFE structure,
+was run with the empty initial structure \strSt, see rows
+{\tt RNAbor} (empty), \fftbor (empty), and with the minimum free
+energy structure as the initial structure \strSt, see rows
+{\tt RNAbor} (MFE) and \fftbor (MFE). Note that for both {\tt RNAbor}
+and \fftbor, the run time increases when \strSt is the MFE structure,
 rather than the empty structure. Notice the radical improvement in the
-run time of {\tt FFTbor} over that of {\tt RNAbor}.
+run time of \fftbor over that of {\tt RNAbor}.
 }
 \label{fig:evanBenchmark}
 \end{figure*}
@@ -1395,7 +1395,7 @@ run time of {\tt FFTbor} over that of {\tt RNAbor}.
 %\includegraphics[width=0.45\textwidth]{figure9B}
 \end{center}
 \caption{{\em (Left)} Table showing parallel run times in seconds
-for {\tt FFTbor}, using
+for \fftbor, using
 OpenMP {\tt http://openmp.org/}. Column headers 1,2 indicate
 the number of cores used in the computational experiment.
 For each sequence length $200,\ldots,500$,
@@ -1404,7 +1404,7 @@ A,C,G,U. Run time in seconds, plus or minus one standard deviation, are
 given for a 24-core
 AMD Opteron 6172 with 2.10GHz and 64GB RAM, with only 1 (resp. 2) cores
 used.
-{\em (Right)} Graph showing parallel run time of {\tt FFTbor} on
+{\em (Right)} Graph showing parallel run time of \fftbor on
 an AMD Opteron 6172 with 2.10GHz and 64GB RAM, using respectively
 1,2,3,4,6,9,12,15,20 cores.
 }
@@ -1425,15 +1425,15 @@ an AMD Opteron 6172 with 2.10GHz and 64GB RAM, using respectively
 \caption{Pearson correlation between various aspects of selenocysteine
 insertion sequences from the seed alignment of Rfam family
 RF00031 \cite{Gardner.nar11}.
-For each of the 61 RNA sequences, we ran {\tt FFTbor}, starting
-from empty initial structure $S^*$, and we ran a Monte Carlo
+For each of the 61 RNA sequences, we ran \fftbor, starting
+from empty initial structure \strSt, and we ran a Monte Carlo
 folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
 Using the Monte Carlo algorithm, we
 determined the mean first passage time (MFPT), defined as the average
 taken over 50 runs, of the number of Monte Carlo steps taken to fold
 the empty structure into the MFE structure, where an absolute upper bound
 of 5 million steps was allowed in the simulation.  From the output of
-{\tt FFTbor}, we computed
+\fftbor, we computed
 {\em (1)}
 the mean number ($\mu$) of base pairs per structure, taken over
 the ensemble of all secondary structures for the given sequence,
@@ -1504,7 +1504,7 @@ logMFPT&-0.036291124&0.48436192&0.376230235&0.405865529&0.399015556& 1 \\
 
 
 \begin{table*}[!h]
-\caption{Table showing parallel run times of {\tt FFTbor}, using
+\caption{Table showing parallel run times of \fftbor, using
 OpenMP {\tt http://openmp.org/}. Column headers 2,3, etc. indicate
 the number of cores used in the computational experiment.
 For each sequence length $200,\ldots,500$,
