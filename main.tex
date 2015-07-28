@@ -56,6 +56,13 @@
 
 \makeatletter
 \xpatchcmd{\algorithmic}{\itemsep\z@}{\itemsep=.75ex plus1pt}{}{}
+
+\def\env@cases{
+  \let\@ifnextchar\new@ifnextchar
+  \left\lbrace
+  \def\arraystretch{.7}
+  \array{@{}l@{\quad}l@{}}
+}
 \makeatother
 
 \begin{document}
@@ -169,13 +176,13 @@ Date:\\
 %	ABSTRACT PAGE
 %----------------------------------------------------------------------------------------
 
-\addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
+% \addtotoc{Abstract} % Add the "Abstract" page entry to the Contents
 
-\abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
-Abstract
-}
+% \abstract{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+% Abstract
+% }
 
-\clearpage % Start a new page
+% \clearpage % Start a new page
 
 %----------------------------------------------------------------------------------------
 %	ACKNOWLEDGEMENTS
@@ -245,7 +252,7 @@ Acknowledgements
 \setlength{\abovedisplayshortskip}{0pt}
 
 \input{Chapters/Introduction}
-\input{Chapters/Background}
+% \input{Chapters/Background}
 \input{Chapters/Ribofinder}
 \input{Chapters/FFTbor}
 % \input{Chapters/RNAparametric}
@@ -279,10 +286,12 @@ Acknowledgements
 
 \label{Bibliography}
 
+\setstretch{1.3}
+
 \lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
 
 \bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
 
-\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+\bibliography{Biblio/Merged} % The references (bibliography) information are stored in the file named "Bibliography.bib"
 
 \end{document}

@@ -36,8 +36,8 @@ to present an application of \fftbor, in the area of RNA folding kinetics.
 % Finally, we give reference to the full recursions using the more accurate
 % Turner energy model, which the underlying implementation actually uses.
 
-% \section{Background}
-% \label{sec:fftbor:bkgrnd}
+\section{Background}
+\label{sec:fftbor:bkgrnd}
 
 \section{Formalization of the problem}
 \label{sec:fftbor:formal}
@@ -168,7 +168,7 @@ secondary structure \strSt on \seq to be fixed. We now recall the
 recursions from Freyhult et al. \cite{Freyhult.ab05} to determine
 the partition function \bfZ{k}{i,j} with
 respect to the Nussinov-Jacobson
-energy $E_0$ model \cite{nussinovJacobson}, defined by
+energy $E_0$ model \cite{nussinovjacobson}, defined by
 $-1$ times the number of base pairs; i.e. $E_0(S) = -1 \cdot |S|$.
 Although we describe here the recursions for the Nussinov-Jacobson
 model, for the sake of
@@ -270,7 +270,7 @@ is re-used; hence these evaluations can be performed in time \On{4} and space
 Lagrange interpolation is clearly computable in time \On{3}.
 Although this approach is theoretically sound, there are severe
 numerical stability issues related to the interpolation method
-\cite{HighamBarycentricInterpolation},
+\cite{highambarycentricinterpolation},
 the choice of values $a_1,\dots,a_{n}$ in the interpolation,
 and floating point arithmetic (round-off error) related to the
 astronomically large values of the partition functions
@@ -430,7 +430,6 @@ values $\emZof{}{\alpha_0},\dots,\emZof{}{\alpha_{n-1}}$, each time re-using the
 the computation resources used to determine the (column) vector
 
 \begin{align}
-\setstretch{1.3}
 \label{eq:fftbor:yColumn}
 \bfY = (y_0,\dots,y_{n-1})^{\text T} =
 \left(
@@ -456,7 +455,6 @@ $n \times n$ matrix, whose $i,j$ entry is $\omega^{i \cdot j}$; i.e.
 
 \begin{align}
 \label{eq:fftbor:vandermonde}
-\setstretch{1.3}
 V_n =
 \left(
 \begin{array}{rrrrr}
@@ -476,7 +474,6 @@ as the matrix product $\bfY = V_n {\bf A}$:
 
 \begin{align}
 \label{eq:fftbor:dftMatrix}
-\setstretch{1.3}
 \left(
 \begin{array}{l}
 y_0 \\
@@ -535,7 +532,6 @@ in the pseudocode on the following page.
 \medskip
 
 \begin{figure}[!ht]
-\label{fig:fftbor:algo}
 \hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for \fftbor} \\
@@ -575,6 +571,7 @@ from equation (\ref{eq:fftbor:probK})}
 of $p_0,\dots,p_{n-1}$, where $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$. This algorithm
 operates in \On{4} time and \On{2} space, a significant improvement over its
 predecessor \rnabor.}
+\label{fig:fftbor:algo}
 \rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
@@ -637,30 +634,28 @@ and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
 $(\aMbi)^k = C-Di$. Indeed, we have the following.
 
 \begin{align}
-\setstretch{1.3}
 \begin{split}
 (\aPbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (bi)^k \\
-(bi)^k  &= \left\{
-\begin{array}{rl}
+(bi)^k  &=
+\begin{cases}
 b^k    & \text{if $k \equiv 0 \bmod 4$} \\
 i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
 -b^k   & \text{if $k \equiv 2 \bmod 4$} \\
 -i b^k & \text{if $k \equiv 3 \bmod 4$} \\
-\end{array} \right.
+\end{cases}
 \end{split}
 \end{align}
 
 \begin{align}
-\setstretch{1.3}
 \begin{split}
 (\aMbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (-bi)^k \\
-(-bi)^k &= \left\{
-\begin{array}{rl}
+(-bi)^k &=
+\begin{cases}
 b^k   & \text{if $k \equiv 0 \bmod 4$} \\
 -ib^k & \text{if $k \equiv 1 \bmod 4$} \\
 -b^k  & \text{if $k \equiv 2 \bmod 4$} \\
 ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
-\end{array} \right.
+\end{cases}
 \end{split}
 \end{align}
 
@@ -717,7 +712,7 @@ nt sequence
 Rfam consensus and minimum free energy structures for both sequences are
 depicted in Figure \ref{fig:fftbor:tppConsensusAndMfe}.
 Despite the fact that there is no sequence homology according to
-pairwise BLAST \cite{BLAST}, this figure clearly demonstrates that
+pairwise BLAST \cite{blast}, this figure clearly demonstrates that
 consensus and
 minimum free energy structures closely resemble each other, and that the
 structures of both TPP riboswitch aptamers are quite similar, with the
@@ -737,13 +732,13 @@ AACY022101973.1/389--487, then
 $\strT_0 \setminus \strT_1$ has 1 base pair, and $\strT_1 \setminus \strT_0$ has 5
 base pairs.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppConsensusAndMfe.pdf}
 \caption{Rfam consensus structures (Rfam) and minimum free energy (MFE)
 secondary structures for two thiamine pyrophosphate (TPP) riboswitch aptamers,
 chosen at random from RF00059 Rfam family seed alignment
-\cite{Gardner.nar11}. Using pairwise BLAST \cite{BLAST}, there is no
+\cite{Gardner.nar11}. Using pairwise BLAST \cite{blast}, there is no
 sequence similarity, although the secondary structures are very similar,
 as shown in this figure. From left to right:
 {\em (A)} Rfam consensus structure for BX842649.1/277414--277318.
@@ -765,7 +760,7 @@ second sequence, AACY022101973.1/389--487, the \fftbor output suggests
 that there are no such competing low energy structures, hence
 the second sequence should fold more quickly than the first.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppDistributions.pdf}
 \caption{Output from \fftbor on two randomly selected
@@ -872,7 +867,7 @@ standard deviation of the \fftbor output (when starting from the
 empty structure) and logarithm base 10 of the mean first passage time.
 
 \begin{landscape}
-\begin{table}[!h]
+\begin{table}[!ht]
 \centering
 \begin{tabularx}{\linewidth}{c *{6}{R}}
   \toprule
@@ -953,7 +948,7 @@ $p$-value of $0.00018249$.}
 \end{table}
 \end{landscape}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/correlationFFTborEmpty.pdf}
 \caption{This figure represents the
@@ -1046,7 +1041,7 @@ and additional evidence is provided to support this claim.
 % is that a gene is regulated by conformational change upon ligand binding.
 % Bacterial riboswitches are often found upstream
 % of operons, regulating groups of genes, as in purine {\em de novo}
-% synthesis and salvage \cite{mandalBoeseBarrickWinklerBreaker}.
+% synthesis and salvage \cite{mandalboesebarrickwinklerbreaker}.
 
 % A riboswitch consists of two equally important parts: an upstream
 % {\em aptamer}, capable of highly discriminative binding to a particular
@@ -1065,7 +1060,7 @@ and additional evidence is provided to support this claim.
 % While a number of methods exist to computationally predict
 % riboswitch aptamers
 % \cite{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
-% (and especially {\tt INFERNAL} \cite{INFERNAL}, which latter is used
+% (and especially {\tt INFERNAL} \cite{infernal}, which latter is used
 % to predict riboswitch aptamers in Rfam), it is an important
 % biological problem to determine the expression platform, since the structure
 % of the expression platform can suggest whether there is
@@ -1155,7 +1150,7 @@ and additional evidence is provided to support this claim.
 % Figure 5 displays the output of \fftbor on the
 % 166 nt prefix, clearly showing a bimodal distribution. Attempting to
 % automate the identification of non-unimodal \fftbor output, we have
-% applied the Hartigan-Hartigan dip-test \cite{hartiganDipTest},
+% applied the Hartigan-Hartigan dip-test \cite{hartigandiptest},
 % implemented in {\tt R}; however,
 % the dip-test appears to be too sensitive, in that a probability distribution
 % is reported to be non-unimodal, even when visual inspection indicates that
@@ -1194,7 +1189,7 @@ with initial sequence \strSt taken to be the MFE structure.
 Each data point in the table comprises the average run time for three
 independent evaluations.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarking.pdf}
 \caption{Run times in seconds for \rnabor and \fftbor, on random RNA
@@ -1228,7 +1223,7 @@ The right panel of Figure \ref{fig:fftbor:benchmarkingParallel}
 presents similar data for running
 \fftbor on $2,3,6,4,12,15,20$ cores.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarkingOpenMP.pdf}
 \caption{{\em (Left)} Table showing parallel run times in seconds

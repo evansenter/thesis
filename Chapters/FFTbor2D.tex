@@ -43,14 +43,14 @@ applications of \ffttwo until Chapter \ref{ch:hermes}, where the software is
 applied to quickly approximate \mfpt and \eqt for the folding of RNA molecules
 between any two distinct, user provided structures \strA,\,\strB.
 
-% \section{Background}
-% \label{sec:ffttwo:bkgrnd}
+\section{Background}
+\label{sec:ffttwo:bkgrnd}
 
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
 
 For expository clarity, we describe \ffttwo and all recursions
-in terms of the Nussinov energy model \cite{nussinovJacobson}
+in terms of the Nussinov energy model \cite{nussinovjacobson}
 (same as in Chapter \ref{ch:fftbor}), where
 the energy $E_0(i,j)$ of a base pair $(i,j)$ is defined to be $-1$, and the
 energy $E(\str)$ of a secondary structure \str is $-1$ times the number $|\str|$
@@ -258,7 +258,6 @@ It follows that
 the computation resources used to determine the (column) vector
 \begin{align}
 \label{eq:ffttwo:yColumn}
-\setstretch{1.3}
 \bfY = (y_0,\dots,y_{n^2-1})^{\text T} =
 \left(
 \begin{array}{l}
@@ -302,13 +301,12 @@ of degree $N$. In our case,
 $N=n^2$, and so the computation involving the FFT requires time $O(n^2 \log n)$.
 
 The pseudocode for the algorithm to compute $p(x)$ is given in
-Figure \ref{algo:ffttwo:algo}.
+Figure \ref{fig:ffttwo:algo}.
 In the next section, we explain a highly non-trivial improvement of
 this algorithm to reduce time by a factor of 4.
 \medskip
 
 \begin{figure}[!ht]
-\label{fig:ffttwo:algo}
 \hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for \ffttwo} \\
@@ -359,6 +357,7 @@ the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
+\label{fig:ffttwo:algo}
 \rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
@@ -609,7 +608,6 @@ By induction on $k=\frac{M_0}{2}+1,\dots,M_0-1$, we have
 \settowidth{\maxLengthCases}{$\nu^{-k} \cdot \emZof{}{-\overline{\nu^{(M_0-k)}}}$}
 
 \begin{align}
-\setstretch{1.3}
 \begin{split}
 \emYof{}{\omega^k} &= \emYof{}{\nu^{2k}} \\ &=
 \begin{cases}
@@ -650,7 +648,6 @@ line 4 follows by Lemma \ref{lem:ffttwo:lemma3}.
 Thus if \dBP{\strA}{\strB} is even, then
 
 \begin{align}
-\setstretch{1.3}
 \label{eq:ffttwo:trickForRoU1}
 y_k = \emYof{}{\omega^k} =
 \begin{cases}
@@ -664,7 +661,6 @@ y_k = \emYof{}{\omega^k} =
 while if \dBP{\strA}{\strB} is odd, then
 
 \begin{align}
-\setstretch{1.3}
 \label{eq:ffttwo:trickForRoU2}
 y_k = \emYof{}{\omega^k} =
 \begin{cases}
@@ -692,7 +688,6 @@ $\omega^{i \cdot j} = \nu^{2 i \cdot j}$;
 i.e.
 
 \begin{align}
-\setstretch{1.3}
 \label{eq:ffttwo:vandermonde}
 V_{M_0} = \left(
 \begin{array}{rrrrr}
@@ -711,7 +706,6 @@ algorithm, which computes the Discrete Fourier Transform (DFT), defined
 as the matrix product $\bfY = V_{M_0} {\bf A}$:
 
 \begin{align}
-\setstretch{1.3}
 \label{eq:ffttwo:dftMatrix}
 \left(
 \begin{array}{l}
@@ -767,7 +761,6 @@ Section \ref{sec:ffttwo:perf} follows below.
 \medskip
 
 \begin{figure}[!ht]
-\label{fig:ffttwo:algoImproved}
 \hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for improved \ffttwo} \\
@@ -871,6 +864,7 @@ the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
 $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 }
+\label{fig:ffttwo:algoImproved}
 \rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
@@ -909,7 +903,7 @@ $-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
 \rnatwofold \ms{-d0} obtains a value of
 $-22.171785$ kcal/mol, while \ffttwo obtains
 $-22.173213$ kcal/mol.
-Note that the straightforward calculation of the partition function, following McCaskill's algorithm \cite{mcCaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
+Note that the straightforward calculation of the partition function, following McCaskill's algorithm \cite{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
 
 For benchmarking purposes,
 to allow for a fair comparison of \ffttwo
@@ -948,7 +942,7 @@ shows that run time of \rnatwofold depends on sequence details, as
 well as sequence length, while the run time of \ffttwo depends only
 on sequence length.
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
 \caption{
@@ -961,7 +955,7 @@ faster.
 \label{fig:ffttwo:ffttwoRtwofoldTiming}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
 \caption{
@@ -977,7 +971,7 @@ in a fraction of a second, this difference is of no practical consequence.
 \label{fig:ffttwo:ffttwoRtwofoldLogScale}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \begin{subfigure}[h]{\textwidth}
 \centering
@@ -1003,7 +997,7 @@ sequence details.
 \label{fig:ffttwo:ffttwoRtwofoldStdevMinMax}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
 \caption{
@@ -1029,7 +1023,7 @@ with \ffttwo; graphics produced using Mathematica.
 \label{fig:ffttwo:ffttwoProbContour}
 \end{figure}
 
-\begin{figure}[!h]
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldProbContour.pdf}
 \quad
