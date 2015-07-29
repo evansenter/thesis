@@ -512,8 +512,11 @@ outlining the configuration and compilation process for the \hermes
 suite.
 
 \hermes is organized into three independent directories:
-{\em (1)\;} \ffttwo, {\em (2)\;} \rnamfpt, and {\em (3)\;} \rnaeq (see
-Figure \ref{fig:hermes:organizationHermes}). These packages compile into both
+\begin{inparaenum}[\em 1\upshape)]
+\item \ffttwo; \item \rnamfpt; and \item \rnaeq (see
+Figure \ref{fig:hermes:organizationHermes}).
+\end{inparaenum}
+These packages compile into both
 standalone executables and archive files. The archives provide an
 API which allow the development of novel applications using source
 from across the \hermes package without having to copy-and-paste
@@ -1113,18 +1116,24 @@ approximate folding time.
 \subsection{Pearson correlation coefficients for various kinetics packages}
 \label{subsec:hermes:corr}
 
-In this section, we display the correlation between {\em (1)} the {\em gold
-standard} method \rnamfpt, both with and without the Hastings
+In this section, we display the correlation between
+\begin{inparaenum}[\em 1\upshape)]
+\item the {\em gold standard} method \rnamfpt, both with and without the Hastings
 modification using equations (\ref{eq:hermes:xitionProbWithHastings}) and
-(\ref{eq:hermes:xitionProbWithoutHastings}), {\em (2)} the {\em platinum standard} method {\tt
-Equilibrium}, {\em (3)} the {\em silver standard} method \kinfold, {\em (4)} {\tt
-FFTmfpt} with and without the Hastings modification using equations
+(\ref{eq:hermes:xitionProbWithoutHastings});
+\item the {\em platinum standard} method \rnaeq, using equation
+(\ref{eq:hermes:xitionRateWithoutHastings});
+\item the {\em silver standard} method \kinfold;
+\item \fftmfpt with and without the Hastings modification using equations
 (\ref{eq:hermes:xitionProbFfttwoWithHastings}) and
-(\ref{eq:hermes:xitionProbFfttwoWithoutHastings}), {\em (5)} \ffteq
-which computes \eqt for the 2D-grid, {\em (6)} \rnatwofold
-with and without the Hastings modification using equations
+(\ref{eq:hermes:xitionProbFfttwoWithoutHastings});
+\item \ffteq which computes \eqt for the 2D-grid using equation
+(\ref{eq:hermes:xitionRateWithoutHastings}); and finally
+\item \rnatwofold with and without the Hastings modification using equations
 (\ref{eq:hermes:xitionProbFfttwoWithHastings}) and
-(\ref{eq:hermes:xitionProbFfttwoWithoutHastings}). Correlations
+(\ref{eq:hermes:xitionProbFfttwoWithoutHastings}).
+\end{inparaenum}
+Correlations
 with [resp. without] the Hastings modification are summarized in the
 lower [resp. upper] triangular portion of
 Table \ref{table:correlationHermes}. It is clear that correlations between

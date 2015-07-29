@@ -894,53 +894,46 @@ taken over 50 runs, of the number of Monte Carlo steps taken to fold
 the empty structure into the MFE structure, where an absolute upper bound
 of 5 million steps was allowed in the simulation.  From the output of
 \fftbor, we computed
-{\em (1)\;}
-the mean number ($\mu$) of base pairs per structure, taken over
-the ensemble of all secondary structures for the given sequence,
-{\em (2)\;}
-the standard deviation ($\sigma$) of the number of base pairs per structure,
-{\em (3)\;}
-the coefficient of variation $\frac{\sigma}{\mu}$,
-{\em (4)\;}
-the RNA sequence length $n$,
-and
-{\em (5)\;}
-the minimum free energy (MFE).  Additionally, we computed the
-logarithm base 10 of mean first passage
-time ($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
+{\em 1})\, the mean number ($\mu$) of base pairs per structure, taken over
+the ensemble of all secondary structures for the given sequence;
+{\em 2})\, the standard deviation ($\sigma$) of the number of base pairs per
+structure;
+{\em 3})\, the coefficient of variation $\frac{\sigma}{\mu}$;
+{\em 4})\, the RNA sequence length $n$; and
+{\em 5})\, the minimum free energy (MFE).
+Additionally, we computed the logarithm base 10 of \mfpt
+($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
 (log base 10 of the standard deviation of number of Monte Carlo
 steps per run was approximately
-9\% of $\log_{10}(\text{MFPT})$ on average). The table shows the correlation between each of
-these aspects.
-Some correlations are obvious ---
-for example,
-{\em (i)}
+9\% of $\log_{10}(\text{MFPT})$ on average). The table shows the correlation between each of these aspects.
+Some correlations are obvious---for example,
+{\em i})\;
 the standard deviation $\sigma$ is highly correlated with the
 coefficient of variation $\frac{\sigma}{\mu}$;
-{\em (ii)}
+{\em ii})\;
 the mean $\mu$ is negatively correlated with the
 coefficient of variation $\frac{\sigma}{\mu}$;
-{\em (iii)}
+{\em iii})\;
 the mean $\mu$ is negatively correlated with the
 minimum free energy (MFE) --- if most low energy structures in the ensemble
 have many base pairs, then it is likely that the minimum free energy is very
-low (i.e. since MFE is negative, the absolute value of MFE increases);
-{\em (iv)}
+low (i.e. since MFE is negative, the absolute value of MFE increases); and
+{\em iv})\;
 sequence length is negatively correlated with MFE --- as sequence length
 increases, the minimum free energy (MFE) decreases.
 However, it may appear surprising that
-{\em (v)} the
+{\em v})\; the
 mean $\mu$ number of base pairs per structure is independent of MFPT
 (correlation $-0.036291124$), although
-{\em (vi)} MFE is correlated with MFPT
-(correlation $0.399015556$) --- i.e.  from {\em (iii)},
+{\em vi})\; MFE is correlated with MFPT
+(correlation $0.399015556$) --- i.e. from {\em (iii)},
 lower MFE is correlated with a larger average $\mu$ number of base pairs per
-structure, from {\em (vi)}
+structure, from ({\em vi})
 higher MFE is correlated with longer folding time, but
-from {\em (v)} the average $\mu$  number of base pairs per structure is
+from ({\em v}) the average $\mu$  number of base pairs per structure is
 independent of folding time.
 The most important insight from this table is that
-{\em (vii)}
+{\em vii})\;
 standard deviation $\sigma$ is correlated with mean first passage
 time --- the correlation is statistically significant, with one-tailed
 $p$-value of $0.00018249$.}
