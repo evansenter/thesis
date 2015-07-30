@@ -46,6 +46,92 @@ between any two distinct, user provided structures \strA,\,\strB.
 \section{Background}
 \label{sec:ffttwo:bkgrnd}
 
+RNA folding pathways play an important role in biological processes.
+For instance, in the {\em hok/sok}
+(host-killing/suppression of killing) system \citep{Gerdes.arg97},
+the transition between two metastable RNA structures determines the
+fate of a cell as follows.
+The {\em hok} gene of {\em E. coli} and other bacteria
+codes a small (52 amino acid) toxin causing irreversible damage to the cell
+membrane. It has been shown that {\em hok}-mRNA is
+constitutively expressed from a weak promoter, while
+the rapidly degraded {\em sok}-RNA is constitutively expressed from
+a strong promoter.  The {\em hok}-mRNA is initially
+inactive, since a foldback sequesters the
+Shine-Dalgarno sequence; however, slow exonucleolytic processing
+digests the last $\approx 40$ nt of the $3'$ end of {\em hok}-mRNA,
+transforming the molecule into its active form in which
+the Shine-Dalgarno sequence is no longer sequestered.
+If R1 plasmids of {\em E. coli} are present in
+sufficient copy number, then a portion of the 64 nt
+{\em sok}-RNA, which is complementary to {\em hok}-mRNA leader
+region, binds to the active conformation of {\em hok}-mRNA, thus
+causing degradation of the complex by RNase III \citep{Gerdes.arg97}.
+If plasmids are not present in sufficient copy number, then the
+cell is killed by {\em hok} toxin, thus ensuring fitness of the daughter
+cells.
+
+In the case of spliced leader (SL) RNA from certain trypanosomes and nematodes,
+a portion of the $5'$ exon is donated to
+another mRNA by trans splicing.
+Intermediate structures appear to be important in the process of splicing,
+as shown by LeCuyer and Crothers \citep{lecuyerCrothers}, who performed
+stopped-flow rapid-mixing and temperature-jump measurements
+of the kinetics for the structural transition between two low
+energy structures of SL RNA from {\em Leptomonas collosoma}.
+Conformational switches are thought not only to play a role in such
+trans splicing, but as well in transcriptional and
+translational regulation, protein synthesis, and mRNA splicing.
+
+For these reasons, substantial experimental and computational work
+has been done on folding pathways and the kinetics of RNA folding;
+below, we cite only a small sample of the work in this area.
+On the experimental side,
+%Baird et al.  \citep{Baird.jacs10} used cryo-electron microscopy and single
+%particle image reconstruction to determine the structure of the major folding
+%intermediate of the specificity domain of a ribonuclease P ribozyme.
+%Mitra et al.  \citep{Mitra.r11} conducted experiments using
+%time-resolved hydroxyl radical probing of backbone solvent accessible
+%surface and catalytic activity measurements, integrated with
+%structural-kinetic modeling to compare folding pathways of
+%three group I intron ribozymes.
+Neupane et al. \citep{Neupane.nar11} applied single-molecule force spectroscopy
+of the add adenine riboswitch, to show how folding  relates to
+gene regulation;
+see also \citep{Woodside.cocb08,Baird.jacs10,Mitra.r11}.
+%see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
+%
+On the computational side, Morgan and Higgs \citep{morganHiggsBarrier}
+appear to have been among the first
+to have considered the computational problem of determining optimal and
+near-optimal {\em folding pathways} between two metastable secondary
+structures $A,B$ of a given RNA sequence.  In \citep{flammPhD}, Flamm
+developed an event-driven Monte Carlo simulation, \kinfold,
+to determine expected
+folding time between two reference structures, including the mean first
+passage time to fold into the minimum free energy structure.
+%In \citep{Xayaphoummine.nar05}, Xayaphoummine et al. described the
+%{\tt Kinefold} web server, for Monte Carlo kinetic folding of an RNA sequence
+%into a metastable pseudoknotted structure.
+Using \rnasub  \citep{Wuchty.b99}, Flamm et al.
+\citep{flamm} designed the exponential
+time exact algorithm, {\tt barriers}, that computes the optimal folding
+pathway between metastable structures \strA and \strB. Since {\tt barriers}
+may not converge, due to its reliance on the enumeration of possibly
+exponentially many structures, in \citep{Dotu.nar10} we developed a
+local search (tabu) method that rapidly returns near-optimal folding
+pathways; in benchmarking results \citep{Dotu.nar10}, local search was shown
+to outperform various methods, including direct and indirect path methods
+of Morgan and Higgs \citep{morganHiggsBarrier}, breadth-first search with
+bounded lookahead, {\tt Findpath} \citep{Flamm.r01}, and the
+exponential time, exact method {\tt barriers} \citep{flamm}, in producing
+near-optimal pathways within
+reasonable time.
+There are far too many contributions to kinetics and folding pathways
+to adequately survey here; the references
+\citep{Xayaphoummine.nar05,Tang.jmb08,Geis.jmb08,Zhao.bj10,Li.bb12}
+give some idea of the variety of methods.
+
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
 

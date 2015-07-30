@@ -41,6 +41,116 @@ RNA design.
 \section{Background}
 \label{sec:hermes:bkgrnd}
 
+Remarkable results in RNA synthetic biology have recently been
+obtained by various groups. In \citep{Hochrein.jacs13}, small
+conditional RNAs have been engineered to silence a gene Y by using the
+RNA interference machinery, only if a gene X is transcribed. In
+\citep{Wachsmuth.nar13} a novel theophylline riboswitch has been
+computationally designed to transcriptionally regulate a gene in {\em
+E. coli}, and in \citep{syntheticHammerheads} a purely computational
+approach was used to design functionally active hammerhead ribozymes.
+Computational design of synthetic RNA molecules invariably uses some
+form of thermodynamics-based algorithm; indeed, {\tt NUPACK-Design}
+\citep{Zadeh.jcc11} was used to design small conditional RNAs
+\citep{Hochrein.jacs13}, Vienna RNA Package \citep{Gruber08} was used in
+the design of the synthetic theophylline riboswitch, and the {\tt
+RNAiFold} inverse folding software
+\citep{garcia.JBCBB13,GarciaMartin.nar13} was used to design the
+synthetic hammerhead ribozymes. The next step in the computational
+design of synthetic RNA molecules is to control the kinetics of
+folding -- such control could be important in engineering
+conformational switches. Kinetics is already used as a design feature
+for synthetic design in proteins \citep{Bujotzek.jcam11,Fasting.acie12}.
+
+In this paper, we introduce a new software suite, called \hermes,
+which efficiently computes RNA secondary structure
+folding kinetics by using a coarse-grained
+method to model RNA transitions that add or remove a single base pair.
+Since our motivation in developing \hermes is to provide a new
+tool to aid in engineering synthetic RNA molecules with desired
+kinetic properties, \hermes does not model {\em co-transcriptional
+folding}, but only the {\em refolding} of RNA sequences.
+
+There is a long history of both experimental and computational work on
+RNA folding pathways and kinetics, so much so, that a review of
+previous work is beyond the scope of this paper. Here we cite only the
+most relevant related work on RNA secondary structure
+kinetics. Experimental approaches to
+determine the kinetics of RNA folding include temperature jump
+experiments \citep{lecuyerCrothers}, using fluorophores
+\citep{Hobartner.jmb03}, using mechanical tension at the single
+molecule level \citep{Vieregg.mp06}, etc. and will not be further
+discussed. In this paper we focus exclusively on computational
+approaches to folding kinetics, where stepwise transitions between
+secondary structures involve the addition or removal of a single base
+pair, as first considered in \citep{flammHofacker}.
+Nevertheless, it should be noted that there are a number of
+methods that concern the addition or removal of an entire helical
+region, e.g. \citep{Huang.bb14,Zhao.jcp11}.
+
+Most computational approaches involve either (1) algorithms to
+determine optimal or near-optimal folding pathways, (2) explicit
+solutions of the master equation, (3) repeated simulations to fold an
+initially empty secondary structure to the target minimum free energy
+(MFE) structure. Examples of methods to determine optimal or
+near-optimal folding pathways include the greedy approach of Morgan
+and Higgs \citep{morganHiggsBarrier}, the exact, optimal, exponential
+time program {\tt barriers} \citep{flammHofacker}, the program {\tt
+Findpath} \citep{Flamm.r01}, which uses bounded look-ahead
+breadth-first search, a genetic algorithm \citep{Shapiro.jmb01}, the
+program {\tt RNAtabupath} that uses local search to determine
+near-optimal folding pathways, etc. The program {\tt barriers}
+\citep{flammHofacker} is the only current method guaranteed to
+produce optimal folding pathways. Since it has been shown that
+the problem of determining optimal folding pathways is
+NP-complete \citep{Thachuk.psb10}, it is now understandable why
+{\tt barriers} can take exponential time to converge, depending
+on the RNA sequence. For this reason, near-optimal solutions
+provided by heuristic methods, such as {\tt RNAtabupath}, are very useful.
+
+Methods that employ the master equation include {\tt Treekin}
+\citep{wolfingerStadler:kinetics}, which uses the programs {\tt
+RNAsubopt} \citep{wuchtyFontanaHofackerSchuster} and {\tt barriers}
+\citep{flammHofacker} to determine {\em macrostates}, defined as basins
+of attraction near a locally optimal structure. The resulting
+coarse-grained Markov chain is then sufficiently small to allow explicit
+solution of the master equation. In \citep{Tang.jcb05}, a moderate
+number of RNA structures were sampled according to different
+strategies, from which a robotic motion planning graph was defined
+to connect each sampled structure to its $k$ nearest sampled
+neighbors. Again, the resulting coarse-grained Markov chain is
+sufficiently small for an explicit solution of the master equation to
+be given.
+
+We now come to simulation approaches to estimate RNA folding kinetics.
+The program \kinfold \citep{flammPhD,flamm} is an implementation
+of Gillespie's algorithm \citep{gillespieStochasticSimulation1},
+directly related to the master equation, hence is considered by many
+to be the gold standard for RNA kinetics. A recent extension of the
+\kinfold algorithm was reported in \citep{Aviram.amb12}. {\tt
+Kinefold} \citep{Xayaphoummine.nar05} uses stochastic simulations of
+the nucleation and dissociation of helical regions to predict
+secondary structure and folding pathways. In contrast to the
+previously mentioned methods, both {\tt RNAKinetics}
+\citep{Danilova.jbcb06} and {\tt Kinwalker} \citep{Geis.jmb08} model
+co-transcriptional folding, known to be necessary when simulating
+{\em in vivo} folding of long RNA molecules \citep{Lai.r13}. As well,
+{\tt Kinefold} can simulate both refolding and co-transcriptional folding
+pathways. Finally, unlike all the previous simulation results, which
+depend on thermodynamic free energy parameters \citep{Turner.nar10},
+the program {\tt Oxfold} \citep{Anderson.b13} performs kinetic folding
+of RNA using stochastic context-free grammars and evolutionary
+information.
+
+In contrast to the previous methods, \hermes computes the mean
+first passage time (MFPT) and {\em equilibrium time} for a
+coarse-grained Markov chain consisting of the ensemble of all
+secondary structures having base pair distance $x$ [resp. $y$] from
+reference structures \strA [resp. \strB] of a given RNA sequence.
+Mean first passage time (MFPT) is computed exactly by matrix inversion,
+and equilibrium time is computed using spectral decomposition of the rate
+matrix for the coarse-grained master equation.
+
 \section{Traditional approaches for kinetics}
 \label{sec:hermes:kinetics}
 

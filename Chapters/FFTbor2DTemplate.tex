@@ -134,13 +134,13 @@ If $A,B$ are secondary structures of \seq, then the {\em base pair distance},
 base pairs belonging to one structure but not the other.
 Structures $S,T$ are said to be $k$-{\em neighbors} if $d_{BP}(S,T) = k$.
 In \citep{Freyhult.b07}, we described recursions for an $O(n^5)$ time and
-$O(n^3)$ algorithm, {\tt RNAbor}, that computes the Boltzmann probability
+$O(n^3)$ algorithm, \rnabor, that computes the Boltzmann probability
 $p_k$ of structures to have base pair distance $k$ from a given reference
 structure \strA. In \citep{fftbor}, we described an $O(n^4)$ time and
 $O(n^2)$ space algorithm, by using polynomial interpolation with the
 fast Fourier transform (FFT).
 In \citep{hofacker:RNAbor2D}, Lorenz et al. generalized
-the recursions  of {\tt RNAbor} \citep{Freyhult.b07}
+the recursions  of \rnabor \citep{Freyhult.b07}
 to yield recursions for an $O(n^7)$ time and $O(n^4)$ space
 algorithm, \rnatwofold,
 that computes the Boltzmann probability $p(x,y)$ that a structure has
@@ -919,7 +919,7 @@ For each sequence length $n = 20,25,30,\ldots,300$, we generated
 $100$ random sequences using probability $0.25$ for each nucleotide A,C,G,U.
 For a given RNA sequence \seq, the metastable structure \strA was
 taken to be the MFE structure of \seq.
-Using {\tt RNAbor}, we determined that value $k_0\geq 10$, for which
+Using \rnabor, we determined that value $k_0\geq 10$, for which
 partition function $Z_{k_0}$ constitutes a visible peak in the graphical
 output -- see Figure 2 and 3 of  \citep{Freyhult.b07} for an example.
 Subsequently, metastable structure \strB was taken to be that structure
@@ -1204,7 +1204,7 @@ $+2.50$.
 Given an RNA sequence \seq and two reference secondary structures $A,B$,
 the algorithm, \ffttwo, computes the partition
 function $Z(x,y)$, defined to be the sum of Boltzmann factors
-$\exp(-E(S)/RT)$ over all secondary structures $S$, having base pair
+\boltzf{\str} over all secondary structures $S$, having base pair
 distance $x$ to  \strA and distance $y$ to \strB, where
 $0 \leq x,y \leq n$ and $n$ denotes the length \seq.
 Using polynomial interpolation with the FFT and exploiting the observations
@@ -1223,7 +1223,7 @@ An important advantage of
 \rnatwofold over \ffttwo is that the former can additionally
 compute the structures $M_{x,y}$ having minimum free energy over all
 structures that are $x$-neighbors of metastable \strA and simultaneously
-$y$-neighbors of metastable \strB. (There is a similar advantage of {\tt RNAbor}
+$y$-neighbors of metastable \strB. (There is a similar advantage of \rnabor
 \citep{Freyhult.b07} over the faster \fftbor \citep{fftbor}.)
 As well, \rnatwofold directly computes the partition function values
 $Z_{x,y}$, while \ffttwo estimates $Z_{x,y}$ by computing

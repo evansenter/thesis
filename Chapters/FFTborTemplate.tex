@@ -20,29 +20,29 @@ expression platform candidates. A web server is available at
 \section*{Introduction}
 
 In \citep{Freyhult.b07}, we developed a dynamic programming algorithm,
-{\tt RNAbor}, pronounced {\em RNA neighbor}, which simultaneously computes for
-each integer $k$, the Boltzmann probability $p_k = \frac{Z_k}{Z}$
+\rnabor, pronounced {\em RNA neighbor}, which simultaneously computes for
+each integer $k$, the Boltzmann probability $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$
 of the subensemble of structures
 whose base pair distance to a given {\em initial}, or
 {\em reference}, structure \strSt is $k$.\footnote{As later
 explained, $Z$ denotes the partition function, defined as the sum of
-all Boltzmann factors $\exp(-E(S)/RT)$, over all secondary structures $S$
+all Boltzmann factors \boltzf{\str}, over all secondary structures $S$
 of a given RNA sequence, and $R$ denotes the  universal
 gas constant and $T$ absolute temperature. Similarly $Z_k$ denotes the
 sum of all Boltzmann factors of all structures $S$, whose base pair distance
 to the initial structure \strSt is exactly $k$.}
-{\tt RNAbor} stores the value of the (partial)
+\rnabor stores the value of the (partial)
 partition functions $Z_k(i,j)$ for all $1 \leq i \leq j \leq n$ and
 $0 \leq k \leq n$, each of which requires quadratic time to compute.
-Thus it follows that {\tt RNAbor} runs in time $O(n^5)$ and space
+Thus it follows that \rnabor runs in time $O(n^5)$ and space
 $O(n^3)$, which severely limits its applicability to genomic annotation.
 This restriction is somewhat mitigated by the fact that
 in \citep{CloteLouLorenz}, we showed how to use sampling
 \citep{Ding.nar03} to efficiently approximate
-{\tt RNAbor} in cubic time $O(n^3)$ and quadratic space $O(n^2)$,
+\rnabor in cubic time $O(n^3)$ and quadratic space $O(n^2)$,
 {\em provided} that the starting structure \strSt is the minimum free
 energy (MFE) structure. We expect that a more efficient version of
-{\tt RNAbor} could be used in applications in genomics and synthetic
+\rnabor could be used in applications in genomics and synthetic
 biology, to detect potential conformational switches --
 RNA sequences containing two or more (distinct) metastable structures.
 
@@ -54,14 +54,14 @@ coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
 \label{eq:PofX}
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
 \end{eqnarray}
-where $p_k$ is defined by $p_k = \frac{Z_k}{Z}$.
+where $p_k$ is defined by $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$.
 Due to severe numerical instability issues in both the Lagrange
 interpolation formula and in Gaussian elimination, we employ
 the Fast Fourier Transform (FFT) to compute the inverse Discrete Fourier
 Transform (DFT) on values $y_0,\ldots,y_{n-1}$, where $y_k = p(\omega^k)$ and
 $\omega = e^{2 \pi i/n}$ is the principal $n$th complex root of unity and
 $p(x)$ is defined in (\ref{eq:PofX}). This
-gives rise to an improved version of {\tt RNAbor}, denoted \fftbor,
+gives rise to an improved version of \rnabor, denoted \fftbor,
 which runs in time $O(n^4)$ and space $O(n^2)$.
 Once two metastable structures $S_1,S_2$ are identified, we can
 subsequently evaluate the feasibility of transition between
@@ -130,7 +130,7 @@ see following paragraph for definitions.
 
 Given an RNA sequence $\seq=s_1,\ldots,s_n$ and compatible secondary structure
 \strSt, let ${\bf Z}^k$ denote the sum
-of the Boltzmann factors $\exp(-E(S)/RT)$ of all $k$-neighbors $S$ of  \strSt;
+of the Boltzmann factors \boltzf{\str} of all $k$-neighbors $S$ of  \strSt;
 i.e.
 \[
 {\bf Z}^k = \z{k}{1}{n} =
@@ -181,7 +181,7 @@ energy $E_0$ model \citep{nussinovJacobson}, defined by
 $-1$ times the number of base pairs; i.e. $E_0(S) = -1 \cdot |S|$.
 Although we describe here the recursions for the Nussinov-Jacobson
 model, for the sake of
-simplicity of exposition, both {\tt RNAbor}
+simplicity of exposition, both \rnabor
 \citep{Freyhult.ab05} as well as our current software \fftbor,
 concern the Turner energy model, consisting of free energy parameters for
 stacked bases, hairpins, bulges, internal loops and multiloops. The full
@@ -299,7 +299,7 @@ given RNA sequence \seq, our goal is to compute
 e^{\frac{-E_0(S)}{RT}}
 \end{align}
 where $S$ can be any structure compatible with \seq.
-As previously mentioned, the recurrence relation for {\tt RNAbor}
+As previously mentioned, the recurrence relation for \rnabor
 with respect to the Nussinov energy model $E_0$ is
 \begin{align}
 \label{eq:RNAborNussRecursion}
@@ -612,7 +612,7 @@ The output of \fftbor, as shown in
 Figure 2, is a probability distribution,
 where the $x$-axis represents the base pair distance from an arbitrary,
 but fixed secondary structure \strSt, and the $y$-axis represents the
-Boltzmann probability $p(k) = \frac{Z_k}{Z}$ that a secondary structure
+Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$ that a secondary structure
 has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
@@ -731,7 +731,7 @@ $d_{\mbox{\sc bp}}(S,S^*)$ denotes base pair distance between $S$ and \strSt.
 If we run \fftbor on an input sequence \seq and secondary structure
 \strSt, then clearly
 $E[ \{ d_{\mbox{\sc bp}}(S,S^*): S \in \mathbb{S}(a_1,\ldots,a_n)\} ]  =
-\sum_{k} k \cdot p(k)$, where $p(k)=\frac{Z_k}{Z}$, obtained from the
+\sum_{k} k \cdot p(k)$, where $p(k)=\frac{\bfZ{k}{}}{\bfZ{}{}}$, obtained from the
 program output.  If \strSt is the empty structure, then \fftbor output
 is simply the probability distribution of the number of base pairs per
 secondary structure, taken over the Boltzmann ensemble of all structures.
@@ -954,22 +954,22 @@ distribution
 $P = (p_0,\ldots,p_{n-1})$ where $p_k = \z{k}{1}{n}/{\bf Z}$.
 In all our tests, for RNA of length up to 400 nt, we found the total
 variation distance between $P$, as computed to 6 decimal places by
-{\tt RNAbor} and by \fftbor, to be $0$. It follows that \fftbor
-can reliably be used in place of {\tt RNAbor} to determine Boltzmann
+\rnabor and by \fftbor, to be $0$. It follows that \fftbor
+can reliably be used in place of \rnabor to determine Boltzmann
 probabilities $p(k) = P\left( d_{BP}(S,S^*)=k \right)$.
 
-\subsubsection*{Run time comparison of {\tt RNAbor} and \fftbor}
+\subsubsection*{Run time comparison of \rnabor and \fftbor}
 
 As visible from the defining recursions, the algorithmic time complexity of
-{\tt RNAbor} is $O(n^5)$ and space complexity is $O(n^3)$, where $n$ is
+\rnabor is $O(n^5)$ and space complexity is $O(n^3)$, where $n$ is
 the length of input RNA sequence. In contrast, the time complexity of
 \fftbor is $O(n^4)$ and space complexity is $O(n^2)$.
 Figure 8 displays run time curves for both
-{\tt RNAbor} and \fftbor, when the initial structure \strSt is
+\rnabor and \fftbor, when the initial structure \strSt is
 taken to be either the empty structure or the minimum free energy
 (MFE) structure.
 
-Here, we compare the run time of {\tt RNAbor} \citep{Freyhult.b07} and
+Here, we compare the run time of \rnabor \citep{Freyhult.b07} and
 the (unparallelized version of) \fftbor, using
 a Dell Power Edge 1950, 2 x Intel Xeon E5430 Quad
 core with 2.80 GHz and 16 GB RAM. For $n = 20,40,60,\ldots, 300$, in step
@@ -979,8 +979,8 @@ For values of $n \leq 200$, $100$ random sequences of length
 $n$ were generated, while for values of $220 \leq n \leq 300$, only
 $10$ sequences of length $n$ were generated.
 RNA sequences larger than 300 nt were not tested,
-due to $O(n^3)$ memory constraints required by {\tt RNAbor}.
-For each RNA sequence, {\tt RNAbor} and \fftbor were both run,
+due to $O(n^3)$ memory constraints required by \rnabor.
+For each RNA sequence, \rnabor and \fftbor were both run,
 each starting with empty initial structure \strSt, and also
 with initial sequence \strSt taken to be the MFE structure.
 Each data point in the table comprises the average run time for three
@@ -1046,10 +1046,10 @@ thus the $m$ most significant positions of
 $c_k=\z{k}{1}{n}=p_k \cdot \z{}{1}{n}$. Interpolation is performed for
 $p(x)$, rather than $\Z(x)$, due to issues concerning numerical instability.
 The computational advantage of \fftbor over its predecessor
-{\tt RNAbor} \citep{Freyhult.b07} is that
+\rnabor \citep{Freyhult.b07} is that
 the new algorithm runs in quartic time $O(n^4)$ and quadratic space
 $O(n^2)$, in contrast to the $O(n^5)$ run time and $O(n^3)$ space
-required by {\tt RNAbor}. We have additionally provided a
+required by \rnabor. We have additionally provided a
 parallelization of \fftbor using OpenMP primitives.
 Additionally, we have
 described applications of \fftbor to determine the
@@ -1058,8 +1058,8 @@ of the energy landscape, and to predict the location of riboswitch
 expression platform candidates.
 
 It is important to point out that
-the algorithm and software {\tt RNAbor} is more general than
-that of \fftbor -- in particular, {\tt RNAbor} not only computes the
+the algorithm and software \rnabor is more general than
+that of \fftbor -- in particular, \rnabor not only computes the
 partition function values $\z{k}{1}{n}$, for all $0 \leq k \leq n$, but as
 well as computes the
 structures $S_k$, defined to be the minimum free energy structure over all
@@ -1084,7 +1084,7 @@ future, we intent to apply interpolation and the FFT to similarly provide a
 more efficient version of {\tt RNAmutants}. Nevertheless, this future,
 more efficient version will be incapable of efficiently sampling low
 energy structures over $k$-point mutants, analogous to the current
-differences between {\tt RNAbor} and \fftbor.
+differences between \rnabor and \fftbor.
 
 
 \section*{Acknowledgements}
@@ -1169,7 +1169,7 @@ of probability that base pair distance to MFE structure is $k$.
 thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
 \citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
 minimum free energy structure for each given sequence; the $y$-axis represents
-Boltzmann probabilities $p(k) = \frac{Z_k}{Z}$, where
+Boltzmann probabilities $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$, where
 $Z_k$ denotes the sum of Boltzmann factors or all secondary structures,
 whose base pair distance from the MFE structure is exactly $k$.
 {\em (Left)}
@@ -1255,7 +1255,7 @@ graphical output of \fftbor, when the empty structure is chosen as
 initial structure \strSt.
 The $x$-axis represents the number of base pairs per structure,
 taken over the ensemble of all secondary structures for the given RNA
-sequence; the $y$-axis represents Boltzmann probability $p(k) = \frac{Z_k}{Z}$,
+sequence; the $y$-axis represents Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$,
 where $Z_k$ is the partition function for all secondary structures
 having exactly $k$ base pairs.
 {\em (Left)}
@@ -1373,15 +1373,15 @@ from $70,72,74,\ldots,200$.
 \begin{center}
 %\includegraphics[width=0.85\textwidth]{figure8}
 \end{center}
-\caption{Run times in seconds for {\tt RNAbor} and \fftbor, on random RNA
+\caption{Run times in seconds for \rnabor and \fftbor, on random RNA
 of length $20,40,60,\ldots,300$ in step size of 20 nt. Each algorithm
 was run with the empty initial structure \strSt, see rows
-{\tt RNAbor} (empty), \fftbor (empty), and with the minimum free
+\rnabor (empty), \fftbor (empty), and with the minimum free
 energy structure as the initial structure \strSt, see rows
-{\tt RNAbor} (MFE) and \fftbor (MFE). Note that for both {\tt RNAbor}
+\rnabor (MFE) and \fftbor (MFE). Note that for both \rnabor
 and \fftbor, the run time increases when \strSt is the MFE structure,
 rather than the empty structure. Notice the radical improvement in the
-run time of \fftbor over that of {\tt RNAbor}.
+run time of \fftbor over that of \rnabor.
 }
 \label{fig:evanBenchmark}
 \end{figure*}

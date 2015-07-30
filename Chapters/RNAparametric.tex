@@ -103,7 +103,7 @@ parameter $k$, for $0 \leq k \leq K \leq n$, the Boltzmann partition
 function $Z^h(k)$ and
 Boltzmann probability $p_h(k) = Z^h(k)/Z$ of all structures  of \seq having
 exactly $k$ hairpins. Here $Z^h(k)$ designates the sum of Boltzmann factors
-$\exp(-E(S)/RT)$, taken over all
+\boltzf{\str}, taken over all
 secondary structures $S$ of \seq that have exactly $k$ hairpins; the
 partition function $Z$ denotes the sum of all Boltzmann factors, where the
 sum is taken over all secondary structures of \seq. Analogously,
@@ -723,7 +723,7 @@ is implemented in the Vienna RNA Package program
 The program {\tt RNAshapes} of Steffen et al.
 \citep{giegerich:shapesBioinf} computes the minimum free energy structure
 from each shape class.
-The program {\tt RNAbor} of Freyhult et al. \citep{Freyhult.b07}
+The program \rnabor of Freyhult et al. \citep{Freyhult.b07}
 computes, for each $k$,
 the minimum free energy structure $MFE(k)$ having base pair
 distance $k$ from a user-specified reference structure, while the

@@ -33,11 +33,59 @@ reformulated as a polynomial whose coefficients $c_k=\bfZ{k}{1,n}$. We then
 describe how the \fft can be employed to efficiently compute the coefficients
 $c_k$, finishing our description of the underlying algorithm. Then we proceed
 to present an application of \fftbor, in the area of RNA folding kinetics.
-% Finally, we give reference to the full recursions using the more accurate
-% Turner energy model, which the underlying implementation actually uses.
 
 \section{Background}
 \label{sec:fftbor:bkgrnd}
+
+In \citep{freyhult.b07}, a dynamic programming algorithm
+\rnabor---pronounced {\em RNA neighbor}---was developed which simultaneously
+computes for
+each integer $k$, the Boltzmann probability $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$
+of the subensemble of structures
+whose base pair distance to a given {\em initial}, or
+{\em reference}, structure \strSt is $k$.
+\footnote{As later
+explained, \bfZ{}{} denotes the partition function, defined as the sum of
+all Boltzmann factors \boltzf{\str}, over all secondary structures \str
+of a given RNA sequence, and $R$ denotes the universal
+gas constant and $T$ absolute temperature. Similarly \bfZ{k}{} denotes the
+sum of all Boltzmann factors of all structures \str, whose base pair distance
+to the initial structure \strSt is exactly $k$.}
+\rnabor stores the value of the (partial)
+partition functions \bfZ{k}{i,j} for all $1 \leq i \leq j \leq n$ and
+$0 \leq k \leq n$, each of which requires quadratic time to compute.
+Thus it follows that \rnabor runs in time \On{5} and space
+\On{3}, which severely limits its applicability to genomic annotation.
+This restriction is somewhat mitigated by the fact that
+in \citep{cloteloulorenz}, we showed how to use sampling
+\citep{ding.nar03} to efficiently approximate
+\rnabor in cubic time \On{3} and quadratic space \On{2},
+{\em provided} that the starting structure \strSt is the minimum free
+energy (MFE) structure. We expect that a more efficient version of
+\rnabor could be used in applications in genomics and synthetic
+biology, to detect potential conformational switches---
+RNA sequences containing two or more (distinct) metastable structures.
+
+In this chapter, we describe a radically different algorithm, \fftbor,
+prounounced {\em FFT neighbor},
+that uses polynomial interpolation to compute the
+coefficients $p_0,\ldots,p_{n-1}$ of the polynomial defined in equation
+(\ref{eq:fftbor:pOfX}),
+where $p_k$ is defined by $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$.
+Due to severe numerical instability issues in both the Lagrange
+interpolation formula and in Gaussian elimination, we employ
+the \fft (FFT) to compute the \idft (DFT) on values $y_0,\ldots,y_{n-1}$,
+where $y_k = p(\omega^k)$ and
+$\omega = \pRoU$ is the principal \nRoU and
+$p(x)$ is defined in (\ref{eq:fftbor:pOfX}). This
+gives rise to an improved version of \rnabor, denoted \fftbor,
+which runs in time \On{4} and space \On{2}.
+% Once two metastable structures \strS,\,\strT are identified, we can
+% subsequently evaluate the feasibility of transition between
+% structures \strS and \strT,
+% by computing the {\em barrier energy} using algorithms, such as that
+% described in Dotu et al. \citep{dotu.nar10} or Flamm et al.
+% \citep{flamm.r01}.
 
 \section{Formalization of the problem}
 \label{sec:fftbor:formal}

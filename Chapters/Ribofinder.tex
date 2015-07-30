@@ -230,7 +230,8 @@ Figure \ref{fig:rfinder:xptOff}.
 {\em B. subtilis} subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054),
 and corresponding gene off structure derived from crystallography analysis in
 complex with guanine \citep{breaker:riboswitch2}. {\em (Bottom)} The experimentally
-derived gene on structure for \Bsxpt.}
+derived gene on structure for \Bsxpt. These structural diagrams were generated
+using VARNA \citep{darty:2009gt}.}
 \label{fig:rfinder:xptOff}
 \end{figure}
 
@@ -326,25 +327,6 @@ the same options as before, only 463 (or 80.24\%) of the resulting structures fr
 \strConst{off} have the tree signature prefix \ms{[0,1,2,2,1]}, and just 21 (or
 3.64\%) of the \strConst{on} structures correctly re-fold their multiloop.
 
-\begin{figure}[!ht]
-\centering
-\begin{subfigure}[h]{\textwidth}
-\centering
-\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_OFF.pdf}
-\end{subfigure} \\
-\medskip
-\begin{subfigure}[h]{\textwidth}
-\centering
-\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_ON.pdf}
-\end{subfigure}
-\caption{{\em Top:} the computationally predicted gene off conformation of
-sequence NC\_014019.1 1427313--1427501, using \rfold from the ViennaRNA 2.1.8
-suite, with dangles disabled and the Turner 1999 energies. This sequence is
-located upstream of the xpt gene in {\em B. megaterium} QM B1551. {\em Bottom:}
-the gene on conformation.}
-\label{fig:figure:exampleSS}
-\end{figure}
-
 \subsection{Step 3: Candidate curation}
 \label{subsec:rfinder:curation}
 
@@ -437,7 +419,9 @@ candidate \grbs each, outlined in Table \ref{table:rfinderCandidateLocs}.
 \caption{The genomic coordinates for the four candidate \grbs in both
 {\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319. Note that the
 \grbs are located upstream of the same genes, and that these two strains of
-{\em B. megaterium} are highly similar.}
+{\em B. megaterium} are highly similar. These structures are pictured in
+Section \ref{sec:rfinder:grbValidationVarna}, plotted using VARNA
+\citep{darty:2009gt}.}
 \label{table:rfinderCandidateLocs}
 \end{table}
 
@@ -469,3 +453,153 @@ In general, we believe those riboswitches using rho-independent transcription
 termination as a mode of regulation, for which an aptamer alignment exists and
 some experimental knowledge of the terminator stem's structural conformation are
 well suited for more robust structural prediction using \rfinder.
+
+\section{Guanine \rbs for experimental validation}
+\label{sec:rfinder:grbValidationVarna}
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_ON.pdf}
+\end{subfigure}
+\caption{{\em Top:} the computationally predicted gene off conformation of
+sequence NC\_014019.1 1427313--1427501, using \rfold from the ViennaRNA 2.1.8
+suite, with dangles disabled and the Turner 1999 energies. This sequence is
+located upstream of the xpt gene in {\em B. megaterium} QM B1551. {\em Bottom:}
+the gene on conformation.}
+\label{fig:figure:NC_014019_1_1427313_1427501}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_231630_231806_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_231630_231806_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the GMP synthase
+gene in {\em B. megaterium} QM B1551 (NC\_014019.1 231630--231806).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014019_1_231630_231806}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_233482_233680_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_233482_233680_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the guanine permease
+gene in {\em B. megaterium} QM B1551 (NC\_014019.1 233482--233680).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014019_1_233482_233680}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_240759_240970_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_240759_240970_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the
+N5-carboxyaminoimidazole
+gene in {\em B. megaterium} QM B1551 (NC\_014019.1 240759--240970).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014019_1_240759_240970}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_1413696_1413884_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_1413696_1413884_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the xpt
+gene in {\em B. megaterium} DSM319 (NC\_014103.1 1413696--1413884).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014103_1_1413696_1413884}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_230059_230235_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_230059_230235_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the GMP synthase
+gene in {\em B. megaterium} DSM319 (NC\_014103.1 230059--230235).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014103_1_230059_230235}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_231911_232108_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_231911_232108_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the guanine permease
+gene in {\em B. megaterium} DSM319 (NC\_014103.1 231911--232108).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014103_1_231911_232108}
+\end{figure}
+\medskip
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_239188_239400_OFF.pdf}
+\end{subfigure} \\
+\medskip
+\begin{subfigure}[h]{\textwidth}
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_239188_239400_ON.pdf}
+\end{subfigure}
+\caption{The computationally predicted \rb located upstream of the
+N5-carboxyaminoimidazole
+gene in {\em B. megaterium} DSM319 (NC\_014103.1 239188--239400).
+{\em Top:} The gene off conformation. {\em Bottom:} The gene on conformation.}
+\label{fig:figure:NC_014103_1_239188_239400}
+\end{figure}
