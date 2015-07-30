@@ -3,7 +3,7 @@
 \chapter{FFTbor}
 \label{ch:fftbor}
 
-\lhead{FFTbor}
+\lhead{FFTbor: Coarse-Grained Energy Landscapes}
 
 \section{Introduction}
 \label{sec:fftbor:intro}
@@ -153,7 +153,7 @@ p(k) =\frac{\bfZ{k}{1,n}}{\bfZ{}{1,n}}.
 \end{align}
 
 By visualizing the probabilities $p_k$ as a function of $k$, we generate a
-coarse grained view of the one-dimensional energy landscape of \seq with
+coarse-grained view of the one-dimensional energy landscape of \seq with
 respect to \strSt. When \strSt is taken to be the \mfes for example, one would
 anticipate to see a peak at $k=0$, with additional peaks implying additional
 metastable structures; local energy minima which could suggest an energetic
@@ -805,12 +805,12 @@ taken by \kinfold, each step consisting of the addition or removal
 of a single base pair (or shift --- see \cite{flamm}), to fold the
 empty structure into the MFE
 structure, where the average was taken over 30 runs, with an absolute
-maximum number of Monte Carlo steps taken to be $500,000$.
-The first sequence, BX842649.1/277414--277318, converged within $500,000$
+maximum number of Monte Carlo steps taken to be 500,000.
+The first sequence, BX842649.1/277414--277318, converged within 500,000
 steps only for 20 out of 30 runs. Assigning the maximum step count of
-$500,000$ for the 10 runs that did not converge, we found a mean first
+500,000 for the 10 runs that did not converge, we found a mean first
 passage time of $311,075.06$ steps for this sequence.
-The second sequence, AACY022101973.1/389--487, converged within $500,000$
+The second sequence, AACY022101973.1/389--487, converged within 500,000
 steps in 29 out of 30 runs, and we found a mean first passage time of
 $61,575.69$ steps for this sequence. From computational experiments of this
 type, it is suggestive that \fftbor may prove useful in synthetic
@@ -1004,11 +1004,11 @@ sequences, starting from the empty structure.  The mean $\mu_1$ and standard
 deviation $\sigma_1$ for the \fftbor distribution for randomized BX842649 are
 respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
 AACY022101973 are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
-maximum of $500,000$ steps with 30 replicates (as explained in the text), we
+maximum of 500,000 steps with 30 replicates (as explained in the text), we
 found
 that for randomized BX842649, all 30 runs converged yielding a mean first passage
 time (MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
-randomized AACY022101973, only 15 out of 30 runs converged within $500,000$ steps,
+randomized AACY022101973, only 15 out of 30 runs converged within 500,000 steps,
 and discounting these nonconvergent data, we obtain an average mean first passage
 time (MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
 test provides more anecdotal evidence supporting our hypothesis that small
@@ -1221,7 +1221,7 @@ presents similar data for running
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarkingOpenMP.pdf}
 \caption{{\em (Left)} Table showing parallel run times in seconds
 for \fftbor, using
-OpenMP {\tt http://openmp.org/}. Column headers 1 and 2 indicate
+OpenMP---\url{http://openmp.org/}. Column headers 1 and 2 indicate
 the number of cores used in the computational experiment.
 For each sequence length $200,\dots,500$,
 five random RNAs were generated using equal probability for each nucleotide

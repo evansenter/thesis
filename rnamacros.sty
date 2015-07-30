@@ -47,6 +47,7 @@
 \newcommand{\rfinder}{\ms{Ribofinder}}
 \newcommand{\rfold}{\ms{RNAfold}}
 \newcommand{\rnabor}{\ms{RNAbor}}
+\newcommand{\rshapes}{\ms{RNAshapes}}
 \newcommand{\rnaeq}{\ms{RNAeq}}
 \newcommand{\rnamfpt}{\ms{RNAmfpt}}
 \newcommand{\rnasub}{\ms{RNAsubopt}}
@@ -58,6 +59,7 @@
 % Terminology
 % --------------------------------------------------
 \newcommand{\bpd}{base pair distance\xspace}
+\newcommand{\Bsxpt}{{\em B. subtilis} xpt\xspace}
 \newcommand{\ebpd}{expected base pair distance\xspace}
 \newcommand{\Eqt}{Equilibrium time\xspace}
 \newcommand{\eqt}{equilibrium time\xspace}
@@ -97,6 +99,14 @@
 \newcommand{\strS}{\strletter{S}}
 \newcommand{\strT}{\strletter{T}}
 \newcommand{\str}{\strS}
+\newcommand{\strConst}[1]{\ensuremath{{\mathcal C}_{\text{#1}}}\xspace}
+\newcommand{\strOff}{\ensuremath{{\mathcal S}_{\text{off}}}\xspace}
+\newcommand{\strOn}{\ensuremath{{\mathcal S}_{\text{on}}}\xspace}
+\newcommand{\tree}{\strT}
+\newcommand{\treeFor}[1]{\ensuremath{\tree_{\text #1}}\xspace}
+\newcommand{\textdown}[2]{\ensuremath{{\text{#1}}_{\text{#2}}}\xspace}
+\newcommand{\treePos}[2]{\textdown{\ms{#1}}{#2}}
+\newcommand{\treeIdx}[3]{\treePos{#1}{#2}\ensuremath{(#3)}\xspace}
 
 % --------------------------------------------------
 % Math notation
@@ -123,7 +133,7 @@
 \newcommand{\pSt}{\ensuremath{p^*}\xspace}
 \newcommand{\statDist}{\ensuremath{p^*=(p^*_1,\dots,p^*_n)}\xspace}
 \newcommand{\tD}[1]{\ensuremath{t_{#1\Delta}}\xspace}
-\newcommand{\tMin}{\ensuremath{T_{\min}}\xspace}
 \newcommand{\tMax}{\ensuremath{T_{\max}}\xspace}
+\newcommand{\tMin}{\ensuremath{T_{\min}}\xspace}
 \newcommand{\xEnd}{\ensuremath{x_\infty}\xspace}
 \newcommand{\xStart}{\ensuremath{x_0}\xspace}

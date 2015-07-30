@@ -3,7 +3,7 @@
 \chapter{Hermes}
 \label{ch:hermes}
 
-\lhead{Hermes}
+\lhead{Hermes: Efficient Kinetic Analysis of RNA Molecules}
 
 \section{Introduction}
 \label{sec:hermes:intro}
@@ -433,6 +433,7 @@ folding, as implemented in \kinfold \cite{flammPhD,flamm}.
 \medskip
 
 \begin{figure}[!ht]
+\centering
 \hrule \rule[0ex]{0pt}{0pt}
 \begin{center}
 {\large Pseudocode for the Gillespie algorithm} \\
@@ -636,7 +637,7 @@ many options for defining the format of the input as well as the
 structure of the graph underlying the
 Markov chain.
 
-Due to our interest in efficiently estimating MFPT using coarse grained 2D
+Due to our interest in efficiently estimating MFPT using coarse-grained 2D
 energy landscapes, the default input for \rnamfpt (and \rnaeq) is a 2D
 probability grid, as described above. We additionally allow as alternative input
 an energy landscape (whereby transition probabilities are defined as in
@@ -965,7 +966,7 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
 \State $t_{\text{temp}} \gets t$
 \If{$|p_i(10^t) - p_i(10^{t'})| > \delta$}
 \State $t \gets t + s * \frac{|t - t'|}{2}$
-\Comment{$s$ is $1$ [resp. $-1$] for the right [resp. left] bound}
+\Comment{$s$ is 1 [resp. $-1$] for the right [resp. left] bound}
 \Else
 \State $t \gets t - s * \frac{|t - t'|}{2}$
 \EndIf
@@ -1024,7 +1025,7 @@ approach (green) versus the approach outlined in Algorithm \ref{fig:hermes:eqEst
 dataset described in Section \ref{sec:hermes:benchdata}, sequence \#146
 {\em (Left)} and \#427 {\em (Right)}. Note that the $p(t)$ for the approach from
 Algorithm \ref{fig:hermes:eqEst} is much closer to the computed Boltzmann
-probability---the correlation across the dataset of $1,000$ sequences is
+probability---the correlation across the dataset of 1,000 sequences is
 $0.9997$.}
 \label{fig:hermes:eqEstFromRnaEq}
 \end{figure}
@@ -1175,8 +1176,8 @@ from \kinfold require prohibitively large computational time---indeed, in
 yeast were obtained by 9,000 \kinfold simulations, each for $10^8$
 steps, requiring 3 months of CPU time on an Intel Pentium 4 running at
 2.4 GHz under Linux. Although the correlation value of 0.6035 between
-\rnamfpt and \fftmfpt is much less than that obtained by {\tt
-Kinfold}, the runtime required by our method \fftmfpt is measured
+\rnamfpt and \fftmfpt is much less than that obtained by \kinfold,
+the runtime required by our method \fftmfpt is measured
 in seconds, even for moderate to large RNAs. For this reason, we
 advocate the use of \fftmfpt in synthetic biology screens to
 design RNA sequences having certain desired kinetic properties. Once
@@ -1201,8 +1202,7 @@ versus \rnaeq {\em (Left)} and for \kinfold versus
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsFftMfptHastings.pdf}
 \caption{ Scatter plots of the natural logarithm of times from \rnamfpt
-versus \kinfold {\em (Left)} and for \rnamfpt versus {\tt
-FFTmfpt} {\em (Right)}. }
+versus \kinfold {\em (Left)} and for \rnamfpt versus \fftmfpt {\em (Right)}. }
 \label{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
 \end{figure}
 
