@@ -42,25 +42,25 @@ at \url{http://bioinformatics.bc.edu/clotelab/Hermes/}.
 \section{Introduction} \label{section:introduction}
 
 Remarkable results in RNA synthetic biology have recently been
-obtained by various groups. In \cite{Hochrein.jacs13}, small
+obtained by various groups. In \citep{Hochrein.jacs13}, small
 conditional RNAs have been engineered to silence a gene Y by using the
 RNA interference machinery, only if a gene X is transcribed. In
-\cite{Wachsmuth.nar13} a novel theophylline riboswitch has been
+\citep{Wachsmuth.nar13} a novel theophylline riboswitch has been
 computationally designed to transcriptionally regulate a gene in {\em
-E. coli}, and in \cite{syntheticHammerheads} a purely computational
+E. coli}, and in \citep{syntheticHammerheads} a purely computational
 approach was used to design functionally active hammerhead ribozymes.
 Computational design of synthetic RNA molecules invariably uses some
 form of thermodynamics-based algorithm; indeed, {\tt NUPACK-Design}
-\cite{Zadeh.jcc11} was used to design small conditional RNAs
-\cite{Hochrein.jacs13}, Vienna RNA Package \cite{Gruber08} was used in
+\citep{Zadeh.jcc11} was used to design small conditional RNAs
+\citep{Hochrein.jacs13}, Vienna RNA Package \citep{Gruber08} was used in
 the design of the synthetic theophylline riboswitch, and the {\tt
 RNAiFold} inverse folding software
-\cite{garcia.JBCBB13,GarciaMartin.nar13} was used to design the
+\citep{garcia.JBCBB13,GarciaMartin.nar13} was used to design the
 synthetic hammerhead ribozymes. The next step in the computational
 design of synthetic RNA molecules is to control the kinetics of
 folding -- such control could be important in engineering
 conformational switches. Kinetics is already used as a design feature
-for synthetic design in proteins \cite{Bujotzek.jcam11,Fasting.acie12}.
+for synthetic design in proteins \citep{Bujotzek.jcam11,Fasting.acie12}.
 
 In this paper, we introduce a new software suite, called \hermes,
 which efficiently computes RNA secondary structure
@@ -77,16 +77,16 @@ previous work is beyond the scope of this paper. Here we cite only the
 most relevant related work on RNA secondary structure
 kinetics. Experimental approaches to
 determine the kinetics of RNA folding include temperature jump
-experiments \cite{lecuyerCrothers}, using fluorophores
-\cite{Hobartner.jmb03}, using mechanical tension at the single
-molecule level \cite{Vieregg.mp06}, etc. and will not be further
+experiments \citep{lecuyerCrothers}, using fluorophores
+\citep{Hobartner.jmb03}, using mechanical tension at the single
+molecule level \citep{Vieregg.mp06}, etc. and will not be further
 discussed. In this paper we focus exclusively on computational
 approaches to folding kinetics, where stepwise transitions between
 secondary structures involve the addition or removal of a single base
-pair, as first considered in \cite{flammHofacker}.
+pair, as first considered in \citep{flammHofacker}.
 Nevertheless, it should be noted that there are a number of
 methods that concern the addition or removal of an entire helical
-region, e.g. \cite{Huang.bb14,Zhao.jcp11}.
+region, e.g. \citep{Huang.bb14,Zhao.jcp11}.
 
 Most computational approaches involve either (1) algorithms to
 determine optimal or near-optimal folding pathways, (2) explicit
@@ -94,27 +94,27 @@ solutions of the master equation, (3) repeated simulations to fold an
 initially empty secondary structure to the target minimum free energy
 (MFE) structure. Examples of methods to determine optimal or
 near-optimal folding pathways include the greedy approach of Morgan
-and Higgs \cite{morganHiggsBarrier}, the exact, optimal, exponential
-time program {\tt barriers} \cite{flammHofacker}, the program {\tt
-Findpath} \cite{Flamm.r01}, which uses bounded look-ahead
-breadth-first search, a genetic algorithm \cite{Shapiro.jmb01}, the
+and Higgs \citep{morganHiggsBarrier}, the exact, optimal, exponential
+time program {\tt barriers} \citep{flammHofacker}, the program {\tt
+Findpath} \citep{Flamm.r01}, which uses bounded look-ahead
+breadth-first search, a genetic algorithm \citep{Shapiro.jmb01}, the
 program {\tt RNAtabupath} that uses local search to determine
 near-optimal folding pathways, etc. The program {\tt barriers}
-\cite{flammHofacker} is the only current method guaranteed to
+\citep{flammHofacker} is the only current method guaranteed to
 produce optimal folding pathways. Since it has been shown that
 the problem of determining optimal folding pathways is
-NP-complete \cite{Thachuk.psb10}, it is now understandable why
+NP-complete \citep{Thachuk.psb10}, it is now understandable why
 {\tt barriers} can take exponential time to converge, depending
 on the RNA sequence. For this reason, near-optimal solutions
 provided by heuristic methods, such as {\tt RNAtabupath}, are very useful.
 
 Methods that employ the master equation include {\tt Treekin}
-\cite{wolfingerStadler:kinetics}, which uses the programs {\tt
-RNAsubopt} \cite{wuchtyFontanaHofackerSchuster} and {\tt barriers}
-\cite{flammHofacker} to determine {\em macrostates}, defined as basins
+\citep{wolfingerStadler:kinetics}, which uses the programs {\tt
+RNAsubopt} \citep{wuchtyFontanaHofackerSchuster} and {\tt barriers}
+\citep{flammHofacker} to determine {\em macrostates}, defined as basins
 of attraction near a locally optimal structure. The resulting
 coarse-grained Markov chain is then sufficiently small to allow explicit
-solution of the master equation. In \cite{Tang.jcb05}, a moderate
+solution of the master equation. In \citep{Tang.jcb05}, a moderate
 number of RNA structures were sampled according to different
 strategies, from which a robotic motion planning graph was defined
 to connect each sampled structure to its $k$ nearest sampled
@@ -123,22 +123,22 @@ sufficiently small for an explicit solution of the master equation to
 be given.
 
 We now come to simulation approaches to estimate RNA folding kinetics.
-The program \kinfold \cite{flammPhD,flamm} is an implementation
-of Gillespie's algorithm \cite{gillespieStochasticSimulation1},
+The program \kinfold \citep{flammPhD,flamm} is an implementation
+of Gillespie's algorithm \citep{gillespieStochasticSimulation1},
 directly related to the master equation, hence is considered by many
 to be the gold standard for RNA kinetics. A recent extension of the
-\kinfold algorithm was reported in \cite{Aviram.amb12}. {\tt
-Kinefold} \cite{Xayaphoummine.nar05} uses stochastic simulations of
+\kinfold algorithm was reported in \citep{Aviram.amb12}. {\tt
+Kinefold} \citep{Xayaphoummine.nar05} uses stochastic simulations of
 the nucleation and dissociation of helical regions to predict
 secondary structure and folding pathways. In contrast to the
 previously mentioned methods, both {\tt RNAKinetics}
-\cite{Danilova.jbcb06} and {\tt Kinwalker} \cite{Geis.jmb08} model
+\citep{Danilova.jbcb06} and {\tt Kinwalker} \citep{Geis.jmb08} model
 co-transcriptional folding, known to be necessary when simulating
-{\em in vivo} folding of long RNA molecules \cite{Lai.r13}. As well,
+{\em in vivo} folding of long RNA molecules \citep{Lai.r13}. As well,
 {\tt Kinefold} can simulate both refolding and co-transcriptional folding
 pathways. Finally, unlike all the previous simulation results, which
-depend on thermodynamic free energy parameters \cite{Turner.nar10},
-the program {\tt Oxfold} \cite{Anderson.b13} performs kinetic folding
+depend on thermodynamic free energy parameters \citep{Turner.nar10},
+the program {\tt Oxfold} \citep{Anderson.b13} performs kinetic folding
 of RNA using stochastic context-free grammars and evolutionary
 information.
 
@@ -152,9 +152,9 @@ and equilibrium time is computed using spectral decomposition of the rate
 matrix for the coarse-grained master equation.
 \hermes is written in C/C++, and
 makes calls to the Fast Fourier Transform implementation {\tt FFTW}
-\cite{FFTW05} \url{http://www.fftw.org/}, the Gnu Scientific Library
+\citep{FFTW05} \url{http://www.fftw.org/}, the Gnu Scientific Library
 (GSL) \url{http://www.gnu.org/software/gsl/}, and the free energy
-functions from Vienna RNA Package \cite{Lorenz.amb11}. The plan of the
+functions from Vienna RNA Package \citep{Lorenz.amb11}. The plan of the
 paper is as follows.
 
 Section~\ref{section:algo} gives background definitions and results
@@ -246,7 +246,7 @@ $(n-1) \times 1$ column vector consisting entirely of $1$'s, it can be
 shown that mean first passage time from state $x_0$ to state $x_{\infty}$
 is the $x_0$-th coordinate
 of column vector
-$(I - P^{-}_{x_{\infty}})^{-1} \cdot {\bf e}$ \cite{meyerMFPT}.
+$(I - P^{-}_{x_{\infty}})^{-1} \cdot {\bf e}$ \citep{meyerMFPT}.
 
 
 The {\em stationary} probability distribution $\pSt = (\pSt_1,\ldots,\pSt_n)$
@@ -256,9 +256,9 @@ It can be shown that the stationary probability $\pSt_i$ is the limit,
 as $m$ tends to infinity, of the frequency of visiting state $i$ in a
 random walk of length $m$ on Markov chain $\mathbb{M}$.
 It is well-known that the stationary distribution exists and is unique
-for any finite aperiodic irreducible Markov chain \cite{cloteBackofen:book}.
+for any finite aperiodic irreducible Markov chain \citep{cloteBackofen:book}.
 
-The Metropolis Monte Carlo algorithm \cite{metropolis:MonteCarlo} can
+The Metropolis Monte Carlo algorithm \citep{metropolis:MonteCarlo} can
 be used to simulate a random walk from initial state $x_0$ to target state
 $x_{\infty}$, when energies are associated with the states, as is the case in
 macromolecular folding, where free energies can be determined for
@@ -295,14 +295,14 @@ where $E(k)$ is the energy of conformation $k$ at temperature $T$,
 $R$ is the universal gas constant,
 $T$ is absolute temperature, and the {\em partition function}
 $Z = \sum_{i=1}^n \exp(-E(i)/RT)$ is a normalization constant
-\cite{waterman:book,cloteBackofen:book}. If neighborhood size is not
+\citep{waterman:book,cloteBackofen:book}. If neighborhood size is not
 constant, as in the case where states are RNA secondary structures and transitions
 are restricted to the addition or removal of a single base pair, then
 by {\em Hasting's trick}, an equivalent Markov chain can be defined which
 satisfies detailed balance -- see equation (\ref{eq:MFPTwithHastings}).
 
 Following Anfinsen's experimental work on the denaturation and
-refolding of bovine pancreatic ribonuclease \cite{anfinsen},
+refolding of bovine pancreatic ribonuclease \citep{anfinsen},
 the native conformation is assumed to be the ground state having
 minimum free energy. These results justify the use of the Monte Carlo
 Algorithm \ref{algo:MonteCarlo} in macromolecular kinetics and
@@ -475,7 +475,7 @@ $\lambda_1,\ldots,\lambda_n$ be the corresponding right eigenvalues of the
 transpose $R^T$ of the rate matrix.
 Letting $T$ be the $n\times n$ matrix, whose columns are
 $\mathbbt^1,\ldots,\mathbbt^n$, using standard matrix algebra
-\cite{matrixTheory}, it can be shown that
+\citep{matrixTheory}, it can be shown that
 \begin{align}
 \label{eq:solutionMasterEquation}
 p(t) &=& \sum_{j=1}^n (T^{-1}
@@ -504,12 +504,12 @@ $Q$ is taken to be the set of all secondary structures for sequences in
 the benchmarking set described later.
 
 
-In \cite{gillespieStochasticSimulation1} Gillespie described
+In \citep{gillespieStochasticSimulation1} Gillespie described
 a very influential algorithm to simulate a finite Markov process.
 The pseudocode, is given in Algorithm~\ref{algo:Gillespie}.
 Though Gillespie's original application was for chemical kinetics,
 Flamm et al.  adapted the method for the kinetics of RNA secondary structure
-folding, as implemented in \kinfold \cite{flammPhD,flamm}.
+folding, as implemented in \kinfold \citep{flammPhD,flamm}.
 
 
 % \begin{algorithm}[Gillespie algorithm] \hfill\break
@@ -553,10 +553,10 @@ the stability of development branches in our Git repository.
 
 External dependencies for the software include a C (resp. C++)
 compiler supporting the GNU99 language specification (resp. C++98),
-FFTW implementation of Fast Fourier Transform \cite{FFTW05} ($\geq
+FFTW implementation of Fast Fourier Transform \citep{FFTW05} ($\geq
 3.3.4$) \url{http://www.fftw.org/}, Gnu Scientific Library GSL ($\geq
 1.15$) \url{http://www.gnu.org/software/gsl/}, Vienna RNA Package
-\cite{Lorenz.amb11} ($\geq 2.0.7$) \url{http://www.viennarna.at}, and
+\citep{Lorenz.amb11} ($\geq 2.0.7$) \url{http://www.viennarna.at}, and
 any corresponding sub-packages included with the aforementioned
 software. For a more detailed explanation of both external
 dependencies and installation instructions, refer to the
@@ -585,17 +585,17 @@ programs (\fftmfpt, \ffteq). For an exhaustive list of
 command-line options, please see the corresponding help files.
 
 Given an RNA sequence \seq of length $n$ and two reference
-structures $A,B$, the algorithm \ffttwo \cite{Senter.jmb14}
+structures $A,B$, the algorithm \ffttwo \citep{Senter.jmb14}
 computes for each $0 \leq x,y \leq n$ the Boltzmann probability
 $P(x,y) = \frac{Z(x,y)}{Z}$ of all structures having base pair
 distance $x$ to \strA [resp. $y$ to \strB]. Although the algorithm for the
-software \ffttwo is unchanged from that of \cite{Senter.jmb14},
+software \ffttwo is unchanged from that of \citep{Senter.jmb14},
 the software described in this
 paper has been heavily refactored to provide a user-facing API,
 homogeneous with the rest of the \hermes suite. As with the rest of
-\hermes, \ffttwo makes use of either the Turner 1999 \cite{turner}
+\hermes, \ffttwo makes use of either the Turner 1999 \citep{turner}
 or the later Turner 2004 energy parameters
-\cite{Turner.nar10}, taken respectively
+\citep{Turner.nar10}, taken respectively
 from the files rna\_turner1999.par and  rna\_turner2004.par in Vienna
 RNA Package. \ffttwo takes as input an RNA sequence \seq and two
 secondary structures $A,B$ of the input RNA sequence -- both given
@@ -611,7 +611,7 @@ $y$) from \strA (resp. \strB).
 
 \rnamfpt computes the {\em mean first passage time} (MFPT), sometimes
 referred to as the {\em hitting time} of a Markov chain, by using
-matrix inversion \cite{meyerMFPT} -- see
+matrix inversion \citep{meyerMFPT} -- see
 Section~\ref{section:algo}. The program takes as input a
 comma separated value (CSV) file containing the non-zero positions and
 values of a 2D probability grid; i.e. a CSV format file having columns {\em i},
@@ -625,7 +625,7 @@ of handling 2D-probability grids, all vertexes are uniquely identified
 by index tuples (which conceptually correspond to positioning in a 2D
 array). However, it is trivial to use this code with both
 1D-probability grids such as those produced by \fftbor
-\cite{Senter.po12} or arbitrary transition matrices without any change
+\citep{Senter.po12} or arbitrary transition matrices without any change
 to the underlying implementation. The software additionally provides
 many options for defining the structure of the graph underlying the
 Markov chain. Some of these include the option to force a fully
@@ -645,7 +645,7 @@ spectral decomposition of the column-ordered rate matrix that
 underlies the corresponding Markov process, \rnaeq computes either
 the equilibrium time or population occupancy frequencies.
 Additionally, \rnaeq can call the
-Vienna RNA Package program \rnasub \cite{Wuchty.b99}, with a
+Vienna RNA Package program \rnasub \citep{Wuchty.b99}, with a
 user-specified upper bound to the energy difference with the minimum
 free energy. With this option, the rate matrix is
 constructed for the Markov process, whose states consist of all
@@ -695,7 +695,7 @@ sampling with \rnasub, even with constraints.
 %and ${\bf e}$ denotes the column vector composed of $n-1$ many ones.
 %It follows that the mean first passage time to reach state $k$, when
 %starting in state $1 \leq i < k$ [resp. $k< i \leq n$] is the $i$th
-%[resp. $(i-1)$th coordinate of $T$ \cite{meyerMFPT}.
+%[resp. $(i-1)$th coordinate of $T$ \citep{meyerMFPT}.
 %
 %\subsection*{Computing equilibrium time for a Markov process}
 %
@@ -715,7 +715,7 @@ sampling with \rnasub, even with constraints.
 %$\lambda_1,\ldots,\lambda_n$ be the corresponding eigenvalues of the
 %rate matrix. Letting $T$ be the $n\times n$ matrix, whose columns are
 %$\mathbbt^1,\ldots,\mathbbt^n$, using standard matrix algebra
-%\cite{matrixTheory}, it can be shown that
+%\citep{matrixTheory}, it can be shown that
 %\begin{align}
 %\label{eq:solutionMasterEquation} P(t) &=& \sum_{j=1}^n (T^{-1}
 %\mathbbP(0))_j \cdot \mathbbt^j \cdot e^{\lambda_j t}
@@ -753,7 +753,7 @@ without having to copy-and-paste relevant functions. The applications
 passage time (MFPT) for an RNA secondary structure to fold from an
 initial structure, such as the empty structure or a given metastable
 structure, into a target structure, such as the minimum free energy
-(MFE) structure or possibly the Rfam \cite{Gardner.nar11} consensus
+(MFE) structure or possibly the Rfam \citep{Gardner.nar11} consensus
 structure. \ffteq uses spectral decomposition to compute the equilibrium time and the
 fraction of the population of RNA structures that are
 equal to a given target structure, as a function of time.
@@ -780,9 +780,9 @@ are \rnamfpt,
 \fftmfpt,
 \fftbor,
 \ffteq -- all computed using \hermes, together with,
-\kinfold \cite{flammHofacker},
-{\tt BarrierBasins} \cite{wolfingerStadler:kinetics},
-and \rnatwofold \cite{hofacker:RNAbor2D}. The {\em exact} data \rnamfpt
+\kinfold \citep{flammHofacker},
+{\tt BarrierBasins} \citep{wolfingerStadler:kinetics},
+and \rnatwofold \citep{hofacker:RNAbor2D}. The {\em exact} data \rnamfpt
 [resp. \rnaeq] were computed using the \hermes software {\tt RNAmfpt}
 [resp. {\tt RNAeq}] in the following fashion.
 
@@ -808,7 +808,7 @@ macrostates $M(x,y)$. Transition probabilities are computed by
 equation (\ref{eq:transitionProb1}), and matrix inversion is used to
 determine mean first passage time for the coarse-grained model.
 For comparison purposes, the method \fftbor calls the
-program \fftbor \cite{Senter.po12} to compute the Boltzmann probabilities
+program \fftbor \citep{Senter.po12} to compute the Boltzmann probabilities
 $p(x) = \frac{Z(x)}{Z}$ for the coarse-grained model consisting of
 macrostates $M(x)$ of all secondary structures having base pair distance
 $x$ to a given target structure. Mean first passage time is then computed
@@ -847,22 +847,22 @@ using spectral decomposition of the rate matrix.
 
 
 Kinetics algorithms developed by other groups and benchmarked in our study
-are the following: \kinfold \cite{flamm},
-{\tt BarriersBasin} \cite{flammHofacker,wolfingerStadler:kinetics},
-{\tt Kinwalker} \cite{Geis.jmb08}. Below, we give a brief overview of these methods.
+are the following: \kinfold \citep{flamm},
+{\tt BarriersBasin} \citep{flammHofacker,wolfingerStadler:kinetics},
+{\tt Kinwalker} \citep{Geis.jmb08}. Below, we give a brief overview of these methods.
 
-\kinfold \cite{flamm} is an implementation of Gillespie's
+\kinfold \citep{flamm} is an implementation of Gillespie's
 Algorithm \ref{algo:Gillespie}.
 For benchmarking purposes, we determined the mean first passage time
 from $10^4$ \kinfold simulations, each with an upper bound of
 $10^8$ Monte Carlo steps in order to ensure convergence of each run.
 {\tt BarriersBasin} is our name for the method described by Wolfinger
-et al. \cite{wolfingerStadler:kinetics}, which first runs
-\rnasub \cite{flammHofacker} to obtain an energy-sorted list of
+et al. \citep{wolfingerStadler:kinetics}, which first runs
+\rnasub \citep{flammHofacker} to obtain an energy-sorted list of
 secondary structures that contain the empty structure,
 then computes locally optimal structures, saddle points and macrostate
 {\em basins of attraction}  using the program {\tt barriers}
-\cite{wolfingerStadler:kinetics}. Subsequently, we use \hermes to
+\citep{wolfingerStadler:kinetics}. Subsequently, we use \hermes to
 determine the equilibrium time for the resulting Markov process whose
 rate matrix is returned by {\tt barriers}.\footnote{Since
 the rate matrix returned by {\tt barriers}
@@ -877,13 +877,13 @@ write a program to determine the equilibrium time from the output of
 {\tt treekin}. Since \hermes determines equilibrium time directly
 from any input rate matrix, we used \hermes to postprocess the
 output rate matrix from {\tt barriers}.}
-Since {\tt Kinwalker} \cite{Geis.jmb08} implements co-transcriptional folding,
+Since {\tt Kinwalker} \citep{Geis.jmb08} implements co-transcriptional folding,
 we found that its correlation with the gold and platinum standards was
 extremely poor, hence we do not further report the results from our tests
 with {\tt Kinwalker}.
 Programs for the remaining kinetics methods, such as the motion planning
-method of Tang et al. \cite{Tang.jmb08}, the stochastic simulation
-{\tt Kinefold} \cite{Xayaphoummine.nar05}, etc.
+method of Tang et al. \citep{Tang.jmb08}, the stochastic simulation
+{\tt Kinefold} \citep{Xayaphoummine.nar05}, etc.
 from the introduction were either not available, or else it
 appeared to be difficult/impossible to extract
 mean first passage times or equilibrium times to compare with the
@@ -893,21 +893,21 @@ gold and platinum standards.
 Finally, Table~\ref{table:correlation}
 also includes the method we call here by \rnatwofold.
 Given reference structures $A,B$, the \rnatwofold  program
-\cite{hofacker:RNAbor2D,Lorenz.amb11} computes for each integer
+\citep{hofacker:RNAbor2D,Lorenz.amb11} computes for each integer
 $x,y$, the minimum free energy structure and partition function
 among all secondary structures having base pair distance $x$ to \strA
 and $y$ to \strB.\footnote{\rnatwofold generalizes an earlier algorithm
-{\tt RNAbor} \cite{Freyhult.b07,Freyhult.nar07}, which computes the
+{\tt RNAbor} \citep{Freyhult.b07,Freyhult.nar07}, which computes the
 minimum free energy structure and partition function among all structures
 having base pair distance $x$ to reference structure \strA.}
-\ffttwo \cite{Senter.jmb14} is a much faster program, using the
+\ffttwo \citep{Senter.jmb14} is a much faster program, using the
 fast Fourier transform, which
 computes the partition function (but not the minimum free energy
 structure) over all structures having base pair distance $x$ to \strA and
 $y$ to \strB. By the kinetics method dubbed
 \rnatwofold, we mean that we applied
 \rnatwofold from Vienna RNA Package 2.1.7
-\cite{hofacker:RNAbor2D,Lorenz.amb11} in order
+\citep{hofacker:RNAbor2D,Lorenz.amb11} in order
 to obtain probabilities $p(x,y) = \frac{Z(x,y)}{Z}$,
 and then applied \hermes to compute the mean first passage time for
 the resulting coarse-grained Markov chain, as in \fftmfpt.
@@ -942,7 +942,7 @@ the left panel of Figure \ref{fig:PLMVd}. The right panel of the
 same figure depicts the minimum free energy structure of the
 54 nt hammerhead type III ribozyme from Peach Latent Mosaic Viroid
 (PLMVd), discussed later. This secondary structure is identical
-to the consensus structure from Rfam 11.0 \cite{Gardner.nar11}.
+to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
 
 
 \begin{figure*} [!ht]
@@ -957,12 +957,12 @@ ACGCGACGUGCACCGCACGU, which range from $-6.5$ to $+25$ kcal/mol, with
 mean of $10.695$ kcal/mol.
 {\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
 Viroid (PLMVd) AJ005312.1/282-335, which is identical to the consensus
-structure from Rfam 11.0 \cite{Gardner.nar11}. {\tt RNAfold} from
+structure from Rfam 11.0 \citep{Gardner.nar11}. {\tt RNAfold} from
 Vienna RNA Package 2.1.7 with energy parameters from the Turner 1999
 model were used, since the minimum free energy structure determined by
 the more recent Turner 2004 energy parameters
 does {\em not} agree with the Rfam consensus structure -- see
-\cite{syntheticHammerheads}. Positional entropy, a measure
+\citep{syntheticHammerheads}. Positional entropy, a measure
 of divergence in the base pairing status at each positions for the
 low energy ensemble of structures, is indicated by color, using the
 RNA Vienna Package utility script {\tt relplot.pl}.
@@ -1061,7 +1061,7 @@ that the mean is equal to the standard deviation, hence
 it is not surprising that \kinfold
 kinetics have this property.} accurate kinetics estimates
 from \kinfold require prohibitively large computational time -- indeed, in
-\cite{wolfingerStadler:kinetics} reliable kinetics for phe-tRNA from
+\citep{wolfingerStadler:kinetics} reliable kinetics for phe-tRNA from
 yeast were obtained by 9,000 \kinfold simulations, each for $10^8$
 steps, requiring 3 months of CPU time on an Intel Pentium 4 running at
 2.4 GHz under Linux. Although the correlation value of 0.6035 between
@@ -1128,9 +1128,9 @@ Given an RNA sequence \seq,  \ffttwo computes the Boltzmann probability
 $p(x,y) = \frac{Z(x,y)}{Z}$ of secondary structures of \seq, whose base
 pair distance from initial structure \strA is $x$ and from target structure
 \strB is $y$. \ffttwo is an enhancement of the algorithm
-described in \cite{Senter.jmb14}, shown there
+described in \citep{Senter.jmb14}, shown there
 to run both in theory and in practice much faster than \rnatwofold
-\cite{hofacker:RNAbor2D},
+\citep{hofacker:RNAbor2D},
 since \ffttwo uses the fast Fourier transform to
 compute Boltzmann probabilities $p(x,y)$ by polynomial interpolation.
 
@@ -1168,7 +1168,7 @@ Figure \ref{fig:checkerboardGridPointsSplicedLeader},
 $P(t) = (P_1(t),\ldots,P_n(t))$ by using spectral decomposition, and
 then determines the {\em equilibrium time}.
 Alternatively, given an input RNA sequence {\tt RNAeq}
-calls \rnasub \cite{wuchtyFontanaHofackerSchuster} to generate
+calls \rnasub \citep{wuchtyFontanaHofackerSchuster} to generate
 structures within a user-specified energy bound (or to sample a user-specified
 number of structures from the low energy ensemble). {\tt RNAeq} subsequently
 computes the rate matrix and computes population occupancy frequencies
@@ -1196,12 +1196,12 @@ matrix or respectively rate matrix are determined, and then calling
 %\includegraphics[width=.45\textwidth]{FIGURES/PeterFFTbor2DLcollosoma}
 \includegraphics[width=.45\textwidth]{figure7b.eps}
 \caption{\small {\em (Left)}
-As first pointed out in \cite{hofacker:RNAbor2D}, the
+As first pointed out in \citep{hofacker:RNAbor2D}, the
 set of grid points $(x,y)$, for which a secondary structure $S$ has
 base pair distance $x$ from reference structure \strA and base pair
 distance $y$ from reference structure \strB, forms a kind of
 checkerboard image. For the 56 nt spliced leader RNA from {\em L.
-collosoma} \cite{lecuyerCrothers}, with sequence AACUAAAACA AUUUUUGAAG
+collosoma} \citep{lecuyerCrothers}, with sequence AACUAAAACA AUUUUUGAAG
 AACAGUUUCU GUACUUCAUU GGUAUGUAGA GACUUC, and reference structure \strA
 given by {\tt
 ..((...((((((..(((((.((((...)))).)))))..))).)))..)).....}, and
@@ -1221,7 +1221,7 @@ from {\em Leptomonas collosoma}, in which
 the $z$-axis represents the ensemble free energy $-RT \log Z(x,y)$,
 where $Z(x,y)$ is computed in \ffttwo by $Z_{x,y}= p(x,y) \cdot Z$.
 Low energy positions $(x,y)$ correspond to high Boltzmann probability positions.
-Image taken from \cite{Senter.jmb14}.
+Image taken from \citep{Senter.jmb14}.
 }
 \end{center}
 \label{fig:checkerboardGridPointsSplicedLeader}
@@ -1242,11 +1242,11 @@ computed for each sequence.
 Pearson correlation was then computed
 between the folding times of all the methods of \hermes, along
 with the current state-of-the-art kinetics programs \kinfold
-\cite{flamm}, {\tt BarrierBasins} \cite{wolfingerStadler:kinetics},
-{\tt Kinwalker} \cite{Geis.jmb08}.
+\citep{flamm}, {\tt BarrierBasins} \citep{wolfingerStadler:kinetics},
+{\tt Kinwalker} \citep{Geis.jmb08}.
 
 \kinfold is an implementation
-of the Gillespie algorithm \cite{gillespieStochasticSimulation1},
+of the Gillespie algorithm \citep{gillespieStochasticSimulation1},
 which essentially samples from an exponential distribution of folding
 times, hence \kinfold mean and standard deviation are
 approximately equal -- see
@@ -1264,13 +1264,13 @@ Since the state-of-the-art software \kinfold, which implements
 Gillespie's algorithm, cannot return statistically significant folding
 times unless significant computation time is allotted, it is natural
 to turn to {\em coarse-grained} models, as done by
-Wolfinger et al. \cite{wolfingerStadler:kinetics} and by
-Tang et al. \cite{Tang.jmb08}.  The software of Tang et al. appears not
+Wolfinger et al. \citep{wolfingerStadler:kinetics} and by
+Tang et al. \citep{Tang.jmb08}.  The software of Tang et al. appears not
 to be available. Concerning the
 method of Wolfinger et al. (called {\tt BarrierBasins} in our benchmarking),
 there is now a web server available, which runs \rnasub
-\cite{Wuchty.b99} to generate all secondary structures within a user-specified
-energy range, then runs {\tt barriers} \cite{flammHofacker} to generate
+\citep{Wuchty.b99} to generate all secondary structures within a user-specified
+energy range, then runs {\tt barriers} \citep{flammHofacker} to generate
 basins of attraction around a user-specified number of locally optimal
 structures, and then runs {\tt treekin} on the output of {\tt barriers}.
 The program {\tt treekin} performs some of the same operations as \hermes,
@@ -1278,14 +1278,14 @@ by computing population occupation frequencies by spectral decomposition.
 Nevertheless it would require a user to write scripts and perform
 several manual steps, in order to determine the equilibrium time for
 an input RNA sequence, with respect to the macrostate Markov process
-of \cite{wolfingerStadler:kinetics}. In addition, because {\tt barriers} computes
+of \citep{wolfingerStadler:kinetics}. In addition, because {\tt barriers} computes
 basins of attraction by utilizing the output of \rnasub, estimating kinetics for the
 refolding of an RNA molecule from the empty structure requires exhaustive enumeration
 of all suboptimal structures having non-positive free energy.
 Figure \ref{fig:populationOccupancySplicedLeader} depicts some population
 occupancy curves for the 56 nt spliced leader RNA from
 {\em L. collorosoma}, a known conformational switch experimentally
-investigated in \cite{lecuyerCrothers}, a determined by
+investigated in \citep{lecuyerCrothers}, a determined by
 \hermes (left panel) and {\tt barriers} with {\tt treekin}
 (right panel).
 
@@ -1359,7 +1359,7 @@ which is $\approx 0.1791$ as shown in the left panel.}
 \end{figure*}
 
 Finally, we mention an application of \hermes to recent data from
-Dotu et al. \cite{syntheticHammerheads}, which describes the
+Dotu et al. \citep{syntheticHammerheads}, which describes the
 first purely computational design of functional synthetic hammerhead type III
 ribozymes, experimentally shown to cleave {\em in vitro}. For the tiny
 data set of 10 synthetic ribozymes, we ran \fftmfpt to determine the
@@ -1370,7 +1370,7 @@ Pearson correlation of $0.4796$ [resp. $0.5322$]  between the logarithm of the
 {\em mean first passage time} [resp. {\em equilibrium time}], as computed by
 \fftmfpt [resp. {\tt RNAeq}] and the cleavage rate, using the
 experimentally measured cleavage rate of 10 synthetic hammerhead ribozymes
-(data from \cite{syntheticHammerheads}).
+(data from \citep{syntheticHammerheads}).
 These correlation values seem surprising, since we had expected that
 rapidly folding hammerheads (low values of MFPT and ET) might be
 associated with fast cleavage. The correlation values suggest instead
@@ -1383,7 +1383,7 @@ RNA design, an area of synthetic biology.
 \section{Acknowledgements}
 
 We would like to thank Ivan Dotu, for the suggestion of checking the
-folding kinetics of the synthetic hammerheads in \cite{syntheticHammerheads}.
+folding kinetics of the synthetic hammerheads in \citep{syntheticHammerheads}.
 Some of the work described in this paper was done while PC visited
 Niles Pierce at the California Institute of Technology, Knut Reinert
 at the Free University of Berlin and Martin Vingron at the Max Planck
@@ -1408,9 +1408,9 @@ Foundation.
 In this section, we describe the kinetics algorithms used in our
 comparative study on a benchmarking set of 1000 small RNAs. The
 kinetics algorithms we consider are the following: \rnamfpt, {\tt
-Equilibrium}, \kinfold \cite{flamm}, \fftmfpt, \ffteq,
+Equilibrium}, \kinfold \citep{flamm}, \fftmfpt, \ffteq,
 \rnatwofold, {\tt FFTbor1D}, {\tt BarrierBasins}
-\cite{wolfingerStadler:kinetics}, {\tt Kinwalker} \cite{Geis.jmb08}.
+\citep{wolfingerStadler:kinetics}, {\tt Kinwalker} \citep{Geis.jmb08}.
 Our software suite \hermes introduces the new methods \rnamfpt,
 \rnaeq, \fftmfpt, \ffteq (along with {\tt
 RNA2Dfold} and {\tt FFTbor1D} through the utility programs {\tt
@@ -1461,7 +1461,7 @@ removal of the row and column with index $x_{\infty}$, and $I$ denote
 the $(n-1)\times(n-1)$ identity matrix, where $n=|\str|$ is the
 number of secondary structures of \seq. Let $e$ denote the vector of
 size $n-1$, each of whose coordinates is $1$. It is well-known
-\cite{meyerMFPT} that for each $k\ne x_{\infty}$, the $k$th coordinate
+\citep{meyerMFPT} that for each $k\ne x_{\infty}$, the $k$th coordinate
 of the vector $(I - \widetilde{P}_{x_{\infty}})^{-1} \cdot {\bf e}$ is
 exactly equal to the mean first passage time from the structure with
 index $k$ to the target structure $x_{\infty}$. In particular, the
@@ -1499,7 +1499,7 @@ correction. However, the Hastings correction is never used for rate
 matrices, hence we only consider the usual definition of rate matrix
 given in equation (\ref{eq:rateMatrix}).}
 
-\item[Kinfold]: Version 1.3 of \kinfold \cite{Flamm:00a}, from
+\item[Kinfold]: Version 1.3 of \kinfold \citep{Flamm:00a}, from
 the Vienna RNA Package (version 2.1.7) was run with the following
 flags:
 \begin{quote}
@@ -1529,7 +1529,7 @@ very long run times are required to obtain a reasonable approximation
 of the MFPT.
 
 \item[FFTmfpt]: Given an RNA sequence \seq, the algorithm {\tt
-FFTbor2D} \cite{Senter.jmb14} computes the probabilities $p(x,y) =
+FFTbor2D} \citep{Senter.jmb14} computes the probabilities $p(x,y) =
 \frac{Z(x,y)}{Z}$ of secondary structures of \seq to have base pair
 distance $x$ [resp. $y$] to secondary structure \strA [resp. \strB], where
 \strA is taken to be the empty structure and \strB is the MFE structure.
@@ -1682,8 +1682,8 @@ It follows that we are forced to use probabilities in any case, and so
 we encounter the above-mentioned loss of accuracy.
 
 \item[BarrierBasins]: Using the {\tt --rate} flag for the program {\tt
-barriers} \cite{flammHofacker}, Wolfinger et al.
-\cite{wolfingerStadler:kinetics} computed the rate matrix for a Markov
+barriers} \citep{flammHofacker}, Wolfinger et al.
+\citep{wolfingerStadler:kinetics} computed the rate matrix for a Markov
 process, whose states are the basins of attraction around locally
 optimal secondary structures. Subsequently, using {\tt Treekin}, the
 authors displayed population occupancy curves for certain macrostates

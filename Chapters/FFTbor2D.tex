@@ -50,12 +50,12 @@ between any two distinct, user provided structures \strA,\,\strB.
 \label{sec:ffttwo:math}
 
 For expository clarity, we describe \ffttwo and all recursions
-in terms of the Nussinov energy model \cite{nussinovjacobson}
+in terms of the Nussinov energy model \citep{nussinovjacobson}
 (same as in Chapter \ref{ch:fftbor}), where
 the energy $E_0(i,j)$ of a base pair $(i,j)$ is defined to be $-1$, and the
 energy $E(\str)$ of a secondary structure \str is $-1$ times the number $|\str|$
 of base pairs in structure \str.  Nevertheless, the implementation of
-\ffttwo involves the full Turner energy model \cite{xia:RNA}, where
+\ffttwo involves the full Turner energy model \citep{xia:RNA}, where
 free energy $E(\str)$ depends on negative, stabilizing energy contributions
 from base stacking, and positive, destabilizing energy contributions due to
 loss of entropy in loops.
@@ -88,8 +88,8 @@ For any secondary structure \str of \seq, and any values
 $1 \leq i \leq j \leq n$, the restriction $\str_{[i,j]}$ is defined to be the
 collection of base pairs of \str, lying within interval $[i,j]$; i.e.
 $\str_{[i,j]} = \{ (k, \ell) : i \leq k < \ell \leq j \}$.
-In \cite{hofacker:RNAbor2D}, Lorenz et al. generalized
-the dynamic programming recursions of our earlier work \cite{Freyhult.b07},
+In \citep{hofacker:RNAbor2D}, Lorenz et al. generalized
+the dynamic programming recursions of our earlier work \citep{Freyhult.b07},
 to yield recursions
 for the partition function $\bfZ{x,y}{i,j}$ in equation
 (\ref{eq:ffttwo:sumBoltzFactors}). In the context of the Nussinov model,
@@ -228,7 +228,7 @@ $\beta(k) =
 Note that if one were to compute all terms of the polynomial $\emZ{1,n}$
 by explicitly performing polynomial multiplications,
 then the computation would require \On{7} time and \On{4} space, the
-same time complexity of \rnatwofold \cite{hofacker:RNAbor2D}.
+same time complexity of \rnatwofold \citep{hofacker:RNAbor2D}.
 Instead of explicitly performing polynomial expansion in {\em variable} $x$,
 we instantiate $x$ to a
 complex number $\rho \in \mathbb{C}$, and apply
@@ -392,11 +392,11 @@ As a corollary, we have the {\em parity condition}, that
 \dBP{\strA}{\str} + \dBP{\str}{\strB} \equiv \dBP{\strA}{\strB} \bmod 2
 \end{align}
 
-first noticed in \cite{hofacker:RNAbor2D}, as well as
+first noticed in \citep{hofacker:RNAbor2D}, as well as
 the triangle inequality
 $\dBP{\strA}{\str} + \dBP{\str}{\strB} \geq \dBP{\strA}{\strB}$
 for base pair distance, probably folklore.
-Lorenz et al. \cite{hofacker:RNAbor2D} exploited the parity condition
+Lorenz et al. \citep{hofacker:RNAbor2D} exploited the parity condition
 and the triangle inequality by using sparse matrix methods to improve on
 the efficiency of the na\"{\i}ve implementation of the
 \On{7} time and \On{4} space algorithm to compute
@@ -882,7 +882,7 @@ For a given RNA sequence \seq, the metastable structure \strA was
 taken to be the MFE structure of \seq.
 Using \rnabor, we determined that value $k_0 \geq 10$, for which
 partition function $\bfZ{k_0}{}$ constitutes a visible peak in the graphical
-output --- see Figure 2 and 3 of \cite{Freyhult.b07} for an example.
+output --- see Figure 2 and 3 of \citep{Freyhult.b07} for an example.
 Subsequently, metastable structure \strB was taken to be that structure
 having minimum free energy over all structures, whose base pair distance from
 \strA was $k_0$.
@@ -905,7 +905,7 @@ $-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
 \rnatwofold \ms{-d0} obtains a value of
 $-22.171785$ kcal/mol, while \ffttwo obtains
 $-22.173213$ kcal/mol.
-Note that the straightforward calculation of the partition function, following McCaskill's algorithm \cite{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
+Note that the straightforward calculation of the partition function, following McCaskill's algorithm \citep{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
 
 For benchmarking purposes,
 to allow for a fair comparison of \ffttwo

@@ -62,35 +62,35 @@ Our programs, written in C/C++, are publicly available at
 
 It has recently emerged that RNA plays surprising and previously unsuspected
 roles in many biological processes, including retranslation of the genetic code
-(selenocysteine insertion \cite{boeckForschhammer}, ribosomal frameshift
-\cite{denise:frameshift}), gene regulation by allostery
-(riboswitches) \cite{mandalBoeseBarrickWinklerBreaker}
-and by the RISC complex (microRNAs) \cite{burgeBartel:miRNAscience},
+(selenocysteine insertion \citep{boeckForschhammer}, ribosomal frameshift
+\citep{denise:frameshift}), gene regulation by allostery
+(riboswitches) \citep{mandalBoeseBarrickWinklerBreaker}
+and by the RISC complex (microRNAs) \citep{burgeBartel:miRNAscience},
 regulation of heat shock protein expression by
-temperature sensitive conformational switches \cite{ROSEswitch,tuckerBreaker:review},
+temperature sensitive conformational switches \citep{ROSEswitch,tuckerBreaker:review},
 pointwise editing of messenger RNA (guide RNA)
-\cite{haeseler:Cryptogenes}, chemical
+\citep{haeseler:Cryptogenes}, chemical
 modification of specific nucleotides in the ribosome (small nucleolar RNAs)
-\cite{loweEddy:snoRNAinArchaea},
-regulation of alternative splicing \cite{Cheah.n07},
+\citep{loweEddy:snoRNAinArchaea},
+regulation of alternative splicing \citep{Cheah.n07},
 regulation of chromatin remodeling (small interfering RNAs)
-\cite{Cam.c09} etc. RNA can encode
+\citep{Cam.c09} etc. RNA can encode
 genomic information (e.g. HIV and hepatitis C) and with no assistance
 from proteins can catalyze reactions such as peptidytransferase
-(at ribosomal P-site) \cite{weinger:peptidyltransferase}
+(at ribosomal P-site) \citep{weinger:peptidyltransferase}
 and cleavage
 of RNA phosphodiester bonds at specific sites (group I introns)
-\cite{intron:reviewCech}.
+\citep{intron:reviewCech}.
 Since RNA plays various unsuspected regulatory and catalytic roles, and
 since it is known from the {\sc encode} consortium report
-\cite{encodeConsortium} that
+\citep{encodeConsortium} that
 the human genome is ``pervasively transcribed'',
 most of whose RNA transcripts have completely unknown structure
 and function, it is clear that the development of
 noncoding RNA gene finders
 remains an important open problem, despite significant
-advances with tools such as {\rnaz} \cite{Gruber.nar07},
-{\foldalign} \cite{Havgaard.nar05}, etc. The current paper
+advances with tools such as {\rnaz} \citep{Gruber.nar07},
+{\foldalign} \citep{Havgaard.nar05}, etc. The current paper
 provides novel computable features that could prove useful
 in enriching features sets for noncoding RNA gene finders.
 
@@ -127,21 +127,21 @@ families, the program {\rnahairpinml} also supports sampling.
 
 Other groups have shown an interest in global structural features
 of RNA families. Here we cite four specific examples.
-First, Hofacker et al.  \cite{hofacker99a} determined the asymptotic
+First, Hofacker et al.  \citep{hofacker99a} determined the asymptotic
 number of hairpins, multiloops, and other structural features for
 random RNA, using the homopolymer model first introduced by
-Stein and Waterman \cite{steinWaterman}.
-Second, Giegerich et al. \cite{giegerich:shapesBioinf} developed the
+Stein and Waterman \citep{steinWaterman}.
+Second, Giegerich et al. \citep{giegerich:shapesBioinf} developed the
 program {\tt RNAshapes}, which computes the minimum free energy structure
 for various {\em shapes}; for instance, the cloverleaf shape of tRNA is
 $\ob \ob \cb \ob \cb \ob \cb \cb$.
-Third, the {\sc rna strand} database \cite{Andronescu.bb08}
+Third, the {\sc rna strand} database \citep{Andronescu.bb08}
 consists of 4666 RNA secondary
 structures collected from other databases, including
-the Nucleic Acid Database \cite{berman03}, the Protein Data Bank
-\cite{Berman.acdb02}, Sprinzl's tRNA database
-\cite{sprinzl}, Gutell's database \cite{gutell:ribosomalRNA}, etc.
-%(see \cite{Andronescu.bb08} for
+the Nucleic Acid Database \citep{berman03}, the Protein Data Bank
+\citep{Berman.acdb02}, Sprinzl's tRNA database
+\citep{sprinzl}, Gutell's database \citep{gutell:ribosomalRNA}, etc.
+%(see \citep{Andronescu.bb08} for
 %citation of original data sources).
 {\sc rna strand} provides frequency analysis for sequence length,
 number of stems, hairpin loops, bulges, internal loops, multiloops,
@@ -150,7 +150,7 @@ class of RNAs selected by the user from a set of predefined RNA classes,
 such as 16S ribosomal RNA, 23S ribosomal RNA, 5S ribosomal RNA,
 7SK RNA, ciliate telomerase RNA, cis-regulatory element, group I intron,
 etc.
-Fourth, Kazan et al. \cite{Kazan.pcb10} presented a machine learning
+Fourth, Kazan et al. \citep{Kazan.pcb10} presented a machine learning
 algorithm {\tt RNAcontext}, which used sequence profiles (sequence LOGOS)
 as well as local secondary structure profiles (structure LOGOS) to
 predict RNA nucleotides that bind to a particular riboprotein. Here,
@@ -170,13 +170,13 @@ certain nucleotides are more likely to be paired or unpaired.
 Since chemical and enzymatic probing data (SHAPE, in-line probing,
 PARS) is not binary 0/1, such soft constraints permit a better
 mathematical integration of such footprinting data in structure
-prediction. For instance, the methods of Deigan et al.  \cite{Deigan.pnas09}
-and Zarringhalam et al.  \cite{Zarringhalam.po12} obtain accuracies
+prediction. For instance, the methods of Deigan et al.  \citep{Deigan.pnas09}
+and Zarringhalam et al.  \citep{Zarringhalam.po12} obtain accuracies
 of $96-100\%$ for RNA structure prediction of moderate size.
-See the papers of  Mathews et al.  \cite{mathewsConstraints},
-Deigan et al. \cite{Deigan.pnas09},
-Zarringhalam et al. \cite{Zarringhalam.po12}, and
-Washietl et al. \cite{Washietl.nar12}.
+See the papers of  Mathews et al.  \citep{mathewsConstraints},
+Deigan et al. \citep{Deigan.pnas09},
+Zarringhalam et al. \citep{Zarringhalam.po12}, and
+Washietl et al. \citep{Washietl.nar12}.
 
 Our contribution in this paper is to extend such constrained structure
 prediction to more global features, such as requiring secondary structures
@@ -198,7 +198,7 @@ all structures having $m$ multiloops and $h$ hairpins.
 The following is the plan of the paper.
 Section~\ref{section:definitions} introduces standard definitions and
 notation to be used. Since our algorithms derive from
-McCaskill's algorithm \cite{mcCaskill} to compute the partition function
+McCaskill's algorithm \citep{mcCaskill} to compute the partition function
 $Z= \sum_{S} \exp(-E(S)/RT)$, for the benefit of the reader, we present
 that algorithm in Section~\ref{section:McCaskill}.
 Sections~\ref{section:hairpinPartitionFunction},
@@ -215,7 +215,7 @@ how the fast Fourier transform is used to speed up the computations of
 
 
 %Boltzmann probabilities for number of hairpins and the number/order of
-%multiloops can be {\em approximated} by using {\sfold} \cite{Ding.nar04}
+%multiloops can be {\em approximated} by using {\sfold} \citep{Ding.nar04}
 %to sample a large number of structures from the Boltzmann ensemble.
 %Nevertheless, {\sfold} cannot approximate the {\em parametric partition
 %functions} $Z^h,Z^m,Z^d$,
@@ -303,29 +303,29 @@ the interval $[i,j]$ is said to be the number of components of $S$ in $[i,j]$.
 
 \subsubsection*{Free energy parameters}
 Following the pioneering work of I.Tinoco, Jr.,
-Freier et al. \cite{Freier.pnas86} measured the free energy and
+Freier et al. \citep{Freier.pnas86} measured the free energy and
 enthalpy of numerous RNA hybridization duplexes, such as
 $5'$-{\tt GAACGUUC}-$3'$ with its reverse complement. By least-squares
 fitting, {\em base stacking} free energies were determined. By similar
-methods, the Turner Lab \cite{turner,xia:RNA}
+methods, the Turner Lab \citep{turner,xia:RNA}
 has extended and refined base stacking free energies,
 loop free energies for hairpins, bulges, internal loops, multiloops, and
 {\em dangles}, which latter are
 stacked single-stranded nucleotides adjacent to a
 {\em canonical} $5'$ or $3'$ base pair. In this paper, we use the
-energy parameters from the Turner 1999 model \cite{turner,xia:RNA}
+energy parameters from the Turner 1999 model \citep{turner,xia:RNA}
 as implemented in Vienna RNA Package 1.8.5
-\cite{hofacker:ViennaWebServer}, except that we do not consider
+\citep{hofacker:ViennaWebServer}, except that we do not consider
 dangles. In future work, we plan to extend to the algorithms to
-the Turner 2004 energy model with dangles \cite{Turner.nar09}.
+the Turner 2004 energy model with dangles \citep{Turner.nar09}.
 
 \section{McCaskill's partition function}
 \label{section:McCaskill}
 
-Since our work extends McCaskill's algorithm \cite{mcCaskill}, for the
+Since our work extends McCaskill's algorithm \citep{mcCaskill}, for the
 paper to be self-contained, we give a brief presentation
 of McCaskill's algorithm. This presentation follows the very lucid
-account given by Bompfunewerer et al.  in \cite{Bompfunewerer.jmb08}.
+account given by Bompfunewerer et al.  in \citep{Bompfunewerer.jmb08}.
 
 Given RNA nucleotide sequence $a_1,\ldots,a_n$, we will use the standard
 notation $\mathcal{H}$ to denote the free energy of a hairpin,
@@ -404,16 +404,16 @@ e^{-(b+c(r-i))/RT}  + \\
 Z^{M1}(r,j) \cdot e^{-b/RT}  \nonumber
 \end{eqnarray}
 See Figure \ref{fig:feynmanDiagram} for a pictorial representation
-of the recursions of McCaskill's (original) algorithm \cite{mcCaskill};
+of the recursions of McCaskill's (original) algorithm \citep{mcCaskill};
 note that the recursions are are not quite the same
-as those given in \cite{hofacker:FastFolding}.
+as those given in \citep{hofacker:FastFolding}.
 We now turn to our parametric versions of the partition function.
 
 \begin{figure}[htp]
 %\centerline{\includegraphics[width=0.6\textwidth]{feynmanDiagram}}
 \centerline{\includegraphics[width=0.6\textwidth]{figure1}}
 \caption{Feynman diagram of original recursions from McCaskill's
-algorithm \cite{mcCaskill} to compute the partition function.
+algorithm \citep{mcCaskill} to compute the partition function.
 Dashed lines present intervals of unpaired bases, and shaded
 arcs represent structures in which $i$ and $j$ will not necessarily pair.
 }
@@ -583,14 +583,14 @@ unfavorable, hence are not generally present in small RNA.
 \label{section:multiloopOrderPartitionFunction}
 
 %first defined
-%by Waterman \cite{waterman:book} and extensively investigated by
-%Nebel \cite{nebel:JCB2002},
+%by Waterman \citep{waterman:book} and extensively investigated by
+%Nebel \citep{nebel:JCB2002},
 
 The {\em order} (or {\em depth}) of a secondary structure is
 the maximum {\em depth} of nesting of its multiloops.
 Formally, multiloop order
 can be defined via a finite analogue of the Cantor-Bendixson topological
-derivative \cite{clote:CantorBendixson,kechris}.
+derivative \citep{clote:CantorBendixson,kechris}.
 The {\em derivative} $D(\strS)$ of secondary
 structure $\strS$ is equal to the set of base pairs $(i,j) \in \strS$,
 within which there is an internal branching; i.e.
@@ -602,14 +602,14 @@ $(x,y),(u,v) \in \strS$} \\
 The {\em order} of a secondary structure $\strS$ is now
 defined to be $n-1$, where $n$ is the least integer such that
 $D(\strS)=\emptyset$. For readers familiar with the notion of
-RNA {\em shape} \cite{giegerich:shapesNAR},
+RNA {\em shape} \citep{giegerich:shapesNAR},
 it follows that the order of a helix is
 zero, with shape $\ob \cb$, while the order of a tRNA cloverleaf secondary
 structure is one, with shape $\ob \ob \cb \ob \cb \ob \cb \cb$.
 Examples of order $2$ secondary structures, with shape
 $\ob \ob \ob \cb \ob \cb \ob \cb \cb \ob \cb \cb$, are furnished by
 certain RNase P RNA molecules, such as
-{\sc strand} database \cite{Andronescu.bb08} sequence
+{\sc strand} database \citep{Andronescu.bb08} sequence
 ASE00001 from {\em Acidianus ambivalens}, and by some transfer-messenger
 RNA, such as {\sc strand} database sequence
 TMR00040, from {\em Azos.oryz.}.
@@ -690,7 +690,7 @@ Given the algorithms described in Sections
 to design the algorithm {\rnahairpinml}, which computes the partitiion
 function $Z(m,h)$ simultaneously for $m$ multiloops and $h$ hairpins.
 Sampling low energy structures is done by a straightforward variation of
-the sampling method introduced by Ding and Lawrence \cite{Ding.nar03}.
+the sampling method introduced by Ding and Lawrence \citep{Ding.nar03}.
 For purposes of brevity, further details of the partition function and
 sampling will not be discussed, though the interested reader can study
 our publicly available source code.
@@ -705,38 +705,38 @@ generate suboptimal secondary structures.
 
 In the literature, there are a number of approaches to compute
 {\em suboptimal} secondary structures. Historically, the first
-method was due to Zuker \cite{Zuk89a}, as implemented in {\tt mfold}
-{\tt mfold} \cite{Zuk89a} and {\tt Unafold} \cite{Markham.mmb08},
+method was due to Zuker \citep{Zuk89a}, as implemented in {\tt mfold}
+{\tt mfold} \citep{Zuk89a} and {\tt Unafold} \citep{Markham.mmb08},
 who for certain base pairs $(i,j)$ computed the minimum
 free erergy structure containing $(i,j)$ that was sufficiently distinct
 from previously generated suboptimal structures.
 Next, the program \rnasub of Wuchty et al.
-\cite{wuchtyFontanaHofackerSchuster} generated all secondary structures
+\citep{wuchtyFontanaHofackerSchuster} generated all secondary structures
 within a user-specified energy above the minimum free energy.
-In contrast the program {\tt Sfold} \cite{Ding.nar03} samples from
+In contrast the program {\tt Sfold} \citep{Ding.nar03} samples from
 the low energy Boltzmann ensemble of structures; indeed, our implementation
 of sampling in {\rnahairpin} is a modification of the method of
-Ding and Lawrence \cite{Ding.nar03}. (Note that the {\tt Sfold} algorithm
+Ding and Lawrence \citep{Ding.nar03}. (Note that the {\tt Sfold} algorithm
 is implemented in the Vienna RNA Package program
 \rnasub with flag {\tt -p}; as well the program
-{\tt RNAstructure} \cite{mathewsConstraints} also supports sampling.)
+{\tt RNAstructure} \citep{mathewsConstraints} also supports sampling.)
 The program {\tt RNAshapes} of Steffen et al.
-\cite{giegerich:shapesBioinf} computes the minimum free energy structure
+\citep{giegerich:shapesBioinf} computes the minimum free energy structure
 from each shape class.
-The program {\tt RNAbor} of Freyhult et al. \cite{Freyhult.b07}
+The program {\tt RNAbor} of Freyhult et al. \citep{Freyhult.b07}
 computes, for each $k$,
 the minimum free energy structure $MFE(k)$ having base pair
 distance $k$ from a user-specified reference structure, while the
-program \rnatwofold of Lorenz et al. \cite{hofacker:RNAbor2D}
+program \rnatwofold of Lorenz et al. \citep{hofacker:RNAbor2D}
 computes, for each $k,\ell$, the minimum free energy structure
 $MFE(k,\ell)$ having base pair
 distance $k$ [resp. $\ell$] from a first [resp. second]
 user-specified reference structure.
-The program {\tt RNAlocopt} of Lorenz and Clote  \cite{RNAlocopt}
+The program {\tt RNAlocopt} of Lorenz and Clote  \citep{RNAlocopt}
 samples low  locally optimal secondary structures, where a locally
 optimal structure has the property that its free energy cannot be lowered
 by the addition or removal of a single base pair. The program
-{\tt RNAbormea} of Lou and Clote \cite{Clote.bb12} determines
+{\tt RNAbormea} of Lou and Clote \citep{Clote.bb12} determines
 for each $k$, the maximum expected accuracy structure among all structures
 having base pair distance $k$ from a user-specified reference structure.
 To this list of previous methods, {\rnahairpin} generates suboptimal
@@ -855,7 +855,7 @@ number of multiloops and hairpins.
 
 Table~\ref{table:sensitivity} presents a comparison of {\rnahairpin}
 and {\tt RNAfold} statistics for sequences taken from the seed alignments
-of several families from Rfam 11.0 \cite{Burge.nar13}
+of several families from Rfam 11.0 \citep{Burge.nar13}
 (August 2012, 2208 families).  For each sequence,
 we sampled only one low energy structure having H hairpins. For a given
 sequence and structure computed either by {\rnahairpin} or {\tt RNAfold},
@@ -869,7 +869,7 @@ dangles, so that both {\rnahairpin} and {\tt RNAfold} employed the same
 energy model. In future work, we plan to lift {\rnahairpin} to
 the Turner 2004 energy model and implement dangles, which then would
 support the same energy model as version 2.0 and higher of
-{\tt RNAfold} \cite{Lorenz.amb11}.
+{\tt RNAfold} \citep{Lorenz.amb11}.
 
 
 In the case of tRNA, there is more than 20\% improvement in sensitivity
@@ -940,8 +940,8 @@ features, and in the case  of HMO
 27=21+6 hairpin and multiloop formation probabilities taken as features
 along with 6 multiloop maximum order probabilities, hence altogether
 33=21+6+6 features.
-The R packages {\tt e1071} \cite{RpackageForSVM} and {\tt pROC} \cite{pROC}
-were used with {\tt libSVM} \cite{libSVM}.
+The R packages {\tt e1071} \citep{RpackageForSVM} and {\tt pROC} \citep{pROC}
+were used with {\tt libSVM} \citep{libSVM}.
 }
 \label{table:AUC}
 \end{table*}
@@ -966,7 +966,7 @@ RVM AUC (SVM/RVM $1.4234$), while for the same class, when using the larger
 feature set for hairpins, multiloop number and multiloop order, SVM AUC
 was lower than RVM AUC (SVM/RVM $0.8986$). At present, the reason for
 this surprising result is unclear.
-The R packages {\tt e1071} \cite{RpackageForSVM} and {\tt pROC} \cite{pROC}
+The R packages {\tt e1071} \citep{RpackageForSVM} and {\tt pROC} \citep{pROC}
 were used for SVM and RVM computations;
 for SVM, the radial basis kernel (rbfkernel) was employed with
 default parameters, while for RVM, rvmbinary
@@ -983,13 +983,13 @@ case, the positive instances were taken to be sequences from the
 seed alignment of a given Rfam family, and negative instances were
 taken to be random sequences having the same number of dinucleotides,
 as computed by our implementation of the Altschul-Erikson algorithm
-\cite{altschulErikson:dinucleotideShuffle}.
+\citep{altschulErikson:dinucleotideShuffle}.
 (Similar results were obtained, when we took negative instances to be
 sequences the seed alignments of all other Rfam families -- data not
 shown.)
 
 For each positive instance, we generated 10 random negative instances.
-Using {\tt libSVM} \cite{libSVM}, we performed a {\em stratified training}
+Using {\tt libSVM} \citep{libSVM}, we performed a {\em stratified training}
 by selecting one-fifth of the
 positive instances together with an equal number of negative instances
 (one of the 10 negative instances was selected for each positive instance)
@@ -1009,8 +1009,8 @@ most cases all but a small number of the features are $0$;
 the classifier HP/M (hairpin and multiloop number) has
 27=21+6 features; the classifier HP/M/O (hairpin, multiloop number,
 multiloop order) has 33=21+6+6 features.
-The R packages {\tt e1071} \cite{RpackageForSVM} and {\tt pROC} \cite{pROC}
-were used with {\tt libSVM} \cite{libSVM}.
+The R packages {\tt e1071} \citep{RpackageForSVM} and {\tt pROC} \citep{pROC}
+were used with {\tt libSVM} \citep{libSVM}.
 
 Table~\ref{table:AUC} summarizes the area under curve (AUC) values for
 ROC curves for the three different SVM classifiers HP, HP/M, HP/M/O,
@@ -1066,8 +1066,8 @@ in the case  of HP/M (hairpin and multiloop number), there were
 27=21+6 features, and in the case  of HP/M/O
 (hairpin and multiloop number with maximum multiloop order), there were
 33=21+6+6 features.
-The R packages {\tt e1071} \cite{RpackageForSVM} and {\tt pROC} \cite{pROC}
-were used with {\tt libSVM} \cite{libSVM}. A radial basis kernel was used
+The R packages {\tt e1071} \citep{RpackageForSVM} and {\tt pROC} \citep{pROC}
+were used with {\tt libSVM} \citep{libSVM}. A radial basis kernel was used
 in each case with cost $C=1$; parameter $\gamma$ was taken to be the
 inverse of the number of features, i.e. for
 HP, $\gamma = 1/21 = 0.0476$, for HP/M, $\gamma = 1/27 = 0.0370$, for
@@ -1145,11 +1145,11 @@ only reports average sensitivity values.
 
 As previously mentioned, we computed the average sensitivity of
 the minimum free energy (MFE) structure obtained from Vienna RNA
-Package {\tt RNAfold} \cite{hofacker:ViennaWebServer}, version 1.8.5
+Package {\tt RNAfold} \citep{hofacker:ViennaWebServer}, version 1.8.5
 without dangles, in order to ensure that both {\rnahairpin} and {\tt RNAfold}
 employ the same energy model.  In future work, we plan
 to extend {\tt RNAhairpin} to the Turner 2004 energy model with dangles
-\cite{Turner.nar09}. By the same token, it is not conceptually difficult
+\citep{Turner.nar09}. By the same token, it is not conceptually difficult
 to modify the program {\rnamlnumber}, in order to sample low energy structures
 having a specified number of multiloops. Such sampled structures could
 yield better structure predictions for certain types of RNA. Finally,
@@ -1233,8 +1233,8 @@ noncoding RNA gene finders. Indeed, by adding novel features,
 it is known that one can improve the accuracy of SVM classifiers.
 For instance, the state-of-the-art precursor
 microRNA (pre-miRNA) SVM developed by Ng and Mishra
-\cite{Ng.b07} uses features
+\citep{Ng.b07} uses features
 MFEI2, MFEI1, \%G+C, dP, dG, dQ, dD, dF,,zG, zQ, zD, zP, zF, etc.
-(see \cite{Ng.b07} for explanation), which outperforms
+(see \citep{Ng.b07} for explanation), which outperforms
 the simpler
-triplet kernel pre-miRNA SVM developed by Xue et al. \cite{Xue.bb05}.
+triplet kernel pre-miRNA SVM developed by Xue et al. \citep{Xue.bb05}.

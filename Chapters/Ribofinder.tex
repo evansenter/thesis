@@ -12,19 +12,21 @@
 
 In this chapter, we present the \rfinder program---a pipeline to facilitate the
 detection of putative \grbs across genomic data. The \rfinder
-tool operates in three stages. First we use \infernal \cite{infernal} and \tthp \cite{ermolaeva:2000cl} to detect
+tool operates in three stages. First we use \infernal
+\citep{infernal,nawrocki:2013hk} and \tthp \citep{ermolaeva:2000cl} to detect
 putative aptamers and expression platforms, two distinct components of
 \rbs described in section \ref{sec:rfinder:bkgrnd}. After coalescing
-this data into a pool of candidate \rbs, we use \rfold \cite{lorenz.amb11} with constraints
-based on experimental data to compute the two distinct structural
+this data into a pool of candidate \rbs, we use \rfold \citep{lorenz.amb11}
+with constraints based on experimental data to compute the two distinct structural
 conformations---`gene on' and `gene off'. In the third and final stage, we
-leverage \foldalign \cite{havgaard:2007ca} to measure the similarity between our candidate pool and a
+leverage \foldalign \citep{havgaard:2007ca} to measure the similarity between our
+candidate pool and a
 canonical \grb well studied in the literature, the
-xanthine phosphoribosyltransferase (xpt) \grb from {\em Bacillus subtilis}. At the time
-of this writing, Prof. Dr. Mario
+xanthine phosphoribosyltransferase (xpt) \grb from {\em Bacillus subtilis}. At the
+time of this writing, Prof. Dr. Mario
 M\"orl at Universit\"at Leipzig is overseeing preliminary structural
 validation of predicted gene on and off structures for a number of
-computationally predicted \grbs in {\em B. megaterium}.
+computationally predicted \grbs in {\em Bacillus megaterium}.
 
 \subsection{Organization}
 \label{subsec:rfinder:org}
@@ -43,24 +45,24 @@ adenine-sensitive aptamers are a straightforward extension.
 \section{Background}
 \label{sec:rfinder:bkgrnd}
 
-Riboswitches are regulatory mRNA elements that modulate gene expression via
+\Rbs are regulatory mRNA elements that modulate gene expression via
 structural changes induced by the direct sensing of a small-molecule metabolite.
-Most often found in bacteria, riboswitches regulate diverse pathways including the
+Most often found in bacteria, \rbs regulate diverse pathways including the
 metabolism and transport of purines, methionine, and thiamin amongst others. The
-structure of a riboswitch includes an aptamer domain---involved in the direct
+structure of a \rb includes an aptamer domain---involved in the direct
 sensing of the small-molecule---and a downstream expression platform whose
 structure changes upon the aptamer binding the metabolite. Because of the
 discriminatory nature of metabolite sensing, groups have had great success in
 finding representative examples of aptamers across a diverse collection of
 bacterial species; RFam 12.0 currently contains 26 different families of aptamers
 involved in different metabolic pathways. Whereas there exists strong sequence and
-structural similarity within the aptamer of a riboswitch family, the expression
+structural similarity within the aptamer of a \rb family, the expression
 platform is highly variable, and thus challenging to capture using traditional
 SCFG-based approaches. For this reason databases such as RFam only contain the aptamer
-portion of the riboswitch, and there exists no database providing sequences
+portion of the \rb, and there exists no database providing sequences
 including expression platforms, necessary for capturing the `on' and `off'
 conformations of this regulatory element. We have developed a new pipeline---
-called \rfinder---which can detect putative riboswitches including their
+called \rfinder---which can detect putative \rbs including their
 expression platforms and likely conformational structures across a wide collection
 of genomic sequences.
 
@@ -69,12 +71,12 @@ of genomic sequences.
 
 At the time of our retrieval (\fnaRetrievalTime), the RefSeq database hosted by
 NCBI comprised 5,121 complete bacterial genomes with corresponding genomic
-annotations. In order to both detect putative full riboswitches across this
+annotations. In order to both detect putative full \rbs across this
 collection of data as well as filter the candidates down to a number tractable for
 experimental validation, we developed a novel pipeline which takes a three-tiered
 approach to candidate selection. Our approach is to
 \begin{inparaenum}[\em 1\upshape)]
-\item identify a pool of candidate riboswitches across genomic data;
+\item identify a pool of candidate \rbs across genomic data;
 \item perform a coarse-grained filtering of the candidate pool based on structural
 characteristics; and finally
 \item fine-grained curation of the candidates based on a collection of measures
@@ -89,24 +91,64 @@ flowchart.
 \label{fig:rfinder:flowchart}
 \end{figure}
 
-In the following discussion, we describe the application of \rfinder to identify unannotated guanine purine riboswitches; guanine-sensing cis-regulatory elements which modulate the expression of genes involved in purine biosynthesis.
+In the following discussion, we describe the application of \rfinder to identify
+unannotated guanine purine \rbs; guanine-sensing cis-regulatory elements
+which modulate the expression of genes involved in purine biosynthesis.
 
 \subsection{Step 1: Candidate selection}
 \label{subsec:rfinder:selection}
 
-The RefSeq data we used for analysis contains 5,121 annotated bacterial genomes across 2,732 different organisms, totaling over $9.5 * 10^9$ bases. We used the program \infernal to determine the coordinates of putative aptamer structures within the RefSeq genomes, and \tthp to locate candidate rho-independent transcription terminators.
+The RefSeq data we used for analysis contains 5,121 annotated bacterial genomes
+across 2,732 different organisms, totaling over $9.5 * 10^9$ bases. We used the
+program \infernal to determine the coordinates of putative aptamer structures
+within the RefSeq genomes, and \tthp to locate candidate rho-independent
+transcription terminators.
 
 \subsubsection{Detecting Aptamers with \infernal}
 \label{subsubsec:rfinder:infernal}
 
-\infernal \cite{infernal} uses a stochastic context-free grammar (SCFG) with a user-provided multiple sequence alignment (MSA) to efficiently scan genomic data for RNA homologs, taking into consideration both sequence and structural conservation. Using the purine aptamer MSA from RFam 12.0 (RF00167), \infernal (v1.1.1, default options) detects 1,537 significant hits having E-value $<= 0.01$. Because \infernal leverages the concept of a `local end'---a large insertion or deletion in the alignment at reduced cost---it is possible for the software to return a significant hit whose aligned structure does not have the canonical three-way junction observed in all purine riboswitches. \rfinder prunes these truncated \infernal hits by converting the alignment structure into a parse tree, and only permitting trees of sufficient complexity to contain a multiloop (described further in \ref{subsubsec:rfinder:shapes}). The pyrimidine residue abutted next to the P1 stem in the J3--1 junction differentiates between guanine and adenine-sensing riboswitches by binding the complimentary purine ligand; for our interest in \grbs exclusively we require the presence of a cytosine at this residue. In total, using \infernal with these additional filters yields 1,280 guanine aptamers across 555 unique organisms (note: here and elsewhere I define a `unique organism' as having a unique taxonomy ID).
+\infernal \citep{infernal}, \citep{nawrocki:2013hk} uses a stochastic context-free
+grammar (SCFG) with a user-provided multiple sequence alignment (MSA) to
+efficiently scan genomic data for RNA homologs, taking into consideration both
+sequence and structural conservation. Using the purine aptamer MSA from RFam 12.0
+(RF00167), \infernal (v1.1.1, default options) detects 1,537 significant hits
+having E-value $<= 0.01$. Because \infernal leverages the concept of a
+`local end'---a large insertion or deletion in the alignment at reduced cost---it
+is possible for the software to return a significant hit whose aligned structure
+does not have the canonical three-way junction observed in all purine
+\rbs. \rfinder prunes these truncated \infernal hits by converting the
+alignment structure into a parse tree, and only permitting trees of sufficient
+complexity to contain a multiloop (described further in
+\ref{subsubsec:rfinder:shapes}). The pyrimidine residue abutted next to the P1
+stem in the J3--1 junction differentiates between guanine and adenine-sensing
+\rbs by binding the complimentary purine ligand; for our interest in \grbs
+exclusively we require the presence of a cytidine at this residue. In total, using
+\infernal with these additional filters yields 1,280 guanine aptamers across 555
+unique organisms (note: here and elsewhere I define a `unique organism' as having
+a unique taxonomy ID).
 
 \subsubsection{Detecting Expression Platforms with \tthp}
 \label{subsubsec:rfinder:tthp}
 
-\tthp \cite{ermolaeva:2000cl} detects rho-independent terminators in bacterial genomes in a context-sensitive fashion by leveraging the protein annotations available in PTT data. These terminator sequences canonically have a stable hairpin loop structure immediately preceding a run of $5+$ uracil residues, the combination of which causes the ribosomal machinery to stall and dissociate from the transcript. \tthp performs a genomic scan to determine candidate loci with this motif, and returns scored hits. The scoring system considers both structural homology and the genomic contextual information available in the PTT file. Across our collection of bacterial genomes acquired from NCBI RefSeq data, \tthp identified 2,752,469 rho-independent terminators using the default filters.
+\tthp \citep{ermolaeva:2000cl} detects rho-independent terminators in bacterial
+genomes in a context-sensitive fashion by leveraging the protein annotations
+available in PTT data. These terminator sequences canonically have a stable
+hairpin loop structure immediately preceding a run of $5+$ uracil residues, the
+combination of which causes the ribosomal machinery to stall and dissociate from
+the transcript. \tthp performs a genomic scan to determine candidate loci with
+this motif, and returns scored hits. The scoring system considers both structural
+homology and the genomic contextual information available in the PTT file. Across
+our collection of bacterial genomes acquired from NCBI RefSeq data, \tthp
+identified 2,752,469 rho-independent terminators using the default filters.
 
-Due to the spatially-mediated structural regulation of purine riboswitches, whereby ligand interaction with the aptamer domain induces local structural rearrangement in the expression platform, we paired aptamers with corresponding terminators by minimizing the genomic distance, with an upper bound of 200 nucleotides between the end of the aptamer domain and start of the terminator. This approach yields 577 candidate riboswitches, 81 of which have multiple rho-independent terminators within range of a putative aptamer produced by \infernal. For these, we simply pair the closest \tthp hit with the aptamer domain.
+Due to the spatially-mediated structural regulation of purine \rbs,
+whereby ligand interaction with the aptamer domain induces local structural
+rearrangement in the expression platform, we paired aptamers with corresponding
+terminators by minimizing the genomic distance, with an upper bound of 200
+nucleotides between the end of the aptamer domain and start of the terminator.
+This approach yields 577 candidate \rbs, 81 of which have multiple
+rho-independent terminators within range of a putative aptamer produced by
+\infernal. For these, we simply pair the closest \tthp hit with the aptamer domain.
 
 \begin{figure}[!ht]
 \centering
@@ -114,7 +156,7 @@ Due to the spatially-mediated structural regulation of purine riboswitches, wher
 \caption{Histogram displaying the distribution of genome sizes across the RefSeq
 data analyzed, comprising 5,172 bacterial genomes. Genome size is shown using a
 $\log_{10}$ scale.}
-\label{fig:genomeSizes}
+\label{fig:rfinder:genomeSizes}
 \end{figure}
 
 \subsection{Step 2: Structural prediction}
@@ -129,20 +171,48 @@ for each candidate.
 \subsubsection{Notation for Representing Abstract RNA Shapes}
 \label{subsubsec:rfinder:shapes}
 
-Given an RNA sequence $\seq = \seqN$, where positions $s_i$ are drawn from the collection of single-letter nucleotide codes, i.e.
+Given an RNA sequence $\seq = \seqN$, where positions $s_i$ are drawn from the
+collection of single-letter nucleotide codes, i.e.
 $s_i \in \{\text{A,\,U,\,G,\,C}\}$, it is possible to describe a corresponding
 secondary structure \strS compatible with \seq using the dot-bracket notation.
 In this notation, each nucleotide $a_i$ has a corresponding state $s_i$, where
 $s_i$ is denoted as a `.' if unpaired and a `(' [resp. `)'] if the left [resp.
-right] base in a base pair. Given any two base pairs $(i,j)$ and $(k,l)$ in \strS, then $i < k < j \iff i < l < j$; pseudoknots are not permitted in the structure. A secondary structure taking this form is said to have balanced parentheses, and can additionally be represented using a context-free grammar such as:
+right] base in a base pair. Given any two base pairs $(i,j)$ and $(k,l)$ in \strS,
+then $i < k < j \iff i < l < j$; pseudoknots are not permitted in the structure. A
+secondary structure taking this form is said to have balanced parentheses, and can
+additionally be represented using a context-free grammar such as:
 
-\begin{equation} \label{eq:str_cfg}
+\begin{align}
+\label{eq:rfinder:strCfg}
 S \rightarrow S\,.\;|\;.\,S\;|\;(S)\;|\;SS\;|\;\epsilon
-\end{equation}
+\end{align}
 
-The grammar from \eqref{eq:str_cfg} can be used to generate a parse tree \tree for \strS. The benefit of working with \tree over \strS is that the parse tree offers an abstract representation of secondary structure shape independent of sequence length, permitting us to classify and eventually constrain a large collection of sequences having variable length which are all expected to have the same abstract tree shape. This is analogous to what the Giegerich lab refers to as their `type 5' structural abstraction using the \rshapes tool. Every node in \tree represents a helix in \strS, and internally tracks the indices of both its beginning $(i,j)$ and closing $(k,l)$ base pair. We use a level-order naming convention to refer to helices within the parse tree, whereby a position \treePos{p}{1} references the first child of the root node, \treePos{p}{1,2} references the second child of \textdown{\ms{p}}{1}, and generally \treePos{p}{$i_1,i_2,\cdots,i_n$} refers to the $i_n$\textsuperscript{th} child of \treePos{p}{$i_1,i_2,\cdots,i_{n-1}$}. To reference specific nucleotides in the context of their location relative to a helix, we use the opening and closing base pairs $(i,j)$ and $(k,l)$ as landmarks. Thus, \treeIdx{p}{1}{l} is the index in \strS of the right-hand side closing base pair of \treePos{p}{1}. We use the notation \treePos{t}{$i$} to refer to the subtree of \tree whose root is \treePos{p}{$i$}.
+The grammar from \eqref{eq:rfinder:strCfg} can be used to generate a parse tree
+\tree for \strS. The benefit of working with \tree over \strS is that the parse
+tree offers an abstract representation of secondary structure shape independent of
+sequence length, permitting us to classify and eventually constrain a large
+collection of sequences having variable length which are all expected to have the
+same abstract tree shape. This is analogous to what the Giegerich lab refers to as
+their `type 5' structural abstraction using the \rshapes tool. Every node in \tree
+represents a helix in \strS, and internally tracks the indices of both its
+beginning $(i,j)$ and closing $(k,l)$ base pair. We use a level-order naming
+convention to refer to helices within the parse tree, whereby a position
+\treePos{p}{1} references the first child of the root node, \treePos{p}{1,2}
+references the second child of \textdown{\ms{p}}{1}, and generally
+\treePos{p}{$i_1,i_2,\cdots,i_n$} refers to the $i_n$\textsuperscript{th} child of
+\treePos{p}{$i_1,i_2,\cdots,i_{n-1}$}. To reference specific nucleotides in the
+context of their location relative to a helix, we use the opening and closing base
+pairs $(i,j)$ and $(k,l)$ as landmarks. Thus, \treeIdx{p}{1}{l} is the index in
+\strS of the right-hand side closing base pair of \treePos{p}{1}. We use the
+notation \treePos{t}{$i$} to refer to the subtree of \tree whose root is
+\treePos{p}{$i$}.
 
-Finally, we introduce the concept of a tree signature. The tree signature for a tree \tree is a list of the node depths when traversed in a depth-first pre-order fashion. To provide a concrete example, consider the following experimentally validated xpt \grb from Bacillus subtilis subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054) with corresponding gene off structure as seen in Figure \ref{fig:rfinder:xptOff}.
+Finally, we introduce the concept of a tree signature. The tree signature for a
+tree \tree is a list of the node depths when traversed in a depth-first pre-order
+fashion. To provide a concrete example, consider the following experimentally
+validated xpt \grb from Bacillus subtilis subsp. subtilis str. 168
+(NC\_000964.3 2320197--2320054) with corresponding gene off structure as seen in
+Figure \ref{fig:rfinder:xptOff}.
 \medskip
 
 \begin{figure}[!ht]
@@ -159,48 +229,102 @@ Finally, we introduce the concept of a tree signature. The tree signature for a 
 \caption{{\em (Top)} The xanthine phosphoribosyltransferase (xpt) \grb from
 {\em B. subtilis} subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054),
 and corresponding gene off structure derived from crystallography analysis in
-complex with guanine \cite{breaker:riboswitch2}. {\em (Bottom)} The experimentally
+complex with guanine \citep{breaker:riboswitch2}. {\em (Bottom)} The experimentally
 derived gene on structure for \Bsxpt.}
 \label{fig:rfinder:xptOff}
 \end{figure}
 
-The \rshapes `type 5' representation for this structure is \ms{[[][]][][]} (note the coalesced left bulge in the hairpin immediately downstream the closing multiloop stem, at helix \treePos{p}{2}) and the tree signature for this parse tree of the structure is \ms{[0,1,2,2,1,1]}.
+The \rshapes \citep{janssen:2015cq} `type 5' representation for this structure is
+\ms{[[][]][][]} (note the coalesced left bulge in the hairpin immediately
+downstream the closing multiloop stem, at helix \treePos{p}{2}) and the tree
+signature for this parse tree of the structure is \ms{[0,1,2,2,1,1]}.
 
-We leverage the notion of abstract structural filtering initially to ensure that all \infernal aptamer hits have a tree signature of \ms{[0,1,2,2]}, which represents a three-way junction, and that the binding site for the guanine ligand $\treeIdx{p}{1}{l - 1} = \text{C}$. These filters, in combination with the proximal terminator hairpins produced by \tthp yield the aforementioned 577 candidate \grbs for which we then try to produce reasonable gene on and off structures.
+We leverage the notion of abstract structural filtering initially to ensure that
+all \infernal aptamer hits have a tree signature of \ms{[0,1,2,2]}, which
+represents a three-way junction, and that the binding site for the guanine ligand
+$\treeIdx{p}{1}{l - 1} = \text{C}$. These filters, in combination with the
+proximal terminator hairpins produced by \tthp yield the aforementioned 577
+candidate \grbs for which we then try to produce reasonable gene on and off
+structures.
 
 \subsubsection{Constrained Folding to Predict Switch Structures}
 \label{subsubsec:rfinder:consfold}
 
-To restrict our search to unannotated \grbs, and further ensure that we are not re-detecting sequences based off the RFam covariance model provided to \infernal, we constrain our search to those RefSeq organisms not represented in the RFam seed alignment. 503 of the 577 candidates, or 87.18\% represent putative unannotated riboswitches not represented by RF00167.
+To restrict our search to unannotated \grbs, and further ensure that we are not
+re-detecting sequences based off the RFam covariance model provided to \infernal,
+we constrain our search to those RefSeq organisms not represented in the RFam seed
+alignment. 503 of the 577 candidates, or 87.18\% represent putative unannotated
+\rbs not represented by RF00167.
 
-The gene off structure \strOff for a \grb is the easier of the two to find computationally, since the terminator loop is exceptionally thermodynamically stable. In the gene on conformation \strOn, the P1 stem of the multiloop partially dissociates and an anti-terminator loop forms between the region immediately 3' of the P1 stem and what was the left-hand side of the terminator loop. This truncated P1 stem, which closes the three-way junction in the aptamer, is exceptionally unstable based on present energy models available for structural folding, and requires special treatment to reconstitute in our final structures.
+The gene off structure \strOff for a \grb is the easier of the two to find
+computationally, since the terminator stem is exceptionally thermodynamically
+stable. In the gene on conformation \strOn, the P1 stem of the multiloop partially
+dissociates and an anti-terminator stem forms between the region immediately 3' of
+the P1 stem and what was the left-hand side of the terminator stem. This truncated
+P1 stem, which closes the three-way junction in the aptamer, is exceptionally
+unstable based on present energy models available for structural folding, and
+requires special treatment to reconstitute in our final structures.
 
-The software \rfold (v2.1.8) allows for the folding of RNA molecules with `loose' constraints. In this model of constrained folding, the resulting structure produced by the software guarantees not to explicitly invalidate any user-provided constraints, but does not guarantee all constraints will be satisfied in the resulting structure. For each of the candidate \grbs, having \treeFor{\infernal} and \treeFor{\tthp}, we build the following constraint masks:
+The software \rfold (v2.1.8) allows for the folding of RNA molecules with `loose'
+constraints. In this model of constrained folding, the resulting structure
+produced by the software guarantees not to explicitly invalidate any user-provided
+constraints, but does not guarantee all constraints will be satisfied in the
+resulting structure. For each of the candidate \grbs, having \treeFor{\infernal}
+and \treeFor{\tthp}, we build the following constraint masks:
+\clearpage
 
-\begin{center}
-\begin{tabularx}{\linewidth}{*{2}{L}}
-  \toprule
-  Guanine gene off constraint mask & Guanine gene on constraint mask \\
-  \cmidrule(lr){1-2}
-  \multicolumn{2}{l}{Prohibit base pairing upstream of \treeIdx{p}{1}{i} and
-  downstream of \treeIdx{p}{2}{l}.} \\
-  \multicolumn{2}{l}{Force base pairs and unpaired regions in \treePos{t}{1}, with
-  the exception of \treePos{p}{1}.} \\
-  \multicolumn{2}{l}{Prohibit formation of \treePos{p}{1} stem, which closes the
-  three-way junction.} \\
-  \cmidrule(lr){1-2}
-  Force base pairs and unpaired regions in \treePos{t}{2}. &
-  Require $m$ nucleotides starting from \treeIdx{p}{1}{l + 3} to pair to the
-  right, where $m = len(\treePos{p}{2})$, and require the left-hand side of the
-  \treePos{p}{2} helix to pair to the left. \\
-  & Disallow pairing downstream of \treeIdx{p}{2}{j}. \\
-  \bottomrule
-\end{tabularx}
-\end{center}
+{\large Structural constraints for both conformations of the \grb aptamer:}
+\begin{enumerate}
+\setstretch{1.3}
+\item Prohibit base pairing upstream of \treeIdx{p}{1}{i} and
+downstream of \treeIdx{p}{2}{l}. \\ {\em Do not permit any possible disruptive pairing
+interactions 5' of the aptamer or 3' of the terminator stem.}
+\item Force base pairs and unpaired regions in \treePos{t}{1}, with
+the exception of \treePos{p}{1}. \\ {\em Since the aptamer structure is well
+conserved and we have the \infernal-provided alignment with the
+covariance model, force this structure to form as aligned.}
+\item Explicitly prohibit formation of \treePos{p}{1} stem, which closes the
+three-way junction. \\ {\em The only exception to above is the closing of the
+P1 multiloop stem. In our experience, since \rfold uses soft constraints
+(meaning that constrained base pairs are only allowed to pair with each other
+or not at all), in practice we rarely see the P1 stem form as we would like.
+Instead, restrict it from forming at all, so that it can be added in after the
+fact without disrupting any other base pairs.}
+\end{enumerate}
+{\large Constraints exclusive to the gene off structure:}
+\begin{enumerate}
+\setstretch{1.3}
+\item Force base pairs and unpaired regions in \treePos{t}{2}. \\ {\em This simply
+forces the formation of the terminator stem, as predicted by \tthp.}
+\end{enumerate}
+{\large Constraints exclusive to the gene on structure:}
+\begin{enumerate}
+\setstretch{1.3}
+\item Require $m$ nucleotides starting from \treeIdx{p}{1}{l + 3} to pair to the
+right, where $m = len(\treePos{p}{2})$, and require the left-hand side of the
+\treePos{p}{2} helix to pair to the left.
+\item Disallow pairing downstream of \treeIdx{p}{2}{j}.
+\end{enumerate}
+\clearpage
 
-These constraint masks are run using the command-line flags \ms{-d 0 -P rna\_turner1999.par} to disable dangles and use the Turner 1999 energies respectively. Experimental evidence using inline probing suggests that the `on' conformation of the \grb has a reduced P1 stem length of 3 base pairs; in practice we were unable to force \rfold to respect this constraint regardless of command-line options specified. For this reason we reconstitute the P1 stem in both structures after constrained folding, having length equivalent to it the \infernal P1 stem (resp. 3 base pairs) in the gene off (resp. gene on) structure.
+These constraint masks are run using the command-line flags
+\ms{-d 0 -P rna\_turner1999.par} to disable dangles and use the Turner 1999
+energies respectively. Experimental evidence using inline probing suggests that
+the `on' conformation of the \grb has a reduced P1 stem length of 3 base pairs;
+in practice we were unable to force \rfold to respect this constraint regardless
+of command-line options specified. For this reason we reconstitute the P1 stem in
+both structures after constrained folding, having length equivalent to it the
+\infernal P1 stem (resp. 3 base pairs) in the gene off (resp. gene on) structure.
 
-This difficulty with \rfold can be shown by using the constraint-produced structures as exhaustive constraints themselves. All unpaired nucleotides in \strOff and \strOn are notated by a `\ms{x}' and all base pairs by `\ms{()}' for the 5' and 3' side of the pair respectively to form new constraints mask \strConst{off} and \strConst{on}, having all bases' state explicitly specified. By refolding all 577 candidate sequences with \strConst{off} and \strConst{on} using the same options as before, only 463 (or 80.24\%) of the resulting structures from \strConst{off} have the tree signature prefix \ms{[0,1,2,2,1]}, and just 21 (or 3.64\%) of the \strConst{on} structures correctly re-fold their multiloop.
+This difficulty with \rfold can be shown by using the constraint-produced
+structures as exhaustive constraints themselves. All unpaired nucleotides in
+\strOff and \strOn are notated by a `\ms{x}' and all base pairs by `\ms{()}' for
+the 5' and 3' side of the pair respectively to form new constraints mask
+\strConst{off} and \strConst{on}, having all bases' state explicitly specified. By
+refolding all 577 candidate sequences with \strConst{off} and \strConst{on} using
+the same options as before, only 463 (or 80.24\%) of the resulting structures from
+\strConst{off} have the tree signature prefix \ms{[0,1,2,2,1]}, and just 21 (or
+3.64\%) of the \strConst{on} structures correctly re-fold their multiloop.
 
 \begin{figure}[!ht]
 \centering
@@ -213,8 +337,12 @@ This difficulty with \rfold can be shown by using the constraint-produced struct
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_ON.pdf}
 \end{subfigure}
-\caption{{\em Top:} the computationally predicted gene off conformation of sequence NC\_014019.1 1427313--1427501, using \rfold from the ViennaRNA 2.1.8 suite, with dangles disabled and the Turner 1999 energies. This sequence is located upstream of the xpt gene in {\em B. megaterium} QM B1551. {\em Bottom:} the gene on conformation.}
-\label{fig:example_ss}
+\caption{{\em Top:} the computationally predicted gene off conformation of
+sequence NC\_014019.1 1427313--1427501, using \rfold from the ViennaRNA 2.1.8
+suite, with dangles disabled and the Turner 1999 energies. This sequence is
+located upstream of the xpt gene in {\em B. megaterium} QM B1551. {\em Bottom:}
+the gene on conformation.}
+\label{fig:figure:exampleSS}
 \end{figure}
 
 \subsection{Step 3: Candidate curation}
@@ -225,7 +353,8 @@ in RefSeq, alongside their gene on and off structures. Unfortunately the
 experimental validation of all 503 candidates is not tractable, so it was
 necessary to reduce this collection again to a more manageable size, while only
 keeping the most promising candidates. Our original approach involved using
-\foldalign alongside the \ms{needleall} tool from XXX \cite{xxx}, to simultaneously
+\foldalign \citep{havgaard:2007ca} alongside the \ms{needleall} tool from EMBOSS
+\citep{rice:2000wr}, to simultaneously
 select sequences which closely approximate the more thermodynamically stable
 gene off conformation of the experimentally known \Bsxpt \grb, while minimizing
 sequence similarity between candidates selected for experimental validation. Due to
@@ -233,8 +362,110 @@ experimental constraints, we elected finally to instead choose a small number
 ($n = 2$) of organisms easily available which had multiple promising hits as our
 experimental candidate pool.
 
-\section{Using \rfinder against the RefSeq database}
-\label{sec:rfinder:refseq}
+In Figure \ref{fig:rfinder:histogramFoldalignCandidatesVsXpt}, we display a histogram of scores produced
+by \foldalign for the 503 candidates, when aligned with the \Bsxpt \grb. \foldalign
+is based off Sankoff's algorithm \citep{sankoff:1985wc}, a dynamic programming
+algorithm for simultaneous folding and alignment that runs in \On{6} time and
+\On{4} space. Because three of the sequences from our pool of 503 candidates have
+no global alignment with the \Bsxpt sequence, we have pruned them from our
+dataset and only consider those remaining 500 sequences for which \foldalign
+scores are produced. The \foldalign scores produce have a mean of $153.798$ with a
+minimum [resp. maximum] score of $-2698$ [resp. 1908]. Running \foldalign with the
+\Bsxpt sequence aligned with itself produces a theoretical maximum score of 2419.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/histogramFoldalignCandidatesVsXpt.pdf}
+\caption{Histogram displaying the distribution of scores produced by \foldalign
+2.1.1 using flags \ms{-global -summary -format commandline} when folding each of
+the 503 candidates against the \Bsxpt sequence NC\_000964.3 2320197--2320054.
+Three of the sequences run against \foldalign (NC\_010674.1 1516712--1516868,
+NC\_010723.1 1487041--1487197, and NC\_020291.1 4599412--4599258) have no global
+alignment with the \Bsxpt sequence, and thus the histogram represents 500 of the
+original 503 sequences.}
+\label{fig:rfinder:histogramFoldalignCandidatesVsXpt}
+\end{figure}
+
+Of these 500 sequences, 335 have a \foldalign score $s > 0$, representing 227
+unique accession numbers, with a distribution of candidates per accession number
+as shown in Figure \ref{fig:rfinder:candidateHistogramGroupedByAccession}. From
+the perspective of experimental validation, we have tried to maximize the chance
+of success per organism by selecting those having multiple candidates within the
+same genome. Only 25 of the candidate organisms have more than three hits within
+their genome (only two have five hits). Our approach for selecting the initial
+two organisms for experimental validation was to take this pool of 25 organisms,
+sort by descending average score $s$, and select the first two which are available
+via DSMZ (\url{https://www.dsmz.de/}), the warehouse for microorganisms used by
+our collaborators. Prof. Dr. Mario M\"orl at Universit\"at Leipzig is presently
+overseeing a post-doc who is using the SHAPE protocol \citep{wilkinson:2006vd} to
+validate the computationally predicted structure of these candidates.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.9\textwidth]{Figures/Ribofinder/candidateHistogramGroupedByAccession.pdf}
+\caption{Histogram displaying the distribution of scores produced by \foldalign
+2.1.1 using flags \ms{-global -summary -format commandline} when folding each of
+the 503 candidates against the \Bsxpt sequence NC\_000964.3 2320197--2320054.
+Three of the sequences run against \foldalign (NC\_010674.1 1516712--1516868,
+NC\_010723.1 1487041--1487197, and NC\_020291.1 4599412--4599258) have no global
+alignment with the \Bsxpt sequence, and thus the histogram represents 500 of the
+original 503 sequences.}
+\label{fig:rfinder:candidateHistogramGroupedByAccession}
+\end{figure}
+
+Proceeding in this fashion, we have selected {\em B. megaterium} QM B1551
+(\href{http://www.ncbi.nlm.nih.gov/nuccore/NC_014019.1}{NC\_014019.1},
+\href{http://www.dsmz.de/catalogues/details/culture/DSM-1804.html}{DSM1804})
+and {\em B. megaterium} DSM319
+(\href{http://www.ncbi.nlm.nih.gov/nuccore/NC_014103.1}{NC\_014103.1},
+\href{http://www.dsmz.de/catalogues/details/culture/DSM-319.html}{DSM319})
+for initial validation. These organisms have four
+candidate \grbs each, outlined in Table \ref{table:rfinderCandidateLocs}.
+
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\linewidth}{*{1}{L} *{2}{C}}
+  \toprule
+  \small{Downstream gene function} & \small{{\em B. megaterium} QM B1551} & \small{{\em B. megaterium} DSM319} \\
+  \cmidrule(lr){1-3}
+  \small{xpt} & 1427313--1427501 & 1413696--1413884 \\[1ex]
+  \small{GMP synthase} & 231630--231806 & 230059--230235 \\[1ex]
+  \small{guanine permease} & 233482--233680 & 231911--232108 \\[1ex]
+  \small{N5-carboxyaminoimidazole} & 240759--240970 & 239188--239400 \\
+  \bottomrule
+\end{tabularx}
+\caption{The genomic coordinates for the four candidate \grbs in both
+{\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319. Note that the
+\grbs are located upstream of the same genes, and that these two strains of
+{\em B. megaterium} are highly similar.}
+\label{table:rfinderCandidateLocs}
+\end{table}
 
 \section{Extending beyond \grbs}
 \label{sec:rfinder:ext}
+
+We believe that the \rfinder pipeline allows for the detection of both structural
+conformations of \rbs beyond the \grb. The investigation of
+adenine-sensitive purine \rbs is a small extension of the existing
+implementation. As indicated in Section \ref{subsubsec:rfinder:infernal}, adenine
+\rbs have a complimentary uradine residue at the ligand binding site in
+the J3--1 junction within the aptamer. Beyond differences in ligand specificity,
+the adenine \rb anti-terminator stem is incorporated into the aptamer structure
+itself, and thus stabilized with the base pairing of the adenine ligand. As a
+result, the adenine riboswitch permits transcription when bound, unlike the \grb.
+As a result of the extensive overlap between the anti-terminator stem and adenine
+\rb aptamer, the formation of the terminator stem completely dissociates both the
+P3 and P1 stems \citep{mandal2004a}.
+
+From a computational perspective, these changes are simple to handle within the
+\rfinder pipeline, and provide some indication to how we believe the framework
+could be more generally applied in the future. Rather than filter for the
+discriminatory cytidine residue in the \rb aptamer (Section \ref{subsubsec:rfinder:infernal}) we can only select those hits from \infernal having a uridine at the
+ligand binding site. Structural on and off conformations are known from
+experimental data for the {\em B. subtilis} ydhL gene \citep{mandal2004a} and can
+be used as templates for the constraint masks used in Section \ref{subsec:rfinder:strpred}.
+
+In general, we believe those riboswitches using rho-independent transcription
+termination as a mode of regulation, for which an aptamer alignment exists and
+some experimental knowledge of the terminator stem's structural conformation are
+well suited for more robust structural prediction using \rfinder.

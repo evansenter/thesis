@@ -128,7 +128,7 @@ Given an RNA sequence $\seq=\seqN$ and compatible secondary structure
 \end{align}
 
 where $E(\str)$ denotes the Turner (nearest neighbor)
-energy \cite{}
+energy \citep{}
 of \str, $R = 0.00198$ kcal/mol denotes the universal
 gas constant and $T$ denotes absolute temperature. From this, it follows that
 the full partition function is defined as
@@ -165,15 +165,15 @@ trap while folding.
 
 For the rest of the paper, we consider both \seq as well as the
 secondary structure \strSt on \seq to be fixed. We now recall the
-recursions from Freyhult et al. \cite{Freyhult.ab05} to determine
+recursions from Freyhult et al. \citep{Freyhult.ab05} to determine
 the partition function \bfZ{k}{i,j} with
 respect to the Nussinov-Jacobson
-energy $E_0$ model \cite{nussinovjacobson}, defined by
+energy $E_0$ model \citep{nussinovjacobson}, defined by
 $-1$ times the number of base pairs; i.e. $E_0(S) = -1 \cdot |S|$.
 Although we describe here the recursions for the Nussinov-Jacobson
 model, for the sake of
 simplicity of exposition, both \rnabor
-\cite{Freyhult.ab05} as well as our current software \fftbor,
+\citep{Freyhult.ab05} as well as our current software \fftbor,
 concern the Turner energy model, consisting of free energy parameters for
 stacked bases, hairpins, bulges, internal loops and multiloops.
 
@@ -270,7 +270,7 @@ is re-used; hence these evaluations can be performed in time \On{4} and space
 Lagrange interpolation is clearly computable in time \On{3}.
 Although this approach is theoretically sound, there are severe
 numerical stability issues related to the interpolation method
-\cite{highambarycentricinterpolation},
+\citep{highambarycentricinterpolation},
 the choice of values $a_1,\dots,a_{n}$ in the interpolation,
 and floating point arithmetic (round-off error) related to the
 astronomically large values of the partition functions
@@ -278,7 +278,7 @@ astronomically large values of the partition functions
 approaches including scaling we obtained excellent results by
 interpolating the polynomial $p(x)$, defined in equation (\ref{eq:fftbor:pOfX}),
 rather than the polynomial \emZ{}, defined in equation (\ref{eq:fftbor:zOfX}),
-and performing interpolation with the \fft (FFT) \cite{cormen}
+and performing interpolation with the \fft (FFT) \citep{cormen}
 where \alphaN are
 chosen to be \nRoUs,
 $\alpha_k = \kRoU$.
@@ -495,7 +495,7 @@ a_{n-1} \\
 \right)
 \end{align}
 
-On page 837 of \cite{cormen}, it is shown that the
+On page 837 of \citep{cormen}, it is shown that the
 $(i,j)$ entry of $V_n^{-1}$ is $\frac{\omega^{-j i}}{n}$
 and that
 
@@ -687,9 +687,9 @@ has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
 of the sort artistically rendered in the well-known
-energy landscape depicted in Figure 1 of \cite{Wolynes.ptam05}.
+energy landscape depicted in Figure 1 of \citep{Wolynes.ptam05}.
 A hypothesis behind theoretical work in biomolecular folding theory in
-\cite{Bryngelson.p95}
+\citep{Bryngelson.p95}
 is that kinetic folding slows down as the energy landscape becomes more
 {\em rugged}. This is borne out in our computational experiments for RNA
 using \fftbor, as reported
@@ -712,7 +712,7 @@ nt sequence
 Rfam consensus and minimum free energy structures for both sequences are
 depicted in Figure \ref{fig:fftbor:tppConsensusAndMfe}.
 Despite the fact that there is no sequence homology according to
-pairwise BLAST \cite{blast}, this figure clearly demonstrates that
+pairwise BLAST \citep{blast}, this figure clearly demonstrates that
 consensus and
 minimum free energy structures closely resemble each other, and that the
 structures of both TPP riboswitch aptamers are quite similar, with the
@@ -738,7 +738,7 @@ base pairs.
 \caption{Rfam consensus structures (Rfam) and minimum free energy (MFE)
 secondary structures for two thiamine pyrophosphate (TPP) riboswitch aptamers,
 chosen at random from RF00059 Rfam family seed alignment
-\cite{Gardner.nar11}. Using pairwise BLAST \cite{blast}, there is no
+\citep{Gardner.nar11}. Using pairwise BLAST \citep{blast}, there is no
 sequence similarity, although the secondary structures are very similar,
 as shown in this figure. From left to right:
 {\em (A)} Rfam consensus structure for BX842649.1/277414--277318.
@@ -765,7 +765,7 @@ the second sequence should fold more quickly than the first.
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppDistributions.pdf}
 \caption{Output from \fftbor on two randomly selected
 thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
-\cite{Gardner.nar11}. The $x$-axis represents base pair distance from the
+\citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
 minimum free energy structure for each given sequence; the $y$-axis represents
 Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\bfZ{}{}}$, where
 \bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
@@ -785,7 +785,7 @@ folding time for the first sequence to increase due to competition from
 metastable structures, while one might expect the second sequence to have
 rapid folding time.
 Computational Monte Carlo folding experiments bear out this fact.
-\kinfold \cite{flamm} simulations clearly show that the second
+\kinfold \citep{flamm} simulations clearly show that the second
 sequence folds
 at least four times more quickly than the first sequence. See section
 \ref{sec:fftbor:kinetics} for
@@ -794,7 +794,7 @@ details.}
 \end{figure}
 
 To test the hypothesis that folding is slower for rugged energy landscapes,
-we ran the kinetic folding software, \kinfold \cite{flamm},
+we ran the kinetic folding software, \kinfold \citep{flamm},
 on each of the two TPP riboswitch aptamer sequences,
 BX842649.1/277414--277318 and AACY022101973.1/389--487,
 to determine the \mfpt (MFPT) to
@@ -802,7 +802,7 @@ fold into the MFE structure, when starting from the empty structure.
 In this computational
 experiment, we took MFPT to be the average number of Monte Carlo steps
 taken by \kinfold, each step consisting of the addition or removal
-of a single base pair (or shift --- see \cite{flamm}), to fold the
+of a single base pair (or shift --- see \citep{flamm}), to fold the
 empty structure into the MFE
 structure, where the average was taken over 30 runs, with an absolute
 maximum number of Monte Carlo steps taken to be 500,000.
@@ -846,7 +846,7 @@ secondary structure, taken over the Boltzmann ensemble of all structures.
 
 For the benchmarking assay, we took all 61 selenocysteine insertion sequence
 (SECIS) sequences from the seed alignment of Rfam family RF00031
-\cite{Gardner.nar11}. Average length was $64.32 \pm 2.83$ nt.
+\citep{Gardner.nar11}. Average length was $64.32 \pm 2.83$ nt.
 For each sequence, we ran both \fftbor (when starting
 from the empty structure rather than the MFE structure) and a Monte Carlo
 folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
@@ -884,7 +884,7 @@ empty structure) and logarithm base 10 of the mean first passage time.
 \end{tabularx}
 \caption{\small Pearson correlation between various aspects of selenocysteine
 insertion sequences from the seed alignment of Rfam family
-RF00031 \cite{Gardner.nar11}.
+RF00031 \citep{Gardner.nar11}.
 For each of the 61 RNA sequences, we ran \fftbor, starting
 from empty initial structure \strSt, and we ran a Monte Carlo
 folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
@@ -999,7 +999,7 @@ $311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
 AB030643.1/4176--4241 [resp.  AL645723.11/192421--192359]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
 
 Additionally, we randomized the TPP riboswitches BX842649.1/277414--277318 and AACY022101973.1/389--487 by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
-\cite{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these
+\citep{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these
 sequences, starting from the empty structure.  The mean $\mu_1$ and standard
 deviation $\sigma_1$ for the \fftbor distribution for randomized BX842649 are
 respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
@@ -1026,15 +1026,15 @@ and additional evidence is provided to support this claim.
 % untranslated region (UTR) of messenger RNA,
 % that performs gene regulation by undergoing a conformational change upon
 % binding with a ligand, such as guanine, thiamine pyrophosphate, lysine,
-% etc.  \cite{breaker:Riboswitch2}.
+% etc.  \citep{breaker:Riboswitch2}.
 % This conformational change may either turn  on or off
 % the corresponding gene by either transcriptional or translational regulation
-% of the messenger RNA \cite{tuckerBreaker:review}, depending on the
+% of the messenger RNA \citep{tuckerBreaker:review}, depending on the
 % particular riboswitch. The common feature shared by all riboswitches
 % is that a gene is regulated by conformational change upon ligand binding.
 % Bacterial riboswitches are often found upstream
 % of operons, regulating groups of genes, as in purine {\em de novo}
-% synthesis and salvage \cite{mandalboesebarrickwinklerbreaker}.
+% synthesis and salvage \citep{mandalboesebarrickwinklerbreaker}.
 
 % A riboswitch consists of two equally important parts: an upstream
 % {\em aptamer}, capable of highly discriminative binding to a particular
@@ -1043,7 +1043,7 @@ and additional evidence is provided to support this claim.
 % discriminating aptamer.
 % Since aptamers have been under strong evolutionary pressure to
 % bind with high affinity
-% (e.g. $K_D \approx 5$ nM for guanine \cite{Mandal.nsmb04}),
+% (e.g. $K_D \approx 5$ nM for guanine \citep{Mandal.nsmb04}),
 % there is strong
 % sequence conservation found in the aptameric region of orthologous
 % riboswitches.
@@ -1052,14 +1052,14 @@ and additional evidence is provided to support this claim.
 % there is relatively low sequence conservation (data not shown).
 % While a number of methods exist to computationally predict
 % riboswitch aptamers
-% \cite{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
-% (and especially {\tt INFERNAL} \cite{infernal}, which latter is used
+% \citep{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
+% (and especially {\tt INFERNAL} \citep{infernal}, which latter is used
 % to predict riboswitch aptamers in Rfam), it is an important
 % biological problem to determine the expression platform, since the structure
 % of the expression platform can suggest whether there is
 % transcriptional regulation
 % via a terminator loop or translational regulation via the sequestration of
-% the Shine-Dalgarno sequence \cite{tuckerBreaker:review}. Determination of
+% the Shine-Dalgarno sequence \citep{tuckerBreaker:review}. Determination of
 % the precise location and structure of the expression platform is difficult
 % due to low conserved sequence identity (in-house computations, data not shown).
 % Although this problem remains open, we report here how
@@ -1069,7 +1069,7 @@ and additional evidence is provided to support this claim.
 % Figure 5 depicts the gene OFF structure of the
 % xpt G-box purine riboswitch in {\em B. subtilis}, as determined by
 % inline-probing --- this structure was taken from
-% Figure 1 of \cite{breaker:Riboswitch2}.
+% Figure 1 of \citep{breaker:Riboswitch2}.
 % Note that this structure is only partial, since there are regions
 % with no base pairs depicted, despite the fact that additional
 % base pairs could be added. By using
@@ -1095,7 +1095,7 @@ and additional evidence is provided to support this claim.
 % except for the leftmost [resp. rightmost] unpaired position
 % adjacent to the leftmost [resp. rightmost] base-paired position.
 % The reason for removal of the leading and trailing unpaired positions was
-% that the structure of \cite{breaker:Riboswitch2}, depicted in
+% that the structure of \citep{breaker:Riboswitch2}, depicted in
 % Figure 5, is clearly only partial, as earlier
 % mentioned.  The center panel displays
 % the expected base pair distance to the following secondary structure
@@ -1143,7 +1143,7 @@ and additional evidence is provided to support this claim.
 % Figure 5 displays the output of \fftbor on the
 % 166 nt prefix, clearly showing a bimodal distribution. Attempting to
 % automate the identification of non-unimodal \fftbor output, we have
-% applied the Hartigan-Hartigan dip-test \cite{hartigandiptest},
+% applied the Hartigan-Hartigan dip-test \citep{hartigandiptest},
 % implemented in {\tt R}; however,
 % the dip-test appears to be too sensitive, in that a probability distribution
 % is reported to be non-unimodal, even when visual inspection indicates that
@@ -1165,7 +1165,7 @@ Figure \ref{fig:fftbor:benchmarking} displays run time curves for both
 taken to be either the empty structure or the minimum free energy
 (MFE) structure.
 
-Here, we compare the run time of \rnabor \cite{Freyhult.b07} and
+Here, we compare the run time of \rnabor \citep{Freyhult.b07} and
 the (unparallelized version of) \fftbor, using
 a Dell Power Edge 1950, 2 x Intel Xeon E5430 Quad
 core with 2.80 GHz and 16 GB RAM. For $n = 20,40,60,\dots,300$, in step
