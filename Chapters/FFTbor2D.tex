@@ -9,25 +9,25 @@
 \label{sec:ffttwo:intro}
 
 In this chapter, we present the \ffttwo algorithm and accompanying software.
-\ffttwo, like \fftbor described in Chapter \ref{ch:fftbor}, is an algorithm
+\ffttwo, like \fftbor described in \Chref{ch:fftbor}, is an algorithm
 which computes the paramerized partition function for an input RNA sequence
 \seq. \ffttwo computes the two-dimensional coarse-grained energy landscape for \seq
 given two compatible input secondary structures \strA and \strB, where position
 $(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
 probability for those structures \str which have $\dBP{\str}{\strA}=x$ and
-$\dBP{\str}{\strB}=y$ (where $d_{\text{BP}}$ is as defined in equation
-\ref{eq:fftbor:dBP}). By again leveraging the \fft, \ffttwo runs in \On{5}
+$\dBP{\str}{\strB}=y$ (where $d_{\text{BP}}$ is as defined in
+equation \ref{eq:fftbor:dBP}). By again leveraging the \fft, \ffttwo runs in \On{5}
 time and only uses \On{2} space---a significant improvement over previous
 approaches. This permits the output energy landscape to be used in a
 high-throughput fashion to analyze folding kinetics; a topic covered in detail
-in Chapter \ref{ch:hermes}.
+in \Chref{ch:hermes}.
 
 \subsection{Organization}
 \label{subsec:ffttwo:org}
 
 This chapter is organized in the following fashion. Because the history for
-this work arises naturally from the history provided in Section
-\ref{sec:fftbor:bkgrnd}, we provide only a brief background
+this work arises naturally from the history provided in
+\Secref{sec:fftbor:bkgrnd}, we provide only a brief background
 and immediately fall into
 a technical discussion of the underlying algorithm. We first develop the
 recursions for the Nussinov energy model for expository clarity, the
@@ -39,16 +39,16 @@ $P(x)$, a parity condition and complex conjugates which further reduce the
 runtime by a factor of 4. Finally, we contrast this software against \rnatwofold,
 and outline the performance characteristics of both softwares and highlight
 the benefits and drawbacks of both. We elect to refrain from describing
-applications of \ffttwo until Chapter \ref{ch:hermes}, where the software is
+applications of \ffttwo until \Chref{ch:hermes}, where the software is
 applied to quickly approximate \mfpt and \eqt for the folding of RNA molecules
-between any two distinct, user provided structures \strA,\,\strB.
+between any two distinct, user provided structures \strAB.
 
 \section{Background}
 \label{sec:ffttwo:bkgrnd}
 
 RNA folding pathways play an important role in biological processes.
 For instance, in the {\em hok/sok}
-(host-killing/suppression of killing) system \citep{Gerdes.arg97},
+(host-killing/suppression of killing) system \citep{gerdes.arg97},
 the transition between two metastable RNA structures determines the
 fate of a cell as follows.
 The {\em hok} gene of {\em E. coli} and other bacteria
@@ -66,7 +66,7 @@ If R1 plasmids of {\em E. coli} are present in
 sufficient copy number, then a portion of the 64 nt
 {\em sok}-RNA, which is complementary to {\em hok}-mRNA leader
 region, binds to the active conformation of {\em hok}-mRNA, thus
-causing degradation of the complex by RNase III \citep{Gerdes.arg97}.
+causing degradation of the complex by RNase III \citep{gerdes.arg97}.
 If plasmids are not present in sufficient copy number, then the
 cell is killed by {\em hok} toxin, thus ensuring fitness of the daughter
 cells.
@@ -75,7 +75,7 @@ In the case of spliced leader (SL) RNA from certain trypanosomes and nematodes,
 a portion of the $5'$ exon is donated to
 another mRNA by trans splicing.
 Intermediate structures appear to be important in the process of splicing,
-as shown by LeCuyer and Crothers \citep{lecuyerCrothers}, who performed
+as shown by LeCuyer and Crothers \citep{lecuyercrothers}, who performed
 stopped-flow rapid-mixing and temperature-jump measurements
 of the kinetics for the structural transition between two low
 energy structures of SL RNA from {\em Leptomonas collosoma}.
@@ -95,41 +95,38 @@ On the experimental side,
 %surface and catalytic activity measurements, integrated with
 %structural-kinetic modeling to compare folding pathways of
 %three group I intron ribozymes.
-Neupane et al. \citep{Neupane.nar11} applied single-molecule force spectroscopy
-of the add adenine riboswitch, to show how folding  relates to
+Neupane et al. \citep{neupane.nar11} applied single-molecule force spectroscopy
+of the add adenine riboswitch, to show how folding relates to
 gene regulation;
-see also \citep{Woodside.cocb08,Baird.jacs10,Mitra.r11}.
+see also \citep{woodside.cocb08,baird.jacs10,mitra.r11}.
 %see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
 %
-On the computational side, Morgan and Higgs \citep{morganHiggsBarrier}
+On the computational side, Morgan and Higgs \citep{morganhiggsbarrier}
 appear to have been among the first
 to have considered the computational problem of determining optimal and
 near-optimal {\em folding pathways} between two metastable secondary
-structures $A,B$ of a given RNA sequence.  In \citep{flammPhD}, Flamm
+structures \strAB of a given RNA sequence.  In \citep{flammphd}, Flamm
 developed an event-driven Monte Carlo simulation, \kinfold,
 to determine expected
 folding time between two reference structures, including the mean first
 passage time to fold into the minimum free energy structure.
-%In \citep{Xayaphoummine.nar05}, Xayaphoummine et al. described the
-%{\tt Kinefold} web server, for Monte Carlo kinetic folding of an RNA sequence
-%into a metastable pseudoknotted structure.
-Using \rnasub  \citep{Wuchty.b99}, Flamm et al.
+Using \rnasub \citep{wuchty.b99}, Flamm et al.
 \citep{flamm} designed the exponential
-time exact algorithm, {\tt barriers}, that computes the optimal folding
-pathway between metastable structures \strA and \strB. Since {\tt barriers}
+time exact algorithm, \barriers, that computes the optimal folding
+pathway between metastable structures \strA and \strB. Since \barriers
 may not converge, due to its reliance on the enumeration of possibly
-exponentially many structures, in \citep{Dotu.nar10} we developed a
+exponentially many structures, in \citep{dotu.nar10} we developed a
 local search (tabu) method that rapidly returns near-optimal folding
-pathways; in benchmarking results \citep{Dotu.nar10}, local search was shown
+pathways; in benchmarking results \citep{dotu.nar10}, local search was shown
 to outperform various methods, including direct and indirect path methods
-of Morgan and Higgs \citep{morganHiggsBarrier}, breadth-first search with
-bounded lookahead, {\tt Findpath} \citep{Flamm.r01}, and the
-exponential time, exact method {\tt barriers} \citep{flamm}, in producing
+of Morgan and Higgs \citep{morganhiggsbarrier}, breadth-first search with
+bounded lookahead, \ms{Findpath} \citep{flamm.r01}, and the
+exponential time, exact method \barriers \citep{flamm}, in producing
 near-optimal pathways within
 reasonable time.
 There are far too many contributions to kinetics and folding pathways
 to adequately survey here; the references
-\citep{Xayaphoummine.nar05,Tang.jmb08,Geis.jmb08,Zhao.bj10,Li.bb12}
+\citep{xayaphoummine.nar05,tang.jmb08,geis.jmb08,zhao.bj10,li.bb12}
 give some idea of the variety of methods.
 
 \section{Derivation of the \ffttwo algorithm}
@@ -137,7 +134,7 @@ give some idea of the variety of methods.
 
 For expository clarity, we describe \ffttwo and all recursions
 in terms of the Nussinov energy model \citep{nussinovjacobson}
-(same as in Chapter \ref{ch:fftbor}), where
+(same as in \Chref{ch:fftbor}), where
 the energy $E_0(i,j)$ of a base pair $(i,j)$ is defined to be $-1$, and the
 energy $E(\str)$ of a secondary structure \str is $-1$ times the number $|\str|$
 of base pairs in structure \str.  Nevertheless, the implementation of
@@ -150,7 +147,7 @@ loss of entropy in loops.
 \texorpdfstring{\bfZ{x,y}{1,n}}{}}
 \label{subsec:ffttwo:recursions}
 
-Given reference secondary structures \strA,\,\strB of a
+Given reference secondary structures \strAB of a
 given RNA sequence $\seq=s_1,\dots,s_n$, our goal is to compute
 
 \begin{align}
@@ -177,8 +174,8 @@ $\str_{[i,j]} = \{ (k, \ell) : i \leq k < \ell \leq j \}$.
 In \citep{hofacker:RNAbor2D}, Lorenz et al. generalized
 the dynamic programming recursions of our earlier work \citep{Freyhult.b07},
 to yield recursions
-for the partition function $\bfZ{x,y}{i,j}$ in equation
-(\ref{eq:ffttwo:sumBoltzFactors}). In the context of the Nussinov model,
+for the partition function $\bfZ{x,y}{i,j}$ in
+\eqnref{eq:ffttwo:sumBoltzFactors}. In the context of the Nussinov model,
 $\bfZ{x,y}{i,j}$ is equal to
 
 \begin{align}
@@ -198,7 +195,7 @@ $\bfZ{x,y}{i,j}$ is equal to
 where $\alpha_0 = 1$ if $j$ is base paired in $\strA_{[i,j]}$ and 0 otherwise,
 $\beta_0 = 1$ if $j$ is base paired in $\strB_{[i,j]}$ and 0 otherwise,
 $E_0(k,j)=-1$ if $k,j$ can base-pair
-(see equation \ref{eq:fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
+(see \eqnref{eq:fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
 $\alpha(k) =
 \dBP{\strA_{[i,j]}}{\strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup \{ (k,j) \}}$,
 and
@@ -211,11 +208,11 @@ $\beta(k) =
 
 Given RNA sequence $\seq = s_1,\dots,s_n$
 and two arbitrary, but fixed reference
-structures \strA,\,\strB, we define the {\em polynomial}
+structures \strAB, we define the {\em polynomial}
 
 \begin{align}
 \label{eq:ffttwo:zOfX}
-\emZ{} = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}\; z_{rn+s} x^{rn+s}
+\fullZx = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1}\; z_{rn+s} x^{rn+s}
 \end{align}
 
 where (constant) coefficients
@@ -230,7 +227,7 @@ z_{rn+s} = \bfZ{r,s}{1,n}\;=
 \end{align}
 
 where $E(\str)$ denotes the free energy of \str.
-If we evaluate the polynomial \emZ{} at $n^2$ distinct pairs of values
+If we evaluate the polynomial \fullZx at $n^2$ distinct pairs of values
 $a_0,\dots,a_{n^2-1}$ in
 
 \begin{align}
@@ -239,15 +236,15 @@ $a_0,\dots,a_{n^2-1}$ in
 \end{align}
 
 then Lagrange polynomial interpolation
-(equation \ref{eq:fftbor:lagrangeInterpolation})
-guarantees that we can determine the coefficients $c_{rn+s}$ of \emZ{},
+(\eqnref{eq:fftbor:lagrangeInterpolation})
+guarantees that we can determine the coefficients $c_{rn+s}$ of \fullZx,
 for $0 \leq r,s < n$. Due to technical difficulties concerning numerical
 robustness observered while working on the \fftbor software
-(Chapter \ref{ch:fftbor}), we will perform polynomial interpolation
+(\Chref{ch:fftbor}), we will perform polynomial interpolation
 by using Vandermonde matrices and the \fft (FFT).
 
 The following theorem shows that a
-recursion, analogous to equation (\ref{eq:ffttwo:bfZabij}),
+recursion, analogous to \eqnref{eq:ffttwo:bfZabij},
 can be used to compute
 the {\em polynomial} $\emZ{i,j}$ defined by
 
@@ -332,8 +329,7 @@ the following recursion, by setting $\emZof{i,j}{\rho}$ equal to
 \end{align}
 
 Note that this approach is similar to what we do in \fftbor---specifically
-equation
-(\ref{eq:fftbor:fftborNussPolyAlpha})---however notationally we will use the
+\eqnref{eq:fftbor:fftborNussPolyAlpha}---however notationally we will use the
 variable $\rho$ instead of $\alpha$, to avoid confusion. In this fashion, we
 can compute $\emZof{}{\rho}=\emZof{1,n}{\rho}$ in
 \On{3} time and \On{2} space. For $n^2$ distinct complex numbers
@@ -360,7 +356,7 @@ quintic time \On{5} and quadratic space \On{2}.
 
 \subsection{Polynomial interpolation}
 Our plan is to determine the coefficients of the polynomial
-\emZ{} in equation (\ref{eq:ffttwo:zOfX}) by
+\fullZx in \eqnref{eq:ffttwo:zOfX} by
 polynomial interpolation.  For reasons of numerical stability,
 we instead determine the coefficients of the polynomial $p(x)$,
 defined by
@@ -370,18 +366,18 @@ defined by
 p(x) =
 \sum_{r=0}^{n-1} \sum_{s=0}^{n-1} p_{rn+s}
  x^{rn+s} =
-\sum_{r=0}^{n-1} \sum_{s=0}^{n-1} \frac{\bfZ{rn+s}{1,n}}{\bfZ{}{}}
+\sum_{r=0}^{n-1} \sum_{s=0}^{n-1} \frac{\bfZ{rn+s}{1,n}}{\fullZ}
  x^{rn+s},
 \end{align}
 
 where the \fft (FFT) is used to implement the
 interpolation of
 the coefficients using the \idft (DFT), as
-described in Section \ref{subsec:ffttwo:fft}.  The following pseudocode
+described in \Secref{subsec:ffttwo:fft}.  The following pseudocode
 describes how
 to compute the $m$ most significant digits
 for probabilities
-$p_{rn+s} = \frac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. It is well-known that
+$p_{rn+s} = \frac{\bfZ{r,s}{1,n}}{\fullZ}$. It is well-known that
 the FFT requires $O(N \log N)$ time to solve the \idft for a polynomial
 of degree $N$. In our case,
 $N=n^2$, and so the computation involving the FFT requires time $O(n^2 \log n)$.
@@ -399,11 +395,11 @@ this algorithm to reduce time by a factor of 4.
 \end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$
+of probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$
 \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to
+{\sc Output:} & $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$ to
 $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,n-1$
 \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
@@ -416,24 +412,24 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,n-1$
 \State $\omega_k \gets \exp(\frac{2 \pi i k}{n^2})$
 \EndFor
 \For{$k \gets 0, n^2-1$}
-\Comment{Note that $\emZof{}{\omega_0} = \bfZ{}{}$}
+\Comment{Note that $\emZof{}{\omega_0} = \fullZ$}
 \State $y_k \gets 2^m \cdot \frac{\emZof{}{\omega_k}}{\emZof{}{\omega_0}}$
 \EndFor
 \For{$k \gets 0, n^2-1$}
-\Comment{Compute IDFT from equation (\ref{eq:ffttwo:aFromY})}
+\Comment{Compute IDFT from \eqnref{eq:ffttwo:aFromY}}
 \State $a_k \gets \frac{1}{n} \sum_{j=0}^{n^2-1} a_j\, \omega^{-kj}$
-\State $p_k \gets 2^{-m} \cdot \lfloor a_k \rfloor$
+\State $\pk \gets 2^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{n^2-1}$
-\Comment{Return all $p_k$ for $0 \leq k < n^2$}
+\Comment{Return all \pk for $0 \leq k < n^2$}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
 \caption{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
-$p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
+$p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
 $m$ has an upper bound of 27---only the $\lfloor \log_{10}(2^m) \rfloor =8$
 most significant digits
@@ -460,7 +456,7 @@ $\{ \kRoU : k=0,\dots,n-1 \}$ is a set of pairwise distinct
 
 \begin{lemma}
 \label{lem:ffttwo:lemma1}
-Let \strA,\,\strB denote two distinct, arbitrary but fixed,
+Let \strAB denote two distinct, arbitrary but fixed,
 secondary structures of RNA sequence \seq, let \str range over
 all secondary structures of \seq, and let $d_0$ denote \dBP{\strA}{\strB}.
 If $x=\dBP{\strA}{\str}$ and $y=\dBP{\str}{\strB}$, then
@@ -494,18 +490,18 @@ The following lemma is not difficult to establish.
 
 \begin{lemma}
 \label{lem:ffttwo:lemma2}
-If \emZ{} is the complex polynomial defined in
-equation (\ref{eq:ffttwo:zOfX}), then for any \nRoU
+If \fullZx is the complex polynomial defined in
+\eqnref{eq:ffttwo:zOfX}, then for any \nRoU
 $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \overline{\emZof{}{\alpha}}$.
 \end{lemma}
 
 \begin{lemma}
 \label{lem:ffttwo:lemma3}
-Let \emZ{} be defined by equation (\ref{eq:ffttwo:zOfX}), and
+Let \fullZx be defined by \eqnref{eq:ffttwo:zOfX}, and
 let $\alpha \in \mathbb{C}$ be any complex number.
 If the base pair distance between reference
-structures \strA,\,\strB is even, then $\emZof{}{-\alpha} = \emZof{}{\alpha}$,
+structures \strAB is even, then $\emZof{}{-\alpha} = \emZof{}{\alpha}$,
 while if
 the distance is odd, then $\emZof{}{-\alpha} = -\emZof{}{\alpha}$.
 \end{lemma}
@@ -533,12 +529,12 @@ can be found in supplementary information.
 
 Lemma \ref{lem:ffttwo:lemma1}
 entails that either all even coefficients, or all odd coefficients
-of \emZ{} are zero, and so by a variable change described in detail below,
-we require only half the number of evaluations of \emZ{}, in order to perform
+of \fullZx are zero, and so by a variable change described in detail below,
+we require only half the number of evaluations of \fullZx, in order to perform
 polynomial interpolation.
 Lemma \ref{lem:ffttwo:lemma2}
  entails that we require only half again the number of evaluations of
-\emZ{}, since the remainder can be inferred by taking the complex conjugate.
+\fullZx, since the remainder can be inferred by taking the complex conjugate.
 Lemma \ref{lem:ffttwo:lemma1} and Lemma \ref{lem:ffttwo:lemma2},
 along with a
 precomputation of powers of the complex roots of unity, lead to a
@@ -551,14 +547,14 @@ of 4 or more.
 Let $n$ denote the length of RNA sequence \seq, and let $N$ denote the
 least {\em even} integer greater than or equal to $n$. Since $N$ is even,
 we have $(r+s) \equiv (r\cdot(N+1)+s) \bmod 2$. For distinct
-fixed structures \strA,\,\strB, let
+fixed structures \strAB, let
 $\pi_1(k) = \lfloor \frac{k}{N+1} \rfloor$, and
 $\pi_2(k) = k \bmod (N+1)$, and define the polynomial
 
 \begin{align}
 \label{eq:ffttwo:polyRecEvenN}
 \begin{split}
-\emZ{} &= \sum_{r=0}^{N} \sum_{s=0}^{N}\; z_{rN+s} x^{rN+s} \\
+\fullZx &= \sum_{r=0}^{N} \sum_{s=0}^{N}\; z_{rN+s} x^{rN+s} \\
 &=
 \sum_{k=0}^{\mathclap{(N+1)^2-1}}\; z_{\pi_1(k)\cdot (N+1) + \pi_2(k)}
 x^{\pi_1(k)\cdot (N+1) + \pi_2(k)} \\
@@ -575,7 +571,7 @@ Consider the coefficients of the polynomial
 
 \begin{align}
 \label{eq:ffttwo:zOfXEvenN}
-\emZ{} = \sum_{r=0}^{N} \sum_{s=0}^{N}\; z_{rN+s} x^{rN+s}
+\fullZx = \sum_{r=0}^{N} \sum_{s=0}^{N}\; z_{rN+s} x^{rN+s}
 \enspace=\enspace\sum_{k=0}^{\mathclap{(N+1)^2-1}}\; z_k x^k.
 \end{align}
 
@@ -587,17 +583,17 @@ or \item all coefficients $z_0,z_2,z_4,\dots$ of even parity are zero.
 \end{inparaenum}
 To simplify notation, in the remainder of this subsection, let $M$ be
 the least integer greater than or equal to $(N+1)^2$ that is evenly divisible
-by 4, and let $M_0=M/2$. We will assume that $\emZ{} = \sum_{k=0}^{M-1}
+by 4, and let $M_0=M/2$. We will assume that $\fullZx = \sum_{k=0}^{M-1}
 z_k x^k$, whereupon coefficients $z_k=0$ for $k>(N+1)^2$.
 
 \medskip
 {\sc Case 1}: All coefficients $z_k$ of odd parity in
-equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
+\eqnref{eq:ffttwo:zOfXEvenN} are zero.
 \smallskip
 
 In this case, we have
-$\emZ{} = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}$. But then
-$\emZ{} = \emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k$,
+$\fullZx = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}$. But then
+$\fullZx = \emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k$,
 where we have made a variable change $u=x^2$, and coefficient changes
 $b_k = a_{2k}$.
 By evaluating $M_0=\frac{M}{2}$ many complex
@@ -609,65 +605,65 @@ the polynomial
 \emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k = \sum_{k=0}^{M_0-1} z_{2k} x^{2k}.
 \end{align}
 
-Since $\emYof{}{x^2}=\emZ{}$, we have
+Since $\emYof{}{x^2}=\fullZx$, we have
 $\emYof{}{\exp(\frac{2\pi i k}{M/2})} =
 \emYof{}{\exp(\frac{4\pi i k}{M})} =
 \emZof{}{\exp(\frac{2\pi i k}{M})}$, hence we can
-use the previous recursions (\ref{eq:ffttwo:polyRecNussJac})
+use the previous recursions from \eqnref{eq:ffttwo:polyRecNussJac}
 to evaluate \emZof{}{\exp(\frac{2\pi i k}{M})}.  Instead of
-performing $M$ evaluations of \emZ{} at $M$-roots of unity,
+performing $M$ evaluations of \fullZx at $M$-roots of unity,
 this requires only $M_0=M/2$ evaluations of $\emYof{}{u}$ at
 $M_0$-roots of unity; i.e. only half the number of
-evaluations of \emZ{} are necessary to
+evaluations of \fullZx are necessary to
 obtain the coefficients of $\emYof{}{x}$. But then, we immediately obtain the
-full polynomial \emZ{}, since its coefficients of odd parity are zero.
+full polynomial \fullZx, since its coefficients of odd parity are zero.
 
 \medskip
 {\sc Case 2}: All coefficients $z_k$ of even parity in
-equation (\ref{eq:ffttwo:zOfXEvenN}) are zero.
+\eqnref{eq:ffttwo:zOfXEvenN} are zero.
 \smallskip
 
 In this case, $z_0,z_2,z_4,\dots$ are zero, so
-$\emZ{} = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
-$\emZ{} = x \cdot \emYof{}{u}$, where
+$\fullZx = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
+$\fullZx = x \cdot \emYof{}{u}$, where
 $\emYof{}{u}= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
 a variable change $u=x^2$, and coefficient changes
 $b_k = z_{2k+1}$. Similarly to Case 1,
 we can interpolate the $M_0$ coefficients of the polynomial
 $\emYof{}{u} = \sum_{k=0}^{M_0-1} b_k u^k$
 by evaluating $M_0$ many complex $M_0$-roots
-of unity.  Since $\emZ{}=x \cdot \emYof{}{x^2}$, $\emYof{}{x^2} = x^{-1} \cdot \emZ{}$,
+of unity.  Since $\fullZx=x \cdot \emYof{}{x^2}$, $\emYof{}{x^2} = x^{-1} \cdot \fullZx$,
 so
 $\emYof{}{\exp(\frac{2\pi i k}{M/2})} = \emYof{}{\exp(\frac{4\pi ki}{M})} =
 \exp(\frac{-2\pi i k}{M}) \cdot
 \emZof{}{\exp(\frac{2\pi i k}{M})}$, employing
-the previous recursions (\ref{eq:ffttwo:polyRecNussJac})
+the previous recursions from \eqnref{eq:ffttwo:polyRecNussJac}
 to evaluate \emZof{}{\exp(\frac{2\pi i k}{M})}.  Note, that unlike the
-Case 1, since $\emZ{} = x \cdot \emYof{}{x^2}$, we have
-$\emYof{}{x^2}=\frac{\emZ{}}{x}$, which explains the presence of additional factor
+Case 1, since $\fullZx = x \cdot \emYof{}{x^2}$, we have
+$\emYof{}{x^2}=\frac{\fullZx}{x}$, which explains the presence of additional factor
 $\exp(\frac{-2\pi i k}{M}))$ in Case 2.  Thus, instead of
-performing $M$ evaluations of \emZ{} at $M$-roots of unity,
+performing $M$ evaluations of \fullZx at $M$-roots of unity,
 we perform only $M_0=\frac{M}{2}$ evaluations of $\emYof{}{u}$ at
 $M_0$-roots of unity; i.e. only half the number of
-evaluations of \emZ{} are necessary to
+evaluations of \fullZx are necessary to
 obtain the coefficients of $\emYof{}{x}$. But then, we immediately obtain the
-full polynomial \emZ{}, since $\emZ{} = x \cdot \emYof{}{x^2}$, and the
-coefficients of \emZ{} of even parity are zero.
+full polynomial \fullZx, since $\fullZx = x \cdot \emYof{}{x^2}$, and the
+coefficients of \fullZx of even parity are zero.
 
 In the following, we will need the observation, that if the parity of
-base pair distance \dBP{\strA}{\strB} between \strA,\,\strB is
+base pair distance \dBP{\strA}{\strB} between \strAB is
 even, then
 
 \begin{align}
 \label{eq:ffttwo:evenY}
-\emYof{}{x^2} = \emZ{}
+\emYof{}{x^2} = \fullZx
 \end{align}
 
 while if the parity is odd, then
 
 \begin{align}
 \label{eq:ffttwo:oddY}
-\emYof{}{x^2} = \frac{1}{x} \cdot \emZ{}.
+\emYof{}{x^2} = \frac{1}{x} \cdot \fullZx.
 \end{align}
 
 \subsection{Optimization due to complex conjugates}
@@ -760,7 +756,7 @@ y_k = \emYof{}{\omega^k} =
 \end{align}
 
 It follows that values $y_0,\dots,y_{M_0-1}$ can be obtained by only
-$\frac{M}{4}$ evaluations of \emZ{}.
+$\frac{M}{4}$ evaluations of \fullZx.
 
 \subsection{Polynomial interpolation to evaluate
 \texorpdfstring{\emZ{i,j}}{}}
@@ -789,7 +785,7 @@ V_{M_0} = \left(
 \right)
 \end{align}
 
-As described in Chapter \ref{ch:fftbor}, the \fft is the $O(n \log n)$
+As described in \Chref{ch:fftbor}, the \fft is the $O(n \log n)$
 algorithm, which computes the Discrete Fourier Transform (DFT), defined
 as the matrix product $\bfY = V_{M_0} {\bf A}$:
 
@@ -827,25 +823,25 @@ a_j &=\frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k\, \omega^{-kj}
 
 for $j=0,\dots,M_0-1$.
 
-Since we defined \bfY in equation (\ref{eq:ffttwo:yColumn}) by $\bfY =
+Since we defined \bfY in \eqnref{eq:ffttwo:yColumn} by $\bfY =
 (y_0,\dots,y_{M_0-1})^{\text T}$, where
 $y_0=\emZof{}{\alpha_0},\dots,\allowbreak y_{M_0-1}=\emZof{}{\alpha_{M_0-1}}$
 and $\alpha_k = \omega^k
 \exp(\frac{k \cdot 2\pi i}{M_0})$,
 it follows that the coefficients
 $z_k=\bfZ{\pi_1(k),\pi_2(k)}{1,n}$ in the polynomial
-$\emZ{} = z_0 + z_1 x + \dots + z_{M} x^{M}$ defined in
-(\ref{eq:ffttwo:zOfX}) can be computed using the FFT.
+$\fullZx = z_0 + z_1 x + \dots + z_{M} x^{M}$ defined in
+\eqnref{eq:ffttwo:zOfX} can be computed using the FFT.
 However, in practice we encounter the same issues of numerical instability
-observed in Section \ref{subsec:fftbor:fft}, and adopt a similar approach
+observed in \Secref{subsec:fftbor:fft}, and adopt a similar approach
 to compute the $m$ most significant
-digits of $\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\bfZ{}{}}$,
-where the partition function $\bfZ{}{} = \sum_{S} \boltzf{\str}$ satisfies
-${\bfZ{}{}} = \sum_{x,y} \bfZ{x,y}{1,n}$. This leads to numerical stability,
+digits of $\frac{\bfZ{\pi_1(k),\pi_2(k)}{1,n}}{\fullZ}$,
+where the partition function $\fullZ = \sum_{S} \boltzf{\str}$ satisfies
+${\fullZ} = \sum_{x,y} \bfZ{x,y}{1,n}$. This leads to numerical stability,
 allowing \ffttwo to compute the
-$m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\bfZ{}{}}$.
+$m$ most significant digits of $p(x,y) = \frac{\bfZ{x,y}{1,n}}{\fullZ}$.
 Pseudocode for \ffttwo which includes the performance enhancements described in
-Section \ref{sec:ffttwo:perf} follows below.
+\Secref{sec:ffttwo:perf} follows below.
 \medskip
 
 \begin{figure}[!ht]
@@ -855,11 +851,11 @@ Section \ref{sec:ffttwo:perf} follows below.
 \end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$
+of probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$
 \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$ to
+{\sc Output:} & $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$ to
 $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
@@ -884,14 +880,14 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \EndFor
 \For{$k \gets 0, M_0-1$}
 \If{$\dBP{\strA}{\strB} \bmod 2 = 0$}
-\Comment{From equation (\ref{eq:ffttwo:trickForRoU1})}
+\Comment{From \eqnref{eq:ffttwo:trickForRoU1}}
 \If{$k \leq \frac{M_0}{2}$}
 \State $y_k \gets \emZof{}{\nu^k}$
 \Else
 \State $y_k \gets \overline{\emZof{}{\nu^{M_0-k}}}$
 \EndIf
 \Else
-\Comment{From equation (\ref{eq:ffttwo:trickForRoU2})}
+\Comment{From \eqnref{eq:ffttwo:trickForRoU2}}
 \If{$k \leq \frac{M_0}{2}$}
 \State $y_k \gets \nu^{-k} \cdot \emZof{}{\nu^k}$
 \Else
@@ -909,11 +905,11 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \begin{algorithmic}[1]
 \algrestore{ffttwoImproved}
 \For{$k \gets 0, M_0-1$}
-\Comment{Note that $\emZof{}{\nu_0} = \bfZ{}{}$}
+\Comment{Note that $\emZof{}{\nu_0} = \fullZ$}
 \State $y_k \gets 2^m \cdot \frac{y_k}{\emZof{}{\nu_0}}$
 \EndFor
 \For{$k \gets 0, M_0-1$}
-\Comment{Compute IDFT from equation (\ref{eq:ffttwo:aFromY})}
+\Comment{Compute IDFT from \eqnref{eq:ffttwo:aFromY}}
 \State $a_k \gets \frac{1}{M_0} \sum_{k=0}^{M_0-1} y_k \omega^{-kj}$
 \EndFor
 \For{$k \gets 0, M-1$}
@@ -934,17 +930,17 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \EndFor
 \For{$k \gets 0, (N + 1)^2 - 1$}
 \Comment{Truncate to $m$ significant digits}
-\State $p_k \gets 2^{-m} \cdot \lfloor p_k \rfloor$
+\State $\pk \gets 2^{-m} \cdot \lfloor \pk \rfloor$
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{(N + 1)^2 - 1}$
-\Comment{Return all $p(r,s) = p_{r \cdot (N + 1) + s} = \frac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$}
+\Comment{Return all $p(r,s) = p_{r \cdot (N + 1) + s} = \frac{\bfZ{r,s}{1,n}}{\fullZ}$}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
 \caption{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
-$p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\bfZ{}{}}$. In our implementation,
+$p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
 $m$ has an upper bound of 27---only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
 are computed with \ffttwo. It is well-known that
@@ -975,7 +971,7 @@ having minimum free energy over all structures, whose base pair distance from
 
 For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
 benchmarked in the computation of all Boltzmann probabilities
-$p(x,y)= \frac{\bfZ{x,y}{}}{\bfZ{}{}}$, where $x$ [resp. $y$] represents base pair
+$p(x,y)= \frac{\bfZ{x,y}{}}{\fullZ}$, where $x$ [resp. $y$] represents base pair
 distance to metastable structure \strA [resp. \strBresp]. Care was taken for
 both software to employ the same energy model (Turner99 energy model,
 no dangles, suppression of minimum free energy structure computations
@@ -1012,7 +1008,7 @@ and $0 \leq y \leq L$ in \rnatwofold.
 
 Figure \ref{fig:ffttwo:ffttwoRtwofoldTiming} depicts average run time of \rnatwofold
 and \ffttwo as a function of RNA sequence length, for random RNA
-sequences of lengths 20--200 and their metastable structures \strA,\,\strB, as
+sequences of lengths 20--200 and their metastable structures \strAB, as
 previously explained.  We see that both programs have
 roughly comparable run times for sequences of length up to approximately
 80 nt, while \ffttwo is demonstrably faster for longer sequences.
@@ -1036,7 +1032,7 @@ on sequence length.
 \caption{
 Run time in seconds for \rnatwofold and \ffttwo on random
 RNA sequences of length 20--200 nt, where sequence generation and
-choice of metastable structures \strA,\,\strB is described in the text.
+choice of metastable structures \strAB is described in the text.
 Beyond a length of approximately 80 nt, \ffttwo is demonstrably
 faster.
 }
@@ -1100,7 +1096,7 @@ The $x$-axis [resp. $y$-axis]
 represents base pair distance between metastable structure \strA [resp.
 \strBresp],
 while the $z$-axis represents the ensemble free energy $-RT \log \bfZ{x,y}{}$,
-where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}=p(x,y) \cdot \bfZ{}{}$.
+where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$.
 Low energy positions $(x,y)$ correspond to high Boltzmann probability positions.
 The left panel depicts a heat map of the ensemble free energy,
 while the right panel depicts a contour map with level curves. In analogy
@@ -1123,7 +1119,7 @@ Figure \ref{fig:ffttwo:ffttwoProbContour},
 except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
 is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
 while in the right panel, ensemble free energy is computed from
-the values $\bfZ{x,y}{}=p(x,y) \cdot \bfZ{}{}$, where values $p(x,y)$ are output
+the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
 by \rnatwofold.
 The loss of detail in the 2D energy landscape is caused uniquely by
 working with probabilities $p(x,y)$, rather than partition function

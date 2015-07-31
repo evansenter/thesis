@@ -40,12 +40,12 @@ to present an application of \fftbor, in the area of RNA folding kinetics.
 In \citep{freyhult.b07}, a dynamic programming algorithm
 \rnabor---pronounced {\em RNA neighbor}---was developed which simultaneously
 computes for
-each integer $k$, the Boltzmann probability $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$
+each integer $k$, the Boltzmann probability $\pk = \frac{\bfZ{k}{}}{\fullZ}$
 of the subensemble of structures
 whose base pair distance to a given {\em initial}, or
 {\em reference}, structure \strSt is $k$.
 \footnote{As later
-explained, \bfZ{}{} denotes the partition function, defined as the sum of
+explained, \fullZ denotes the partition function, defined as the sum of
 all Boltzmann factors \boltzf{\str}, over all secondary structures \str
 of a given RNA sequence, and $R$ denotes the universal
 gas constant and $T$ absolute temperature. Similarly \bfZ{k}{} denotes the
@@ -69,18 +69,18 @@ RNA sequences containing two or more (distinct) metastable structures.
 In this chapter, we describe a radically different algorithm, \fftbor,
 prounounced {\em FFT neighbor},
 that uses polynomial interpolation to compute the
-coefficients $p_0,\ldots,p_{n-1}$ of the polynomial defined in equation
-(\ref{eq:fftbor:pOfX}),
-where $p_k$ is defined by $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$.
+coefficients $p_0,\ldots,p_{n-1}$ of the polynomial defined in
+\eqnref{eq:fftbor:pOfX},
+where \pk is defined by $\pk = \frac{\bfZ{k}{}}{\fullZ}$.
 Due to severe numerical instability issues in both the Lagrange
 interpolation formula and in Gaussian elimination, we employ
 the \fft (FFT) to compute the \idft (DFT) on values $y_0,\ldots,y_{n-1}$,
 where $y_k = p(\omega^k)$ and
 $\omega = \pRoU$ is the principal \nRoU and
-$p(x)$ is defined in (\ref{eq:fftbor:pOfX}). This
+$p(x)$ is defined in \eqnref{eq:fftbor:pOfX}. This
 gives rise to an improved version of \rnabor, denoted \fftbor,
 which runs in time \On{4} and space \On{2}.
-% Once two metastable structures \strS,\,\strT are identified, we can
+% Once two metastable structures \strST are identified, we can
 % subsequently evaluate the feasibility of transition between
 % structures \strS and \strT,
 % by computing the {\em barrier energy} using algorithms, such as that
@@ -97,10 +97,10 @@ which runs in time \On{4} and space \On{2}.
 p(x) = p_0 + p_1 x + p_2 x^2 + \dots + p_{n-1} x^{n-1},
 \end{align}
 
-where $p_k$ is defined as $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$. We employ the \fft to compute
+where \pk is defined as $\pk = \frac{\bfZ{k}{}}{\fullZ}$. We employ the \fft to compute
 the \idft on values $y_0,\dots,y_{n-1}$, where
 $y_k = p(\omega^k)$ and $\omega = \pRoU$ is the principal \nRoU and $p(x)$ is defined in
-equation (\ref{eq:fftbor:pOfX}). By leveraging
+\eqnref{eq:fftbor:pOfX}. By leveraging
 \nRoUs in conjunction with the \idft the we subvert numeric instability
 issues observed with both Lagrange interpolation and Gaussian elimination.
 
@@ -134,11 +134,11 @@ shown to be present in some biologically relevant RNAs, their inclusion greatly
 complicates the recursive decomposition of the structure, and thus it is common
 to ignore them.
 
-Provided two secondary structures \str,\,\strT, we can define a notion of
+Provided two secondary structures \strST, we can define a notion of
 distance between them. There are a number of different definitions of distance
 used across the literature; we will use {\em \bpd} for \fftbor.
 Base pair distance is defined as the symmetric difference between the sets
-\str,\,\strT:
+\strST:
 
 \begin{align}
 \label{eq:fftbor:dBP}
@@ -183,7 +183,7 @@ the full partition function is defined as
 
 \begin{align}
 \label{eq:fftbor:partFunc}
-\bfZ{}{} = \bfZ{}{1,n} = \sum_{k=0}^n \bfZ{k}{1,n}
+\fullZ = \bfZ{}{1,n} = \sum_{k=0}^n \bfZ{k}{1,n}
 \end{align}
 
 since the \bpd between \strSt and \str is at most
@@ -200,7 +200,7 @@ We can then define the Boltzmann probability of all \kNbrs of \strSt as
 p(k) =\frac{\bfZ{k}{1,n}}{\bfZ{}{1,n}}.
 \end{align}
 
-By visualizing the probabilities $p_k$ as a function of $k$, we generate a
+By visualizing the probabilities \pk as a function of $k$, we generate a
 coarse-grained view of the one-dimensional energy landscape of \seq with
 respect to \strSt. When \strSt is taken to be the \mfes for example, one would
 anticipate to see a peak at $k=0$, with additional peaks implying additional
@@ -284,14 +284,14 @@ we define the {\em polynomial}
 
 \begin{align}
 \label{eq:fftbor:zOfX}
-\emZ{} = \sum_{k=0}^n c_k x^k
+\fullZx = \sum_{k=0}^n c_k x^k
 \end{align}
 
-where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of equation
-(\ref{eq:fftbor:maxDist}) and the fact that the minimum number of
+where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of
+\eqnref{eq:fftbor:maxDist} and the fact that the minimum number of
 unpaired bases in a hairpin loop $\theta$ is 3, we know that $c_n=0$,
-so that \emZ{} is a polynomial of degree strictly less than $n$.
-If we evaluate the polynomial \emZ{} for $n$ distinct values
+so that \fullZx is a polynomial of degree strictly less than $n$.
+If we evaluate the polynomial \fullZx for $n$ distinct values
 
 \begin{align}
 \label{eq:fftbor:solutionsForAlpha}
@@ -299,7 +299,7 @@ If we evaluate the polynomial \emZ{} for $n$ distinct values
 \end{align}
 
 then the Lagrange polynomial interpolation formula guarantees that
-$\emZ{} = \sum_{k=1}^n y_k P_k(x)$, where the polynomials $P_k(x)$ have degree
+$\fullZx = \sum_{k=1}^n y_k P_k(x)$, where the polynomials $P_k(x)$ have degree
 at most $n-1$ and are given by the Lagrange formula
 
 \begin{align}
@@ -308,11 +308,11 @@ P_k(x) = \frac{\prod_{i\ne k} (x-x_i)}{\prod_{i \ne k} (x_k-x_i)}.
 \end{align}
 
 Since the polynomials $P_k(x)$ can be explicitly computed, it follows that
-we can compute the coefficients $c_k$ of polynomial \emZ{}. As we describe
-below, the evaluation of \emZ{} for a fixed value of $x$ can be done in
+we can compute the coefficients $c_k$ of polynomial \fullZx. As we describe
+below, the evaluation of \fullZx for a fixed value of $x$ can be done in
 time \On{3} and space \On{2}.  It follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ can be computed after
-$n$ evaluations of \emZ{}, where the space for each evaluation of \emZ{}
+$n$ evaluations of \fullZx, where the space for each evaluation of \fullZx
 is re-used; hence these evaluations can be performed in time \On{4} and space
 \On{2}. Finally,
 Lagrange interpolation is clearly computable in time \On{3}.
@@ -324,8 +324,8 @@ and floating point arithmetic (round-off error) related to the
 astronomically large values of the partition functions
 \bfZ{k}{1,n}, for $0 \leq k < n$. After many unsuccessful
 approaches including scaling we obtained excellent results by
-interpolating the polynomial $p(x)$, defined in equation (\ref{eq:fftbor:pOfX}),
-rather than the polynomial \emZ{}, defined in equation (\ref{eq:fftbor:zOfX}),
+interpolating the polynomial $p(x)$, defined in \eqnref{eq:fftbor:pOfX},
+rather than the polynomial \fullZx, defined in \eqnref{eq:fftbor:zOfX},
 and performing interpolation with the \fft (FFT) \citep{cormen}
 where \alphaN are
 chosen to be \nRoUs,
@@ -333,7 +333,7 @@ $\alpha_k = \kRoU$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
 time, rather than the cubic time required by using the Lagrange formula
-(\ref{eq:fftbor:lagrangeInterpolation}) or by Gaussian elimination. Fewer
+shown in \eqnref{eq:fftbor:lagrangeInterpolation} or by Gaussian elimination. Fewer
 numerical operations implies increased numerical stability in our application.
 
 \subsection{Recursions to compute the polynomial
@@ -426,9 +426,9 @@ First, some notation is necessary.
 Recall that if $F$ is an arbitrary
 polynomial [resp. analytic] function, then $[x^k] F(x)$
 denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
-Taylor expansion of $F$]. For instance, in equation (\ref{eq:fftbor:pOfX}),
-$[x^k]p(x) = p_k$, and in equation (\ref{eq:fftbor:zOfX}),
-$[x^k]\emZ{} = c_k(i,j)$.
+Taylor expansion of $F$]. For instance, in \eqnref{eq:fftbor:pOfX},
+$[x^k]p(x) = \pk$, and in \eqnref{eq:fftbor:zOfX},
+$[x^k]\fullZx = c_k(i,j)$.
 
 By definition, it is clear that $\emZ{i,j}=1$ if $i \leq j \leq i + \theta$,
 where we recall that $\theta = 3$ is the minimum number of unpaired bases in
@@ -554,28 +554,28 @@ a_j = \frac{1}{n} \sum_{k=0}^{n-1} y_k\,\omega^{-kj}
 
 for $j=0,\dots,n-1$.
 
-Since we defined \bfY in equation (\ref{eq:fftbor:yColumn}) by $\bfY =
+Since we defined \bfY in \eqnref{eq:fftbor:yColumn} by $\bfY =
 (y_0,\dots,y_{n-1})^{\text T}$, where
 $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$
 and $\alpha_k = \omega^k \kRoU$, it follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ in the polynomial
-$\emZ{} = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in equation
-(\ref{eq:fftbor:zOfX}) can be computed, at least in principle,
+$\fullZx = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in
+\eqnref{eq:fftbor:zOfX} can be computed, at least in principle,
 by using the \fft. It turns out, however, that the values of
 \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
 that exceed 56 (data not shown).
 Nevertheless, our approach can be modified as follows.
 Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
-$y_1=\frac{\emZof{}{\alpha_1}}{\bfZ{}{}},\dots,
-y_{n}=\frac{\emZof{}{\alpha_n}}{\bfZ{}{}}$, and
-\bfZ{}{} is the partition function defined in equation (\ref{eq:fftbor:partFunc}).
-Using the \fft to compute the \idft, it follows from equation
-(\ref{eq:fftbor:aFromY}) that we can compute the probabilities $p_0,\dots,p_{n-1}$
+$y_1=\frac{\emZof{}{\alpha_1}}{\fullZ},\dots,
+y_{n}=\frac{\emZof{}{\alpha_n}}{\fullZ}$, and
+\fullZ is the partition function defined in \eqnref{eq:fftbor:partFunc}.
+Using the \fft to compute the \idft, it follows from
+\eqnref{eq:fftbor:aFromY} that we can compute the probabilities $p_0,\dots,p_{n-1}$
 that are coefficients of the polynomial
 $p(x) = p_0 + p_1 x + \dots + p_{n-1}x^{n-1}$
-defined in equation (\ref{eq:fftbor:pOfX}). For genomics applications, we are
-only interested in the $m$ most significant digits of each $p_k$, as described
+defined in \eqnref{eq:fftbor:pOfX}. For genomics applications, we are
+only interested in the $m$ most significant digits of each \pk, as described
 in the pseudocode on the following page.
 \medskip
 
@@ -586,10 +586,10 @@ in the pseudocode on the following page.
 \end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_k = \sfrac{\bfZ{k}{1,n}}{\bfZ{}{}}$ \rule[-1.5ex]{0pt}{0pt} \\
+of probabilities $\pk = \sfrac{\bfZ{k}{1,n}}{\fullZ}$ \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structure \strSt of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & Probabilities $p_k = \sfrac{\bfZ{k}{1,n}}{\bfZ{}{}}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
+{\sc Output:} & Probabilities $\pk = \sfrac{\bfZ{k}{1,n}}{\fullZ}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
@@ -600,23 +600,23 @@ structure \strSt of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \State $\omega_k \gets \exp(\frac{2 \pi i k}{n})$
 \EndFor
 \For{$k \gets 0, n-1$}
-\Comment{Note that $\emZof{}{\omega_0} = \bfZ{}{}$}
+\Comment{Note that $\emZof{}{\omega_0} = \fullZ$}
 \State $y_k \gets 10^m \cdot \frac{\emZof{}{\omega_k}}{\emZof{}{\omega_0}}$
 \EndFor
 \For{$k \gets 0, n-1$}
-\Comment{Compute IDFT from equation (\ref{eq:fftbor:aFromY})}
+\Comment{Compute IDFT from \eqnref{eq:fftbor:aFromY}}
 \State $a_k \gets \frac{1}{n} \sum_{j=0}^{n-1} y_j\, \omega^{-kj}$
-\State $p_k \gets 10^{-m} \cdot \lfloor a_k \rfloor$
+\State $\pk \gets 10^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{n-1}$
-\Comment{Return all $p_k$ for $0 \leq k < n$,
-from equation (\ref{eq:fftbor:probK})}
+\Comment{Return all \pk for $0 \leq k < n$,
+from \eqnref{eq:fftbor:probK}}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
 \caption{The function {\sc FFTbor} computes the $m$ most significant digits
-of $p_0,\dots,p_{n-1}$, where $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$. This algorithm
+of $p_0,\dots,p_{n-1}$, where $\pk = \frac{\bfZ{k}{}}{\fullZ}$. This algorithm
 operates in \On{4} time and \On{2} space, a significant improvement over its
 predecessor \rnabor.}
 \label{fig:fftbor:algo}
@@ -627,8 +627,8 @@ predecessor \rnabor.}
 \label{sec:fftbor:benchmarking}
 
 In this subsection, we show that we need only evaluate the polynomial
-\emZ{}, as defined in
-equation (\ref{eq:fftbor:zOfX}), for $n/2$ of the \nRoUs.
+\fullZx, as defined in
+\eqnref{eq:fftbor:zOfX}, for $n/2$ of the \nRoUs.
  It is first necessary to recall the definition of complex
 conjugate.
 Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
@@ -638,8 +638,8 @@ $i = \sqrt{-1}$,  then $\overline{z} = \aMbi$.
 \begin{lemma}
 \label{lem:fftbor:compconj}
 
-If \emZ{} is the complex polynomial defined in
-equation (\ref{eq:fftbor:zOfX}), then for any \nRoU
+If \fullZx is the complex polynomial defined in
+\eqnref{eq:fftbor:zOfX}, then for any \nRoU
  $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \overline{\emZof{}{\alpha}}$. In other words, if $\alpha$ is a \nRoU
  of the form \aPbi, where $a,b \in \mathbb{R}$ and $b>0$, and
@@ -670,7 +670,7 @@ $b>0$, then we have $e^{-i k \theta} = \aMbi$. It follows that for any
 \nRoU of the form \aPbi, where $b>0$, the number \aMbi
 is also an \nRoU.
 
-Recall that $\emZ{} = \sum_{k=0}^n c_k x^k$, where
+Recall that $\fullZx = \sum_{k=0}^n c_k x^k$, where
 $c_k \in \mathbb{R}$ are real numbers representing the partition function
 \bfZ{k}{1,n} over
 all secondary structures of a given RNA sequence \seqN,
@@ -716,9 +716,9 @@ This completes the proof of the lemma.
 
 \end{proof}
 
-Lemma \ref{lem:fftbor:compconj} immediately entails that we need only to evaluate \emZ{} on $n/2$
+Lemma \ref{lem:fftbor:compconj} immediately entails that we need only to evaluate \fullZx on $n/2$
 many of the \nRoUs---namely, those of the form
-\aPbi, where $b \geq 0$. The remaining values of \emZ{} are obtained by
+\aPbi, where $b \geq 0$. The remaining values of \fullZx are obtained by
 taking conplex conjugates of the first $n/2$ values. This, along with a
 precomputation of powers of the \nRoUs, leads to an
 enormous performance speed-up in our implementation of \fftbor.
@@ -730,7 +730,7 @@ The output of \fftbor, as shown in Figure
 \ref{fig:fftbor:tppDistributions}, is a probability distribution,
 where the $x$-axis represents the base pair distance from an arbitrary,
 but fixed secondary structure \strSt, and the $y$-axis represents the
-Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$ that a secondary structure
+Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\fullZ}$ that a secondary structure
 has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
@@ -815,7 +815,7 @@ the second sequence should fold more quickly than the first.
 thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
 \citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
 minimum free energy structure for each given sequence; the $y$-axis represents
-Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\bfZ{}{}}$, where
+Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$, where
 \bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
 whose base pair distance from the MFE structure is exactly $k$.
 {\em (Left)}
@@ -881,13 +881,13 @@ E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
 
 where
 $\mathbb{S}(\seqN)$ denotes the set of secondary structures for
-$\seq = \seqN$, $P(\str) = \frac{\boltzf{\str}}{\bfZ{}{}}$ is the Boltzmann
+$\seq = \seqN$, $P(\str) = \frac{\boltzf{\str}}{\fullZ}$ is the Boltzmann
 probability of \str, and
 \dBP{\str}{\strSt} denotes base pair distance between \str and \strSt.
 If we run \fftbor on an input sequence \seq and secondary structure
 \strSt, then clearly
 $E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
-\sum_{k} k \cdot p(k)$, where $p(k)=\frac{\bfZ{k}{}}{\bfZ{}{}}$, obtained from the
+\sum_{k} k \cdot p(k)$, where $p(k)=\frac{\bfZ{k}{}}{\fullZ}$, obtained from the
 program output.  If \strSt is the empty structure, then \fftbor output
 is simply the probability distribution of the number of base pairs per
 secondary structure, taken over the Boltzmann ensemble of all structures.
@@ -998,8 +998,8 @@ initial structure \strSt.
 The $x$-axis represents the number of base pairs per structure,
 taken over the ensemble of all secondary structures for the given RNA
 sequence; the $y$-axis represents Boltzmann probability
-$p(k) = \sfrac{\bfZ{k}{}}{\bfZ{}{}}$,
-where \bfZ{}{} is the partition function for all secondary structures
+$p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$,
+where \fullZ is the partition function for all secondary structures
 having exactly $k$ base pairs.
 {\em (Left)}
 For the selenocysteine (SECIS) element AB030643.1/4176--4241 from Rfam family
@@ -1253,7 +1253,7 @@ OpenMP is a simple and flexible
 multi-platform shared-memory parallel programming environment, that supports
 parallelizations of C/C++ code---see \url{http://openmp.org/}.
 Using OpenMP primitives, we created multiple threads to evaluate the polynomial
-\emZ{} on different \nRoUs. Figure \ref{fig:fftbor:benchmarkingParallel}
+\fullZx on different \nRoUs. Figure \ref{fig:fftbor:benchmarkingParallel}
 presents benchmarks, executed on
 a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
 of \fftbor as a function of the number of cores.

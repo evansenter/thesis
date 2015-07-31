@@ -15,7 +15,7 @@ detection of putative \grbs across genomic data. The \rfinder
 tool operates in three stages. First we use \infernal
 \citep{infernal,nawrocki:2013hk} and \tthp \citep{ermolaeva:2000cl} to detect
 putative aptamers and expression platforms, two distinct components of
-\rbs described in section \ref{sec:rfinder:bkgrnd}. After coalescing
+\rbs described in \Secref{sec:rfinder:bkgrnd}. After coalescing
 this data into a pool of candidate \rbs, we use \rfold \citep{lorenz.amb11}
 with constraints based on experimental data to compute the two distinct structural
 conformations---`gene on' and `gene off'. In the third and final stage, we
@@ -187,7 +187,7 @@ additionally be represented using a context-free grammar such as:
 S \rightarrow S\,.\;|\;.\,S\;|\;(S)\;|\;SS\;|\;\epsilon
 \end{align}
 
-The grammar from \eqref{eq:rfinder:strCfg} can be used to generate a parse tree
+The grammar from \eqnref{eq:rfinder:strCfg} can be used to generate a parse tree
 \tree for \strS. The benefit of working with \tree over \strS is that the parse
 tree offers an abstract representation of secondary structure shape independent of
 sequence length, permitting us to classify and eventually constrain a large
@@ -272,20 +272,19 @@ produced by the software guarantees not to explicitly invalidate any user-provid
 constraints, but does not guarantee all constraints will be satisfied in the
 resulting structure. For each of the candidate \grbs, having \treeFor{\infernal}
 and \treeFor{\tthp}, we build the following constraint masks:
-\clearpage
 
 {\large Structural constraints for both conformations of the \grb aptamer:}
 \begin{enumerate}
 \setstretch{1.3}
 \item Prohibit base pairing upstream of \treeIdx{p}{1}{i} and
-downstream of \treeIdx{p}{2}{l}. \\ {\em Do not permit any possible disruptive pairing
+downstream of \treeIdx{p}{2}{l}. \\[1.5ex] {\em Do not permit any possible disruptive pairing
 interactions 5' of the aptamer or 3' of the terminator stem.}
 \item Force base pairs and unpaired regions in \treePos{t}{1}, with
-the exception of \treePos{p}{1}. \\ {\em Since the aptamer structure is well
+the exception of \treePos{p}{1}. \\[1.5ex] {\em Since the aptamer structure is well
 conserved and we have the \infernal-provided alignment with the
 covariance model, force this structure to form as aligned.}
 \item Explicitly prohibit formation of \treePos{p}{1} stem, which closes the
-three-way junction. \\ {\em The only exception to above is the closing of the
+three-way junction. \\[1.5ex] {\em The only exception to above is the closing of the
 P1 multiloop stem. In our experience, since \rfold uses soft constraints
 (meaning that constrained base pairs are only allowed to pair with each other
 or not at all), in practice we rarely see the P1 stem form as we would like.
@@ -295,23 +294,31 @@ fact without disrupting any other base pairs.}
 {\large Constraints exclusive to the gene off structure:}
 \begin{enumerate}
 \setstretch{1.3}
-\item Force base pairs and unpaired regions in \treePos{t}{2}. \\ {\em This simply
+\item Force base pairs and unpaired regions in \treePos{t}{2}. \\[1.5ex] {\em This simply
 forces the formation of the terminator stem, as predicted by \tthp.}
 \end{enumerate}
 {\large Constraints exclusive to the gene on structure:}
 \begin{enumerate}
 \setstretch{1.3}
 \item Require $m$ nucleotides starting from \treeIdx{p}{1}{l + 3} to pair to the
-right, where $m = len(\treePos{p}{2})$, and require the left-hand side of the
-\treePos{p}{2} helix to pair to the left.
-\item Disallow pairing downstream of \treeIdx{p}{2}{j}.
+right, where $m = \textit{length}(\treePos{p}{2})$, and require the left-hand side of the
+\treePos{p}{2} helix to pair to the left. \\[1.5ex] {\em The formation of the
+anti-terminator stem involves the partial disruption of the \treePos{p}{1} stem.
+Though there is no consensus for the length of the anti-terminator stem,
+experimental data suggests that the left side of the terminator stem}
+(\treeIdx{p}{2}{i}--\treeIdx{p}{2}{k}) {\em alternatively base pairs to the left,
+thus forming the anti-terminator hairpin and permitting transcription to proceed
+\citep{mandal:2004ja}.}
+\item Disallow pairing downstream of \treeIdx{p}{2}{j}. \\[1.5ex] {\em Avoid
+disruptive pairing downstream of the newly formed anti-terminator stem.}
 \end{enumerate}
-\clearpage
 
 These constraint masks are run using the command-line flags
 \ms{-d 0 -P rna\_turner1999.par} to disable dangles and use the Turner 1999
-energies respectively. Experimental evidence using inline probing suggests that
-the `on' conformation of the \grb has a reduced P1 stem length of 3 base pairs;
+energies respectively. Experimental evidence using inline probing and
+crystallographic analysis suggests that
+the `on' conformation of the \grb has a reduced P1 stem length of 3 base pairs
+\citep{mandalboesebarrickwinklerbreaker,serganov:2004dq};
 in practice we were unable to force \rfold to respect this constraint regardless
 of command-line options specified. For this reason we reconstitute the P1 stem in
 both structures after constrained folding, having length equivalent to it the
@@ -420,7 +427,7 @@ candidate \grbs each, outlined in Table \ref{table:rfinderCandidateLocs}.
 {\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319. Note that the
 \grbs are located upstream of the same genes, and that these two strains of
 {\em B. megaterium} are highly similar. These structures are pictured in
-Section \ref{sec:rfinder:grbValidationVarna}, plotted using VARNA
+\Secref{sec:rfinder:grbValidationVarna}, plotted using VARNA
 \citep{darty:2009gt}.}
 \label{table:rfinderCandidateLocs}
 \end{table}
@@ -431,7 +438,7 @@ Section \ref{sec:rfinder:grbValidationVarna}, plotted using VARNA
 We believe that the \rfinder pipeline allows for the detection of both structural
 conformations of \rbs beyond the \grb. The investigation of
 adenine-sensitive purine \rbs is a small extension of the existing
-implementation. As indicated in Section \ref{subsubsec:rfinder:infernal}, adenine
+implementation. As indicated in \Secref{subsubsec:rfinder:infernal}, adenine
 \rbs have a complimentary uradine residue at the ligand binding site in
 the J3--1 junction within the aptamer. Beyond differences in ligand specificity,
 the adenine \rb anti-terminator stem is incorporated into the aptamer structure
@@ -444,10 +451,10 @@ P3 and P1 stems \citep{mandal2004a}.
 From a computational perspective, these changes are simple to handle within the
 \rfinder pipeline, and provide some indication to how we believe the framework
 could be more generally applied in the future. Rather than filter for the
-discriminatory cytidine residue in the \rb aptamer (Section \ref{subsubsec:rfinder:infernal}) we can only select those hits from \infernal having a uridine at the
+discriminatory cytidine residue in the \rb aptamer (\Secref{subsubsec:rfinder:infernal}) we can only select those hits from \infernal having a uridine at the
 ligand binding site. Structural on and off conformations are known from
 experimental data for the {\em B. subtilis} ydhL gene \citep{mandal2004a} and can
-be used as templates for the constraint masks used in Section \ref{subsec:rfinder:strpred}.
+be used as templates for the constraint masks used in \Secref{subsec:rfinder:strpred}.
 
 In general, we believe those riboswitches using rho-independent transcription
 termination as a mode of regulation, for which an aptamer alignment exists and

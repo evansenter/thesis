@@ -135,7 +135,7 @@ base pairs belonging to one structure but not the other.
 Structures $S,T$ are said to be $k$-{\em neighbors} if $d_{BP}(S,T) = k$.
 In \citep{Freyhult.b07}, we described recursions for an $O(n^5)$ time and
 $O(n^3)$ algorithm, \rnabor, that computes the Boltzmann probability
-$p_k$ of structures to have base pair distance $k$ from a given reference
+\pk of structures to have base pair distance $k$ from a given reference
 structure \strA. In \citep{fftbor}, we described an $O(n^4)$ time and
 $O(n^2)$ space algorithm, by using polynomial interpolation with the
 fast Fourier transform (FFT).
@@ -160,7 +160,7 @@ by Waldisp\"uhl and Ponty in the context of the
 {\tt RNAmutants} program \citep{waldispuhlPontyRecomb}. Subsequently,
 we used the Fast Fourier Transform (FFT) in our algorithm
 \fftbor \citep{fftbor}  to interpolate the
-probabilities $p_k$ that structures from the Boltzmann
+probabilities \pk that structures from the Boltzmann
 ensemble have base pair distance $k$ from a target structure \strSt.
 This paper extends the result from \citep{fftbor} to two dimensions; i.e.
 in the algorithm \ffttwo,
@@ -444,7 +444,7 @@ $\alpha^k = \exp(\frac{2\pi i k}{n^2})$.
  5.    $y_k = 10^m \cdot \frac{y_k}{{\bf Z}}$ //normalize $y_k$
  6.  compute $p_0,\ldots,p_{n^2-1}$ by FFT
  7.  for $k=0$ to $n^2-1$
- 8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+ 8.    $\pk = \lfloor 10^m \cdot \pk \rfloor \cdot \frac{1}{10^m}$
  9.  //truncate to $m$ most significant digits
 |mendverbatim
 \end{small}
@@ -822,7 +822,7 @@ $k=\pi_1(k)\cdot M + \pi_2(k)$.
 \caption{\small
 Pseudocode to compute the $m$ most significant digits
 for probabilities
-$p_k = \frac{z_{k}}{{\bf Z}}=\frac{\z{\pi_1(k),\pi_2(k)}{1}{n}}{{\bf Z}}$.
+$\pk = \frac{z_{k}}{{\bf Z}}=\frac{\z{\pi_1(k),\pi_2(k)}{1}{n}}{{\bf Z}}$.
 Our program, \ffttwo, supports values of $m = 1,\ldots,8$ for the
 precision parameter $m$.
 (Note that the software actually usesbase $2$ precision parameter, with maximum of $27$, where $2^{27} \approx

@@ -21,7 +21,7 @@ expression platform candidates. A web server is available at
 
 In \citep{Freyhult.b07}, we developed a dynamic programming algorithm,
 \rnabor, pronounced {\em RNA neighbor}, which simultaneously computes for
-each integer $k$, the Boltzmann probability $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$
+each integer $k$, the Boltzmann probability $\pk = \frac{\bfZ{k}{}}{\fullZ}$
 of the subensemble of structures
 whose base pair distance to a given {\em initial}, or
 {\em reference}, structure \strSt is $k$.\footnote{As later
@@ -54,7 +54,7 @@ coefficients $p_0,\ldots,p_{n-1}$ of the polynomial
 \label{eq:PofX}
 p(x) = p_0 + p_1 x + p_2 x^2 + \cdots + p_{n-1} x^{n-1},
 \end{eqnarray}
-where $p_k$ is defined by $p_k = \frac{\bfZ{k}{}}{\bfZ{}{}}$.
+where \pk is defined by $\pk = \frac{\bfZ{k}{}}{\fullZ}$.
 Due to severe numerical instability issues in both the Lagrange
 interpolation formula and in Gaussian elimination, we employ
 the Fast Fourier Transform (FFT) to compute the inverse Discrete Fourier
@@ -164,7 +164,7 @@ structure \strSt can be defined from the partition function by
 %p(k) :=\frac{{\bf Z}^k}{{\bf Z}}.
 p(k) :=\frac{\z{k}{1}{n}}{\z{}{1}{n}}.
 \]
-By graphing the probabilities $p_k$ as a function of $k$,
+By graphing the probabilities \pk as a function of $k$,
 we expect to see one or more peaks at base pair distance $k$ when
 there is a meta-stable (low energy) structure $S$
 at base pair distance $k$ from \strSt.
@@ -355,7 +355,7 @@ First, some notation is necessary. Recall that if $F$ is an arbitrary
 polynomial [resp. analytic] function, then $[x^k] F(x)$
 denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
 Taylor expansion of $F$] -- for instance, in equation~(\ref{eq:PofX}),
-$[x^k]p(x) = p_k$, and in equation~(\ref{eq:ZofX}), $[x^k]\Z(x) = c_k(i,j)$.
+$[x^k]p(x) = \pk$, and in equation~(\ref{eq:ZofX}), $[x^k]\Z(x) = c_k(i,j)$.
 
 By definition, it is clear that $\Z_{i,j}(x)=1$ if $i\leq j \leq i+\theta$,
 where we recall that $\theta = 3$ is the minimum number of unpaired bases in
@@ -483,17 +483,17 @@ Using the FFT to compute the inverse DFT, it follows from
 that are coefficients of the polynomial
 $p(x)=p_0+p_1 x + \cdots + p_{n-1}x^{n-1}$
 defined in equation~(\ref{eq:PofX}). For genomics applications, we are
-only interested in the $m$ most significant digits of each $p_k$, as described
+only interested in the $m$ most significant digits of each \pk, as described
 in the pseudocode below.
 \medskip
 
 \noindent
 {\sc Algorithm} for \fftbor\hfill\break
 This pseudocode computes the $m$ most significant digits
-of probabilities $p_k = \frac{\z{k}{1}{n}}{{\bf Z}}$. \hfill\break
+of probabilities $\pk = \frac{\z{k}{1}{n}}{{\bf Z}}$. \hfill\break
 {\sc Input:} RNA sequence $\seq=s_1,\ldots,s_n$, and initial secondary
 structure \strSt of \seq, and integer $m$. \hfill\break
-{\sc Output:} Probabilities $p_k=\z{k}{1}{n}/{\bf Z}$ to $m$ significant digits for $k=0,\ldots,n-1$. \hfill\break
+{\sc Output:} Probabilities $\pk=\z{k}{1}{n}/{\bf Z}$ to $m$ significant digits for $k=0,\ldots,n-1$. \hfill\break
 \smallskip
 \mverbatim
 1.  generate roots of unity $\omega^k$ for $k=0,\ldots,n-1$, where $\omega=\exp(\frac{2 \pi i}{n})$ and $i=\sqrt{-1}$
@@ -503,7 +503,7 @@ structure \strSt of \seq, and integer $m$. \hfill\break
 5.    $y_k = 10^m \cdot \frac{y_k}{{\bf Z}}$ //normalize $y_k$
 6.  compute $P = (p_0,\ldots,p_{n-1})^T$ where $p_j =\frac{\sum_{k=0}^{n-1} a_k \omega^{-kj}}{n}$ by using FFT in (\ref{eq:ajdef})
 7.  for $k=0$ to $n-1$
-8.    $p_k = \lfloor 10^m \cdot p_k \rfloor \cdot \frac{1}{10^m}$
+8.    $\pk = \lfloor 10^m \cdot \pk \rfloor \cdot \frac{1}{10^m}$
 9.    //truncate to $m$ most significant digits
 |mendverbatim
 \medskip
@@ -612,7 +612,7 @@ The output of \fftbor, as shown in
 Figure 2, is a probability distribution,
 where the $x$-axis represents the base pair distance from an arbitrary,
 but fixed secondary structure \strSt, and the $y$-axis represents the
-Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$ that a secondary structure
+Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\fullZ}$ that a secondary structure
 has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
@@ -731,7 +731,7 @@ $d_{\mbox{\sc bp}}(S,S^*)$ denotes base pair distance between $S$ and \strSt.
 If we run \fftbor on an input sequence \seq and secondary structure
 \strSt, then clearly
 $E[ \{ d_{\mbox{\sc bp}}(S,S^*): S \in \mathbb{S}(a_1,\ldots,a_n)\} ]  =
-\sum_{k} k \cdot p(k)$, where $p(k)=\frac{\bfZ{k}{}}{\bfZ{}{}}$, obtained from the
+\sum_{k} k \cdot p(k)$, where $p(k)=\frac{\bfZ{k}{}}{\fullZ}$, obtained from the
 program output.  If \strSt is the empty structure, then \fftbor output
 is simply the probability distribution of the number of base pairs per
 secondary structure, taken over the Boltzmann ensemble of all structures.
@@ -951,7 +951,7 @@ defined by
 The {\em density of states} for an RNA sequence \seq with respect to
 an initial structure \strSt of \seq is defined to be the probability
 distribution
-$P = (p_0,\ldots,p_{n-1})$ where $p_k = \z{k}{1}{n}/{\bf Z}$.
+$P = (p_0,\ldots,p_{n-1})$ where $\pk = \z{k}{1}{n}/{\bf Z}$.
 In all our tests, for RNA of length up to 400 nt, we found the total
 variation distance between $P$, as computed to 6 decimal places by
 \rnabor and by \fftbor, to be $0$. It follows that \fftbor
@@ -1034,16 +1034,16 @@ Boltzmann factors over all secondary structures of a given RNA
 sequence, whose base pair distance to a given initial structure \strSt
 is $k$.  Recall the definition of polynomial
 \begin{eqnarray}
-p(x) = \frac{\Z(x)}{\z{}{1}{n}} = \sum_{k=0}^n p_k x^k
+p(x) = \frac{\Z(x)}{\z{}{1}{n}} = \sum_{k=0}^n \pk x^k
 \end{eqnarray}
 obtained from $\Z(x)$, whose coefficients are Boltzmann
-probabilities $p_k=\frac{\z{k}{1}{n}}{\z{}{1}{n}}$ that a secondary
+probabilities $\pk=\frac{\z{k}{1}{n}}{\z{}{1}{n}}$ that a secondary
 structure has base pair distance $k$ to \strSt.
 By using the fast Fourier transform to compute the inverse
 discrete transform, we can approximate  to $m$ decimal places the coefficients
-$p_k=\frac{\z{k}{1}{n}}{\z{}{1}{n}} =\frac{c_k}{\z{}{1}{n}}$ of $p(x)$, and
+$\pk=\frac{\z{k}{1}{n}}{\z{}{1}{n}} =\frac{c_k}{\z{}{1}{n}}$ of $p(x)$, and
 thus the $m$ most significant positions of
-$c_k=\z{k}{1}{n}=p_k \cdot \z{}{1}{n}$. Interpolation is performed for
+$c_k=\z{k}{1}{n}=\pk \cdot \z{}{1}{n}$. Interpolation is performed for
 $p(x)$, rather than $\Z(x)$, due to issues concerning numerical instability.
 The computational advantage of \fftbor over its predecessor
 \rnabor \citep{Freyhult.b07} is that
@@ -1065,8 +1065,8 @@ well as computes the
 structures $S_k$, defined to be the minimum free energy structure over all
 $k$-neighbors of initial structure \strSt.
 In contrast, \fftbor only computes the $m$ most significant digits of
-the probabilities $p_k = \z{k}{1}{n}/{\bf Z}$, for $0 \leq k \leq n$, where
-by multiplication of $p_k$ by the partition function $Z=\z{}{1}{n}$,
+the probabilities $\pk = \z{k}{1}{n}/{\bf Z}$, for $0 \leq k \leq n$, where
+by multiplication of \pk by the partition function $Z=\z{}{1}{n}$,
 one obtains an approximation of the partition function values $\z{k}{1}{n}$.
 There is no possibility that \fftbor can compute the structures $S_k$,
 nor can at present we see how to use \fftbor to sample structures from
@@ -1169,7 +1169,7 @@ of probability that base pair distance to MFE structure is $k$.
 thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
 \citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
 minimum free energy structure for each given sequence; the $y$-axis represents
-Boltzmann probabilities $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$, where
+Boltzmann probabilities $p(k) = \frac{\bfZ{k}{}}{\fullZ}$, where
 $Z_k$ denotes the sum of Boltzmann factors or all secondary structures,
 whose base pair distance from the MFE structure is exactly $k$.
 {\em (Left)}
@@ -1255,7 +1255,7 @@ graphical output of \fftbor, when the empty structure is chosen as
 initial structure \strSt.
 The $x$-axis represents the number of base pairs per structure,
 taken over the ensemble of all secondary structures for the given RNA
-sequence; the $y$-axis represents Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\bfZ{}{}}$,
+sequence; the $y$-axis represents Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\fullZ}$,
 where $Z_k$ is the partition function for all secondary structures
 having exactly $k$ base pairs.
 {\em (Left)}

@@ -37,6 +37,10 @@
 \titlespacing{\subsection}{0pt}{*.75}{*1.5}
 \titlespacing{\subsubsection}{0pt}{*.5}{*1}
 
+\newcommand{\Chref}[1]{Chapter \ref{#1}}
+\newcommand{\Secref}[1]{Section \ref{#1}}
+\newcommand{\eqnref}[1]{equation (\ref{#1})}
+
 % --------------------------------------------------
 % Software
 % --------------------------------------------------
@@ -53,11 +57,11 @@
 \newcommand{\rfinder}{\ms{Ribofinder}}
 \newcommand{\rfold}{\ms{RNAfold}}
 \newcommand{\rnabor}{\ms{RNAbor}}
-\newcommand{\rshapes}{\ms{RNAshapes}}
 \newcommand{\rnaeq}{\ms{RNAeq}}
 \newcommand{\rnamfpt}{\ms{RNAmfpt}}
 \newcommand{\rnasub}{\ms{RNAsubopt}}
 \newcommand{\rnatwofold}{\ms{RNA2Dfold}}
+\newcommand{\rshapes}{\ms{RNAshapes}}
 \newcommand{\treekin}{\ms{treekin}}
 \newcommand{\tthp}{\ms{TransTermHP}}
 
@@ -97,22 +101,25 @@
 \newcommand{\seqIJ}{\ensuremath{s_i,\dots,s_j}\xspace}
 \newcommand{\seqN}{\ensuremath{s_1,\dots,s_n}\xspace}
 \newcommand{\seq}{{\bf s}\xspace}
+\newcommand{\strAB}{\strA,\,\strB}
 \newcommand{\strA}{\strletter{A}}
 \newcommand{\strBresp}{\ensuremath{\mathcal B}}
 \newcommand{\strB}{\strletter{B}}
-\newcommand{\strletter}[1]{\ensuremath{\mathcal #1}\xspace}
-\newcommand{\strSt}{\ensuremath{\strS^*}\xspace}
-\newcommand{\strS}{\strletter{S}}
-\newcommand{\strT}{\strletter{T}}
-\newcommand{\str}{\strS}
 \newcommand{\strConst}[1]{\ensuremath{{\mathcal C}_{\text{#1}}}\xspace}
+\newcommand{\strletter}[1]{\ensuremath{\mathcal #1}\xspace}
 \newcommand{\strOff}{\ensuremath{{\mathcal S}_{\text{off}}}\xspace}
 \newcommand{\strOn}{\ensuremath{{\mathcal S}_{\text{on}}}\xspace}
-\newcommand{\tree}{\strT}
-\newcommand{\treeFor}[1]{\ensuremath{\tree_{\text #1}}\xspace}
+\newcommand{\strSt}{\ensuremath{\strS^*}\xspace}
+\newcommand{\strST}{\strS,\,\strT}
+\newcommand{\strS}{\strletter{S}}
+\newcommand{\strTresp}{\ensuremath{\mathcal T}}
+\newcommand{\strT}{\strletter{T}}
+\newcommand{\str}{\strS}
 \newcommand{\textdown}[2]{\ensuremath{{\text{#1}}_{\text{#2}}}}
-\newcommand{\treePos}[2]{\textdown{\ms{#1}}{#2}}
+\newcommand{\treeFor}[1]{\ensuremath{\tree_{\text #1}}\xspace}
 \newcommand{\treeIdx}[3]{\treePos{#1}{#2}\ensuremath{(#3)}\xspace}
+\newcommand{\treePos}[2]{\textdown{\ms{#1}}{#2}}
+\newcommand{\tree}{\strT}
 
 % --------------------------------------------------
 % Math notation
@@ -128,6 +135,8 @@
 \newcommand{\emYof}[2]{\ensuremath{{\mathcal Y}_{#1}(#2)}\xspace}
 \newcommand{\emZof}[2]{\ensuremath{{\mathcal Z}_{#1}(#2)}\xspace}
 \newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
+\newcommand{\fullZx}{\emZ{}}
+\newcommand{\fullZ}{\bfZ{}{}}
 \newcommand{\kRoU}{\ensuremath{e^{2 \pi i k/n}}\xspace}
 \newcommand{\mathbbP}{\mbox{\bf P}}
 \newcommand{\mathbbt}{\mbox{\bf t}}
@@ -137,6 +146,7 @@
 \newcommand{\On}[1]{\ensuremath{O(n^{#1})}\xspace}
 \newcommand{\pRoU}{\ensuremath{e^{2 \pi i/n}}\xspace}
 \newcommand{\pSt}{\ensuremath{p^*}\xspace}
+\newcommand{\pk}{\ensuremath{p_k}\xspace}
 \newcommand{\statDist}{\ensuremath{p^*=(p^*_1,\dots,p^*_n)}\xspace}
 \newcommand{\tD}[1]{\ensuremath{t_{#1\Delta}}\xspace}
 \newcommand{\tMax}{\ensuremath{T_{\max}}\xspace}

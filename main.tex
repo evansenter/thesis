@@ -28,7 +28,7 @@
 
 \graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
 
-\usepackage[square, comma, sort&compress]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers'
+\usepackage[square,sort,comma,numbers]{natbib} % Use the natbib reference package - read up on this to edit the reference style; if you want text (e.g. Smith et al., 2012) for the in-text references (instead of numbers), remove 'numbers'
 \hypersetup{urlcolor=black, colorlinks=false} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
 
@@ -288,10 +288,10 @@ Acknowledgements
 
 \setstretch{1.3}
 
-\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
+\lhead{\emph{Bibliography}}
 
-\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+\bibliographystyle{ieeetr}
 
-\bibliography{Biblio/Merged} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+\bibliography{Biblio/Full}
 
 \end{document}

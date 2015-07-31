@@ -5,9 +5,66 @@
 
 \lhead{Introduction}
 
-% Introduced in 1958, the central dogma of biology has been an excellent model for the biological flow of information, much as Newtonian classical mechanics stood the test of time for over 200 years. But just as Einstein’s revolutionary principle of relativity have upended our understanding of space in a way unheard of since Copernicus, recent research has gone to confirm that for all our scientific progress, the cell still holds fundamental mysteries, and even the central dogma isn’t sacred.
+Introduced in 1958, the central dogma of biology has been an excellent model for
+the biological flow of information, much as Newtonian classical mechanics stood the
+test of time for over 200 years. But just as Einstein’s revolutionary principle of
+relativity has upended our understanding of space in a way unheard of since
+Copernicus, recent research has gone to confirm that for all our scientific
+progress, the cell still holds fundamental mysteries, and even the central dogma
+isn't sacred. Even Francis Crick himself indicated in \citep{crick:1970wb} that
+RNA likely had a role beyond the traditional {\em messenger} intermediary between
+DNA and proteins, as evidenced by viral RNAs \citep{coffin:1997ws}. Though recent
+evidence continues to suggest that the genome is pervasively transcribed, current
+estimates indicate that only 1.2\% of the mammalian genome constitutes
+protein-coding sequences \citep{berretta:2009tq,clark:2011cc,jensen:2013vb}. The
+study of the transcriptome has led to the identification of a wide variety of
+non-coding RNAs (ncRNA) that highlight the diversity of roles for which RNA can
+be put to use \citep{costa:2005ug}. Now understood to be much more than the
+intermediary step between DNA and proteins, RNAs have been implicated in a variety
+of regulatory and enzymatic activities, including gene knockdown and silencing
+\citep{fire:1998tv,mccaffrey:2002tf,hannon:2002vn,he:2004uk},
+transcriptional and translational regulation \citep{nudler:2004vm,mandal:2004vh},
+intronic splicing \citep{kruger:1982wk,cech:1990tn}, cite-specific cleavage
+\citep{doherty:2001wq}, and more.
+A prevailing theory now suggests that self-replicating RNA molecules were the
+predecessors to all life on Earth---the RNA world hypothesis \citep{gilbert:1986td}.
+
+\section{Thesis Content}
+\label{sec:intro:thesiscontent}
+
+The work of this thesis is based off the following four journal articles, alongside
+unpublished data and observations. The journal articles constituting the
+primary body of research include:
+
+\begin{itemize}
+\setstretch{1.3}
+\item Senter, E., Sheikh, S., Dotu, I., Ponty, Y., \& Clote, P. (2012). Using the Fast Fourier Transform to Accelerate the Computational Search for RNA Conformational Switches. PloS One, 7(12), e50506. \url{http://doi.org/10.1371/journal.pone.0050506}
+\item Ding, Y., Lorenz, W. A., Dotu, I., Senter, E., \& Clote, P. (2014). Computing the Probability of RNA Hairpin and Multiloop Formation. Journal of Computational Biology : a Journal of Computational Molecular Cell Biology, 21(3), 201–218. \url{http://doi.org/10.1089/cmb.2013.0148}
+\item Senter, E., Dotu, I., \& Clote, P. (2014). RNA folding pathways and kinetics using 2D energy landscapes. Journal of Mathematical Biology, 70(1-2), 173–196. \url{http://doi.org/10.1007/s00285-014-0760-4}
+\item Senter, E., \& Clote, P. (2015). Fast, Approximate Kinetics of RNA Folding. Journal of Computational Biology : a Journal of Computational Molecular Cell Biology, 22(2), 124–144. \url{http://doi.org/10.1089/cmb.2014.0193}
+\end{itemize}
+
+Text, figures, and tables from these papers are used throughout this thesis without
+additional notice.
 
 \section{Thesis Organization}
 \label{sec:intro:thesisorg}
 
-% Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultricies lacinia euismod. Nam tempus risus in dolor rhoncus in interdum enim tincidunt. Donec vel nunc neque. In condimentum ullamcorper quam non consequat. Fusce sagittis tempor feugiat. Fusce magna erat, molestie eu convallis ut, tempus sed arcu. Quisque molestie, ante a tincidunt ullamcorper, sapien enim dignissim lacus, in semper nibh erat lobortis purus. Integer dapibus ligula ac risus convallis pellentesque.
+The remainder of this thesis is organized in the following fashion. We begin in
+\Chref{ch:rfinder} with the presentation of \rfinder, a pipeline of
+software intended to facilitate the detection of full riboswitch sequences
+alongside their corresponding `on' and `off' structures in genomic data. In
+\Chref{ch:fftbor} we introduce the program \fftbor, which computes---for
+each integer $k$---the Boltzmann probability \pk of the subensemble of structures
+whose base pair distance to an input {\em reference} structure \str is $k$.
+In \Chref{ch:ffttwo} we extend this idea to simultaneously consider two
+reference structures \strST and produce as a result the coarse-grained 2D energy
+landscape where---for each integer pair $x,y$---we compute the Boltzmann
+probability $p_{x,y}$
+of those structures whose base pair distance from \strS [resp. \strTresp] is $x$
+[resp. $y$]. This program---\ffttwo---allows for the efficient approximation of
+kinetic characteristics of RNA molecules; presented in \Chref{ch:hermes}
+through the software package \hermes. Finally in \Chref{ch:disc} we conclude
+with a summary of this work as a whole, and consider its place in the greater
+ecosystem of computational RNA tools.
+
