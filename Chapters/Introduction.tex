@@ -1,37 +1,116 @@
-% Chapter Template
+%!TEX root = ../main.tex
 
-\chapter{Chapter Title Here} % Main chapter title
+\chapter{Introduction}
+\label{ch:intro}
 
-\label{ChapterX} % Change X to a consecutive number; for referencing this chapter elsewhere, use \ref{ChapterX}
+\lhead{Introduction}
 
-\lhead{Chapter X. \emph{Chapter Title Here}} % Change X to a consecutive number; this is for the header on each page - perhaps a shortened title
+Introduced in 1958, the central dogma of biology has been an excellent model for
+the biological flow of information, much as Newtonian classical mechanics stood the
+test of time for over 200 years. But just as Einstein’s revolutionary principle of
+relativity has upended our understanding of space in a way unheard of since
+Copernicus, recent research has gone to confirm that for all our scientific
+progress, the cell still holds fundamental mysteries, and even the central dogma
+isn't sacred. Even Francis Crick himself indicated in \citep{crick:1970wb} that
+ribonucleic acids (RNAs) likely had a role beyond the traditional {\em messenger}
+intermediary between
+DNA and proteins, as evidenced by viral RNAs \citep{coffin:1997ws}. Though recent
+research continues to suggest that the genome is pervasively transcribed, current
+estimates indicate that only 1.2\% of the mammalian genome constitutes
+protein-coding sequences \citep{berretta:2009tq,clark:2011cc,jensen:2013vb}. The
+study of the transcriptome has led to the identification of a wide variety of
+non-coding RNAs (ncRNAs) that highlight the diversity of roles for which RNA can
+be put to use \citep{costa:2005ug}. Now understood to be much more than the
+intermediary step between DNA and proteins, RNAs have been implicated in a variety
+of regulatory and enzymatic activities, including gene knockdown and silencing
+\citep{fire:1998tv,mccaffrey:2002tf,hannon:2002vn,he:2004uk},
+transcriptional and translational regulation \citep{nudler:2004vm,mandal:2004vh},
+intronic splicing \citep{kruger:1982wk,cech:1990tn}, cite-specific cleavage
+\citep{doherty:2001wq}, and more.
+A prevailing theory now suggests that self-replicating RNA molecules were the
+predecessors to all life on Earth---the RNA world hypothesis \citep{gilbert:1986td}.
+As our appreciation of RNA diversity has increased,
+significant effort has been put forth by the scientific community to understand
+and characterize the properties of these molecules.
 
-%----------------------------------------------------------------------------------------
-% SECTION 1
-%----------------------------------------------------------------------------------------
+Unlike DNA, RNA is generally single stranded and thus able to interact with itself
+to form interesting shapes with various functional characteristics, akin to
+proteins. RNA is a polymer comprised of four monomer {\em building blocks}:
+the purines
+adenine (A) and guanine (G); and the pyrimidines cytosine (C) and uracil (U). These
+nucleotides can form planar base pairs comprised of energetically favorable
+hydrogen bonds, the stacking of which produces a stable {\em helix} structure
+\citep{yakovchuk:2006bm}. There are only a select set of possible base pairs; the
+Watson-Crick pairs (A-U, G-C) or the G-U wobble pair. Given an arbitrary RNA
+sequence $\seq = \seqN$, where $s_i \in \{\text{A,\,U,\,G,\,C}\}$, we can define
+a secondary structure \str for \seq as the set of index tuples indicating those
+bases involved in a base pair within \seq. Again like proteins, RNA molecules tend
+to fold into a `native' conformation, usually that which minimizes free energy.
+While protein folding is predominantly motivated by hydrophobic
+interactions, RNA structure is driven by stacking base pair interactions, and
+therefore secondary structure tends to be a much better predictor for the function
+of the molecule in question than is the case with proteins, whose function is
+largely determined by 3D `tertiary' structure.
 
-\section{Main Section 1}
+From a computational perspective, the history of RNA folding is far too long for
+proper treatment within this introduction. Instead we will touch upon just some
+of the major milestones to get a flavor for what progress has been made. In 1978,
+Michael Waterman presented the first graph-theoretic model of single stranded
+nucleic acids such as RNA \citep{waterman:1978va}. This was followed in 1980 by
+the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm for
+determining the maximally matching secondary structure \str for
+a given RNA sequence \citep{nussinov1980}, using dynamic programming
+\citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
+developed an algorithm and accompanying software for the minimum free energy
+formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In 1990, John
+McCaskill showed how dynamic programming could be used to compute the
+partition function for an RNA molecule, and even compute the probability that an
+arbitrary base is bound \citep{mccaskill}. Alongside these early developments,
+more robust energy models were experimentally derived \citep{turner,turner:2009vy},
+further improving the accuracy of computational-based models.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ultricies lacinia euismod. Nam tempus risus in dolor rhoncus in interdum enim tincidunt. Donec vel nunc neque. In condimentum ullamcorper quam non consequat. Fusce sagittis tempor feugiat. Fusce magna erat, molestie eu convallis ut, tempus sed arcu. Quisque molestie, ante a tincidunt ullamcorper, sapien enim dignissim lacus, in semper nibh erat lobortis purus. Integer dapibus ligula ac risus convallis pellentesque.
+Fast-forwarding to today, there is now a huge collection of software aimed at
+computing various properties of RNAs, be it folding, inverse folding, kinetics,
+design, and more. The work that we present here intends to be a contribution
+to the diverse toolset that researchers have at their disposal for the analysis
+and design of both existing and novel RNA sequences.
 
-%-----------------------------------
-% SUBSECTION 1
-%-----------------------------------
-\subsection{Subsection 1}
+\section{Thesis Content}
+\label{sec:intro:thesiscontent}
 
-Nunc posuere quam at lectus tristique eu ultrices augue venenatis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam erat volutpat. Vivamus sodales tortor eget quam adipiscing in vulputate ante ullamcorper. Sed eros ante, lacinia et sollicitudin et, aliquam sit amet augue. In hac habitasse platea dictumst.
+The work of this thesis is based off the following four journal articles, alongside
+unpublished data and observations. The journal articles constituting the
+primary body of research include:
 
-%-----------------------------------
-% SUBSECTION 2
-%-----------------------------------
+\begin{itemize}
+\setstretch{1.3}
+\item Senter, E., Sheikh, S., Dotu, I., Ponty, Y., \& Clote, P. (2012). Using the Fast Fourier Transform to Accelerate the Computational Search for RNA Conformational Switches. PloS One, 7(12), e50506. \url{http://doi.org/10.1371/journal.pone.0050506}
+\item Ding, Y., Lorenz, W. A., Dotu, I., Senter, E., \& Clote, P. (2014). Computing the Probability of RNA Hairpin and Multiloop Formation. Journal of Computational Biology : a Journal of Computational Molecular Cell Biology, 21(3), 201–218. \url{http://doi.org/10.1089/cmb.2013.0148}
+\item Senter, E., Dotu, I., \& Clote, P. (2014). RNA folding pathways and kinetics using 2D energy landscapes. Journal of Mathematical Biology, 70(1-2), 173–196. \url{http://doi.org/10.1007/s00285-014-0760-4}
+\item Senter, E., \& Clote, P. (2015). Fast, Approximate Kinetics of RNA Folding. Journal of Computational Biology : a Journal of Computational Molecular Cell Biology, 22(2), 124–144. \url{http://doi.org/10.1089/cmb.2014.0193}
+\end{itemize}
 
-\subsection{Subsection 2}
-Morbi rutrum odio eget arcu adipiscing sodales. Aenean et purus a est pulvinar pellentesque. Cras in elit neque, quis varius elit. Phasellus fringilla, nibh eu tempus venenatis, dolor elit posuere quam, quis adipiscing urna leo nec orci. Sed nec nulla auctor odio aliquet consequat. Ut nec nulla in ante ullamcorper aliquam at sed dolor. Phasellus fermentum magna in augue gravida cursus. Cras sed pretium lorem. Pellentesque eget ornare odio. Proin accumsan, massa viverra cursus pharetra, ipsum nisi lobortis velit, a malesuada dolor lorem eu neque.
+Text, figures, and tables from these papers are used throughout this thesis without
+additional notice.
 
-%----------------------------------------------------------------------------------------
-% SECTION 2
-%----------------------------------------------------------------------------------------
+\section{Thesis Organization}
+\label{sec:intro:thesisorg}
 
-\section{Main Section 2}
+The remainder of this thesis is organized in the following fashion. We begin in
+\Chref{rfinder} with the presentation of \rfinder, a pipeline of
+software intended to facilitate the detection of full \rb sequences
+alongside their corresponding `on' and `off' structures in genomic data. In
+\Chref{fftbor} we introduce the program \fftbor, which computes---for
+each integer $k$---the Boltzmann probability \pk of the subensemble of structures
+whose base pair distance to an input reference structure \str is $k$.
+In \Chref{ffttwo} we extend this idea to simultaneously consider two
+reference structures \strST and produce as a result the coarse-grained 2D energy
+landscape where---for each integer pair $x,y$---we compute the Boltzmann
+probability $p_{x,y}$
+of those structures whose base pair distance from \strS [resp. \strTresp] is $x$
+[resp. $y$]. This program---\ffttwo---allows for the efficient approximation of
+kinetic characteristics of RNA molecules; presented in \Chref{hermes}
+through the software package \hermes. Finally in \Chref{disc} we conclude
+with a summary of this work as a whole, and consider its place in the greater
+ecosystem of computational RNA tools.
 
-Sed ullamcorper quam eu nisl interdum at interdum enim egestas. Aliquam placerat justo sed lectus lobortis ut porta nisl porttitor. Vestibulum mi dolor, lacinia molestie gravida at, tempus vitae ligula. Donec eget quam sapien, in viverra eros. Donec pellentesque justo a massa fringilla non vestibulum metus vestibulum. Vestibulum in orci quis felis tempor lacinia. Vivamus ornare ultrices facilisis. Ut hendrerit volutpat vulputate. Morbi condimentum venenatis augue, id porta ipsum vulputate in. Curabitur luctus tempus justo. Vestibulum risus lectus, adipiscing nec condimentum quis, condimentum nec nisl. Aliquam dictum sagittis velit sed iaculis. Morbi tristique augue sit amet nulla pulvinar id facilisis ligula mollis. Nam elit libero, tincidunt ut aliquam at, molestie in quam. Aenean rhoncus vehicula hendrerit.
