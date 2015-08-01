@@ -64,7 +64,7 @@ It has recently emerged that RNA plays surprising and previously unsuspected
 roles in many biological processes, including retranslation of the genetic code
 (selenocysteine insertion \citep{boeckForschhammer}, ribosomal frameshift
 \citep{denise:frameshift}), gene regulation by allostery
-(riboswitches) \citep{mandalBoeseBarrickWinklerBreaker}
+(\rbs) \citep{mandalBoeseBarrickWinklerBreaker}
 and by the RISC complex (microRNAs) \citep{burgeBartel:miRNAscience},
 regulation of heat shock protein expression by
 temperature sensitive conformational switches \citep{ROSEswitch,tuckerBreaker:review},
@@ -792,9 +792,9 @@ RF00008 (type III hammerhead ribozyme),
 RF00031 (selenocysteine insertion sequence I),
 RF00045 (snoRNA),
 RF00094 (HDV ribozyme),
-RF00167 (purine riboswitch),
+RF00167 (purine \rb),
 RF00375 (HIV primer binding site),
-RF00504 (glycine riboswitch),
+RF00504 (glycine \rb),
 RF00635 (HAR1A),
 RF01055 (moco RNA motif).
 }
@@ -829,8 +829,8 @@ average sensitivity improved over that of {\rnahairpin}
 in essentially all cases.
 %Improvement over {\rnahairpin}: over 2\% in RF00005 (tRNA),
 %4\% in RF00094 (HDV ribozyme),
-%over 4\% in RF00167 (purine riboswitch),
-%about 1.5\% in RF00504  (glycine riboswitch),
+%over 4\% in RF00167 (purine \rb),
+%about 1.5\% in RF00504  (glycine \rb),
 %about 2\% in RF01055 (moco RNA motif).
 Moreover, {\rnahairpinml} provides more accurate structure
 prediction (sensitivity) than {\tt RNAfold} for a number of
@@ -838,7 +838,7 @@ Rfam families. There is an improvement
 of almost $approx 24\%$ in RF00005 (tRNA),
 over $4\%$ in RF00008 (type III hammerhead ribozyme),
 $2.5\%$ in RF00045 (snoRNA),
-$5\%$ in RF00504  (glycine riboswitch),
+$5\%$ in RF00504  (glycine \rb),
 over $2\%$ in RF01055 (moco RNA motif).
 On the other hand, {\rnahairpinml} has significantly lower
 sensitivity than {\tt RNAfold} in the following two cases, where
@@ -879,7 +879,7 @@ in the case of the hammerhead ribozyme (around 4\% improvement).
 On the other hand, {\tt RNAfold} has greater
 sensitivity than {\rnahairpin} for several classes, including
 HIV primer binding site RF00375 (over 5\% improvement), and
-purine riboswitch aptamers RF00167 (around 4.5\% improvement).
+purine \rb aptamers RF00167 (around 4.5\% improvement).
 Clearly {\rnahairpin} is not a better structure prediction tool than
 {\tt RNAfold}; however, for particular classes of functional RNA,
 which require certain hairpin structures for function, {\rnahairpin}
@@ -889,12 +889,12 @@ more discussion.
 The program {\rnahairpinml}, which samples low energy structures having
 $m$ multiloops and $h$ hairpins,  improves the structure prediction
 accuracy of {\rnahairpin} (e.g. an improvement of over 4\% for RF000167
-purine riboswitches), and also outperforms {\tt RNAfold} for a larger number
+purine \rbs), and also outperforms {\tt RNAfold} for a larger number
 of cases on the previously described Rfam families. For instance,
 there is an improvement
 of almost $approx 24\%$ in RF00005 (tRNA),
 over $4\%$ in RF00008 (type III hammerhead ribozyme),
-$5\%$ in RF00504  (glycine riboswitch), etc.
+$5\%$ in RF00504  (glycine \rb), etc.
 On the other hand, {\rnahairpinml} has significantly lower
 sensitivity than {\tt RNAfold} in the following two cases, where
 the difference is over $5\%$ for RF00375 (HIV primer binding site),
@@ -921,7 +921,7 @@ RF00008 hammerhead III &  0.9191  & 0.9705  & 0.9562  & 84 & 55.4 & 48.4\% \\
 RF00027 let 7 microRNA precursor &  0.8338  & 0.8766  & 0.8617  & 67 & 79.6 & 43.7\% \\
 RF00031 SECIS 1 & 0.7917  & 0.8361  & 0.7941  & 61 & 64.5 & 49.0\% \\
 RF00045 SNORA73 & 0.6306  & 0.6515  & 0.6609  & 66 & 202.6 & 53.1\% \\
-RF00167 purine riboswitch & 0.6508  & 0.8608  & 0.8529  & 136 & 100.8 & 38.1\% \\
+RF00167 purine \rb & 0.6508  & 0.8608  & 0.8529  & 136 & 100.8 & 38.1\% \\
 \hline
 \end{tabular}
 \caption{Area under curve (AUC) for receiver operating characteristic
@@ -1083,7 +1083,7 @@ reduce time and space requirements for {\rnahairpin} and
 {\em (Left)}
 Rfam family RF00008 (U2 spliceosomal RNA).
 {\em (Right)}
-Rfam family RF00167 (purine riboswitch).
+Rfam family RF00167 (purine \rb).
 }
 \label{fig:SVMforU2andPurineRiboswitch}
 \end{figure*}
@@ -1175,7 +1175,7 @@ Not shown in the table are RNA families, where the sensitivity of
 {\tt RNAfold} exceeded that of {\tt RNAhairpin} -- for instance,
 for 5S rRNA (RF00001), {\tt RNAhairpin} average sensitivity was
 $0.621306$ compared with {\tt RNAfold} sensitivity of $0.633189$;
-for purine riboswitches (RF00167), {\tt RNAhairpin} obtained had
+for purine \rbs (RF00167), {\tt RNAhairpin} obtained had
 $0.811327$ compared with {\tt RNAfold} sensitivity of  $0.856764$.
 We believe that {\rnahairpin} showed better sensitivity than {\tt RNAfold}
 in the case of tRNA, because of two reasons: (1) tRNA has a well-known
@@ -1189,7 +1189,7 @@ hence more likely to adopt the functional cloverleaf structure.
 It could be that similar reasons explain the small improvement of
 {\rnahairpin} over {\tt RNAfold} for some of the other examples, including
 certain ribozymes. However, along this line of reasoning, we expected
-{\rnahairpin} to outperform {\tt RNAfold} for purine riboswitch aptamers,
+{\rnahairpin} to outperform {\tt RNAfold} for purine \rb aptamers,
 which have a very well-defined multiloop with two hairpins;
 Table~\ref{table:sensitivity} shows this is not the case.
 As described in the caption of

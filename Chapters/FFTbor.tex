@@ -14,9 +14,8 @@ the Boltzmann probability of those structures whom, for a given input RNA
 sequence \seq, differ by $k$ base pairs. By leveraging polynomial interpolation
 via the \fft, this algorithm runs in \On{4} time and
 \On{2} space, a significant improvement over its predecessor. The accompanying
-software which implements this algorithm has been used to predict the location
-of expression platforms for putative \rbs in genomic data, and to
-evaluate the correlation between kinetic folding speed and landscape ruggedness.
+software which implements this algorithm has been used to evaluate the
+correlation between kinetic folding speed and landscape ruggedness.
 
 \subsection{Organization}
 \label{subsec:fftbor:org}
@@ -27,7 +26,7 @@ the problem which \fftbor aims to address, as well as a brief overview of
 existing approaches. We follow by a formal explanation of the problem, and
 proceed to describe how the energy landscape is coarsified into discrete bins.
 We then develop the recursions for the parameterized partition function using
-the Nussinov-Jacobson energy model, which allows us to exposé the novel aspects
+the Nussinov-Jacobson energy model, which allows us to highlight the novel aspects
 of the algorithm. After developing the recursions, we indicate how they can be
 reformulated as a polynomial whose coefficients $c_k=\bfZ{k}{1,n}$. We then
 describe how the \fft can be employed to efficiently compute the coefficients
@@ -66,7 +65,8 @@ energy (MFE) structure. We expect that a more efficient version of
 biology, to detect potential conformational switches---
 RNA sequences containing two or more (distinct) metastable structures.
 
-In this chapter, we describe a radically different algorithm, \fftbor,
+In this chapter, we describe a radically different algorithm, \fftbor
+\citep{senter.po12},
 prounounced {\em FFT neighbor},
 that uses polynomial interpolation to compute the
 coefficients $p_0,\ldots,p_{n-1}$ of the polynomial defined in
@@ -211,7 +211,7 @@ trap while folding.
 \texorpdfstring{\bfZ{k}{1,n}}{}}
 \label{subsec:fftbor:recursions}
 
-For the rest of the paper, we consider both \seq as well as the
+For the rest of the chapter, we consider both \seq as well as the
 secondary structure \strSt on \seq to be fixed. We now recall the
 recursions from Freyhult et al. \citep{Freyhult.ab05} to determine
 the partition function \bfZ{k}{i,j} with
@@ -743,7 +743,7 @@ is that kinetic folding slows down as the energy landscape becomes more
 using \fftbor, as reported
 in \Figref{fftbor:tppDistributions}.
 
-We randomly chose two TPP riboswitch
+We randomly chose two TPP \rb
 aptamers from the seed alignment for
 Rfam family RF00059. The first sequence has EMBL accession code
 BX842649.1/277414--277318 and is comprised of the 97 nt sequence
@@ -763,7 +763,7 @@ Despite the fact that there is no sequence homology according to
 pairwise BLAST \citep{blast}, this figure clearly demonstrates that
 consensus and
 minimum free energy structures closely resemble each other, and that the
-structures of both TPP riboswitch aptamers are quite similar, with the
+structures of both TPP \rb aptamers are quite similar, with the
 exception of the leftmost hairpin loop [resp. multiloop].
 The MFE structures differ
 from the consensus structures principally by the addition of base pairs not
@@ -784,7 +784,7 @@ base pairs.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppConsensusAndMfe.pdf}
 \caption{Rfam consensus structures (Rfam) and minimum free energy (MFE)
-secondary structures for two thiamine pyrophosphate (TPP) riboswitch aptamers,
+secondary structures for two thiamine pyrophosphate (TPP) \rb aptamers,
 chosen at random from RF00059 Rfam family seed alignment
 \citep{Gardner.nar11}. Using pairwise BLAST \citep{blast}, there is no
 sequence similarity, although the secondary structures are very similar,
@@ -797,7 +797,7 @@ as shown in this figure. From left to right:
 \label{fig:fftbor:tppConsensusAndMfe}
 \end{figure}
 
-We ran \fftbor on each of the TPP riboswitch aptamer
+We ran \fftbor on each of the TPP \rb aptamer
 sequences, with the MFE structure of each
 sequence taken as the initial structure \strSt for that sequence. For the
 first sequence, BX842649.1/277414--277318, the \fftbor output
@@ -812,7 +812,7 @@ the second sequence should fold more quickly than the first.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppDistributions.pdf}
 \caption{Output from \fftbor on two randomly selected
-thiamine pyrophosphate riboswitch (TPP) aptamers, taken from the Rfam database
+thiamine pyrophosphate \rb (TPP) aptamers, taken from the Rfam database
 \citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
 minimum free energy structure for each given sequence; the $y$-axis represents
 Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$, where
@@ -843,7 +843,7 @@ details.}
 
 To test the hypothesis that folding is slower for rugged energy landscapes,
 we ran the kinetic folding software, \kinfold \citep{flamm},
-on each of the two TPP riboswitch aptamer sequences,
+on each of the two TPP \rb aptamer sequences,
 BX842649.1/277414--277318 and AACY022101973.1/389--487,
 to determine the \mfpt (MFPT) to
 fold into the MFE structure, when starting from the empty structure.
@@ -1017,7 +1017,7 @@ Among the 61 sequences in the seed alignment of RF00031,
 AB030643.1/4176--4241 was the fastest folder, while
 AL645723.11/192421--192359 was the slowest folder.
 {\em (Right)}
-Superimposition of output of \fftbor for two TPP riboswitch aptamers: the
+Superimposition of output of \fftbor for two TPP \rb aptamers: the
 97 nt sequence BX842649.1/277414--277318 and the
 99 nt sequence AACY022101973.1/389--487, both obtained when
 taking the empty structure for the initial structure \strSt.
@@ -1025,8 +1025,8 @@ The mean $\mu$ for the \fftbor structural profile near the empty
 structure is $23.0203$  [resp. $27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
 is $2.22528791$  [resp. $1.98565959$], and the \kinfold MFPT is
-$311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
-AB030643.1/4176--4241 [resp.  AL645723.11/192421--192359].
+$311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
+AB030643.1/4176--4241 [resp. AL645723.11/192421--192359].
 The right panel of this figure should be compared with Figure
 \ref{fig:fftbor:tppDistributions}.
 These anecdotal results bear up the correlation between standard deviation
@@ -1036,17 +1036,17 @@ $\sigma$ and $\log_{10}(\text{MFPT})$ described in \ref{table:correlationFFTborE
 \end{figure}
 
 In the right panel of \Figref{fftbor:correlationFFTborEmpty}, we
-applied \fftbor to each of the two randomly chosen TPP riboswitch
+applied \fftbor to each of the two randomly chosen TPP \rb
 aptamers BX842649.1/277414--277318 and AACY022101973.1/389--487, starting
 from the empty reference structure $\strSt=\emptyset$.
 The mean for the \fftbor structural profile near the empty
 structure is $\mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
 is $\sigma_1=2.22528791$  [resp. $\sigma_2=1.98565959$], and the \kinfold MFPT is
-$311,075.06$ [resp. $61,575.69$] for the TPP riboswitch aptamer
+$311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
 AB030643.1/4176--4241 [resp.  AL645723.11/192421--192359]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
 
-Additionally, we randomized the TPP riboswitches BX842649.1/277414--277318 and AACY022101973.1/389--487 by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
+Additionally, we randomized the TPP \rbs BX842649.1/277414--277318 and AACY022101973.1/389--487 by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
 \citep{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these
 sequences, starting from the empty structure.  The mean $\mu_1$ and standard
 deviation $\sigma_1$ for the \fftbor distribution for randomized BX842649 are
@@ -1070,7 +1070,7 @@ and additional evidence is provided to support this claim.
 % \section{Riboswitch detection with \fftbor}
 % \label{sec:fftbor:rb}
 
-% A bacterial riboswitch is a portion of the $5'$
+% A bacterial \rb is a portion of the $5'$
 % untranslated region (UTR) of messenger RNA,
 % that performs gene regulation by undergoing a conformational change upon
 % binding with a ligand, such as guanine, thiamine pyrophosphate, lysine,
@@ -1078,13 +1078,13 @@ and additional evidence is provided to support this claim.
 % This conformational change may either turn  on or off
 % the corresponding gene by either transcriptional or translational regulation
 % of the messenger RNA \citep{tuckerBreaker:review}, depending on the
-% particular riboswitch. The common feature shared by all riboswitches
+% particular \rb. The common feature shared by all \rbs
 % is that a gene is regulated by conformational change upon ligand binding.
-% Bacterial riboswitches are often found upstream
+% Bacterial \rbs are often found upstream
 % of operons, regulating groups of genes, as in purine {\em de novo}
 % synthesis and salvage \citep{mandalboesebarrickwinklerbreaker}.
 
-% A riboswitch consists of two equally important parts: an upstream
+% A \rb consists of two equally important parts: an upstream
 % {\em aptamer}, capable of highly discriminative binding to a particular
 % ligand, and a downstream {\em expression platform}, capable of undergoing
 % a radical conformational change upon binding of a ligand with the
@@ -1094,15 +1094,15 @@ and additional evidence is provided to support this claim.
 % (e.g. $K_D \approx 5$ nM for guanine \citep{Mandal.nsmb04}),
 % there is strong
 % sequence conservation found in the aptameric region of orthologous
-% riboswitches.
+% \rbs.
 % In contrast, while secondary structure is conserved in the
-% terminator loop of the expression platform in purine riboswitches,
+% terminator loop of the expression platform in purine \rbs,
 % there is relatively low sequence conservation (data not shown).
 % While a number of methods exist to computationally predict
-% riboswitch aptamers
+% \rb aptamers
 % \citep{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
 % (and especially {\tt INFERNAL} \citep{infernal}, which latter is used
-% to predict riboswitch aptamers in Rfam), it is an important
+% to predict \rb aptamers in Rfam), it is an important
 % biological problem to determine the expression platform, since the structure
 % of the expression platform can suggest whether there is
 % transcriptional regulation
@@ -1112,16 +1112,16 @@ and additional evidence is provided to support this claim.
 % due to low conserved sequence identity (in-house computations, data not shown).
 % Although this problem remains open, we report here how
 % \fftbor may provide help to biologists in the selection and
-% prioritization of riboswitch candidates.
+% prioritization of \rb candidates.
 
 % Figure 5 depicts the gene OFF structure of the
-% xpt G-box purine riboswitch in {\em B. subtilis}, as determined by
+% xpt G-box purine \rb in {\em B. subtilis}, as determined by
 % inline-probing --- this structure was taken from
 % Figure 1 of \citep{breaker:Riboswitch2}.
 % Note that this structure is only partial, since there are regions
 % with no base pairs depicted, despite the fact that additional
 % base pairs could be added. By using
-% {\tt blastn}, it is found that this 161 nt purine riboswitch
+% {\tt blastn}, it is found that this 161 nt purine \rb
 % can be found on the complement strand of GenBank accession number
 % CP002906.1/2165302--2165142 in
 % complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
@@ -1169,7 +1169,7 @@ and additional evidence is provided to support this claim.
 % as a function of window offset, where window size equals the size of this
 % target {\em expression platform} structure.
 % Figure 6 determines the precise location of the
-% xpt riboswitch, both aptamer and expression platform.
+% xpt \rb, both aptamer and expression platform.
 
 % If the biologically functional target structure is unknown, one can
 % instead attempt a similar moving window computation, where the target
@@ -1178,10 +1178,10 @@ and additional evidence is provided to support this claim.
 % bimodal distribution, as displayed in Figure 7.
 % Given an input RNA sequence, or genomic region, the
 % web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
-% creates a movie as follows, described here for the xpt riboswitch
+% creates a movie as follows, described here for the xpt \rb
 % previously discussed.  We extracted the downstream region of
 % Taking the
-% 161 nt xpt G-box purine riboswitch described in Figure 5,
+% 161 nt xpt G-box purine \rb described in Figure 5,
 % with GenBank accession number CP002906.1/2165302--2165142, we extended
 % to a sequence of length 200 nt, by appending flanking
 % downstream genomic nucleotides.  Running \fftbor on all

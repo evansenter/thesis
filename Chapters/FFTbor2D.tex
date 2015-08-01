@@ -96,7 +96,7 @@ On the experimental side,
 %structural-kinetic modeling to compare folding pathways of
 %three group I intron ribozymes.
 Neupane et al. \citep{neupane.nar11} applied single-molecule force spectroscopy
-of the add adenine riboswitch, to show how folding relates to
+of the add adenine \rb, to show how folding relates to
 gene regulation;
 see also \citep{woodside.cocb08,baird.jacs10,mitra.r11}.
 %see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
@@ -132,7 +132,8 @@ give some idea of the variety of methods.
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
 
-For expository clarity, we describe \ffttwo and all recursions
+For expository clarity, we describe \ffttwo \citep{senter.jmb14}
+and all recursions
 in terms of the Nussinov energy model \citep{nussinovjacobson}
 (same as in \Chref{fftbor}), where
 the energy $E_0(i,j)$ of a base pair $(i,j)$ is defined to be $-1$, and the
@@ -164,7 +165,7 @@ is absolute temperature, $E(\str)$ denotes the free energy of \str,
 and \str ranges
 over all secondary structures that are compatible with \seq. As mentioned,
 we emphasize that for expository reasons alone, the Nussinov energy model is
-used in the recursions in this paper, although full recursions and
+used in the recursions in this chapter, although full recursions and
 the implementation of \ffttwo, like \fftbor, involve the Turner energy model.
 
 For any secondary structure \str of \seq, and any values
@@ -1038,7 +1039,6 @@ faster.
 }
 \label{fig:ffttwo:ffttwoRtwofoldTiming}
 \end{figure}
-\clearpage
 
 \begin{figure}[!ht]
 \centering
@@ -1055,7 +1055,6 @@ in a fraction of a second, this difference is of no practical consequence.
 }
 \label{fig:ffttwo:ffttwoRtwofoldLogScale}
 \end{figure}
-\clearpage
 
 \begin{figure}[!ht]
 \centering
@@ -1082,7 +1081,6 @@ sequence details.
 }
 \label{fig:ffttwo:ffttwoRtwofoldStdevMinMax}
 \end{figure}
-\clearpage
 
 \begin{figure}[!ht]
 \centering
@@ -1109,7 +1107,6 @@ with \ffttwo; graphics produced using Mathematica.
 }
 \label{fig:ffttwo:ffttwoProbContour}
 \end{figure}
-\clearpage
 
 \begin{figure}[!ht]
 \centering
@@ -1138,7 +1135,7 @@ An important advantage of
 compute the structures $M_{x,y}$ having minimum free energy over all
 structures that are $x$-neighbors of metastable \strA and simultaneously
 $y$-neighbors of metastable \strB. (There is a similar advantage of \rnabor
-\citep{freyhult.b07} over the faster \fftbor \citep{fftbor}.)
+\citep{freyhult.b07} over the faster \fftbor \citep{senter.po12}.)
 As well, \rnatwofold directly computes the partition function values
 \bfZ{x,y}{}, while \ffttwo estimates \bfZ{x,y}{} by computing
 $p(x,y) \cdot \fullZ$. This difference entails a significant loss of precision,

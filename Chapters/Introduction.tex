@@ -15,11 +15,11 @@ isn't sacred. Even Francis Crick himself indicated in \citep{crick:1970wb} that
 ribonucleic acids (RNAs) likely had a role beyond the traditional {\em messenger}
 intermediary between
 DNA and proteins, as evidenced by viral RNAs \citep{coffin:1997ws}. Though recent
-evidence continues to suggest that the genome is pervasively transcribed, current
+research continues to suggest that the genome is pervasively transcribed, current
 estimates indicate that only 1.2\% of the mammalian genome constitutes
 protein-coding sequences \citep{berretta:2009tq,clark:2011cc,jensen:2013vb}. The
 study of the transcriptome has led to the identification of a wide variety of
-non-coding RNAs (ncRNA) that highlight the diversity of roles for which RNA can
+non-coding RNAs (ncRNAs) that highlight the diversity of roles for which RNA can
 be put to use \citep{costa:2005ug}. Now understood to be much more than the
 intermediary step between DNA and proteins, RNAs have been implicated in a variety
 of regulatory and enzymatic activities, including gene knockdown and silencing
@@ -35,8 +35,9 @@ and characterize the properties of these molecules.
 
 Unlike DNA, RNA is generally single stranded and thus able to interact with itself
 to form interesting shapes with various functional characteristics, akin to
-proteins. RNA is a polymer comprised of four monomer {\em building blocks}: purines
-adenine (A) and guanine (G); and pyrimidines cytosine (C) and uracil (U). These
+proteins. RNA is a polymer comprised of four monomer {\em building blocks}:
+the purines
+adenine (A) and guanine (G); and the pyrimidines cytosine (C) and uracil (U). These
 nucleotides can form planar base pairs comprised of energetically favorable
 hydrogen bonds, the stacking of which produces a stable {\em helix} structure
 \citep{yakovchuk:2006bm}. There are only a select set of possible base pairs; the
@@ -58,14 +59,14 @@ Michael Waterman presented the first graph-theoretic model of single stranded
 nucleic acids such as RNA \citep{waterman:1978va}. This was followed in 1980 by
 the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm for
 determining the maximally matching secondary structure \str for
-a given RNA sequence \seq \citep{nussinov1980}, using dynamic programming
+a given RNA sequence \citep{nussinov1980}, using dynamic programming
 \citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
 developed an algorithm and accompanying software for the minimum free energy
-formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In 1990 John
+formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In 1990, John
 McCaskill showed how dynamic programming could be used to compute the
 partition function for an RNA molecule, and even compute the probability that an
 arbitrary base is bound \citep{mccaskill}. Alongside these early developments,
-more robust energy models were experimentally derived \citep{turner,turner:2009vy}
+more robust energy models were experimentally derived \citep{turner,turner:2009vy},
 further improving the accuracy of computational-based models.
 
 Fast-forwarding to today, there is now a huge collection of software aimed at
@@ -97,11 +98,11 @@ additional notice.
 
 The remainder of this thesis is organized in the following fashion. We begin in
 \Chref{rfinder} with the presentation of \rfinder, a pipeline of
-software intended to facilitate the detection of full riboswitch sequences
+software intended to facilitate the detection of full \rb sequences
 alongside their corresponding `on' and `off' structures in genomic data. In
 \Chref{fftbor} we introduce the program \fftbor, which computes---for
 each integer $k$---the Boltzmann probability \pk of the subensemble of structures
-whose base pair distance to an input {\em reference} structure \str is $k$.
+whose base pair distance to an input reference structure \str is $k$.
 In \Chref{ffttwo} we extend this idea to simultaneously consider two
 reference structures \strST and produce as a result the coarse-grained 2D energy
 landscape where---for each integer pair $x,y$---we compute the Boltzmann

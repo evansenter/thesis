@@ -7,3 +7,71 @@
 
 Over the course of this thesis, we have described a collection of tools aimed
 at facilitating the computational analysis of RNA. The work in \Chref{rfinder}
+aims to address the open problem of determining full \rb sequences, along
+with their `on' and `off' conformational states in an efficient and generalized
+manner. \Rbs are an imporant regulatory motif that can influence
+transcription by the introduction of an intrinsic terminator, an extended stem-loop
+followed by a series of uracil residues which cause RNA polymerase to prematurely
+terminate transcription \citep{gusarov:1999uu,yarnell:1999wt}. Alternately,
+\rbs can regulate translation, generally by sequestration of the ribosome
+binding site in response to the presence or absence of a corresponding ligand
+\citep{barrick:2007gw}. This degree of control makes \rbs well suited for
+the regulation of metabolic pathways, and are generally found within bacterial
+genomes. While the aptamer portion of the \rb necessarily exhibits high
+sequence and structural conservation---necessary to retain a high binding affinity
+for the corresponding ligand---the downstream expression platform is much more
+variable, and difficult to detect using covariance models such as \infernal
+\citep{infernal}. For this reason, databases such as RFam \citep{nawrocki:2014uy}
+only contain alignments for the conserved aptamer domain; rarely enough to
+understand the structural characteristics of the \rb `states' in the greater
+context of the mRNA. \rfinder aims to provide a holistic description of
+\rbs by coupling powerful aptamer-detection tools (such as \infernal) with software
+designed to detect intrinsic terminators (such as \tthp), and use
+experimentally-derived structural information from the literature in conjunction
+with constrained folding methods to predict full gene `on' and `off' conformations
+in a general manner.
+
+The remainder of the thesis follows a natural progression. In \Chref{fftbor} we
+present the algorithm \fftbor, an efficient approach to compute the
+{\em parameterized} Boltzmann probabilities $\pk = \frac{\bfZ{k}{}}{\fullZ}$ of
+those sequences having base pair distance $k$ from an arbitrary input structure
+\strSt. By using the \fft along with \nRoUs, \fftbor operates in \On{4} speed,
+an order of magnitude faster than its predecessor. This approach of applying the
+\fft to compute parameterized partition functions was put to use in
+\citep{ding:2014ex} as well, where we develop programs \ms{FFThairpin}
+[resp. \msresp{FFTmultiloop}] to describe the probability distribution of structures
+having exactly $k$ hairpins [resp. multiloops]. Though not discussed here, by
+training a support vector machine (SVM) on the probability distributions output
+by these
+programs we were able to classify RFam families using five-fold cross validation
+with excellent `area under curve' (AUC) values.
+
+\Chref{ffttwo} uses the \fft to compute the 2D probability distribution, where
+given two compatible input secondary structures \strA and \strB, position
+$(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
+probability for those structures \str which have base pair distance $x$ [resp. $y$]
+from \strA [resp. \strBresp]. Compared against its closest relative \rnatwofold,
+\ffttwo is two orders of magnitude faster, operating in \On{5} speed and only
+\On{2} space. This opens the door for using \ffttwo in a high-throughput fashion,
+where the probability landscapes can be used as a starting point for kinetic
+analysis.
+
+With \hermes in \Chref{hermes}, we do just that; representing the output of
+\ffttwo as a graph, we can create a corresponding Markov chain [resp. Markov
+process] to estimate \mfpt [resp. equilibrium time] with correlation to the
+mathematically-exact values as shown in Table \ref{table:correlationHermes}.
+The speed of these approximate tools within \hermes---namely \fftmfpt and
+\ffteq---present what we believe to be the first suite of kinetic analysis
+tools for RNA sequences that are suitable for high throughput usage, something
+we believe to be of interest in the field of synthetic design.
+
+Finally, though not discussed in the body of this thesis, we have also
+developed a collection of packages for working with command-line tools for
+computational RNA analysis in a more streamlined fashion. Two of these programs,
+\href{https://github.com/evansenter/wrnap}{\wrnap} and
+\href{https://github.com/evansenter/rbfam}{\rbfam} are among the first of their
+type for the Ruby programming langage, a popular interpreted language that
+enjoys wide adoption in the web development community. In an era of increasingly
+cloud-focused software, we believe that researchers will need a robust set of
+tools for working with their data in a web-oriented environment, something
+\wrnap and \rbfam aim to provide.

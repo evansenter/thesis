@@ -45,7 +45,7 @@ Remarkable results in RNA synthetic biology have recently been
 obtained by various groups. In \citep{hochrein.jacs13}, small
 conditional RNAs have been engineered to silence a gene Y by using the
 RNA interference machinery, only if a gene X is transcribed. In
-\citep{wachsmuth.nar13} a novel theophylline riboswitch has been
+\citep{wachsmuth.nar13} a novel theophylline \rb has been
 computationally designed to transcriptionally regulate a gene in
 {\em E. coli}, and in \citep{synthetichammerheads} a purely computational
 approach was used to design functionally active hammerhead ribozymes.
@@ -53,7 +53,7 @@ Computational design of synthetic RNA molecules invariably uses some
 form of thermodynamics-based algorithm; indeed, \ms{NUPACK-Design}
 \citep{zadeh.jcc11} was used to design small conditional RNAs
 \citep{hochrein.jacs13}, Vienna RNA Package \citep{gruber08} was used in
-the design of the synthetic theophylline riboswitch, and the
+the design of the synthetic theophylline \rb, and the
 \ms{RNAiFold} inverse folding software
 \citep{garcia.jbcbb13,garciamartin.nar13} was used to design the
 synthetic hammerhead ribozymes. The next step in the computational
@@ -62,7 +62,8 @@ folding---such control could be important in engineering
 conformational switches. Kinetics is already used as a design feature
 for synthetic design in proteins \citep{bujotzek.jcam11,fasting.acie12}.
 
-In this chapter we introduce a new software suite, called \hermes,
+In this chapter we introduce a new software suite, called \hermes
+\citep{senter:2015fq},
 which efficiently computes RNA secondary structure
 folding kinetics by using a coarse-grained
 method to model RNA transitions that add or remove a single base pair.
@@ -334,15 +335,6 @@ is given by a finite set $Q= \{1,\dots,n\}$ of states, the
 initial probability distribution $\pi$,
 and the $n\times n$ matrix $P(t)=(p_{i,j}(t))$ of
 probability transition functions.
-
-% \footnote{Only in the
-% current section does $P(t)$ denote the Markov process
-% transition probability matrix.  In all later sections of the paper,
-% $P(t) = (P_1(t),\dots,P_n(t))$ will denote the population occupancy
-% frequency function, defined in (\ref{eq:hermes:populationOccupancyEquation}).
-% In Markov processes, the rate matrix $R$ is used rather than the transition
-% probability matrix $P(t)$, so there will be no ambiguity in later
-% reserving $P(t)$ to denote the population occupancy function.}
 
 Letting $q_t$ denote the state at (continuous)
 time $t$, the probability that the initial state $q_0$ at time 0 is
@@ -738,7 +730,7 @@ of handling 2D-probability grids, all vertexes are uniquely identified
 by index tuples (which conceptually correspond to positioning in a 2D
 array). However, it is trivial to use this code with both
 1D-probability grids such as those produced by \fftbor
-\citep{Senter.po12} or arbitrary transition matrices without any change
+\citep{senter.po12} or arbitrary transition matrices without any change
 to the underlying implementation. The software additionally provides
 many options for defining the format of the input as well as the
 structure of the graph underlying the
