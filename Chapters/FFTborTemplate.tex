@@ -19,7 +19,7 @@ expression platform candidates. A web server is available at
 
 \section*{Introduction}
 
-In \citep{Freyhult.b07}, we developed a dynamic programming algorithm,
+In \citep{freyhult.b07}, we developed a dynamic programming algorithm,
 \rnabor, pronounced {\em RNA neighbor}, which simultaneously computes for
 each integer $k$, the Boltzmann probability $\pk = \frac{\bfZ{k}{}}{\fullZ}$
 of the subensemble of structures
@@ -969,7 +969,7 @@ Figure 8 displays run time curves for both
 taken to be either the empty structure or the minimum free energy
 (MFE) structure.
 
-Here, we compare the run time of \rnabor \citep{Freyhult.b07} and
+Here, we compare the run time of \rnabor \citep{freyhult.b07} and
 the (unparallelized version of) \fftbor, using
 a Dell Power Edge 1950, 2 x Intel Xeon E5430 Quad
 core with 2.80 GHz and 16 GB RAM. For $n = 20,40,60,\ldots, 300$, in step
@@ -1046,7 +1046,7 @@ thus the $m$ most significant positions of
 $c_k=\z{k}{1}{n}=\pk \cdot \z{}{1}{n}$. Interpolation is performed for
 $p(x)$, rather than $\Z(x)$, due to issues concerning numerical instability.
 The computational advantage of \fftbor over its predecessor
-\rnabor \citep{Freyhult.b07} is that
+\rnabor \citep{freyhult.b07} is that
 the new algorithm runs in quartic time $O(n^4)$ and quadratic space
 $O(n^2)$, in contrast to the $O(n^5)$ run time and $O(n^3)$ space
 required by \rnabor. We have additionally provided a

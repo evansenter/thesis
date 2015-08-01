@@ -81,7 +81,7 @@ approach to candidate selection. Our approach is to
 characteristics; and finally
 \item fine-grained curation of the candidates based on a collection of measures
 and pairwise similarity.
-\end{inparaenum} Figure \ref{fig:rfinder:flowchart} outlines this approach as a
+\end{inparaenum} \Figref{rfinder:flowchart} outlines this approach as a
 flowchart.
 
 \begin{figure}[!ht]
@@ -187,7 +187,7 @@ additionally be represented using a context-free grammar such as:
 S \rightarrow S\,.\;|\;.\,S\;|\;(S)\;|\;SS\;|\;\epsilon
 \end{align}
 
-The grammar from \eqnref{eq:rfinder:strCfg} can be used to generate a parse tree
+The grammar from \eqnref{rfinder:strCfg} can be used to generate a parse tree
 \tree for \strS. The benefit of working with \tree over \strS is that the parse
 tree offers an abstract representation of secondary structure shape independent of
 sequence length, permitting us to classify and eventually constrain a large
@@ -212,7 +212,7 @@ tree \tree is a list of the node depths when traversed in a depth-first pre-orde
 fashion. To provide a concrete example, consider the following experimentally
 validated xpt \grb from Bacillus subtilis subsp. subtilis str. 168
 (NC\_000964.3 2320197--2320054) with corresponding gene off structure as seen in
-Figure \ref{fig:rfinder:xptOff}.
+\Figref{rfinder:xptOff}.
 \medskip
 
 \begin{figure}[!ht]
@@ -351,7 +351,7 @@ experimental constraints, we elected finally to instead choose a small number
 ($n = 2$) of organisms easily available which had multiple promising hits as our
 experimental candidate pool.
 
-In Figure \ref{fig:rfinder:histogramFoldalignCandidatesVsXpt}, we display a histogram of scores produced
+In \Figref{rfinder:histogramFoldalignCandidatesVsXpt}, we display a histogram of scores produced
 by \foldalign for the 503 candidates, when aligned with the \Bsxpt \grb. \foldalign
 is based off Sankoff's algorithm \citep{sankoff:1985wc}, a dynamic programming
 algorithm for simultaneous folding and alignment that runs in \On{6} time and
@@ -377,7 +377,7 @@ original 503 sequences.}
 
 Of these 500 sequences, 335 have a \foldalign score $s > 0$, representing 227
 unique accession numbers, with a distribution of candidates per accession number
-as shown in Figure \ref{fig:rfinder:candidateHistogramGroupedByAccession}. From
+as shown in \Figref{rfinder:candidateHistogramGroupedByAccession}. From
 the perspective of experimental validation, we have tried to maximize the chance
 of success per organism by selecting those having multiple candidates within the
 same genome. Only 25 of the candidate organisms have more than three hits within

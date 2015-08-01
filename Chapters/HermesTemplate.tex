@@ -566,7 +566,7 @@ suite.
 
 \hermes is organized into three independent directories: (1)
 \ffttwo, (2) \rnamfpt, and (3) \rnaeq (see
-Figure \ref{fig:organizationHermes}). These packages compile into both
+\Figref{organizationHermes}). These packages compile into both
 standalone executables and archive files. The archives provide a DRY
 API which allow the development of novel applications using source
 from across the \hermes package without having to copy-and-paste
@@ -897,7 +897,7 @@ Given reference structures $A,B$, the \rnatwofold  program
 $x,y$, the minimum free energy structure and partition function
 among all secondary structures having base pair distance $x$ to \strA
 and $y$ to \strB.\footnote{\rnatwofold generalizes an earlier algorithm
-\rnabor \citep{Freyhult.b07,Freyhult.nar07}, which computes the
+\rnabor \citep{freyhult.b07,Freyhult.nar07}, which computes the
 minimum free energy structure and partition function among all structures
 having base pair distance $x$ to reference structure \strA.}
 \ffttwo \citep{Senter.jmb14} is a much faster program, using the
@@ -937,8 +937,7 @@ energy of $-6.4$ kcal/mol. Statistics for the free energies of the
 $10.695$, standary deviation is $4.804$, maximum is $25.00$, minimum
 is $-6.40$. A histogram for the free energy of all secondary
 structures of ACGCGACGUGCACCGCACGU is depicted in
-%Figure \ref{fig:freeEnergyHistogramSecStrACGCGACGUGCACCGCACGU}.
-the left panel of Figure \ref{fig:PLMVd}. The right panel of the
+the left panel of \Figref{PLMVd}. The right panel of the
 same figure depicts the minimum free energy structure of the
 54 nt hammerhead type III ribozyme from Peach Latent Mosaic Viroid
 (PLMVd), discussed later. This secondary structure is identical
@@ -947,9 +946,7 @@ to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
 
 \begin{figure*} [!ht]
 \begin{center}
-%\includegraphics[width=0.45\textwidth]{FIGURES/freeEnergyHistogramSecStrACGCGACGUGCACCGCACGU}
 \includegraphics[width=0.45\textwidth]{figure2a.eps}
-%\includegraphics[width=0.45\textwidth]{FIGURES/plmvd_positional_entropy}
 \includegraphics[width=0.45\textwidth]{figure2b.eps}
 \caption{\small
 {\em (Left)} Histogram of free energies of secondary structures of
@@ -972,7 +969,7 @@ RNA Vienna Package utility script {\tt relplot.pl}.
 \end{figure*}
 
 
-Figure \ref{fig:meanStdevKinfoldRuns1000sequences} displays the mean
+\Figref{meanStdevKinfoldRuns1000sequences} displays the mean
 and standard deviation for \kinfold simulations of folding time
 for each of the 1,000 RNA sequences from our benchmarking data. For
 each sequence, the mean and standard deviation of the time required to
@@ -1031,7 +1028,7 @@ Figures~\ref{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq},
 \ref{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
 depict scatterplots for kinetics obtained by some of the algorithms
 above. The left panel of
-Figure \ref{fig:scatterplot_single_bp_moves_for_kinfold_vs_rnaeq}
+\Figref{scatterplot_single_bp_moves_for_kinfold_vs_rnaeq}
 shows a scatter plots for gold standard \rnamfpt versus platinum
 standard \rnaeq, with correlation value 0.5652. The right
 panel of the same figure shows a scatter plot for \kinfold versus
@@ -1044,11 +1041,11 @@ remaining RNA sequences, whose folding time is longer than that of
 cluster A. There are no significant differences between RNA sequences
 in clusters A and B with respect to GC-content, sequence logo, minimum
 free energy, number of secondary structures, etc.  The left panel of
-Figure \ref{fig:scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d}
+\Figref{scatterplot_single_bp_moves_for_actual_mfpt_vs_fftbor2d}
 shows the scatter plot for \rnamfpt versus \kinfold, with
 correlation 0.7933, and the right panel shows the scatter plot for
 \rnamfpt versus \fftmfpt, with correlation 0.6035.
-Figure \ref{fig:scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
+\Figref{scatterplot_single_bp_moves_for_fftbor2d_vs_rnapopulation}
 shows scatter plots for \fftmfpt versus \kinfold (Left) and
 for \fftmfpt versus \ffteq (Right), with respective
 correlation values 0.7608 and 0.9589. \kinfold obviously provides
@@ -1144,7 +1141,7 @@ Given an initial state $A=(x_0,y_0)$, a
 target state $B=(x_1,y_1)$, and the 2D grid of positions $(x,y)$
 and probabilities $p(x,y)$ as computed by \ffttwo and
 illustrated in
-Figure \ref{fig:checkerboardGridPointsSplicedLeader},
+\Figref{checkerboardGridPointsSplicedLeader},
 {\tt RNAmfpt} computes the {\em mean first passage time}, taken
 over all paths from $(x_0,y_0)$ to  $(x_1,y_1)$.  Alternatively,
 {\tt RNAmfpt} can take as input the probability transition matrix $P$ for
@@ -1163,7 +1160,7 @@ Given an initial state $A=(x_0,y_0)$, a
 target state $B=(x_1,y_1)$, and the 2D grid of positions $(x,y)$
 and probabilities $p(x,y)$ as returned by \ffttwo and
 illustrated in
-Figure \ref{fig:checkerboardGridPointsSplicedLeader},
+\Figref{checkerboardGridPointsSplicedLeader},
 {\tt RNAeq} computes the population occupancy frequencies
 $P(t) = (P_1(t),\ldots,P_n(t))$ by using spectral decomposition, and
 then determines the {\em equilibrium time}.
@@ -1250,7 +1247,7 @@ of the Gillespie algorithm \citep{gillespieStochasticSimulation1},
 which essentially samples from an exponential distribution of folding
 times, hence \kinfold mean and standard deviation are
 approximately equal -- see
-Figure \ref{fig:meanStdevKinfoldRuns1000sequences}. Elementary
+\Figref{meanStdevKinfoldRuns1000sequences}. Elementary
 considerations from statistics indicate that for our benchmarking set
 of 20-mers, the minimum sample size $n = \left( \frac{z_{\alpha/2}
 \cdot \sigma}{E} \right)^2$ ranges from 937,712 to 23,289,310 for us
@@ -1282,7 +1279,7 @@ of \citep{wolfingerStadler:kinetics}. In addition, because {\tt barriers} comput
 basins of attraction by utilizing the output of \rnasub, estimating kinetics for the
 refolding of an RNA molecule from the empty structure requires exhaustive enumeration
 of all suboptimal structures having non-positive free energy.
-Figure \ref{fig:populationOccupancySplicedLeader} depicts some population
+\Figref{populationOccupancySplicedLeader} depicts some population
 occupancy curves for the 56 nt spliced leader RNA from
 {\em L. collorosoma}, a known conformational switch experimentally
 investigated in \citep{lecuyerCrothers}, a determined by
@@ -1365,7 +1362,7 @@ ribozymes, experimentally shown to cleave {\em in vitro}. For the tiny
 data set of 10 synthetic ribozymes, we ran \fftmfpt to determine the
 log(MFPT) of folding from the empty structure to the target consensus
 structure of Peach Mosaic Latent Viroid (PMLVd),
-shown in Figure \ref{fig:PLMVd}. We determined a
+shown in \Figref{PLMVd}. We determined a
 Pearson correlation of $0.4796$ [resp. $0.5322$]  between the logarithm of the
 {\em mean first passage time} [resp. {\em equilibrium time}], as computed by
 \fftmfpt [resp. {\tt RNAeq}] and the cleavage rate, using the
@@ -1375,7 +1372,7 @@ These correlation values seem surprising, since we had expected that
 rapidly folding hammerheads (low values of MFPT and ET) might be
 associated with fast cleavage. The correlation values suggest instead
 that perhaps the longer a hammerhead requires to fold into its functional
-secondary structure, shown in Figure \ref{fig:PLMVd}, the more rapid its
+secondary structure, shown in \Figref{PLMVd}, the more rapid its
 cleavage. If this observation can be experimentally validated on a large set
 of hammerheads, then the insight could be potentially important for
 RNA design, an area of synthetic biology.
@@ -1558,7 +1555,7 @@ We say that the {\em triangle inequality} holds for $(x,y)$ if
 \label{eq:triangleInequality} (d_0 \leq x+y), (x \leq d_0 + y), (y
 \leq d_0 + x)
 \end{align}
-Figure \ref{fig:checkerboardGridPointsSplicedLeader} displays the
+\Figref{checkerboardGridPointsSplicedLeader} displays the
 space of possible grid points $(x,y)$ for spliced leader RNA from {\em
 L. collosoma} with two reference structures.
 
@@ -1639,7 +1636,7 @@ of secondary structures of \seq to have base pair distance $x$
 [resp. $y$] to secondary structure \strA [resp. \strB], where \strA is the
 empty structure and \strB is the minimum free energy structure. As in
 the case for \ffttwo,
-Figure \ref{fig:checkerboardGridPointsSplicedLeader} displays the
+\Figref{checkerboardGridPointsSplicedLeader} displays the
 checkerboard image of possible grid points $(x,y)$ for spliced leader
 RNA from {\em L. collosoma} with two reference structures.
 

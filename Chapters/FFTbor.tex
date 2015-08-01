@@ -70,14 +70,14 @@ In this chapter, we describe a radically different algorithm, \fftbor,
 prounounced {\em FFT neighbor},
 that uses polynomial interpolation to compute the
 coefficients $p_0,\ldots,p_{n-1}$ of the polynomial defined in
-\eqnref{eq:fftbor:pOfX},
+\eqnref{fftbor:pOfX},
 where \pk is defined by $\pk = \frac{\bfZ{k}{}}{\fullZ}$.
 Due to severe numerical instability issues in both the Lagrange
 interpolation formula and in Gaussian elimination, we employ
 the \fft (FFT) to compute the \idft (DFT) on values $y_0,\ldots,y_{n-1}$,
 where $y_k = p(\omega^k)$ and
 $\omega = \pRoU$ is the principal \nRoU and
-$p(x)$ is defined in \eqnref{eq:fftbor:pOfX}. This
+$p(x)$ is defined in \eqnref{fftbor:pOfX}. This
 gives rise to an improved version of \rnabor, denoted \fftbor,
 which runs in time \On{4} and space \On{2}.
 % Once two metastable structures \strST are identified, we can
@@ -100,7 +100,7 @@ p(x) = p_0 + p_1 x + p_2 x^2 + \dots + p_{n-1} x^{n-1},
 where \pk is defined as $\pk = \frac{\bfZ{k}{}}{\fullZ}$. We employ the \fft to compute
 the \idft on values $y_0,\dots,y_{n-1}$, where
 $y_k = p(\omega^k)$ and $\omega = \pRoU$ is the principal \nRoU and $p(x)$ is defined in
-\eqnref{eq:fftbor:pOfX}. By leveraging
+\eqnref{fftbor:pOfX}. By leveraging
 \nRoUs in conjunction with the \idft the we subvert numeric instability
 issues observed with both Lagrange interpolation and Gaussian elimination.
 
@@ -288,7 +288,7 @@ we define the {\em polynomial}
 \end{align}
 
 where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of
-\eqnref{eq:fftbor:maxDist} and the fact that the minimum number of
+\eqnref{fftbor:maxDist} and the fact that the minimum number of
 unpaired bases in a hairpin loop $\theta$ is 3, we know that $c_n=0$,
 so that \fullZx is a polynomial of degree strictly less than $n$.
 If we evaluate the polynomial \fullZx for $n$ distinct values
@@ -324,8 +324,8 @@ and floating point arithmetic (round-off error) related to the
 astronomically large values of the partition functions
 \bfZ{k}{1,n}, for $0 \leq k < n$. After many unsuccessful
 approaches including scaling we obtained excellent results by
-interpolating the polynomial $p(x)$, defined in \eqnref{eq:fftbor:pOfX},
-rather than the polynomial \fullZx, defined in \eqnref{eq:fftbor:zOfX},
+interpolating the polynomial $p(x)$, defined in \eqnref{fftbor:pOfX},
+rather than the polynomial \fullZx, defined in \eqnref{fftbor:zOfX},
 and performing interpolation with the \fft (FFT) \citep{cormen}
 where \alphaN are
 chosen to be \nRoUs,
@@ -333,7 +333,7 @@ $\alpha_k = \kRoU$.
 One
 advantage of the FFT is that interpolation can be performed in $O(n \log n)$
 time, rather than the cubic time required by using the Lagrange formula
-shown in \eqnref{eq:fftbor:lagrangeInterpolation} or by Gaussian elimination. Fewer
+shown in \eqnref{fftbor:lagrangeInterpolation} or by Gaussian elimination. Fewer
 numerical operations implies increased numerical stability in our application.
 
 \subsection{Recursions to compute the polynomial
@@ -426,8 +426,8 @@ First, some notation is necessary.
 Recall that if $F$ is an arbitrary
 polynomial [resp. analytic] function, then $[x^k] F(x)$
 denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
-Taylor expansion of $F$]. For instance, in \eqnref{eq:fftbor:pOfX},
-$[x^k]p(x) = \pk$, and in \eqnref{eq:fftbor:zOfX},
+Taylor expansion of $F$]. For instance, in \eqnref{fftbor:pOfX},
+$[x^k]p(x) = \pk$, and in \eqnref{fftbor:zOfX},
 $[x^k]\fullZx = c_k(i,j)$.
 
 By definition, it is clear that $\emZ{i,j}=1$ if $i \leq j \leq i + \theta$,
@@ -554,13 +554,13 @@ a_j = \frac{1}{n} \sum_{k=0}^{n-1} y_k\,\omega^{-kj}
 
 for $j=0,\dots,n-1$.
 
-Since we defined \bfY in \eqnref{eq:fftbor:yColumn} by $\bfY =
+Since we defined \bfY in \eqnref{fftbor:yColumn} by $\bfY =
 (y_0,\dots,y_{n-1})^{\text T}$, where
 $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$
 and $\alpha_k = \omega^k \kRoU$, it follows that the coefficients
 $c_k=\bfZ{k}{1,n}$ in the polynomial
 $\fullZx = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in
-\eqnref{eq:fftbor:zOfX} can be computed, at least in principle,
+\eqnref{fftbor:zOfX} can be computed, at least in principle,
 by using the \fft. It turns out, however, that the values of
 \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
 instability makes even this approach infeasible for values of $n$
@@ -569,12 +569,12 @@ Nevertheless, our approach can be modified as follows.
 Define \bfY by $\bfY = (y_1,\dots,y_n)^{\text T}$, where
 $y_1=\frac{\emZof{}{\alpha_1}}{\fullZ},\dots,
 y_{n}=\frac{\emZof{}{\alpha_n}}{\fullZ}$, and
-\fullZ is the partition function defined in \eqnref{eq:fftbor:partFunc}.
+\fullZ is the partition function defined in \eqnref{fftbor:partFunc}.
 Using the \fft to compute the \idft, it follows from
-\eqnref{eq:fftbor:aFromY} that we can compute the probabilities $p_0,\dots,p_{n-1}$
+\eqnref{fftbor:aFromY} that we can compute the probabilities $p_0,\dots,p_{n-1}$
 that are coefficients of the polynomial
 $p(x) = p_0 + p_1 x + \dots + p_{n-1}x^{n-1}$
-defined in \eqnref{eq:fftbor:pOfX}. For genomics applications, we are
+defined in \eqnref{fftbor:pOfX}. For genomics applications, we are
 only interested in the $m$ most significant digits of each \pk, as described
 in the pseudocode on the following page.
 \medskip
@@ -604,14 +604,14 @@ structure \strSt of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
 \State $y_k \gets 10^m \cdot \frac{\emZof{}{\omega_k}}{\emZof{}{\omega_0}}$
 \EndFor
 \For{$k \gets 0, n-1$}
-\Comment{Compute IDFT from \eqnref{eq:fftbor:aFromY}}
+\Comment{Compute IDFT from \eqnref{fftbor:aFromY}}
 \State $a_k \gets \frac{1}{n} \sum_{j=0}^{n-1} y_j\, \omega^{-kj}$
 \State $\pk \gets 10^{-m} \cdot \lfloor a_k \rfloor$
 \Comment{Truncate to $m$ significant digits}
 \EndFor
 \State \textbf{return} $p_0,\dots,p_{n-1}$
 \Comment{Return all \pk for $0 \leq k < n$,
-from \eqnref{eq:fftbor:probK}}
+from \eqnref{fftbor:probK}}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
@@ -628,7 +628,7 @@ predecessor \rnabor.}
 
 In this subsection, we show that we need only evaluate the polynomial
 \fullZx, as defined in
-\eqnref{eq:fftbor:zOfX}, for $n/2$ of the \nRoUs.
+\eqnref{fftbor:zOfX}, for $n/2$ of the \nRoUs.
  It is first necessary to recall the definition of complex
 conjugate.
 Recall that the complex conjugate of $z$ is denoted by $\overline{z}$;
@@ -639,7 +639,7 @@ $i = \sqrt{-1}$,  then $\overline{z} = \aMbi$.
 \label{lem:fftbor:compconj}
 
 If \fullZx is the complex polynomial defined in
-\eqnref{eq:fftbor:zOfX}, then for any \nRoU
+\eqnref{fftbor:zOfX}, then for any \nRoU
  $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \overline{\emZof{}{\alpha}}$. In other words, if $\alpha$ is a \nRoU
  of the form \aPbi, where $a,b \in \mathbb{R}$ and $b>0$, and
@@ -683,7 +683,7 @@ $(\aMbi)^k = C-Di$. Indeed, we have the following.
 
 \begin{align}
 \begin{split}
-(\aPbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (bi)^k \\
+(\aPbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (bi)^k \\
 (bi)^k  &=
 \begin{cases}
 b^k    & \text{if $k \equiv 0 \bmod 4$} \\
@@ -696,7 +696,7 @@ i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
 
 \begin{align}
 \begin{split}
-(\aMbi)^m &= \sum_{k=0}^m {m \choose k}\; a^{m-k} \cdot (-bi)^k \\
+(\aMbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (-bi)^k \\
 (-bi)^k &=
 \begin{cases}
 b^k   & \text{if $k \equiv 0 \bmod 4$} \\
@@ -726,8 +726,8 @@ enormous performance speed-up in our implementation of \fftbor.
 \section{Coarse-grained kinetics with \fftbor}
 \label{sec:fftbor:kinetics}
 
-The output of \fftbor, as shown in Figure
-\ref{fig:fftbor:tppDistributions}, is a probability distribution,
+The output of \fftbor, as shown in
+\Figref{fftbor:tppDistributions}, is a probability distribution,
 where the $x$-axis represents the base pair distance from an arbitrary,
 but fixed secondary structure \strSt, and the $y$-axis represents the
 Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\fullZ}$ that a secondary structure
@@ -735,13 +735,13 @@ has base pair distance $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
 of the sort artistically rendered in the well-known
-energy landscape depicted in Figure 1 of \citep{Wolynes.ptam05}.
+energy landscape depicted in Figure 1 of \citep{wolynes.ptam05}.
 A hypothesis behind theoretical work in biomolecular folding theory in
-\citep{Bryngelson.p95}
+\citep{bryngelson.p95}
 is that kinetic folding slows down as the energy landscape becomes more
 {\em rugged}. This is borne out in our computational experiments for RNA
 using \fftbor, as reported
-in Figure \ref{fig:fftbor:tppDistributions}.
+in \Figref{fftbor:tppDistributions}.
 
 We randomly chose two TPP riboswitch
 aptamers from the seed alignment for
@@ -758,7 +758,7 @@ nt sequence
   UGAACCUGAUCCGGUUAAUACCGGCGUAGGAAUGGAUUUUCUCUACAGC%
 }.
 Rfam consensus and minimum free energy structures for both sequences are
-depicted in Figure \ref{fig:fftbor:tppConsensusAndMfe}.
+depicted in \Figref{fftbor:tppConsensusAndMfe}.
 Despite the fact that there is no sequence homology according to
 pairwise BLAST \citep{blast}, this figure clearly demonstrates that
 consensus and
@@ -1035,7 +1035,7 @@ $\sigma$ and $\log_{10}(\text{MFPT})$ described in \ref{table:correlationFFTborE
 \label{fig:fftbor:correlationFFTborEmpty}
 \end{figure}
 
-In the right panel of Figure \ref{fig:fftbor:correlationFFTborEmpty}, we
+In the right panel of \Figref{fftbor:correlationFFTborEmpty}, we
 applied \fftbor to each of the two randomly chosen TPP riboswitch
 aptamers BX842649.1/277414--277318 and AACY022101973.1/389--487, starting
 from the empty reference structure $\strSt=\emptyset$.
@@ -1208,12 +1208,12 @@ As visible from the defining recursions, the algorithmic time complexity of
 \rnabor is \On{5} and space complexity is \On{3}, where $n$ is
 the length of input RNA sequence. In contrast, the time complexity of
 \fftbor is \On{4} and space complexity is \On{2}.
-Figure \ref{fig:fftbor:benchmarking} displays run time curves for both
+\Figref{fftbor:benchmarking} displays run time curves for both
 \rnabor and \fftbor, when the initial structure \strSt is
 taken to be either the empty structure or the minimum free energy
 (MFE) structure.
 
-Here, we compare the run time of \rnabor \citep{Freyhult.b07} and
+Here, we compare the run time of \rnabor \citep{freyhult.b07} and
 the (unparallelized version of) \fftbor, using
 a Dell Power Edge 1950, 2 x Intel Xeon E5430 Quad
 core with 2.80 GHz and 16 GB RAM. For $n = 20,40,60,\dots,300$, in step
@@ -1253,14 +1253,14 @@ OpenMP is a simple and flexible
 multi-platform shared-memory parallel programming environment, that supports
 parallelizations of C/C++ code---see \url{http://openmp.org/}.
 Using OpenMP primitives, we created multiple threads to evaluate the polynomial
-\fullZx on different \nRoUs. Figure \ref{fig:fftbor:benchmarkingParallel}
+\fullZx on different \nRoUs. \Figref{fftbor:benchmarkingParallel}
 presents benchmarks, executed on
 a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
 of \fftbor as a function of the number of cores.
-The left panel of Figure \ref{fig:fftbor:benchmarkingParallel} describes average
+The left panel of \Figref{fftbor:benchmarkingParallel} describes average
 run time in seconds ($\pm$ one standard deviation) for running \fftbor
 on random RNA of length $200,250,300,400,450,500$ with either 1 or 2 cores.
-The right panel of Figure \ref{fig:fftbor:benchmarkingParallel}
+The right panel of \Figref{fftbor:benchmarkingParallel}
 presents similar data for running
 \fftbor on $2,3,6,4,12,15,20$ cores.
 

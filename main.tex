@@ -32,6 +32,7 @@
 \hypersetup{urlcolor=black, colorlinks=false} % Colors hyperlinks in blue - change to black if annoying
 \title{\ttitle} % Defines the thesis title - don't touch this
 
+\input{ushyphex}
 \usepackage[compact]{titlesec}
 \usepackage[T1]{fontenc}
 \usepackage{algorithm}
@@ -40,19 +41,21 @@
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage{datetime}
-\usepackage{fixltx2e}
 \usepackage{lmodern}
 \usepackage{mathtools}
 \usepackage{paralist}
 \usepackage{pdflscape}
 \usepackage{rnamacros}
 \usepackage{seqsplit}
+\usepackage{silence}
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{url}
 \usepackage{xfrac}
 \usepackage{xpatch}
-\input{ushyphex}
+
+\WarningFilter{latex}{Text page}
+\WarningFilter{latex}{Float too large for page by}
 
 \makeatletter
 \xpatchcmd{\algorithmic}{\itemsep\z@}{\itemsep=.75ex plus1pt}{}{}

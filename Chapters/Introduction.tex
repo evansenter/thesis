@@ -12,7 +12,8 @@ relativity has upended our understanding of space in a way unheard of since
 Copernicus, recent research has gone to confirm that for all our scientific
 progress, the cell still holds fundamental mysteries, and even the central dogma
 isn't sacred. Even Francis Crick himself indicated in \citep{crick:1970wb} that
-RNA likely had a role beyond the traditional {\em messenger} intermediary between
+ribonucleic acids (RNAs) likely had a role beyond the traditional {\em messenger}
+intermediary between
 DNA and proteins, as evidenced by viral RNAs \citep{coffin:1997ws}. Though recent
 evidence continues to suggest that the genome is pervasively transcribed, current
 estimates indicate that only 1.2\% of the mammalian genome constitutes
@@ -28,6 +29,50 @@ intronic splicing \citep{kruger:1982wk,cech:1990tn}, cite-specific cleavage
 \citep{doherty:2001wq}, and more.
 A prevailing theory now suggests that self-replicating RNA molecules were the
 predecessors to all life on Earth---the RNA world hypothesis \citep{gilbert:1986td}.
+As our appreciation of RNA diversity has increased,
+significant effort has been put forth by the scientific community to understand
+and characterize the properties of these molecules.
+
+Unlike DNA, RNA is generally single stranded and thus able to interact with itself
+to form interesting shapes with various functional characteristics, akin to
+proteins. RNA is a polymer comprised of four monomer {\em building blocks}: purines
+adenine (A) and guanine (G); and pyrimidines cytosine (C) and uracil (U). These
+nucleotides can form planar base pairs comprised of energetically favorable
+hydrogen bonds, the stacking of which produces a stable {\em helix} structure
+\citep{yakovchuk:2006bm}. There are only a select set of possible base pairs; the
+Watson-Crick pairs (A-U, G-C) or the G-U wobble pair. Given an arbitrary RNA
+sequence $\seq = \seqN$, where $s_i \in \{\text{A,\,U,\,G,\,C}\}$, we can define
+a secondary structure \str for \seq as the set of index tuples indicating those
+bases involved in a base pair within \seq. Again like proteins, RNA molecules tend
+to fold into a `native' conformation, usually that which minimizes free energy.
+While protein folding is predominantly motivated by hydrophobic
+interactions, RNA structure is driven by stacking base pair interactions, and
+therefore secondary structure tends to be a much better predictor for the function
+of the molecule in question than is the case with proteins, whose function is
+largely determined by 3D `tertiary' structure.
+
+From a computational perspective, the history of RNA folding is far too long for
+proper treatment within this introduction. Instead we will touch upon just some
+of the major milestones to get a flavor for what progress has been made. In 1978,
+Michael Waterman presented the first graph-theoretic model of single stranded
+nucleic acids such as RNA \citep{waterman:1978va}. This was followed in 1980 by
+the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm for
+determining the maximally matching secondary structure \str for
+a given RNA sequence \seq \citep{nussinov1980}, using dynamic programming
+\citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
+developed an algorithm and accompanying software for the minimum free energy
+formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In 1990 John
+McCaskill showed how dynamic programming could be used to compute the
+partition function for an RNA molecule, and even compute the probability that an
+arbitrary base is bound \citep{mccaskill}. Alongside these early developments,
+more robust energy models were experimentally derived \citep{turner,turner:2009vy}
+further improving the accuracy of computational-based models.
+
+Fast-forwarding to today, there is now a huge collection of software aimed at
+computing various properties of RNAs, be it folding, inverse folding, kinetics,
+design, and more. The work that we present here intends to be a contribution
+to the diverse toolset that researchers have at their disposal for the analysis
+and design of both existing and novel RNA sequences.
 
 \section{Thesis Content}
 \label{sec:intro:thesiscontent}
@@ -51,20 +96,20 @@ additional notice.
 \label{sec:intro:thesisorg}
 
 The remainder of this thesis is organized in the following fashion. We begin in
-\Chref{ch:rfinder} with the presentation of \rfinder, a pipeline of
+\Chref{rfinder} with the presentation of \rfinder, a pipeline of
 software intended to facilitate the detection of full riboswitch sequences
 alongside their corresponding `on' and `off' structures in genomic data. In
-\Chref{ch:fftbor} we introduce the program \fftbor, which computes---for
+\Chref{fftbor} we introduce the program \fftbor, which computes---for
 each integer $k$---the Boltzmann probability \pk of the subensemble of structures
 whose base pair distance to an input {\em reference} structure \str is $k$.
-In \Chref{ch:ffttwo} we extend this idea to simultaneously consider two
+In \Chref{ffttwo} we extend this idea to simultaneously consider two
 reference structures \strST and produce as a result the coarse-grained 2D energy
 landscape where---for each integer pair $x,y$---we compute the Boltzmann
 probability $p_{x,y}$
 of those structures whose base pair distance from \strS [resp. \strTresp] is $x$
 [resp. $y$]. This program---\ffttwo---allows for the efficient approximation of
-kinetic characteristics of RNA molecules; presented in \Chref{ch:hermes}
-through the software package \hermes. Finally in \Chref{ch:disc} we conclude
+kinetic characteristics of RNA molecules; presented in \Chref{hermes}
+through the software package \hermes. Finally in \Chref{disc} we conclude
 with a summary of this work as a whole, and consider its place in the greater
 ecosystem of computational RNA tools.
 
