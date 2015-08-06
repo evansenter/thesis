@@ -180,11 +180,20 @@ $s_i$ is denoted as a `.' if unpaired and a `(' [resp. `)'] if the left [resp.
 right] base in a base pair. Given any two base pairs $(i,j)$ and $(k,l)$ in \strS,
 then $i < k < j \iff i < l < j$; pseudoknots are not permitted in the structure. A
 secondary structure taking this form is said to have balanced parentheses, and can
-additionally be represented using a context-free grammar such as:
+additionally be represented using a context-free grammar such as the
+following,\footnote{Note that in the grammar from \eqnref{rfinder:strCfg},
+$\bullet^{\theta}$ should be interpreted to mean $\theta$ repetitions
+of the $\bullet$ symbol, where $\theta$ is generally taken to be 3.}
+derived from \cite{fusy:2012ka}:
 
 \begin{align}
 \label{eq:rfinder:strCfg}
-S \rightarrow S\,.\;|\;.\,S\;|\;(S)\;|\;SS\;|\;\epsilon
+\begin{split}
+S &\rightarrow \bullet \;|\; S \bullet \,|\; T \;|\; S\,T \\
+T &\rightarrow \bpL U \bpR \;|\;
+\bpL S\,U \bpR \;|\; \bpL T \bpR \;|\; \bpL S\,T \bpR \\
+U &\rightarrow \bullet^{\theta} \;|\; U\, \bullet \\
+\end{split}
 \end{align}
 
 The grammar from \eqnref{rfinder:strCfg} can be used to generate a parse tree
