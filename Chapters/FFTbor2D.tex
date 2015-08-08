@@ -203,7 +203,7 @@ $a_0,\dots,a_{n^2-1}$ in
 
 then Lagrange polynomial interpolation
 (\eqnref{fftbor:lagrangeInterpolation})
-guarantees that we can determine the coefficients $c_{rn+s}$ of \fullZx,
+guarantees that we can determine the coefficients $z_{rn+s}$ of \fullZx,
 for $0 \leq r,s < n$. Due to technical difficulties concerning numerical
 robustness observered while working on the \fftbor software
 (\Chref{fftbor}), we will perform polynomial interpolation
@@ -239,6 +239,7 @@ are $r$-neighbors of the restriction $\strA_{[i,j]}$ of reference structure
 \strB to interval $[i,j]$.
 
 \begin{theorem}
+\label{thm:ffttwo:recursions}
 Let $s_1,\dots,s_n$ be a given RNA sequence.
 For any integers $1 \leq i < j \leq n$, let
 
@@ -271,7 +272,7 @@ $\alpha(k) =
 $\beta(k) =
 \dBP{\strB_{[i,j]}}{\strB_{[i,k-1]} \cup \strB_{[k+1,j-1]} \cup \{ (k,j) \}}$.
 
-% The proof is given in supplementary information.
+The proof is given in \Secref{sec:ffttwo:recursions}.
 \end{theorem}
 
 Note that if one were to compute all terms of the polynomial $\emZ{1,n}$
@@ -451,7 +452,6 @@ the efficiency of the na\"{\i}ve implementation of the
 the partition function, $\bfZ{r,s}{1,n}$,
 and \mfes, $\text{MFE\,}^{r,s}_{1,n}$, over all
 structures having \bpd $r$ to \strA and \str to \strB.
-The following lemma is not difficult to establish.
 \end{lemma}
 
 \begin{lemma}
@@ -479,20 +479,18 @@ $\nu = \exp(\frac{2 \pi i}{M})$ is the principal $M$-root of unity, and
 $\frac{M}{4} < k \leq \frac{M}{2}$. Then
 
 \begin{align}
-\nu^k = -(\nu^{-(M/2-k)}) = -\overline{\nu^{M/2-k}}.
+\nu^k = -(\nu^{-(M_0-k)}) = -\overline{\nu^{M_0-k}}.
 \end{align}
 \end{lemma}
 
-Lemma \ref{lem:ffttwo:lemma1} is proved by simple induction;
+Lemma \ref{lem:ffttwo:lemma1} is proved by induction;
 Lemma \ref{lem:ffttwo:lemma2}
-is proved by a computation involving binomial coefficients;
-Lemma \ref{lem:ffttwo:lemma3} is immediate
+is proved in \Secref{lem:fftbor:compconj} by a computation involving
+binomial coefficients;
+Lemma \ref{lem:ffttwo:lemma3} is proved in \Secref{sec:ffttwo:lemma3proof}
 by the parity observation above, resulting from Lemma \ref{lem:ffttwo:lemma1};
-Lemma \ref{lem:ffttwo:lemma4} is elementary, relying on Euler's
-formula and trigonometric addition formulas.
-% Detailed proofs of
-% Lemmas \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4}
-% can be found in supplementary information.
+Lemma \ref{lem:ffttwo:lemma4} is proved in \Secref{sec:ffttwo:lemma4proof},
+relying on Euler's formula and trigonometric addition formulas.
 
 Lemma \ref{lem:ffttwo:lemma1}
 entails that either all even coefficients, or all odd coefficients
@@ -500,7 +498,7 @@ of \fullZx are zero, and so by a variable change described in detail below,
 we require only half the number of evaluations of \fullZx, in order to perform
 polynomial interpolation.
 Lemma \ref{lem:ffttwo:lemma2}
- entails that we require only half again the number of evaluations of
+entails that we require only half again the number of evaluations of
 \fullZx, since the remainder can be inferred by taking the complex conjugate.
 Lemma \ref{lem:ffttwo:lemma1} and Lemma \ref{lem:ffttwo:lemma2},
 along with a
@@ -591,7 +589,7 @@ full polynomial \fullZx, since its coefficients of odd parity are zero.
 \smallskip
 
 In this case, $z_0,z_2,z_4,\dots$ are zero, so
-$\fullZx = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
+$\fullZx = \sum_{k=0}^{M_0-1} z_{2k+1} x^{2k+1}$. But then
 $\fullZx = x \cdot \emYof{}{u}$, where
 $\emYof{}{u}= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
 a variable change $u=x^2$, and coefficient changes
@@ -904,7 +902,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{
+\caption[Pseudocode for improved \ffttwo]{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
@@ -996,7 +994,8 @@ on sequence length.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
-\caption{
+\caption[Run time in seconds for \rnatwofold and \ffttwo on random
+RNA sequences of length 20--200 nt]{
 Run time in seconds for \rnatwofold and \ffttwo on random
 RNA sequences of length 20--200 nt, where sequence generation and
 choice of metastable structures \strAB is described in the text.
@@ -1009,7 +1008,8 @@ faster.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
-\caption{
+\caption[Logarithm of run time in seconds for \rnatwofold and \ffttwo
+on random RNA sequences of length less than 200 nt]{
 Logarithm of run time in seconds for \rnatwofold and \ffttwo
 on random RNA sequences of length less than 200 nt, for same data as that
 in \Figref{ffttwo:ffttwoRtwofoldTiming}.
@@ -1032,7 +1032,11 @@ in a fraction of a second, this difference is of no practical consequence.
 \centering
 \includegraphics[width=.65\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
 \end{subfigure}
-\caption{
+\caption[{\em (Top)}
+Standard deviation of run times of \rnatwofold and \ffttwo
+as a function of sequence length $n$.
+{\em (Bottom)}
+Minimum and maximum run times for \rnatwofold and \ffttwo]{
 {\em (Top)}
 Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
@@ -1051,7 +1055,8 @@ sequence details.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
-\caption{
+\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
+from {\em L. collosoma}, as computed by \ffttwo]{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
@@ -1079,13 +1084,20 @@ with \ffttwo; graphics produced using Mathematica.
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldProbContour.pdf}
 \quad
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldEnsFreeEnergyContour.pdf}
-\caption{
+\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
+from {\em L. collosoma}, as in
+\Figref{ffttwo:ffttwoProbContour},
+except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
+is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
+while in the left panel, ensemble free energy is computed from
+the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
+by \rnatwofold]{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, as in
 \Figref{ffttwo:ffttwoProbContour},
 except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
 is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
-while in the right panel, ensemble free energy is computed from
+while in the left panel, ensemble free energy is computed from
 the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
 by \rnatwofold.
 The loss of detail in the 2D energy landscape is caused uniquely by

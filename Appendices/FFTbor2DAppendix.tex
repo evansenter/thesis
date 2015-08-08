@@ -5,8 +5,8 @@
 
 \lhead{FFTbor2D Appendix}
 
-\section{Full Recursions for \texorpdfstring{\emZ{i,j}}{}
-for the Turner Energy Model}
+\section{Full recursions for \texorpdfstring{\emZ{i,j}}{}
+for the Turner energy model}
 \label{sec:ffttwo:turner}
 
 To compute $\emZ{} = \emZ{1,n}$ given input structures \strAB,
@@ -95,232 +95,130 @@ Justification of recursions (\ref{eq:ffttwoapp:zx}),
 (\ref{eq:ffttwoapp:zmx})
 follow by induction, as in the proof of Theorem \ref{thm:ffttwo:recursions}.
 
-% \section{Full Recursions for \texorpdfstring{\emZ{i,j}}{}
-% for the Turner Energy Model}
-% \label{sec:ffttwo:theorems}
+\section{Proof for Theorem \ref{thm:ffttwo:recursions}}
+\label{sec:ffttwo:recursions}
 
-% Here, we provide proofs of Theorem 1 and of Lemmas 2,3,4.
-% \smallskip
+\begin{proof}
+Recall that if $F$ is an arbitrary
+polynomial [resp. analytic] function, then $[x^{rn+s}]F(x)$
+denotes the coefficient of monomial $x^{rn+s}$ in the
+Taylor expansion of $F(x)$. For instance, in
+\eqnref{ffttwo:pOfX}, $[x^{rn+s}]p(x) = p_{rn+s}$, and in
+\eqnref{ffttwo:zOfX}, $[x^{rn+s}]\fullZx = z_{rn+s}$.
 
-% \noindent
-% \label{thm:ffttwo:recursions}
-% {\sc Theorem 1:} Let $s_1,\ldots,s_n$ be a given RNA sequence.
-% For any integers $1 \leq i \leq j \leq n$, let
-% $\Z_{i,j}(x) = \sum_{r=0}^{n-1} \sum_{s=0}^{n-1} z_{rn+s}  x^{rn+s}$
-% where
-% $z_{rn+s}(i,j)= \z{rn+s}{i}{j}$.
-% Then  for $i\leq j \leq i+\theta$, $\Z_{i,j}(x)=1$ and for
-% $j>i+\theta$ we have the recurrence relation
-% \begin{eqnarray}
-% \label{eqn:polynomialRecursionNussJac1}
-% \Z_{i,j}(x) &= \Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0} + \\
-% &\sum_{\substack{s_k s_j \in \mathbb{B},\\i\le k<j}}
-% \left(e^{\frac{-E_0(k,j)}{RT}}\cdot
-% \Z_{i,k-1}(x)\cdot\Z_{k+1,j-1}(x)\cdot x^{\alpha(k)n+\beta(k)} \right)
-% \nonumber
-% \end{eqnarray}
-% where $\alpha_0 = 1$ if $j$ is base-paired in $A_{[i,j]}$ and $0$ otherwise,
-% $\beta_0 = 1$ if $j$ is base-paired in $B_{[i,j]}$ and $0$ otherwise, and
-% $\alpha(k)=d_{BP}(A_{[i,j]}, A_{[i,k-1]} \cup A_{[k+1,j-1]} \cup\{(k,j)\})$,
-% $\beta(k)=d_{BP}(B_{[i,j]}, B_{[i,k-1]} \cup B_{[k+1,j-1]} \cup\{(k,j)\})$.
-% \smallskip
+By definition, it is clear that $\emZ{i,j}=1$ if $i \leq j \leq i + \theta$,
+where we recall that $\theta = 3$ is the minimum number of unpaired bases in
+a hairpin loop. For $j > i + \theta$, we have
 
-% \noindent
-% {\sc Proof:}
-% First, some notation is necessary. Recall that if $F$ is an arbitrary
-% polynomial [resp. analytic] function, then $[x^{rn+s}] F(x)$
-% denotes the coefficient of monomial $x^{rn+s}$ in the
-% Taylor expansion of $F(x)$] -- for instance, in equation~(3) of the main text,
-% $[x^{rn+s}]Z(x) = z_{rn+s}$.
+\begin{align}
+\begin{split}
+[x^{rn+s}] \emZ{i,j} &= z_{rn+s}(i,j) = \bfZ{rn+s}{i,j} \\
+&= \bfZ{(r-\alpha_0)n+(s-\beta_0)}{i,j-1} \\
+&+
+\sum_{k=i}^{j-1}\enspace
+\sum_{u_0+u_1=r-\alpha(k)}\enspace
+\sum_{v_0+v_1=s-\beta(k)}
+\left( \boltzNuss{k,j}
+\cdot \bfZ{u_0 n+v_0}{i,k-1} \cdot \bfZ{u_1 n+v_1}{k+1,j-1} \right) \\
+&= [x^{(r-\alpha_0)n+(s-\beta_0)}] \emZ{i,j-1} \\
+&+ \sum_{k=i}^{j-1}\enspace
+\sum_{u_0+u_1=r-\alpha(k)}\enspace
+\sum_{v_0+v_1=s-\beta(k)}
+\left( \boltzNuss{k,j} \right. \\
+&\left. \cdot \left( [x^{u_0 n+v_0}] \emZ{i,k-1} \right) \cdot
+\left( [x^{u_1 n+v_1}] \emZ{k+1,j-1} \right)
+\vphantom{\boltzNuss{k,j}} \right) \\
+&= [x^{(r-\alpha_0)n+(s-\beta_0)}] \emZ{i,j-1} \\
+&+ \sum_{k=i}^{j-1}\enspace
+\sum_{u_0+u_1=r-\alpha(k)}\enspace
+\sum_{v_0+v_1=s-\beta(k)}
+\left( \boltzNuss{k,j} \right. \\
+&\left. \cdot [x^{(u_0+u_1)n+(v_0+v_1)}] \left( \emZ{i,k-1} \cdot \emZ{k+1,j-1} \right)
+\vphantom{\boltzNuss{k,j}} \right) \\
+&= [x^{(r-\alpha_0)n+(s-\beta_0)}] \emZ{i,j-1} \\
+&+ \sum_{k=i}^{j-1} \left( \boltzNuss{k,j}
+\cdot [x^{(r-\alpha(k))n+(s-\beta(k))}] \left( \emZ{i,k-1} \cdot \emZ{k+1,j-1}
+\right) \right) \\
+&= [x^{rn+s}] \left( \emZ{i,j-1} \cdot x^{\ab{0}} \right) \\
+&+ \sum_{k=i}^{j-1} \left( \boltzNuss{k,j}
+\cdot [x^{rn+s}] \left( \emZ{i,k-1} \cdot \emZ{k+1,j-1} \cdot
+x^{\alpha(k)n+\beta(k)} \right) \right) \\
+&= [x^{rn+s}] \left( \vphantom{\sum_{k=i}^{j-1}} \emZ{i,j-1} \cdot x^{\ab{0}} \right. \\
+&\left. + \sum_{k=i}^{j-1} \left( \boltzNuss{k,j}
+\cdot \emZ{i,k-1} \cdot \emZ{k+1,j-1} \cdot
+x^{\alpha(k)n+\beta(k)} \right) \right) \\
+\end{split}
+\end{align}
+\end{proof}
 
-% By definition, it is clear that $\Z_{i,j}(x)=1$ if $i\leq j \leq i+\theta$,
-% where we recall that $\theta = 3$ is the minimum number of unpaired bases in
-% a hairpin loop.  For $j>i+\theta$, we have
-% \begin{eqnarray*}
-% [x^{rn+s}] \Z_{i,j}(x) &=& z_{rn+s}(i,j) = \z{rn+s}{i}{j}\\
-% &=&\z{(r-\alpha_0)n+(s-\beta_0)}{i}{j-1} + \sum_{k=i}^{j-1}
-% \sum_{u_0+u_1 = r-\alpha(k)} \sum_{v_0+v_1 = s-\beta(k)}
-% e^{\frac{-E_0(k,j)}{RT}} \cdot \z{u_0n+v_0}{i}{k-1} \cdot
-% \z{u_1n+v_1}{k+1}{j-1} \\
-% &=&
-% [x^{(r-\alpha_0)n+(s-\beta_0)}] \Z_{i,j-1}(x) + \\
-% & &
-% \sum_{k=i}^{j-1}
-% \sum_{u_0+u_1 = r-\alpha(k)}
-% \sum_{v_0+v_1 = s-\beta(k)}
-% e^{\frac{-E_0(k,j)}{RT}} \cdot \left\{ [x^{u_0n+v_0}]
-% \Z_{i,k-1}(x) \right\} \cdot
-% \left\{ [x^{u_1n+v_1}] \Z_{k-1,j-1}(x) \right\} \\
-% &=&
-% [x^{(r-\alpha_0)n+(s-\beta_0)}] \Z_{i,j-1}(x) + \\
-% & &
-% \sum_{k=i}^{j-1}
-% \sum_{u_0+u_1 = r-\alpha(k)}
-% \sum_{v_0+v_1 = s-\beta(k)}
-% e^{\frac{-E_0(k,j)}{RT}} \cdot [x^{(u_0+u_1)n+(v_0+v_1)}] \Z_{i,k-1}(x)
-% \Z_{k-1,j-1}(x) \\
-% &= &
-% [x^{(r-\alpha_0)n+(s-\beta_0)}] \Z_{i,j-1}(x) + %+++\\
-% %+++& &
-% \sum_{k=i}^{j-1}
-% e^{\frac{-E_0(k,j)}{RT}} \cdot [x^{(r-\alpha(k))n+(s-\beta(k))}] \Z_{i,k-1}(x)
-% \Z_{k-1,j-1}(x) \\
-% &= &
-% [x^{rn+s}] \left( \Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0} \right) +
-% \sum_{k=i}^{j-1}
-% e^{\frac{-E_0(k,j)}{RT}} \cdot
-% [x^{rn+s}] \left(  \Z_{i,k-1}(x) \Z_{k-1,j-1}(x) x^{\alpha(k)n+\beta(k)}
-% \right) \\
-% &= &
-% [x^{rn+s}] \left(
-% \Z_{i,j-1}(x) \cdot x^{\alpha_0n+\beta_0}  + \sum_{k=i}^{j-1}
-% e^{\frac{-E_0(k,j)}{RT}} \cdot
-% \Z_{i,k-1}(x) \Z_{k-1,j-1}(x) x^{\alpha(k)n+\beta(k)} \right).
-% \end{eqnarray*}
-% By induction, the proof of the theorem now follows. $\Box$
-% \medskip
+\section{Proof for Lemma \ref{lem:ffttwo:lemma3}}
+\label{sec:ffttwo:lemma3proof}
 
-% The following lemma was proved in \cite{fftbor}, and is reproduced
-% for the convenience of the reader.
+\begin{proof}
+The lemma states that if the \bpd $d_0$ between reference
+structures \strAB is even, then $\emZof{}{-\alpha}=\emZof{}{\alpha}$, while if
+the distance is odd, then $\emZof{}{-\alpha}=-\emZof{}{\alpha}$.
+Suppose first that $d_0$ is even. By Lemma \ref{lem:ffttwo:lemma1},
+$\emZ{} = z_0 + z_2 x^2 + z_4 x^4 + \dots +
+z_{M-2} x^{M-2)}$, and so $\emZof{}{-\alpha}=\emZof{}{\alpha}$.
+Suppose now that
+$d_0$ is odd. By Lemma \ref{lem:ffttwo:lemma1},
+$Z(x) = z_1 x^1 + z_3 x^3 + z^5 x^5 \dots +
+z_{M-1} x^{M-1}$, and so $\emZof{}{-\alpha}=-\emZof{}{\alpha}$.
+\end{proof}
 
-% \noindent
-% {\sc Lemma 2:} If $\Z(x)$ is the complex polynomial defined in
-% %equation~(\ref{eqn:polynomialYann}), then for any complex $n$th root of
-% equation~(9) of the main text, then for any complex $n$th root of
-% unity $\alpha$, it is the case that $\Z(\overline{\alpha}) =
-% \overline{\Z(\alpha)}$. In other words, if $\alpha$ is a complex $n$th root
-% of unity of the form $a+bi$, where $a,b \in \mathbb{R}$ and $b>0$, and
-% if $\Z(a+bi) = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case that
-% \[
-% \Z(a - bi) = A - Bi.
-% \]
-% \smallskip
+\section{Proof for Lemma \ref{lem:ffttwo:lemma4}}
+\label{sec:ffttwo:lemma4proof}
 
-% \noindent
-% {\sc Proof:}
-% Letting $i = \sqrt{-1}$, if  $\theta = \frac{2 \pi}{n}$, then
-% $\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
-% is the principal $n$th complex root of unity, and
-% $1=\omega^{0},\ldots,e^{(n-1)\cdot i \theta}=\omega^{n-1}$ together
-% constitute the complete collection of all
-% $n$th complex roots of unity -- i.e. the $n$ unique solutions of
-% of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
-% Clearly, for any $1 \leq r < n$,
-% $e^{-i r \theta} = 1 \cdot e^{-i r \theta} =
-% e^{2 \pi i} \cdot e^{-i r \theta} = e^{i(2 \pi - r \theta)} =
-% e^{i(n \theta - r \theta)} = e^{i \theta (n - r)}$.
-% Moreover, if $\omega^r = e^{i r \theta} = a + b i$ where
-% $b>0$, then we have $e^{-i r \theta} = a-bi$. It follows that for any
-% $n$th root of unity of the form $a+bi$, where $b>0$, the number $a-bi$
-% is also an $n$th root of unity.
+\begin{proof}
+Recall Euler's formula in complex analysis:
+$\exp(ix) = \cos(x) + i \sin(x)$. As well, recall that
+$\sin(\pi)=0$, $\cos(\pi)=-1$, and the trigonometric
+addition formulas:
 
-% Recall that $\Z(x) = \sum_{k=0}^n c_k x^k$, where
-% $c_k\in \mathbb{R}$ are real numbers representing the partition function
-% $\z{k}{1}{n}$ over
-% all secondary structures of a given RNA sequence $s_1,\ldots,s_n$,
-% whose \bpd from initial structure
-% $S^*$ is $k$. Thus, in order to prove the lemma, it suffices to show
-% that for all values $k=0,\ldots,n-1$, if $a+bi$ is a complex $n$th
-% root of unity, where $a,b \in \mathbb{R}$
-% and $b>0$, and if $(a+bi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
-% $(a-bi)^k = C-Di$. Indeed, we have the following.
+\begin{align}
+\begin{split}
+\cos(\alpha-\beta) &= \cos(\alpha) \cos(\beta) + \sin(\alpha) \sin(\beta) \\
+\sin(\alpha-\beta) &= \sin(\alpha) \cos(\beta) - \sin(\beta) \cos(\alpha).
+\end{split}
+\end{align}
 
-% \begin{eqnarray*}
-% (a+bi)^m &=& \sum_{k=0}^m {m \choose k} a^{m-k}\cdot  (bi)^k \\
-% (bi)^k  &=& \left\{
-% \begin{array}{ll}
-% b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
-% i b^k &\mbox{if $k \equiv 1 \bmod 4$}\\
-% -b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
-% -i b^k &\mbox{if $k \equiv 3 \bmod 4$}\\
-% \end{array} \right.
-% \end{eqnarray*}
-% \begin{eqnarray*}
-% (a-bi)^m &=& \sum_{k=0}^m {m \choose k} a^{m-k} \cdot (-bi)^k \\
-% (-bi)^k &=& \left\{
-% \begin{array}{ll}
-% b^k &\mbox{if $k \equiv 0 \bmod 4$}\\
-% -ib^k &\mbox{if $k \equiv 1 \bmod 4$}\\
-% -b^k &\mbox{if $k \equiv 2 \bmod 4$}\\
-% ib^k &\mbox{if $k \equiv 3 \bmod 4$}\\
-% \end{array} \right.
-% \end{eqnarray*}
-% It follows that each term of the form
-% $a^{m-k} \cdot (bi)^k$, for $k=0,\ldots,m$, is the complex conjugate of
-% $a^{m-k} \cdot (-bi)^k$, and thus $(a+bi)^m$ is the complex conjugate of
-% $(a-bi)^m$. Since $\Z(a+bi)$ is a sum of terms of the form $c_k (a+bi)^k$,
-% it follows that $\Z(a-bi)$ is the complex conjugate of $\Z(a+bi)$.
-% This completes the proof of the lemma. \hfill  $\Box$
-% \medskip
+Then we have
 
+\begin{align}
+\begin{split}
+\nu^{M_0-k} &= \exp\left(\frac{2 \pi i (M_0-k)}{M}\right) \\
+&= \cos\left(\frac{2 \pi (M_0-k)}{M}\right) + i
+\sin\left(\frac{2 \pi (M_0-k)}{M}\right) \\
+&= \cos\left(\pi - \frac{2 \pi k}{M}\right) + i
+\sin\left(\pi - \frac{2 \pi k}{M}\right) \\
+&=
+\left[
+\cos(\pi) \cos\left(\frac{2 \pi k}{M}\right) +
+\sin(\pi) \sin\left(\frac{2 \pi k}{M}\right)
+\right] \\
+&+
+i \left[
+\sin(\pi) \cos\left(\frac{2 \pi k}{M}\right) -
+\sin\left(\frac{2 \pi k}{M}\right) \cos(\pi)
+\right] \\
+&=
+-\cos\left(\frac{2 \pi k}{M}\right) + i
+\sin\left(\frac{2 \pi k}{M}\right) \\
+&=
+-1 \left[ \cos\left(\frac{2 \pi k}{M}\right) - i
+\sin\left(\frac{2 \pi k}{M}\right) \right] \\
+&=
+-1 \cdot \overline{\cos\left(\frac{2 \pi k}{M}\right) + i
+\sin\left(\frac{2 \pi k}{M}\right)}  \\
+&=
+-1 \cdot \overline{\exp\left(\frac{2 \pi i k}{M}\right)} = - \overline{\nu^k} . \\
+\end{split}
+\end{align}
 
-% \noindent
-% {\sc Lemma 3:} Let $d_0=d_{BP}(A,B)$.  Then for any complex number
-% $\alpha \in \mathbb{C}$,  $Z(-\alpha)= -1^{d_0} \cdot Z(\alpha)$.
-% \medskip
+It follows that
+$\nu^{M_0-k} = -\overline{\nu^k}$, so
+$\nu^{k} = \overline{- \nu^{(M_0-k)}} = -\overline{\nu^{(M_0-k)}}$.
 
-% \noindent
-% {\sc Proof:}
-% The lemma states that if the \bpd between reference
-% structures $A,B$ is even, then $Z(-\alpha)=Z(\alpha)$, while if
-% the distance is odd, then $Z(-\alpha)=-Z(\alpha)$. Suppose first that
-% $d_0$ is even. By Lemma 1,
-% $Z(x) = z_0 + z_2 x^2 + z_4 x^4 + \cdots +
-% z_{M-2)} x^{M-2)}$, and so $Z(-\alpha) = Z(\alpha)$.
-% Suppose now that
-% $d_0$ is odd. By Lemma 1,
-% $Z(x) = z_1 x^1 + z_3 x^3 + z^5 x^5 \cdots +
-% z_{M-1} x^{M-1}$, and so $Z(-\alpha) = -Z(\alpha)$.
-% \medskip
-
-% \noindent
-% {\sc Lemma 4:} Suppose that $\nu = \exp(\frac{2 \pi i}{M})$ is
-% the principal $M$-root of unity, and that
-% $\frac{M}{4} < k \leq \frac{M}{2}$. Then
-% \[
-% \nu^k = -(\nu^{-(M/2-k)}) = - \overline{\nu^{M/2-k}}.
-% \]
-% \medskip
-
-% \noindent
-% {\sc Proof:} Recall Euler's formula in complex analysis:
-% $\exp( ix) = \cos(x) + i \sin(x)$. As well, recall that
-% $\sin(\pi)=0$, $\cos(\pi)=-1$, and the trigonometric
-% addition formulas:
-% \begin{eqnarray*}
-% \cos(\alpha-\beta) &=& \cos(\alpha) \cos(\beta) + \sin(\alpha) \sin(\beta)\\
-% \sin(\alpha-\beta) &=& \sin(\alpha) \cos(\beta) - \sin(\beta) \cos(\alpha).
-% \end{eqnarray*}
-% Then
-% \begin{eqnarray*}
-% \nu^{M/2-k} &=& \exp\left(\frac{2 \pi i (M/2-k)}{M}\right) \\
-% &=& \cos\left(\frac{2 \pi (M/2-k)}{M}\right) + i
-% \sin\left(\frac{2 \pi (M/2-k)}{M}\right) \\
-% &=& \cos\left(\pi - \frac{2 \pi k}{M}\right) + i
-% \sin\left(\pi - \frac{2 \pi k}{M}\right) \\
-% &=&
-% \left[
-% \cos(\pi) \cos\left(\frac{2 \pi k}{M}\right) +
-% \sin(\pi) \sin\left(\frac{2 \pi k}{M}\right)
-% \right] + \\
-% &&
-% \left[
-% \sin(\pi) \cos\left(\frac{2 \pi k}{M}\right) -
-% \sin\left(\frac{2 \pi k}{M}\right) \cos(\pi)
-% \right] \\
-% &=&
-% -\cos\left(\frac{2 \pi k}{M}\right) + i
-% \sin\left(\frac{2 \pi k}{M}\right) \\
-% &=&
-% -1 \left[ \cos\left(\frac{2 \pi k}{M}\right) - i
-% \sin\left(\frac{2 \pi k}{M}\right) \right] \\
-% &=&
-% -1 \cdot \overline{\cos\left(\frac{2 \pi k}{M}\right) + i
-% \sin\left(\frac{2 \pi k}{M}\right)}  \\
-% &=&
-% -1 \cdot \overline{\exp\left(\frac{2 \pi i k}{M}\right)} = - \overline{\nu^k} . \\
-% \end{eqnarray*}
-% It follows that
-% $\nu^{M/2-k} = -\overline{\nu^k}$, so
-% $\nu^{k} = \overline{- \nu^{(M/2-k)}} = -\overline{\nu^{(M/2-k)}}$.
-% This completes the proof of the lemma.
+This completes the proof of the lemma.
+\end{proof}

@@ -184,7 +184,7 @@ the conditional probability $Pr[ q_{t+1} = j | q_t=i] = p_{i,j}$.
 Define the {\em population occupancy frequency} of visiting state
 $i$ at time $t$ by $p_{i}(t) = Pr[q_t=i]$.  Denote
 $p_{i,j}^{(t)} = Pr[q_t = j | q_0 = i]$ and notice that
-the $(i,j)$-th entry of the $t$-th power $P^t$ of matrix $P$  equals
+the $(i,j)$th entry of the $t$th power $P^t$ of matrix $P$  equals
 $p_{i,j}^{(t)}$.
 
 The {\em \mfpt} (MFPT) or
@@ -315,7 +315,7 @@ upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{The function {\sc Metropolis} implements a discrete time simulation
+\caption[Pseudocode for the Metropolis Monte Carlo algorithm]{The function {\sc Metropolis} implements a discrete time simulation
 of folding trajectories for a Markov chain.}
 \label{fig:hermes:mcmc}
 \rule[0ex]{0pt}{1.5em} \hrule
@@ -459,8 +459,8 @@ values $c_k$ are determined by the initial population occupancy
 distribution $p(0)$ at time 0. Here
 ${\bf v}_k$ denotes the $k$th eigenvector and
 $\lambda_k$ the $k$th eigenvalue. In particular,
-$c_k = \left(p(0) \cdot T^{-1})\right)_k$, where the $j$-th row of $T$
-is the $j$-th left eigenvector of $R$,
+$c_k = \left(p(0) \cdot T^{-1})\right)_k$, where the $j$th row of $T$
+is the $j$th left eigenvector of $R$,
 and $p(0)$ is the population occupancy distribution
 at time $t=0$. If the eigenvalues are labeled in decreasing
 order, then $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n$,
@@ -583,7 +583,7 @@ upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{The function {\sc Gillespie} implements a continuous time simulation of
+\caption[Pseudocode for the Gillespie algorithm]{The function {\sc Gillespie} implements a continuous time simulation of
 folding trajectories for a Markov process.}
 \label{fig:hermes:gillespie}
 \rule[0ex]{0pt}{1.5em} \hrule
@@ -638,7 +638,8 @@ aspects of this software for other developers---the C++ sourcecode comprising
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Hermes/softwareOrg.pdf}
-\caption{Overall organization of
+\caption[Overall organization of the \hermes software suite]{Overall
+organization of
 \hermes. \ffttwo, \rnamfpt, and \rnaeq are three distinct software
 packages we have developed, which compile into both standalone
 executables and archive files, providing an API that allow novel
@@ -965,7 +966,8 @@ yielding the curvess seen in \Figref{hermes:populationOccupancySplicedLeader}.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=0.7\textwidth]{Figures/Hermes/populationOccupancyCurves.pdf}
-\caption{
+\caption[Population occupancy curves computed with \ffteq for the
+56 nt conformational switch {\em L. collosoma} spliced leader RNA]{
 Population occupancy curves computed with \ffteq for the
 56 nt conformational switch {\em L. collosoma} spliced leader RNA,
 with sequence \ms{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGA}
@@ -1001,15 +1003,15 @@ occupancy curve, an approach also taken by \treekin
 \citep{wolfingerstadler:kinetics}. Our first
 approximation of \eqt involved using a sliding window approach, where we
 compute the smallest $t_0$,
-such that for $t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$, the absolute difference
+such that for $t \in \{t_0+\tD,t_0+2\tD,t_0+3\tD,\dots,t_0+(w-1)\cdot\tD\}$, the absolute difference
 $|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$, for $\epsilon =
-10^{-4}$ and step size \tD{}. In systems where there are local energy minima, this approach has the
+10^{-4}$ and step size \tD across a window of length $w$. In systems where there are local energy minima, this approach has the
 drawback of prematurely indicating equilibrium, as seen in
 \Figref{hermes:eqEstFromRnaEq}. To address this concern, we introduce the
 concept of $\delta,\epsilon$ equilibrium.
 
 Given a starting state $i'$, target state $i$, and user definable parameters
-$w = 5, \tD{} = 10^{-3}, \delta = 10^{-3}$ and $\epsilon = 10^{-4}$, we compute the estimated
+$w = 5, \tD = 10^{-3}, \delta = 10^{-3}$ and $\epsilon = 10^{-4}$, we compute the estimated
 equilirium using the following algorithm.
 \medskip
 
@@ -1022,22 +1024,22 @@ equilirium using the following algorithm.
 {\sc Purpose:} & Estimate time $\log_{10}(t)$ at which state \xStart appears
 within $\epsilon$ of equilibrium \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & States \xStart, \xEnd; \tMin, \tMax;
-$w = 5, \tD{} = 10^{-3}, \delta = 10^{-3}, \epsilon = 10^{-4}$ \rule[-1.5ex]{0pt}{0pt} \\
+$w = 5, \tD = 10^{-3}, \delta = 10^{-3}, \epsilon = 10^{-4}$ \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Output:} & Time $\log_{10}(t)$ at which $p_{\xEnd}(10^t)$ varies by no
-more than $\epsilon$ within a \\ & window of size $w$, having step size \tD{}
+more than $\epsilon$ within a \\ & window of size $w$, having step size \tD
 \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
-\Function{EstimateEquilibrium}{\xStart, \xEnd, \tMin, \tMax, \tD{}, $\delta$, $\epsilon$, $w$}
-\State $t \gets \Call{SoftBound}{\xEnd, \tMin, \tMax, \tD{}, \delta, s}$
-\If{$\Call{WindowEq}{\xEnd, t, \tD{}, w, \epsilon}$}
-\While{$t > \tMin$ AND $\Call{WindowEq}{\xEnd, t, \tD{}, w, \epsilon}$}
-\State $t \gets t - \tD{}$
+\Function{EstimateEquilibrium}{\xStart, \xEnd, \tMin, \tMax, \tD, $\delta$, $\epsilon$, $w$}
+\State $t \gets \Call{SoftBound}{\xEnd, \tMin, \tMax, \tD, \delta, s}$
+\If{$\Call{WindowEq}{\xEnd, t, \tD, w, \epsilon}$}
+\While{$t > \tMin$ AND $\Call{WindowEq}{\xEnd, t, \tD, w, \epsilon}$}
+\State $t \gets t - \tD$
 \EndWhile
 \EndIf
-\While{$t < \tMax$ AND NOT $\Call{WindowEq}{\xEnd, t, \tD{}, w, \epsilon}$}
-\State $t \gets t + \tD{}$
+\While{$t < \tMax$ AND NOT $\Call{WindowEq}{\xEnd, t, \tD, w, \epsilon}$}
+\State $t \gets t + \tD$
 \EndWhile
 \If{$t = \tMin$}
 \Comment{$x$ doesn't leave equilibrium after \tMin}
@@ -1058,12 +1060,12 @@ more than $\epsilon$ within a \\ & window of size $w$, having step size \tD{}
 \begin{figure}[!ht]
 \begin{algorithmic}[1]
 \algrestore{eqEst}
-\Function{SoftBound}{$i$, \tMin, \tMax, \tD{}, $\delta$, $s$}
+\Function{SoftBound}{$i$, \tMin, \tMax, \tD, $\delta$, $s$}
 \State $i_{\infty} \gets p_i(10^{\tMax})$
 \Comment{From equation \ref{eq:hermes:solutionMasterEquationForSingleStateFixedStartPop}}
 \State $t \gets \tMin + \frac{\tMax - \tMin}{2}$
 \State $t' \gets \tMax$
-\While{$|t - t'| > \tD{}$}
+\While{$|t - t'| > \tD$}
 \Comment{Binary search for time $t$ within $\delta$ of \tMax}
 \State $t_{\text{temp}} \gets t$
 \If{$|p_i(10^t) - p_i(10^{t'})| > \delta$}
@@ -1076,10 +1078,10 @@ more than $\epsilon$ within a \\ & window of size $w$, having step size \tD{}
 \EndWhile
 \State \textbf{return} $t$
 \EndFunction
-\Function{WindowEq}{$x$, $t$, \tD{}, $w$, $\epsilon$}
-\Comment{Is $x$ within $\epsilon$ of equilibrium for $[t, \tD{(w-1)\cdot}]$}
+\Function{WindowEq}{$x$, $t$, \tD, $w$, $\epsilon$}
+\Comment{Is $x$ within $\epsilon$ over $[t, t+(w-1)\cdot\tD]$}
 \For{$i \gets 1, w - 1$}
-\If{$|p_x(10^{t+\tD{i\cdot}}) - p_x(10^t)| > \epsilon$}
+\If{$|p_x(10^{t+i\cdot\tD}) - p_x(10^t)| > \epsilon$}
 \State \textbf{return} \textbf{false}
 \EndIf
 \EndFor
@@ -1087,8 +1089,8 @@ more than $\epsilon$ within a \\ & window of size $w$, having step size \tD{}
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{The function {\sc EstimateEquilibrium} computes the smallest $t_0 > t'$,
-such that for $t \in \{t_0+\tD{},t_0+\tD{2\cdot},t_0+\tD{3\cdot},t_0+\tD{4\cdot}\}$,
+\caption[Pseudocode for estimating equilibrium time]{The function {\sc EstimateEquilibrium} computes the smallest $t_0 > t'$,
+such that for $t \in \{t_0+\tD,t_0+2\tD,t_0+3\tD,\dots,t_0+(w-1)\cdot\tD\}$,
 the absolute difference $|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$ and
 $|p(t')[\xEnd] - p(\tMax)[\xEnd]| \approx \delta|$. If $t'$ is already in
 equilibrium, we relax the constraint that $t_0 > t'$ and instead find the
@@ -1117,7 +1119,7 @@ na\"{\i}ve approach used by \treekin, which uses a simple sliding window for
 all $x \in Q$.
 We also allow defining the \eqt to be the
 smallest $t_0$, such that for
-$t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$, the
+$t \in \{t_0+\tD,t_0+2\tD,t_0+3\tD,\dots,t_0+(w-1)\cdot\tD\}$, the
 absolute difference $|p(t)[x] - p(t_0)[x]| < \epsilon$ for all $x \in
 Q$ using Algorithm \ref{fig:hermes:eqEst};
 however, results suggest that this definition is inferior
@@ -1131,7 +1133,7 @@ the benchmarking set described later.
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/eqEstFromRnaEqSeq146.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/eqEstFromRnaEqSeq427.pdf}
-\caption{Example of the differences in using the simple sliding window
+\caption[Example of the differences in using a sliding window approach for estimating \eqt versus a more robust approach, outlined in Algorithm \ref{fig:hermes:eqEst}]{Example of the differences in using the simple sliding window
 approach (green) versus the approach outlined in Algorithm \ref{fig:hermes:eqEst}
 (blue). There are two representative sequences shown from the benchmarking
 dataset described in \Secref{sec:hermes:benchdata}, sequence \#146
@@ -1178,7 +1180,10 @@ to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
 \includegraphics[width=0.525\textwidth]{Figures/Hermes/plmvDist.pdf}
 \quad
 \includegraphics[width=0.375\textwidth]{Figures/Hermes/plmvStr.pdf}
-\caption{
+\caption[{\em (Left)} Histogram of free energies of secondary structures of
+an example 20-mer from the benchmarking dataset.
+{\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
+Viroid (PLMVd) AJ005312.1/282-335]{
 {\em (Left)} Histogram of free energies of secondary structures of
 \ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to $+25$ kcal/mol, with
 mean of $10.695$ kcal/mol.
@@ -1248,7 +1253,8 @@ free energy.
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldTimeDist.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldMeanStdev.pdf}
-\caption{{\em (Left)} Histogram of \kinfold folding times for 20-mer
+\caption[Analysis of \kinfold folding times for 20-mer
+\ms{CCGAUUGGCGAAAGGCCACC}]{{\em (Left)} Histogram of \kinfold folding times for 20-mer
 \ms{CCGAUUGGCGAAAGGCCACC}. The mean [resp. standard deviation] of 10,000 runs of \kinfold for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order.}
 \label{fig:hermes:kinfoldMeanStdev}
 \end{figure}
@@ -1329,9 +1335,9 @@ kinetics.
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsRnaEq.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaEqKinfold.pdf}
-\caption{ Scatter plots of the natural logarithm of times from \rnamfpt
-versus \rnaeq {\em (Left)} and for \kinfold versus
-\rnaeq {\em (Right)}. }
+\caption{Scatter plots of the natural logarithm of times from \rnamfpt
+versus \msresp{RNAeq} {\em (Left)} and for \kinfold versus
+\msresp{RNAeq} {\em (Right)}. }
 \label{fig:hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold}
 \end{figure}
 
@@ -1340,8 +1346,8 @@ versus \rnaeq {\em (Left)} and for \kinfold versus
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsKinfold.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsFftMfptHastings.pdf}
-\caption{ Scatter plots of the natural logarithm of times from \rnamfpt
-versus \kinfold {\em (Left)} and for \rnamfpt versus \fftmfpt {\em (Right)}. }
+\caption{Scatter plots of the natural logarithm of times from \rnamfpt
+versus \msresp{Kinfold} {\em (Left)} and for \rnamfpt versus \msresp{FFTmfpt} {\em (Right)}. }
 \label{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
 \end{figure}
 
@@ -1351,7 +1357,7 @@ versus \kinfold {\em (Left)} and for \rnamfpt versus \fftmfpt {\em (Right)}. }
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/fftMfptFftEq.pdf}
 \caption{ Scatter plots of the natural logarithm of times from \kinfold
-versus \fftmfpt {\em (Left)} and for \fftmfpt versus \ffteq
+versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
 {\em (Right)}. }
 \label{fig:hermes:scatterplotFftMfptVsKinfoldAndFftEq}
 \end{figure}
@@ -1373,7 +1379,7 @@ versus \fftmfpt {\em (Left)} and for \fftmfpt versus \ffteq
   \small{\ffteq}         & 0.5614 & 0.7916 & 0.6966 & 0.9670 & 0.9590 & 0.4757 & 0.8940 & 1      \\
   \bottomrule
  \end{tabularx}
- \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having \bpd $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose \bpd is $x$ from the MFE structure), \ms{BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from \ms{Barriers}), and \ffteq (\eqt, computed in the same fashion as \ms{BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }
+ \caption[Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics]{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having \bpd $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose \bpd is $x$ from the MFE structure), \ms{BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from \ms{Barriers}), and \ffteq (\eqt, computed in the same fashion as \ms{BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }
 \label{table:correlationHermes}
  \end{table}
  \end{landscape}
