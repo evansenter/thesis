@@ -10,7 +10,7 @@
 
 In this chapter, we present the \fftbor algorithm and accompanying software.
 \fftbor is a novel algorithm developed with the intent of efficiently computing
-the Boltzmann probability of those structures whom, for a given input RNA
+the Boltzmann probability of those structures which, for a given input RNA
 sequence \seq, differ by $k$ base pairs. By leveraging polynomial interpolation
 via the \fft, this algorithm runs in \On{4} time and
 \On{2} space, a significant improvement over its predecessor. The accompanying
@@ -222,7 +222,7 @@ Although we describe here the recursions for the Nussinov-Jacobson
 model, for the sake of
 simplicity of exposition, both \rnabor
 \citep{Freyhult.ab05} as well as our current software \fftbor,
-concern the Turner energy model, consisting of free energy parameters for
+concern the Turner energy model (described in \Secref{sec:fftbor:turner}), consisting of free energy parameters for
 stacked bases, hairpins, bulges, internal loops and multiloops.
 
 % The full
@@ -356,7 +356,7 @@ with respect to the Nussinov energy model $E_0$ is
 \begin{align}
 \label{eq:fftbor:rnaborNuss}
 \bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
-\sum_{\substack{s_r s_j \in \bpSet, \\ i \le r<j}}
+\sum_{\substack{(s_r,s_j) \in \bpSet, \\ i \le r<j}}
 \left(
 \boltzNuss{r,j}\enspace \sum_{\mathclap{w+w'=k-b(r)}}\quad
 \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1}
@@ -391,6 +391,7 @@ are \kNbrs of the restriction $\strSt_{[i,j]}$ of initial structure
 $E_0(S)=-1 \cdot |S|$ denotes the Nussinov-Jacobson energy of \str.
 
 \begin{theorem}
+\label{thm:fftbor:recursions}
 Let \seqN be a given RNA sequence.
 For any integers $1 \leq i \leq j \leq n$, let
 
@@ -410,7 +411,7 @@ $j>i+\theta$ we have the recurrence relation
 \begin{align}
 \label{eq:fftbor:fftborNussPoly}
 \emZ{i,j} = \emZ{i,j-1} \cdot x^{b_0} +
-\sum_{\substack{s_r s_j \in \bpSet, \\ i\le r<j}}
+\sum_{\substack{(s_r,s_j) \in \bpSet, \\ i\le r<j}}
 \left(
 \boltzNuss{r,j} \cdot \emZ{i,r-1} \cdot \emZ{r+1,j-1} \cdot x^{b(r)}
 \right).
@@ -769,12 +770,12 @@ The MFE structures differ
 from the consensus structures principally by the addition of base pairs not
 determined by covariation in the Rfam alignment.
 Indeed, if we let $\str_0,\str_1$
-denote the Rfam consensus structure resp. MFE structure for the 97 nt
+denote the Rfam consensus structure [resp. MFE structure] for the 97 nt
 sequence with EMBL accession code BX842649.1/277414--277318, then
 $\str_0 \setminus \str_1$ has 4 base pairs, and $\str_1 \setminus \str_0$
  has 7
 base pairs. If we let $\strT_0,\strT_1$
-denote the Rfam consensus structure resp. MFE structure for the 99 nt
+denote the Rfam consensus structure [resp. MFE structure] for the 99 nt
 sequence with EMBL accession code
 AACY022101973.1/389--487, then
 $\strT_0 \setminus \strT_1$ has 1 base pair, and $\strT_1 \setminus \strT_0$ has 5
@@ -849,8 +850,8 @@ to determine the \mfpt (MFPT) to
 fold into the MFE structure, when starting from the empty structure.
 In this computational
 experiment, we took MFPT to be the average number of Monte Carlo steps
-taken by \kinfold, each step consisting of the addition or removal
-of a single base pair (or shift --- see \citep{flamm}), to fold the
+taken by \kinfold---each step consisting of the addition or removal
+of a single base pair---to fold the
 empty structure into the MFE
 structure, where the average was taken over 30 runs, with an absolute
 maximum number of Monte Carlo steps taken to be 500,000.
@@ -909,12 +910,11 @@ the probability distribution
 for the number of base pairs per structure, taken over the ensemble
 of all secondary structure for the input RNA
 sequence. Surprisingly, we found that there is a significant
-correlation of  $0.48436192$ with one-tailed
-$p$-value of $0.00018249$ between the
+correlation of  $0.4847$ with one-tailed
+$p$-value of $0.0002$ between the
 standard deviation of the \fftbor output (when starting from the
 empty structure) and logarithm base 10 of the mean first passage time.
 
-\begin{landscape}
 \begin{table}[!ht]
 \centering
 \begin{tabularx}{\linewidth}{c *{6}{R}}
@@ -972,9 +972,9 @@ increases, the minimum free energy (MFE) decreases.
 However, it may appear surprising that
 {\em v})\; the
 mean $\mu$ number of base pairs per structure is independent of MFPT
-(correlation $-0.036291124$), although
+(correlation $-0.0363$), although
 {\em vi})\; MFE is correlated with MFPT
-(correlation $0.399015556$) --- i.e. from {\em (iii)},
+(correlation $0.3990$) --- i.e. from {\em (iii)},
 lower MFE is correlated with a larger average $\mu$ number of base pairs per
 structure, from ({\em vi})
 higher MFE is correlated with longer folding time, but
@@ -984,10 +984,9 @@ The most important insight from this table is that
 {\em vii})\;
 standard deviation $\sigma$ is correlated with mean first passage
 time --- the correlation is statistically significant, with one-tailed
-$p$-value of $0.00018249$.}
+$p$-value of $0.0002$.}
 \label{table:correlationFFTborEmpty}
 \end{table}
-\end{landscape}
 
 \begin{figure}[!ht]
 \centering
@@ -1005,14 +1004,14 @@ having exactly $k$ base pairs.
 For the selenocysteine (SECIS) element AB030643.1/4176--4241 from Rfam family
 RF00031, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
-$0.727618$, while the logarithm base 10 of the mean first passage time ($\log_{10}(\text{MFPT})$)
+$0.7276$, while the logarithm base 10 of the mean first passage time ($\log_{10}(\text{MFPT})$)
 is $4.75$.
 {\em (Center)}
 For the selenocysteine (SECIS) element
 AL645723.11/192421--192359 from Rfam family
 RF00031, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
-$2.679446$, while $\log_{10}(\text{MFPT})$ is $5.69$.
+$2.6794$, while $\log_{10}(\text{MFPT})$ is $5.69$.
 Among the 61 sequences in the seed alignment of RF00031,
 AB030643.1/4176--4241 was the fastest folder, while
 AL645723.11/192421--192359 was the slowest folder.
@@ -1024,7 +1023,7 @@ taking the empty structure for the initial structure \strSt.
 The mean $\mu$ for the \fftbor structural profile near the empty
 structure is $23.0203$  [resp. $27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
-is $2.22528791$  [resp. $1.98565959$], and the \kinfold MFPT is
+is $2.2253$  [resp. $1.9857$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
 AB030643.1/4176--4241 [resp. AL645723.11/192421--192359].
 The right panel of this figure should be compared with Figure
@@ -1042,7 +1041,7 @@ from the empty reference structure $\strSt=\emptyset$.
 The mean for the \fftbor structural profile near the empty
 structure is $\mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
-is $\sigma_1=2.22528791$  [resp. $\sigma_2=1.98565959$], and the \kinfold MFPT is
+is $\sigma_1=2.2253$  [resp. $\sigma_2=1.9857$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
 AB030643.1/4176--4241 [resp.  AL645723.11/192421--192359]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
 
@@ -1066,140 +1065,6 @@ This notion of correlation between the coarse-grained energy landscape and
 kinetics is what motivates the work described in Chapters \ref{ch:ffttwo}
 and \ref{ch:hermes}, where a more detailed explanation of kinetics is provided,
 and additional evidence is provided to support this claim.
-
-% \section{Riboswitch detection with \fftbor}
-% \label{sec:fftbor:rb}
-
-% A bacterial \rb is a portion of the $5'$
-% untranslated region (UTR) of messenger RNA,
-% that performs gene regulation by undergoing a conformational change upon
-% binding with a ligand, such as guanine, thiamine pyrophosphate, lysine,
-% etc.  \citep{breaker:Riboswitch2}.
-% This conformational change may either turn  on or off
-% the corresponding gene by either transcriptional or translational regulation
-% of the messenger RNA \citep{tuckerBreaker:review}, depending on the
-% particular \rb. The common feature shared by all \rbs
-% is that a gene is regulated by conformational change upon ligand binding.
-% Bacterial \rbs are often found upstream
-% of operons, regulating groups of genes, as in purine {\em de novo}
-% synthesis and salvage \citep{mandalboesebarrickwinklerbreaker}.
-
-% A \rb consists of two equally important parts: an upstream
-% {\em aptamer}, capable of highly discriminative binding to a particular
-% ligand, and a downstream {\em expression platform}, capable of undergoing
-% a radical conformational change upon binding of a ligand with the
-% discriminating aptamer.
-% Since aptamers have been under strong evolutionary pressure to
-% bind with high affinity
-% (e.g. $K_D \approx 5$ nM for guanine \citep{Mandal.nsmb04}),
-% there is strong
-% sequence conservation found in the aptameric region of orthologous
-% \rbs.
-% In contrast, while secondary structure is conserved in the
-% terminator loop of the expression platform in purine \rbs,
-% there is relatively low sequence conservation (data not shown).
-% While a number of methods exist to computationally predict
-% \rb aptamers
-% \citep{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
-% (and especially {\tt INFERNAL} \citep{infernal}, which latter is used
-% to predict \rb aptamers in Rfam), it is an important
-% biological problem to determine the expression platform, since the structure
-% of the expression platform can suggest whether there is
-% transcriptional regulation
-% via a terminator loop or translational regulation via the sequestration of
-% the Shine-Dalgarno sequence \citep{tuckerBreaker:review}. Determination of
-% the precise location and structure of the expression platform is difficult
-% due to low conserved sequence identity (in-house computations, data not shown).
-% Although this problem remains open, we report here how
-% \fftbor may provide help to biologists in the selection and
-% prioritization of \rb candidates.
-
-% Figure 5 depicts the gene OFF structure of the
-% xpt G-box purine \rb in {\em B. subtilis}, as determined by
-% inline-probing --- this structure was taken from
-% Figure 1 of \citep{breaker:Riboswitch2}.
-% Note that this structure is only partial, since there are regions
-% with no base pairs depicted, despite the fact that additional
-% base pairs could be added. By using
-% {\tt blastn}, it is found that this 161 nt purine \rb
-% can be found on the complement strand of GenBank accession number
-% CP002906.1/2165302--2165142 in
-% complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
-% Figure 6 depicts the result of
-% three computational experiments with FFTbor. The left panel displays
-% the expected base pair distance to the following secondary structure
-% \begin{small}
-% \begin{eqnarray}
-% \label{eq:xpt1}
-% %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGAGCAAUGGAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
-% \bf
-% .((((((((...(((((((.......)))))))........((((((.......))))))..))))))))........(((((........)))))............((((((((((((((.......)))))))))))))).
-% \end{eqnarray}
-% \end{small}
-% as a function of window offset, where window size equals the size of this
-% target structure. This structure was
-% obtained by removing all leading and trailing unpaired positions
-% from the structure depicted in Figure 5,
-% except for the leftmost [resp. rightmost] unpaired position
-% adjacent to the leftmost [resp. rightmost] base-paired position.
-% The reason for removal of the leading and trailing unpaired positions was
-% that the structure of \citep{breaker:Riboswitch2}, depicted in
-% Figure 5, is clearly only partial, as earlier
-% mentioned.  The center panel displays
-% the expected base pair distance to the following secondary structure
-% \begin{small}
-% \begin{eqnarray}
-% \label{eq:xpt2}
-% %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGA
-% \bf
-% .((((((((...(((((((.......)))))))........((((((.......))))))..)))))))).
-% \end{eqnarray}
-% \end{small}
-% as a function of window offset, where window size equals the size of this
-% target {\em aptamer} structure. Similarly, the right panel displays
-% the expected base pair distance to the following secondary structure
-% \begin{small}
-% \begin{eqnarray}
-% \label{eq:xpt3}
-% %GAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
-% \bf
-% .(((((........)))))............((((((((((((((.......)))))))))))))).
-% \end{eqnarray}
-% \end{small}
-% as a function of window offset, where window size equals the size of this
-% target {\em expression platform} structure.
-% Figure 6 determines the precise location of the
-% xpt \rb, both aptamer and expression platform.
-
-% If the biologically functional target structure is unknown, one can
-% instead attempt a similar moving window computation, where the target
-% structure is taken to be the minimum free energy structure of the
-% current window contents. In this case, one may hope to determine a
-% bimodal distribution, as displayed in Figure 7.
-% Given an input RNA sequence, or genomic region, the
-% web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
-% creates a movie as follows, described here for the xpt \rb
-% previously discussed.  We extracted the downstream region of
-% Taking the
-% 161 nt xpt G-box purine \rb described in Figure 5,
-% with GenBank accession number CP002906.1/2165302--2165142, we extended
-% to a sequence of length 200 nt, by appending flanking
-% downstream genomic nucleotides.  Running \fftbor on all
-% prefixes of the resulting sequence of lengths
-% $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
-% \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
-% Figure 5 displays the output of \fftbor on the
-% 166 nt prefix, clearly showing a bimodal distribution. Attempting to
-% automate the identification of non-unimodal \fftbor output, we have
-% applied the Hartigan-Hartigan dip-test \citep{hartigandiptest},
-% implemented in {\tt R}; however,
-% the dip-test appears to be too sensitive, in that a probability distribution
-% is reported to be non-unimodal, even when visual inspection indicates that
-% it appears overwhelmingly to be unimodal (data not shown). It is for this
-% reason that the web server
-% \url{http://bioinformatics.bc.edu/clotelab/FFTbor} produces a movie of
-% prefixes, where the user can start/stop the movie,
-% move forward/backward, or download all raw data output by \fftbor.
 
 \section{Performance characteristics of \fftbor and \rnabor}
 \label{sec:fftbor:speed}
@@ -1275,7 +1140,7 @@ For each sequence length $200,\dots,500$,
 five random RNAs were generated using equal probability for each nucleotide
 A,C,G,U. Run time in seconds, plus or minus one standard deviation, are
 given for a 24-core
-AMD Opteron 6172 with 2.10GHz and 64GB RAM, with only 1 (resp. 2) cores
+AMD Opteron 6172 with 2.10GHz and 64GB RAM, with only 1 [resp. 2] cores
 used.
 {\em (Right)} Graph showing parallel run time of \fftbor on
 an AMD Opteron 6172 with 2.10GHz and 64GB RAM, using respectively

@@ -97,7 +97,8 @@ time program \barriers \citep{flammhofacker}, the program
 \ms{Findpath} \citep{flamm.r01}, which uses bounded look-ahead
 breadth-first search, a genetic algorithm \citep{shapiro.jmb01}, the
 program \ms{RNAtabupath} that uses local search to determine
-near-optimal folding pathways, etc. The program \barriers
+near-optimal folding pathways, the Basin Hopping Graph (BHG, \citep{kucharik:2014ft}) which uses a greedy algorithm to determine local minima
+and approximate their barrier energies, etc. The program \barriers
 \citep{flammhofacker} is the only current method guaranteed to
 produce optimal folding pathways. Since it has been shown that
 the problem of determining optimal folding pathways is
@@ -126,7 +127,10 @@ of Gillespie's algorithm \citep{gillespiestochasticsimulation1},
 directly related to the master equation, hence is considered by many
 to be the {\em gold standard} for RNA kinetics. A recent extension of the
 \kinfold algorithm was reported in \citep{aviram.amb12}.
-\ms{Kinefold} \citep{xayaphoummine.nar05} uses stochastic simulations of
+\ms{KFOLD} \citep{dykeman:2015bxa} also implements Gillespie's algorithm,
+but leverages memoization of transition rates to operate much more efficiently
+than \kinfold. Meanwhile \ms{Kinefold} \citep{xayaphoummine.nar05} uses
+stochastic simulations of
 the nucleation and dissociation of helical regions to predict
 secondary structure and folding pathways. In contrast to the
 previously mentioned methods, both \ms{RNAKinetics}
@@ -921,11 +925,10 @@ small sequences.
 kinetics for a sequence folding between two arbitrary, but fixed,
 structures. The transition rate matrix underlying the Markov process
 necessary for eigendecomposition is derived from the 2D energy
-landscape. Vertices in the rate matrix represent a subset of
-structures compatible with the input sequence as modeled by
-\ffttwo (in a fashion similar to \fftmfpt, explained in
-\Secref{subsec:hermes:fftmfpt}), which makes the graph size more tractable
-than structural
+landscape.
+Indices $(x,y)$ in the rate matrix correspond to all strucutres having
+base pair distance $x$ [resp. $y$] to input structure \strA [resp. \strBresp],
+which makes the graph size more tractable than structural
 sampling with \rnasub using \rnaeq, even with constraints.
 
 This method consists of computing the equilibrium time
@@ -974,15 +977,15 @@ structure is
 \ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} with free
 energy $-7.5$ kcal/mol. In the case of the MFE structure, the
 equilibrium occupancy $P(t_{\infty})$, which \hermes approximates
-as $0.17893806$ should equal the Boltzmann probability $0.17909227$,
+as $0.1789$ should equal the Boltzmann probability $0.1791$,
 since the MFE structure is the only structure at distance $x_0$ [resp.
 $y_0$] from the reference structures \strA (empty
 structure) [resp. \strB (MFE structure)]. As well, if there are few
 other low energy structures at the same base pair distance $x_1$
-[resp. $y_1$] from \strA [resp. \strB] as that of the alternate suboptimal
-structure, then we expect that the occupancy probability $0.03003426$
+[resp. $y_1$] from \strA [resp. \strBresp] as that of the alternate suboptimal
+structure, then we expect that the occupancy probability $0.0300$
 for the $(x_1,y_1)$ be approximately the Boltzmann probability
-$0.03005854$ of the alternate structure.}
+$0.0301$ of the alternate structure.}
 \label{fig:hermes:populationOccupancySplicedLeader}
 \end{figure}
 
@@ -1021,7 +1024,8 @@ within $\epsilon$ of equilibrium \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & States \xStart, \xEnd; \tMin, \tMax;
 $w = 5, \tD{} = 10^{-3}, \delta = 10^{-3}, \epsilon = 10^{-4}$ \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Output:} & Time $\log_{10}(t)$ at which $p_{\xEnd}(10^t)$ varies by no
-more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
+more than $\epsilon$ within a \\ & window of size $w$, having step size \tD{}
+\rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
@@ -1073,9 +1077,9 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
 \State \textbf{return} $t$
 \EndFunction
 \Function{WindowEq}{$x$, $t$, \tD{}, $w$, $\epsilon$}
-\Comment{Is $x$ within $\epsilon$ of equilibrium for $[t, \tD{(w-1)}]$}
+\Comment{Is $x$ within $\epsilon$ of equilibrium for $[t, \tD{(w-1)\cdot}]$}
 \For{$i \gets 1, w - 1$}
-\If{$|p_x(10^{t+\tD{i}}) - p_x(10^t)| > \epsilon$}
+\If{$|p_x(10^{t+\tD{i\cdot}}) - p_x(10^t)| > \epsilon$}
 \State \textbf{return} \textbf{false}
 \EndIf
 \EndFor
@@ -1084,7 +1088,7 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
 \caption{The function {\sc EstimateEquilibrium} computes the smallest $t_0 > t'$,
-such that for $t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$,
+such that for $t \in \{t_0+\tD{},t_0+\tD{2\cdot},t_0+\tD{3\cdot},t_0+\tD{4\cdot}\}$,
 the absolute difference $|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$ and
 $|p(t')[\xEnd] - p(\tMax)[\xEnd]| \approx \delta|$. If $t'$ is already in
 equilibrium, we relax the constraint that $t_0 > t'$ and instead find the
@@ -1097,11 +1101,21 @@ across the window $w$ starting at time $t$.}
 \rule[0ex]{0pt}{1.5em} \hrule
 \end{figure}
 
-In using the approach outlined in \Figref{hermes:eqEst}, the correlation
-between $p_{\xEnd}(t_0)$ and $\frac{\boltzf{\xEnd}}{\fullZ}$ is $0.9997$, and
-visual inspection of the estimated equilibrium times
+In using the approach outlined in \Figref{hermes:eqEst}, the root-mean-square
+deviation (RMSD)
+between $p_{\xEnd}(t_0)$ and $\frac{\boltzf{\xEnd}}{\fullZ}$ is $0.0041$, where
+RMSD is defined as
+
+\begin{align}
+\label{eq:hermes:rmsd}
+\sqrt{\frac{\sum_{i=1}^{n} (\widehat{x_i} - x_i)^2}{n}}.
+\end{align}
+
+Visual inspection of the estimated equilibrium times
 (\Figref{hermes:eqEstFromRnaEq}) are much better than the
-na\"{\i}ve approach used by \treekin. We also allow defining the \eqt to be the
+na\"{\i}ve approach used by \treekin, which uses a simple sliding window for
+all $x \in Q$.
+We also allow defining the \eqt to be the
 smallest $t_0$, such that for
 $t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$, the
 absolute difference $|p(t)[x] - p(t_0)[x]| < \epsilon$ for all $x \in
@@ -1123,8 +1137,10 @@ approach (green) versus the approach outlined in Algorithm \ref{fig:hermes:eqEst
 dataset described in \Secref{sec:hermes:benchdata}, sequence \#146
 {\em (Left)} and \#427 {\em (Right)}. Note that the $p(t)$ for the approach from
 Algorithm \ref{fig:hermes:eqEst} is much closer to the computed Boltzmann
-probability---the correlation across the dataset of 1,000 sequences is
-$0.9997$.}
+probability---the root-mean-square deviation (RMSD, equation
+\ref{eq:hermes:rmsd}) across the dataset of 1,000 sequences is $0.0041$
+[resp. $0.0491$] for the approach described in Algorithm \ref{fig:hermes:eqEst}
+[resp. simple sliding window].}
 \label{fig:hermes:eqEstFromRnaEq}
 \end{figure}
 

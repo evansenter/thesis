@@ -34,8 +34,9 @@ recursions for the Nussinov energy model for expository clarity, the
 underlying implementation uses the more complicated and robust Turner energy
 model. Recursions in place, we then move to show how these lead to
 a single variable polynomial $P(x)$ whose coeffecients can be computed by
-the \idft, and map to the 2D energy landscape. We describe two exploitations of
-$P(x)$, a parity condition and complex conjugates which further reduce the
+the \idft, and map to the 2D energy landscape. We describe two improvements over
+the straight-forward use of the \fft to compute $P(x)$,
+a parity condition and complex conjugates, which together reduce the
 runtime by a factor of 4. Finally, we contrast this software against \rnatwofold,
 and outline the performance characteristics of both softwares and highlight
 the benefits and drawbacks of both. We elect to refrain from describing
@@ -45,6 +46,11 @@ between any two distinct, user provided structures \strAB.
 
 \section{Background}
 \label{sec:ffttwo:bkgrnd}
+
+In \citep{lorenz}, \rnatwofold---a dynamic programming method that operates in
+\On{7} time and \On{4} space---is presented, a generalization of \rnabor
+\citep{freyhult.b07} that computes a 2D projection of the energy landscape,
+discretized by base pair distance to two input structures.
 
 RNA folding pathways play an important role in biological processes.
 For instance, in the {\em hok/sok}
@@ -84,50 +90,7 @@ trans splicing, but as well in transcriptional and
 translational regulation, protein synthesis, and mRNA splicing.
 
 For these reasons, substantial experimental and computational work
-has been done on folding pathways and the kinetics of RNA folding;
-below, we cite only a small sample of the work in this area.
-On the experimental side,
-%Baird et al.  \citep{Baird.jacs10} used cryo-electron microscopy and single
-%particle image reconstruction to determine the structure of the major folding
-%intermediate of the specificity domain of a ribonuclease P ribozyme.
-%Mitra et al.  \citep{Mitra.r11} conducted experiments using
-%time-resolved hydroxyl radical probing of backbone solvent accessible
-%surface and catalytic activity measurements, integrated with
-%structural-kinetic modeling to compare folding pathways of
-%three group I intron ribozymes.
-Neupane et al. \citep{neupane.nar11} applied single-molecule force spectroscopy
-of the add adenine \rb, to show how folding relates to
-gene regulation;
-see also \citep{woodside.cocb08,baird.jacs10,mitra.r11}.
-%see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
-%
-On the computational side, Morgan and Higgs \citep{morganhiggsbarrier}
-appear to have been among the first
-to have considered the computational problem of determining optimal and
-near-optimal {\em folding pathways} between two metastable secondary
-structures \strAB of a given RNA sequence.  In \citep{flammphd}, Flamm
-developed an event-driven Monte Carlo simulation, \kinfold,
-to determine expected
-folding time between two reference structures, including the mean first
-passage time to fold into the minimum free energy structure.
-Using \rnasub \citep{wuchty.b99}, Flamm et al.
-\citep{flamm} designed the exponential
-time exact algorithm, \barriers, that computes the optimal folding
-pathway between metastable structures \strA and \strB. Since \barriers
-may not converge, due to its reliance on the enumeration of possibly
-exponentially many structures, in \citep{dotu.nar10} we developed a
-local search (tabu) method that rapidly returns near-optimal folding
-pathways; in benchmarking results \citep{dotu.nar10}, local search was shown
-to outperform various methods, including direct and indirect path methods
-of Morgan and Higgs \citep{morganhiggsbarrier}, breadth-first search with
-bounded lookahead, \ms{Findpath} \citep{flamm.r01}, and the
-exponential time, exact method \barriers \citep{flamm}, in producing
-near-optimal pathways within
-reasonable time.
-There are far too many contributions to kinetics and folding pathways
-to adequately survey here; the references
-\citep{xayaphoummine.nar05,tang.jmb08,geis.jmb08,zhao.bj10,li.bb12}
-give some idea of the variety of methods.
+has been done on folding pathways.
 
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
@@ -183,7 +146,7 @@ $\bfZ{x,y}{i,j}$ is equal to
 \label{eq:ffttwo:bfZabij}
 \begin{split}
 & \bfZ{x-\alpha_0,y-\beta_0}{i,j-1}\enspace + \\
-& \sum_{\substack{s_k,s_j \in \bpSet, \\ i \le k<j}}
+& \sum_{\substack{(s_k,s_j) \in \bpSet, \\ i \le k<j}}
 \left(
 \boltzNuss{k,j}\quad
 \sum_{\mathclap{u+u'=x-\alpha(k)}}\hspace{3.75em}
@@ -293,7 +256,7 @@ Inductively we define $\emZ{i,j}$ to equal
 \label{eq:ffttwo:polyRecNussJac}
 \begin{split}
 &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
-&\sum_{\substack{s_k,s_j \in \bpSet,\\i\le k<j}}
+&\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
 \left(\boltzNuss{k,j}\cdot
 \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
 \end{split}
@@ -524,9 +487,10 @@ is proved by a computation involving binomial coefficients;
 Lemma \ref{lem:ffttwo:lemma3} is immediate
 by the parity observation above, resulting from Lemma \ref{lem:ffttwo:lemma1};
 Lemma \ref{lem:ffttwo:lemma4} is elementary, relying on Euler's
-formula and trigonometric addition formulas. Details proofs of
-Lemmas \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4}
-can be found in supplementary information.
+formula and trigonometric addition formulas.
+% Detailed proofs of
+% Lemmas \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4}
+% can be found in supplementary information.
 
 Lemma \ref{lem:ffttwo:lemma1}
 entails that either all even coefficients, or all odd coefficients
@@ -983,16 +947,16 @@ mismatch penalties for multiloop stems and for exterior loops, while
 \ffttwo does not. Even in the computation of the partition function
 $Z$, for spliced leader RNA from {\em L. collosoma} of length 56 nt,
 \rnatwofold \ms{-d0} obtains a value of
-$-9.660419$ kcal/mol, while \ffttwo obtains
-$-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
+$-9.6604$ kcal/mol, while \ffttwo obtains
+$-9.6605$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
 \rnatwofold \ms{-d0} obtains a value of
-$-22.171785$ kcal/mol, while \ffttwo obtains
-$-22.173213$ kcal/mol.
+$-22.1718$ kcal/mol, while \ffttwo obtains
+$-22.1732$ kcal/mol.
 Note that the straightforward calculation of the partition function, following McCaskill's algorithm \citep{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
 
 For benchmarking purposes,
 to allow for a fair comparison of \ffttwo
-with \rnatwofold, we restricted therange of $x,y$ in the same manner as done in the source code of \rnatwofold.
+with \rnatwofold, we restricted the range of $x,y$ in the same manner as done in the source code of \rnatwofold.
 In that code, parameters $K$ [resp. $L$] are defined respectively to be the
 sum of the number of base pairs in reference structure \strA
 [resp. \strBresp] plus the number of base pairs in
