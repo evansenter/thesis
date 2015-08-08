@@ -1,85 +1,85 @@
-% %!TEX root = ../main.tex
+%!TEX root = ../main.tex
 
-% \chapter{FFTbor2D Appendix}
-% \label{ch:ffttwoapp}
+\chapter{FFTbor2D Appendix}
+\label{ch:ffttwoapp}
 
-% \lhead{FFTbor2D Appendix}
+\lhead{FFTbor2D Appendix}
 
-% \section{Full Recursions for \texorpdfstring{\emZ{i,j}}{}
-% for the Turner Energy Model}
-% \label{sec:ffttwo:turner}
+\section{Full Recursions for \texorpdfstring{\emZ{i,j}}{}
+for the Turner Energy Model}
+\label{sec:ffttwo:turner}
 
-% To compute $\emZ{} = \emZ{1,n}$, we use the recursions
+To compute $\emZ{} = \emZ{1,n}$, we use the recursions
 
-% \begin{align}
-% \label{eq:fftborapp:zx}
-% \emZ{i,j} = \emZ{i,j-1} \cdot x^{d_0} +
-% \sum_{\mathclap{\substack{(s_k,s_j) \in \bpSet, \\ i \leq k < j}}}\enspace
-% \Big( \emZ{i,k-1} \cdot \emZB{k,j} \cdot \boltzE{E_d} \cdot x^{d_1} \Big),
-% \end{align}
+\begin{align}
+\label{eq:fftborapp:zx}
+\emZ{i,j} = \emZ{i,j-1} \cdot x^{d_0} +
+\sum_{\mathclap{\substack{(s_k,s_j) \in \bpSet, \\ i \leq k < j}}}\enspace
+\Big( \emZ{i,k-1} \cdot \emZB{k,j} \cdot \boltzE{E_d} \cdot x^{d_1} \Big),
+\end{align}
 
-% where $d_0 = 1$ if $j$ is base paired
-% in $\str_{[i,j]}$ and $0$ otherwise, where $d_1 =
-% \dBP{\str_{[i,j]}}{\str_{[i,k-1]} \cup \str_{[k,j]}}$, and
-% where $E_d$ is the energy contribution due to dangling ends (energy
-% contributions from single bases stacking on adjacent base pairs) and
-% closing AU base pairs (since a non GC base pair closing a stem has a
-% destabilizing effect).  The sum is taken over all possible
-% base pairs $(k,j)$ with $i \le k < j$.
+where $d_0 = 1$ if $j$ is base paired
+in $\str_{[i,j]}$ and $0$ otherwise, where $d_1 =
+\dBP{\str_{[i,j]}}{\str_{[i,k-1]} \cup \str_{[k,j]}}$, and
+where $E_d$ is the energy contribution due to dangling ends (energy
+contributions from single bases stacking on adjacent base pairs) and
+closing AU base pairs (since a non GC base pair closing a stem has a
+destabilizing effect).  The sum is taken over all possible
+base pairs $(k,j)$ with $i \le k < j$.
 
-% We compute \emZB{} using the recursion
+We compute \emZB{} using the recursion
 
-% \begin{align}
-% \label{eq:fftborapp:zbx}
-% \begin{split}
-% \emZB{i,j} &= \boltzE{EH(i,j)} \cdot x^{d_2} \\
-% &+ \sum_{\mathclap{\substack{(s_k,s_l) \in \bpSet, \\ i < k < l < j }}}\enspace
-% \emZB{k,l} \cdot \boltzE{EI(i,j,k,l)} \cdot x^{d_3} \\
-% &+ \sum_{\mathclap{\substack{(s_k,s_l) \in \bpSet, \\ i < k < l < j }}}\enspace
-% \Big( \emZM{i+1,k-1} \cdot \emZB{k,l} \cdot \boltzE{(a+b+c(j-l-1))}
-% \cdot x^{d_4} \Big)
-% \end{split}
-% \end{align}
+\begin{align}
+\label{eq:fftborapp:zbx}
+\begin{split}
+\emZB{i,j} &= \boltzE{EH(i,j)} \cdot x^{d_2} \\
+&+ \sum_{\mathclap{\substack{(s_k,s_l) \in \bpSet, \\ i < k < l < j }}}\enspace
+\emZB{k,l} \cdot \boltzE{EI(i,j,k,l)} \cdot x^{d_3} \\
+&+ \sum_{\mathclap{\substack{(s_k,s_l) \in \bpSet, \\ i < k < l < j }}}\enspace
+\Big( \emZM{i+1,k-1} \cdot \emZB{k,l} \cdot \boltzE{(a+b+c(j-l-1))}
+\cdot x^{d_4} \Big)
+\end{split}
+\end{align}
 
-% where $d_2 = \dBP{\str_{[i,j]}}{\{(i,j)\}}$,
-% where $EH(i,j)$ is the energy of the hairpin loop with closing base
-% pair $(i,j)$, $EI(i,j,k,l)$ is the energy of the stack, bulge or
-% interior loop with the closing base pair $(i,j)$ and the interior
-% base pair $(k,l)$, $d_3 = \dBP{\str_{[i,j]}}{\str_{[k,l]} \cup
-% \{(i,j)\}}$, and $d_4 = \dBP{\str_{[i,j]}}{\str_{[i+1,k-1]} \cup
-% \str_{[k,l]} \cup\{(i,j)\}}$.  The first term in the
-% recursion takes care of the case where $(i,j)$ is the only base pair
-% in $[i,j]$, i.e. $(i,j)$ closes a hairpin loop. The second term
-% handles the case where there is an interior loop (or a bulge or a
-% stack) closed by $(i,j)$ and $(k,l)$. The third term takes care of
-% all the structures where $(i,j)$ closes a multiloop. To reduce
-% complexity of the algorithm, the interior and bulge loop size can be
-% limited to a maximum size of $L$, by requiring that $l>j-L$ in the
-% above recursion.
+where $d_2 = \dBP{\str_{[i,j]}}{\{(i,j)\}}$,
+where $EH(i,j)$ is the energy of the hairpin loop with closing base
+pair $(i,j)$, $EI(i,j,k,l)$ is the energy of the stack, bulge or
+interior loop with the closing base pair $(i,j)$ and the interior
+base pair $(k,l)$, $d_3 = \dBP{\str_{[i,j]}}{\str_{[k,l]} \cup
+\{(i,j)\}}$, and $d_4 = \dBP{\str_{[i,j]}}{\str_{[i+1,k-1]} \cup
+\str_{[k,l]} \cup\{(i,j)\}}$.  The first term in the
+recursion takes care of the case where $(i,j)$ is the only base pair
+in $[i,j]$, i.e. $(i,j)$ closes a hairpin loop. The second term
+handles the case where there is an interior loop (or a bulge or a
+stack) closed by $(i,j)$ and $(k,l)$. The third term takes care of
+all the structures where $(i,j)$ closes a multiloop. To reduce
+complexity of the algorithm, the interior and bulge loop size can be
+limited to a maximum size of $L$, by requiring that $l>j-L$ in the
+above recursion.
 
-% The final recursion, for computing \emZM{}, is
+The final recursion, for computing \emZM{}, is
 
-% \begin{align}
-% \label{eq:fftborapp:zmx}
-% \begin{split}
-% \emZM{i,j} &= \emZM{i,j-1} \cdot \boltzE{c} \cdot x^{d_0} \\
-% &+ \sum_{\mathclap{\substack{(s_k,s_j) \in \bpSet, \\ i \leq k < j }}}\enspace
-% \Big( \emZB{k,j} \cdot \boltzE{(b+c(k-i))} \cdot x^{d_5} \\
-% &+ \emZM{i,k-1} \cdot \emZB{k,j} \cdot \boltzE{b} \cdot x^{d_6} \Big)
-% \end{split}
-% \end{align}
+\begin{align}
+\label{eq:fftborapp:zmx}
+\begin{split}
+\emZM{i,j} &= \emZM{i,j-1} \cdot \boltzE{c} \cdot x^{d_0} \\
+&+ \sum_{\mathclap{\substack{(s_k,s_j) \in \bpSet, \\ i \leq k < j }}}\enspace
+\Big( \emZB{k,j} \cdot \boltzE{(b+c(k-i))} \cdot x^{d_5} \\
+&+ \emZM{i,k-1} \cdot \emZB{k,j} \cdot \boltzE{b} \cdot x^{d_6} \Big)
+\end{split}
+\end{align}
 
-% where $d_5 = \dBP{\str_{[i,j]}}{\str_{[k,j]}}$ and $d_6
-% =\dBP{\str_{[i,j]}}{\str_{[i,k-1]} \cup \str_{[k,j]}}$.
-% Note that since $\emZM{i,j}$ computes the partition function
-% contribution under the assumption that $[i,j]$ is part of a
-% multiloop, there will be exactly one stem-loop structure in this
-% region (the \emZB{} term) or
-% more than one (the \emZM{}-\emZB{} term).
-% Justification of recursions (\ref{eq:fftborapp:zx}),
-% (\ref{eq:fftborapp:zbx}), and
-% (\ref{eq:fftborapp:zmx})
-% follow by induction, as in the proof of Theorem \ref{thm:fftbor:recursions}.
+where $d_5 = \dBP{\str_{[i,j]}}{\str_{[k,j]}}$ and $d_6
+=\dBP{\str_{[i,j]}}{\str_{[i,k-1]} \cup \str_{[k,j]}}$.
+Note that since $\emZM{i,j}$ computes the partition function
+contribution under the assumption that $[i,j]$ is part of a
+multiloop, there will be exactly one stem-loop structure in this
+region (the \emZB{} term) or
+more than one (the \emZM{}-\emZB{} term).
+Justification of recursions (\ref{eq:fftborapp:zx}),
+(\ref{eq:fftborapp:zbx}), and
+(\ref{eq:fftborapp:zmx})
+follow by induction, as in the proof of Theorem \ref{thm:fftbor:recursions}.
 
 % \section{Full Recursions for \texorpdfstring{\emZ{i,j}}{}
 % for the Turner Energy Model}
@@ -309,6 +309,3 @@
 % $\nu^{M/2-k} = -\overline{\nu^k}$, so
 % $\nu^{k} = \overline{- \nu^{(M/2-k)}} = -\overline{\nu^{(M/2-k)}}$.
 % This completes the proof of the lemma.
-
-
-

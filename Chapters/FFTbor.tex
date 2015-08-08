@@ -905,15 +905,20 @@ taken over 50 runs, of the number of Monte Carlo steps taken to fold
 the empty structure into the MFE structure, where an absolute upper bound
 of 5 million steps was allowed in the simulation.
 
+Surprisingly, we found that there is a significant
+correlation of $0.4847$ with one-tailed
+$p$-value of $0.0002$ between the
+standard deviation of the \fftbor output (when starting from the
+empty structure) and logarithm base 10 of the mean first passage time.
 As described above, \fftbor output is simply
 the probability distribution
 for the number of base pairs per structure, taken over the ensemble
 of all secondary structure for the input RNA
-sequence. Surprisingly, we found that there is a significant
-correlation of  $0.4847$ with one-tailed
-$p$-value of $0.0002$ between the
-standard deviation of the \fftbor output (when starting from the
-empty structure) and logarithm base 10 of the mean first passage time.
+sequence. The standard deviation of this probability distribution corresponds
+to a notion of the {\em width} of the distribution. It is possible that those
+sequences having distributions tightly centered around the
+mean have faster folding times than those with a wider distribution
+due to other local minima causing the RNA to get trapped while folding.
 
 \begin{table}[!ht]
 \centering

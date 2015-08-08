@@ -47,11 +47,6 @@ between any two distinct, user provided structures \strAB.
 \section{Background}
 \label{sec:ffttwo:bkgrnd}
 
-In \citep{lorenz}, \rnatwofold---a dynamic programming method that operates in
-\On{7} time and \On{4} space---is presented, a generalization of \rnabor
-\citep{freyhult.b07} that computes a 2D projection of the energy landscape,
-discretized by base pair distance to two input structures.
-
 RNA folding pathways play an important role in biological processes.
 For instance, in the {\em hok/sok}
 (host-killing/suppression of killing) system \citep{gerdes.arg97},
@@ -90,7 +85,14 @@ trans splicing, but as well in transcriptional and
 translational regulation, protein synthesis, and mRNA splicing.
 
 For these reasons, substantial experimental and computational work
-has been done on folding pathways.
+has been done on folding pathways. In \citep{lorenz}, \rnatwofold---a dynamic
+programming method that operates in
+\On{7} time and \On{4} space---is presented, a generalization of \rnabor
+\citep{freyhult.b07} that computes a 2D projection of the energy landscape,
+discretized by base pair distance to two input structures. Our work presented
+here, called \ffttwo, produces a similar energy landscape in \On{5} time and
+\On{2} space---efficient enough for the analysis of folding pathways of large
+RNA sequences not tractable using \rnatwofold.
 
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
