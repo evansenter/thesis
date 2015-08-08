@@ -72,6 +72,7 @@
 % --------------------------------------------------
 % Terminology
 % --------------------------------------------------
+\newcommand{\Bpd}{Base pair distance\xspace}
 \newcommand{\bpd}{base pair distance\xspace}
 \newcommand{\Bsxpt}{{\em B. subtilis} xpt\xspace}
 \newcommand{\ebpd}{expected base pair distance\xspace}
@@ -86,6 +87,7 @@
 \newcommand{\Hit}{Hitting time\xspace}
 \newcommand{\idft}{inverse Discrete Fourier Transform\xspace}
 \newcommand{\mfes}{minimum free energy structure\xspace}
+\newcommand{\mfess}{minimum free energy structures\xspace}
 \newcommand{\mfe}{minimum free energy\xspace}
 \newcommand{\Mfpt}{Mean first passage time\xspace}
 \newcommand{\mfpt}{mean first passage time\xspace}
@@ -97,7 +99,12 @@
 % --------------------------------------------------
 % RNA notation
 % --------------------------------------------------
+\newcommand{\ab}[1]{\ensuremath{\alpha_#1 n + \beta_#1}}
 \newcommand{\alphaN}{\ensuremath{\alpha_0,\dots,\alpha_{n-1}}\xspace}
+\newcommand{\bpL}{\ensuremath{\ms{(\,}}}
+\newcommand{\brL}{\ensuremath{\ms{[\,}}}
+\newcommand{\bpR}{\ensuremath{\ms{\,)}}}
+\newcommand{\brR}{\ensuremath{\ms{\,]}}}
 \newcommand{\bpSet}{\ensuremath{\mathbb{B}}}
 \newcommand{\dBP}[2]{\ensuremath{d_{\text{BP}}(#1,\,#2)}\xspace}
 \newcommand{\kNbrs}{$k$-{\em neighbors}\xspace}
@@ -132,6 +139,7 @@
 \newcommand{\aPbi}{\ensuremath{a+bi}\xspace}
 \newcommand{\bfY}{\ensuremath{{\bf Y}}\xspace}
 \newcommand{\bfZ}[2]{\ensuremath{{\bf Z}^{#1}_{#2}}\xspace}
+\newcommand{\boltzE}[1]{\ensuremath{e^{\frac{-#1}{RT}}}\xspace}
 \newcommand{\boltzf}[1]{\ensuremath{\exp(-E(#1)/RT)}\xspace}
 \newcommand{\boltzF}[1]{\ensuremath{e^{\frac{-E(#1)}{RT}}}\xspace}
 \newcommand{\boltzNuss}[1]{\ensuremath{e^{\frac{-E_0(#1)}{RT}}}\xspace}
@@ -139,6 +147,8 @@
 \newcommand{\emYof}[2]{\ensuremath{{\mathcal Y}_{#1}(#2)}\xspace}
 \newcommand{\emZof}[2]{\ensuremath{{\mathcal Z}_{#1}(#2)}\xspace}
 \newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
+\newcommand{\emZB}[1]{\ensuremath{\mathcal{ZB}_{#1}(x)}\xspace}
+\newcommand{\emZM}[1]{\ensuremath{\mathcal{ZM}_{#1}(x)}\xspace}
 \newcommand{\fullZx}{\emZ{}}
 \newcommand{\fullZ}{\bfZ{}{}}
 \newcommand{\kRoU}{\ensuremath{e^{2 \pi i k/n}}\xspace}
@@ -152,7 +162,7 @@
 \newcommand{\pSt}{\ensuremath{p^*}\xspace}
 \newcommand{\pk}{\ensuremath{p_k}\xspace}
 \newcommand{\statDist}{\ensuremath{p^*=(p^*_1,\dots,p^*_n)}\xspace}
-\newcommand{\tD}[1]{\ensuremath{t_{#1\Delta}}\xspace}
+\newcommand{\tD}{\ensuremath{t_{\Delta}}\xspace}
 \newcommand{\tMax}{\ensuremath{T_{\max}}\xspace}
 \newcommand{\tMin}{\ensuremath{T_{\min}}\xspace}
 \newcommand{\xEnd}{\ensuremath{x_\infty}\xspace}
