@@ -89,7 +89,7 @@ has been done on folding pathways. In \citep{lorenz}, \rnatwofold---a dynamic
 programming method that operates in
 \On{7} time and \On{4} space---is presented, a generalization of \rnabor
 \citep{freyhult.b07} that computes a 2D projection of the energy landscape,
-discretized by base pair distance to two input structures. Our work presented
+discretized by \bpd to two input structures. Our work presented
 here, called \ffttwo, produces a similar energy landscape in \On{5} time and
 \On{2} space---efficient enough for the analysis of folding pathways of large
 RNA sequences not tractable using \rnatwofold.
@@ -161,7 +161,7 @@ $\bfZ{x,y}{i,j}$ is equal to
 where $\alpha_0 = 1$ if $j$ is base paired in $\strA_{[i,j]}$ and 0 otherwise,
 $\beta_0 = 1$ if $j$ is base paired in $\strB_{[i,j]}$ and 0 otherwise,
 $E_0(k,j)=-1$ if $k,j$ can base-pair
-(see \eqnref{fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
+(see equation \ref{eq:fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
 $\alpha(k) =
 \dBP{\strA_{[i,j]}}{\strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup \{ (k,j) \}}$,
 and
@@ -443,14 +443,14 @@ As a corollary, we have the {\em parity condition}, that
 first noticed in \citep{hofacker:RNAbor2D}, as well as
 the triangle inequality
 $\dBP{\strA}{\str} + \dBP{\str}{\strB} \geq \dBP{\strA}{\strB}$
-for base pair distance, probably folklore.
+for \bpd, probably folklore.
 Lorenz et al. \citep{hofacker:RNAbor2D} exploited the parity condition
 and the triangle inequality by using sparse matrix methods to improve on
 the efficiency of the na\"{\i}ve implementation of the
 \On{7} time and \On{4} space algorithm to compute
 the partition function, $\bfZ{r,s}{1,n}$,
-and minimum free energy structure, $\text{MFE\,}^{r,s}_{1,n}$, over all
-structures having base pair distance $r$ to \strA and \str to \strB.
+and \mfes, $\text{MFE\,}^{r,s}_{1,n}$, over all
+structures having \bpd $r$ to \strA and \str to \strB.
 The following lemma is not difficult to establish.
 \end{lemma}
 
@@ -466,7 +466,7 @@ $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \label{lem:ffttwo:lemma3}
 Let \fullZx be defined by \eqnref{ffttwo:zOfX}, and
 let $\alpha \in \mathbb{C}$ be any complex number.
-If the base pair distance between reference
+If the \bpd between reference
 structures \strAB is even, then $\emZof{}{-\alpha} = \emZof{}{\alpha}$,
 while if
 the distance is odd, then $\emZof{}{-\alpha} = -\emZof{}{\alpha}$.
@@ -618,7 +618,7 @@ full polynomial \fullZx, since $\fullZx = x \cdot \emYof{}{x^2}$, and the
 coefficients of \fullZx of even parity are zero.
 
 In the following, we will need the observation, that if the parity of
-base pair distance \dBP{\strA}{\strB} between \strAB is
+\bpd \dBP{\strA}{\strB} between \strAB is
 even, then
 
 \begin{align}
@@ -933,7 +933,7 @@ Using \rnabor, we determined that value $k_0 \geq 10$, for which
 partition function $\bfZ{k_0}{}$ constitutes a visible peak in the graphical
 output --- see Figure 2 and 3 of \citep{freyhult.b07} for an example.
 Subsequently, metastable structure \strB was taken to be that structure
-having minimum free energy over all structures, whose base pair distance from
+having \mfe over all structures, whose \bpd from
 \strA was $k_0$.
 
 For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
@@ -941,7 +941,7 @@ benchmarked in the computation of all Boltzmann probabilities
 $p(x,y)= \frac{\bfZ{x,y}{}}{\fullZ}$, where $x$ [resp. $y$] represents base pair
 distance to metastable structure \strA [resp. \strBresp]. Care was taken for
 both software to employ the same energy model (Turner99 energy model,
-no dangles, suppression of minimum free energy structure computations
+no dangles, suppression of \mfes computations
 for \rnatwofold) and the same number of parallel threads (8 threads
 using OpenMP). Nonetheless, there are slight differences in the energy
 models --- namely, \rnatwofold includes
@@ -1060,7 +1060,7 @@ $\strA =$ \ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} \\
 $\strB =$ \ms{.......................((((((((((((.....)))))..)))))))..}
 \rule[-1.25em]{0pt}{0pt} \\
 The $x$-axis [resp. $y$-axis]
-represents base pair distance between metastable structure \strA [resp.
+represents \bpd between metastable structure \strA [resp.
 \strBresp],
 while the $z$-axis represents the ensemble free energy $-RT \log \bfZ{x,y}{}$,
 where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$.
@@ -1098,7 +1098,7 @@ Data produced with \rnatwofold; graphics produced using Mathematica.
 
 An important advantage of
 \rnatwofold over \ffttwo is that the former can additionally
-compute the structures $M_{x,y}$ having minimum free energy over all
+compute the structures $M_{x,y}$ having \mfe over all
 structures that are $x$-neighbors of metastable \strA and simultaneously
 $y$-neighbors of metastable \strB. (There is a similar advantage of \rnabor
 \citep{freyhult.b07} over the faster \fftbor \citep{senter.po12}.)

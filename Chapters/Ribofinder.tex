@@ -60,7 +60,7 @@ finding representative examples of aptamers across a diverse collection of
 bacterial species; RFam 12.0 currently contains 26 different families of aptamers
 involved in different metabolic pathways.
 
-Tools such as Riboswitch finder \citep{bengert2004} and \ms{RiboSW}
+Tools such as \Rb finder \citep{bengert2004} and \ms{RiboSW}
 \citep{chang:2009de} have used the conserved
 structural characteristics of the aptamer as search criteria with promising
 results, while the webserver \ms{RibEx} relies solely on sequence conservation
@@ -215,9 +215,8 @@ derived from \citep{fusy:2012ka}:
 \label{eq:rfinder:strCfg}
 \begin{split}
 S &\rightarrow \bullet \;|\; S \bullet \,|\; T \;|\; S\,T \\
-T &\rightarrow \bpL U \bpR \;|\;
-\bpL S\,U \bpR \;|\; \bpL T \bpR \;|\; \bpL S\,T \bpR \\
-U &\rightarrow \bullet^{\theta} \;|\; U\, \bullet \\
+T &\rightarrow \bpL \bullet^{\theta} \bpR \;|\;
+\bpL S\,\bullet^{\theta} \bpR \;|\; \bpL T \bpR \;|\; \bpL S\,T \bpR \\
 \end{split}
 \end{align}
 

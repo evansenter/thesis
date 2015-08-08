@@ -61,7 +61,7 @@ the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm 
 determining the maximally matching secondary structure \str for
 a given RNA sequence \citep{nussinov1980}, using dynamic programming
 \citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
-developed an algorithm and accompanying software for the minimum free energy
+developed an algorithm and accompanying software for the \mfe
 formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In 1990, John
 McCaskill showed how dynamic programming could be used to compute the
 partition function for an RNA molecule, and even compute the probability that an
@@ -102,12 +102,12 @@ software intended to facilitate the detection of full \rb sequences
 alongside their corresponding `on' and `off' structures in genomic data. In
 \Chref{fftbor} we introduce the program \fftbor, which computes---for
 each integer $k$---the Boltzmann probability \pk of the subensemble of structures
-whose base pair distance to an input reference structure \str is $k$.
+whose \bpd to an input reference structure \str is $k$.
 In \Chref{ffttwo} we extend this idea to simultaneously consider two
 reference structures \strST and produce as a result the coarse-grained 2D energy
 landscape where---for each integer pair $x,y$---we compute the Boltzmann
 probability $p_{x,y}$
-of those structures whose base pair distance from \strS [resp. \strTresp] is $x$
+of those structures whose \bpd from \strS [resp. \strTresp] is $x$
 [resp. $y$]. This program---\ffttwo---allows for the efficient approximation of
 kinetic characteristics of RNA molecules, presented in \Chref{hermes}
 through the software package \hermes. Finally in \Chref{disc} we conclude

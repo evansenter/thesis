@@ -34,7 +34,7 @@ in a general manner.
 The remainder of the thesis follows a natural progression. In \Chref{fftbor} we
 present the algorithm \fftbor, an efficient approach to compute the
 {\em parameterized} Boltzmann probabilities $\pk = \frac{\bfZ{k}{}}{\fullZ}$ of
-those sequences having base pair distance $k$ from an arbitrary input structure
+those sequences having \bpd $k$ from an arbitrary input structure
 \strSt. By using the \fft along with \nRoUs, \fftbor operates in \On{4} speed,
 an order of magnitude faster than its predecessor. This approach of applying the
 \fft to compute parameterized partition functions was put to use in
@@ -49,7 +49,7 @@ with excellent `area under curve' (AUC) values.
 \Chref{ffttwo} uses the \fft to compute the 2D probability distribution, where
 given two compatible input secondary structures \strA and \strB, position
 $(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
-probability for those structures \str which have base pair distance $x$ [resp. $y$]
+probability for those structures \str which have \bpd $x$ [resp. $y$]
 from \strA [resp. \strBresp]. Compared against its closest relative \rnatwofold,
 \ffttwo is two orders of magnitude faster, operating in \On{5} speed and only
 \On{2} space. This opens the door for using \ffttwo in a high-throughput fashion,

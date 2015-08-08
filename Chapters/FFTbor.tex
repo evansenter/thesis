@@ -41,14 +41,14 @@ In \citep{freyhult.b07}, a dynamic programming algorithm
 computes for
 each integer $k$, the Boltzmann probability $\pk = \frac{\bfZ{k}{}}{\fullZ}$
 of the subensemble of structures
-whose base pair distance to a given {\em initial}, or
+whose \bpd to a given {\em initial}, or
 {\em reference}, structure \strSt is $k$.
 \footnote{As later
 explained, \fullZ denotes the partition function, defined as the sum of
 all Boltzmann factors \boltzf{\str}, over all secondary structures \str
 of a given RNA sequence, and $R$ denotes the universal
 gas constant and $T$ absolute temperature. Similarly \bfZ{k}{} denotes the
-sum of all Boltzmann factors of all structures \str, whose base pair distance
+sum of all Boltzmann factors of all structures \str, whose \bpd
 to the initial structure \strSt is exactly $k$.}
 \rnabor stores the value of the (partial)
 partition functions \bfZ{k}{i,j} for all $1 \leq i \leq j \leq n$ and
@@ -59,8 +59,8 @@ This restriction is somewhat mitigated by the fact that
 in \citep{cloteloulorenz}, we showed how to use sampling
 \citep{ding.nar03} to efficiently approximate
 \rnabor in cubic time \On{3} and quadratic space \On{2},
-{\em provided} that the starting structure \strSt is the minimum free
-energy (MFE) structure. We expect that a more efficient version of
+{\em provided} that the starting structure \strSt is the \mfe
+(MFE) structure. We expect that a more efficient version of
 \rnabor could be used in applications in genomics and synthetic
 biology, to detect potential conformational switches---
 RNA sequences containing two or more (distinct) metastable structures.
@@ -137,7 +137,7 @@ to ignore them.
 Provided two secondary structures \strST, we can define a notion of
 distance between them. There are a number of different definitions of distance
 used across the literature; we will use {\em \bpd} for \fftbor.
-Base pair distance is defined as the symmetric difference between the sets
+\Bpd is defined as the symmetric difference between the sets
 \strST:
 
 \begin{align}
@@ -675,7 +675,7 @@ Recall that $\fullZx = \sum_{k=0}^n c_k x^k$, where
 $c_k \in \mathbb{R}$ are real numbers representing the partition function
 \bfZ{k}{1,n} over
 all secondary structures of a given RNA sequence \seqN,
-whose base pair distance from initial structure
+whose \bpd from initial structure
 \strSt is $k$. Thus, in order to prove the lemma, it suffices to show
 that for all values $k=0,\dots,n-1$, if \aPbi is a
 \nRoU, where $a,b \in \mathbb{R}$
@@ -729,10 +729,10 @@ enormous performance speed-up in our implementation of \fftbor.
 
 The output of \fftbor, as shown in
 \Figref{fftbor:tppDistributions}, is a probability distribution,
-where the $x$-axis represents the base pair distance from an arbitrary,
+where the $x$-axis represents the \bpd from an arbitrary,
 but fixed secondary structure \strSt, and the $y$-axis represents the
 Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\fullZ}$ that a secondary structure
-has base pair distance $k$ from \strSt. Arguably, this probability distribution
+has \bpd $k$ from \strSt. Arguably, this probability distribution
 is an accurate one-dimensional projection of the rugged, high dimensional energy
 landscape near structure \strSt,
 of the sort artistically rendered in the well-known
@@ -758,12 +758,12 @@ nt sequence
   UAUAAGUCCAAGGGGUGCCAAUUGGCUGAGAUGGUUUUAACCAAUCCCUU%
   UGAACCUGAUCCGGUUAAUACCGGCGUAGGAAUGGAUUUUCUCUACAGC%
 }.
-Rfam consensus and minimum free energy structures for both sequences are
+Rfam consensus and \mfess for both sequences are
 depicted in \Figref{fftbor:tppConsensusAndMfe}.
 Despite the fact that there is no sequence homology according to
 pairwise BLAST \citep{blast}, this figure clearly demonstrates that
 consensus and
-minimum free energy structures closely resemble each other, and that the
+\mfess closely resemble each other, and that the
 structures of both TPP \rb aptamers are quite similar, with the
 exception of the leftmost hairpin loop [resp. multiloop].
 The MFE structures differ
@@ -784,7 +784,7 @@ base pairs.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppConsensusAndMfe.pdf}
-\caption{Rfam consensus structures (Rfam) and minimum free energy (MFE)
+\caption{Rfam consensus structures (Rfam) and \mfe (MFE)
 secondary structures for two thiamine pyrophosphate (TPP) \rb aptamers,
 chosen at random from RF00059 Rfam family seed alignment
 \citep{Gardner.nar11}. Using pairwise BLAST \citep{blast}, there is no
@@ -814,14 +814,14 @@ the second sequence should fold more quickly than the first.
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppDistributions.pdf}
 \caption{Output from \fftbor on two randomly selected
 thiamine pyrophosphate \rb (TPP) aptamers, taken from the Rfam database
-\citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
-minimum free energy structure for each given sequence; the $y$-axis represents
+\citep{Gardner.nar11}. The $x$-axis represents \bpd from the
+\mfes for each given sequence; the $y$-axis represents
 Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$, where
 \bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
-whose base pair distance from the MFE structure is exactly $k$.
+whose \bpd from the MFE structure is exactly $k$.
 {\em (Left)}
 The 97 nt sequence BX842649.1/277414--277318 appears to have a rugged energy
-landscape near its minimum free energy structure, with distinct
+landscape near its \mfes, with distinct
 low energy structures that may compete with the MFE structure during the
 folding process.
 {\em (Right)}
@@ -857,10 +857,10 @@ structure, where the average was taken over 30 runs, with an absolute
 maximum number of Monte Carlo steps taken to be 500,000.
 The first sequence, BX842649.1/277414--277318, converged within 500,000
 steps only for 20 out of 30 runs. Assigning the maximum step count of
-500,000 for the 10 runs that did not converge, we found a mean first
-passage time of $311,075.06$ steps for this sequence.
+500,000 for the 10 runs that did not converge, we found a \mfpt
+of $311,075.06$ steps for this sequence.
 The second sequence, AACY022101973.1/389--487, converged within 500,000
-steps in 29 out of 30 runs, and we found a mean first passage time of
+steps in 29 out of 30 runs, and we found a \mfpt of
 $61,575.69$ steps for this sequence. From computational experiments of this
 type, it is suggestive that \fftbor may prove useful in synthetic
 biology,
@@ -873,7 +873,7 @@ we need to numerically quantify ruggedness. To this end, in the following
 we define the notion of \ebpd to a designated
 structure. Let \strSt be an arbitrary secondary structure of the RNA sequence
 $\seq = \seqN$.
-The expected base pair distance to \strSt is defined by
+The expected \bpd to \strSt is defined by
 
 \begin{align}
 E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
@@ -884,7 +884,7 @@ where
 $\mathbb{S}(\seqN)$ denotes the set of secondary structures for
 $\seq = \seqN$, $P(\str) = \frac{\boltzf{\str}}{\fullZ}$ is the Boltzmann
 probability of \str, and
-\dBP{\str}{\strSt} denotes base pair distance between \str and \strSt.
+\dBP{\str}{\strSt} denotes \bpd between \str and \strSt.
 If we run \fftbor on an input sequence \seq and secondary structure
 \strSt, then clearly
 $E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
@@ -909,7 +909,7 @@ Surprisingly, we found that there is a significant
 correlation of $0.4847$ with one-tailed
 $p$-value of $0.0002$ between the
 standard deviation of the \fftbor output (when starting from the
-empty structure) and logarithm base 10 of the mean first passage time.
+empty structure) and logarithm base 10 of the \mfpt.
 As described above, \fftbor output is simply
 the probability distribution
 for the number of base pairs per structure, taken over the ensemble
@@ -953,7 +953,7 @@ the ensemble of all secondary structures for the given sequence;
 structure;
 {\em 3})\, the coefficient of variation $\frac{\sigma}{\mu}$;
 {\em 4})\, the RNA sequence length $n$; and
-{\em 5})\, the minimum free energy (MFE).
+{\em 5})\, the \mfe (MFE).
 Additionally, we computed the logarithm base 10 of \mfpt
 ($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
 (log base 10 of the standard deviation of number of Monte Carlo
@@ -968,12 +968,12 @@ the mean $\mu$ is negatively correlated with the
 coefficient of variation $\frac{\sigma}{\mu}$;
 {\em iii})\;
 the mean $\mu$ is negatively correlated with the
-minimum free energy (MFE) --- if most low energy structures in the ensemble
-have many base pairs, then it is likely that the minimum free energy is very
+\mfe (MFE) --- if most low energy structures in the ensemble
+have many base pairs, then it is likely that the \mfe is very
 low (i.e. since MFE is negative, the absolute value of MFE increases); and
 {\em iv})\;
 sequence length is negatively correlated with MFE --- as sequence length
-increases, the minimum free energy (MFE) decreases.
+increases, the \mfe (MFE) decreases.
 However, it may appear surprising that
 {\em v})\; the
 mean $\mu$ number of base pairs per structure is independent of MFPT
@@ -987,8 +987,7 @@ from ({\em v}) the average $\mu$  number of base pairs per structure is
 independent of folding time.
 The most important insight from this table is that
 {\em vii})\;
-standard deviation $\sigma$ is correlated with mean first passage
-time --- the correlation is statistically significant, with one-tailed
+standard deviation $\sigma$ is correlated with \mfpt---the correlation is statistically significant, with one-tailed
 $p$-value of $0.0002$.}
 \label{table:correlationFFTborEmpty}
 \end{table}
@@ -1009,7 +1008,7 @@ having exactly $k$ base pairs.
 For the selenocysteine (SECIS) element AB030643.1/4176--4241 from Rfam family
 RF00031, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
-$0.7276$, while the logarithm base 10 of the mean first passage time ($\log_{10}(\text{MFPT})$)
+$0.7276$, while the logarithm base 10 of the \mfpt ($\log_{10}(\text{MFPT})$)
 is $4.75$.
 {\em (Center)}
 For the selenocysteine (SECIS) element
@@ -1058,11 +1057,11 @@ respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
 AACY022101973 are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
 maximum of 500,000 steps with 30 replicates (as explained in the text), we
 found
-that for randomized BX842649, all 30 runs converged yielding a mean first passage
-time (MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
+that for randomized BX842649, all 30 runs converged yielding a \mfpt
+(MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
 randomized AACY022101973, only 15 out of 30 runs converged within 500,000 steps,
-and discounting these nonconvergent data, we obtain an average mean first passage
-time (MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
+and discounting these nonconvergent data, we obtain an average \mfpt
+(MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
 test provides more anecdotal evidence supporting our hypothesis that small
 standard deviation $\sigma$ in \fftbor probability density is correlated with fast folding, as measured by MFPT.
 
@@ -1078,9 +1077,13 @@ As visible from the defining recursions, the algorithmic time complexity of
 \rnabor is \On{5} and space complexity is \On{3}, where $n$ is
 the length of input RNA sequence. In contrast, the time complexity of
 \fftbor is \On{4} and space complexity is \On{2}.
+While \fftbor saves an order of magnitude in performance and memory,
+\rnabor has the benefit of producing suboptimal structures $\text{MFE}_k$
+for all $0 \leq k \leq n$, whose free energy is minimal across all structures
+having \bpd $k$ from input structures \strSt.
 \Figref{fftbor:benchmarking} displays run time curves for both
 \rnabor and \fftbor, when the initial structure \strSt is
-taken to be either the empty structure or the minimum free energy
+taken to be either the empty structure or the \mfe
 (MFE) structure.
 
 Here, we compare the run time of \rnabor \citep{freyhult.b07} and
@@ -1106,8 +1109,8 @@ independent evaluations.
 \caption{Run times in seconds for \rnabor and \fftbor, on random RNA
 of length $20,40,60,\dots,300$ in step size of 20 nt. Each algorithm
 was run with the empty initial structure \strSt, see rows
-\rnabor (empty), \fftbor (empty), and with the minimum free
-energy structure as the initial structure \strSt, see rows
+\rnabor (empty), \fftbor (empty), and with the \mfes as the initial structure
+\strSt, see rows
 \rnabor (MFE) and \fftbor (MFE). Note that for both \rnabor
 and \fftbor, the run time increases when \strSt is the MFE structure,
 rather than the empty structure. Notice the radical improvement in the
