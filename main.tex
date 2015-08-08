@@ -60,13 +60,13 @@
 \makeatletter
 \xpatchcmd{\algorithmic}{\itemsep\z@}{\itemsep=.75ex plus1pt}{}{}
 
-% \def\env@cases{
-%   \let\@ifnextchar\new@ifnextchar
-%   \left\lbrace
-%   \def\arraystretch{.7}
-%   \array{@{}l@{\quad}l@{}}
-% }
-% \makeatother
+\def\env@cases{
+  \let\@ifnextchar\new@ifnextchar
+  \left\lbrace
+  \def\arraystretch{.7}
+  \array{@{}l@{\quad}l@{}}
+}
+\makeatother
 
 \begin{document}
 
@@ -251,8 +251,8 @@ along the way.
 %	THESIS CONTENT - CHAPTERS
 %----------------------------------------------------------------------------------------
 
-% \setstretch{2}
-\setstretch{1.3}
+\setstretch{2}
+% \setstretch{1.3}
 
 \mainmatter % Begin numeric (1,2,3...) page numbering
 
@@ -262,13 +262,10 @@ along the way.
 \setlength{\abovedisplayshortskip}{0pt}
 
 \input{Chapters/Introduction}
-% \input{Chapters/Background}
 \input{Chapters/Ribofinder}
 \input{Chapters/FFTbor}
-% \input{Chapters/RNAparametric}
 \input{Chapters/FFTbor2D}
 \input{Chapters/Hermes}
-% \input{Chapters/Wrnap}
 \input{Chapters/Discussion}
 
 %----------------------------------------------------------------------------------------
@@ -284,8 +281,6 @@ along the way.
 
 \input{Appendices/FFTborAppendix}
 \input{Appendices/FFTbor2DAppendix}
-% %\input{Appendices/AppendixB}
-% %\input{Appendices/AppendixC}
 
 % \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
 
