@@ -792,9 +792,9 @@ chosen at random from RF00059 Rfam family seed alignment
 \citep{Gardner.nar11}. Using pairwise BLAST \citep{blast}, there is no
 sequence similarity, although the secondary structures are very similar,
 as shown in this figure. From left to right:
-{\em (A)} Rfam consensus structure for BX842649.1/277414--277318.
-{\em (B)} MFE structure for BX842649.1/277414--277318.
-{\em (C)} Rfam consensus structure for AACY022101973.1/389--487.
+{\em (A)} MFE structure for BX842649.1/277414--277318.
+{\em (B)} Rfam consensus structure for BX842649.1/277414--277318.
+{\em (C)} MFE structure for AACY022101973.1/389--487.
 {\em (D)} Rfam consensus structure for AACY022101973.1/389--487.
 }
 \label{fig:fftbor:tppConsensusAndMfe}
@@ -813,7 +813,9 @@ the second sequence should fold more quickly than the first.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=.9\textwidth]{Figures/FFTbor/tppDistributions.pdf}
+\includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_AACY022101973_1.pdf}
+\quad
+\includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_BX842649_1.pdf}
 \caption[Output from \fftbor on two randomly selected
 thiamine pyrophosphate \rb (TPP) aptamers]{Output from \fftbor on two randomly selected
 thiamine pyrophosphate \rb (TPP) aptamers, taken from the Rfam database
@@ -999,7 +1001,9 @@ $p$-value of $0.0002$.}
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=.9\textwidth]{Figures/FFTbor/correlationFFTborEmpty.pdf}
+\includegraphics[width=.3\textwidth]{Figures/FFTbor/AB030643_1_4176-4241.pdf}
+\includegraphics[width=.3\textwidth]{Figures/FFTbor/AL645723_11_192421-192359.pdf}
+\includegraphics[width=.3\textwidth]{Figures/FFTbor/FFTborOutputFromEmptyStrForTPPriboswitches.pdf}
 \caption[Example of the graphical output of \fftbor, when the empty structure is chosen as initial structure \strSt]{This figure represents the
 graphical output of \fftbor, when the empty structure is chosen as
 initial structure \strSt.
@@ -1110,7 +1114,7 @@ independent evaluations.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarking.pdf}
+\includegraphics[width=.9\textwidth]{Figures/FFTbor/rnaborfftborRunTimeEvan.pdf}
 \caption[Run times in seconds for \rnabor and \fftbor, on random RNA
 of length $20,40,60,\dots,300$ in step size of 20 nt]{Run times in seconds for \rnabor and \fftbor, on random RNA
 of length $20,40,60,\dots,300$ in step size of 20 nt. Each algorithm
@@ -1136,29 +1140,46 @@ Using OpenMP primitives, we created multiple threads to evaluate the polynomial
 presents benchmarks, executed on
 a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
 of \fftbor as a function of the number of cores.
-The left panel of \Figref{fftbor:benchmarkingParallel} describes average
+The data in Table \ref{table:fftborBenchmarkingParallel} describes average
 run time in seconds ($\pm$ one standard deviation) for running \fftbor
 on random RNA of length $200,250,300,400,450,500$ with either 1 or 2 cores.
-The right panel of \Figref{fftbor:benchmarkingParallel}
+\Figref{fftbor:benchmarkingParallel}
 presents similar data for running
 \fftbor on $2,3,6,4,12,15,20$ cores.
 
-\begin{figure}[!ht]
+\begin{table}[!ht]
 \centering
-\includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarkingOpenMP.pdf}
-\caption[Performance considerations for the parallelized implementation of \fftbor, using OpenMP]{{\em (Left)} Table showing parallel run times in seconds
-for \fftbor, using
-OpenMP---\url{http://openmp.org/}. Column headers 1 and 2 indicate
-the number of cores used in the computational experiment.
+\begin{tabularx}{\linewidth}{c *{2}{R}}
+\toprule
+\small{$n$} & \small{Single core} & \small{Two cores} \\
+\cmidrule(lr){1-3}
+200 & 123.2 $\pm$ 16.2 & 61.8 $\pm$ 8.0 \\
+250 & 331.1 $\pm$ 27.2 & 166.1 $\pm$ 13.7 \\
+300 & 723.4 $\pm$ 59.9 & 365.2 $\pm$ 30.1 \\
+350 & 1,380.8 $\pm$ 95.2 & 698.4 $\pm$ 46.9 \\
+400 & 2,239.1 $\pm$ 210.9 & 1,129.5 $\pm$ 104.3 \\
+450 & 3,635.0 $\pm$ 857.4 & 1,980.9 $\pm$ 126.5 \\
+500 & 5,076.7 $\pm$ 1,292.1 & 3,389.8 $\pm$ 788.4 \\
+\bottomrule
+\end{tabularx}
+\caption[Table showing parallel run times in seconds
+for \fftbor, using OpenMP]{Table showing parallel run times in seconds
+for \fftbor, using OpenMP---\url{http://openmp.org/}.
 For each sequence length $200,\dots,500$,
 five random RNAs were generated using equal probability for each nucleotide
 A,C,G,U. Run time in seconds, plus or minus one standard deviation, are
 given for a 24-core
-AMD Opteron 6172 with 2.10GHz and 64GB RAM, with only 1 [resp. 2] cores
-used.
-{\em (Right)} Graph showing parallel run time of \fftbor on
-an AMD Opteron 6172 with 2.10GHz and 64GB RAM, using respectively
-1,2,3,4,6,9,12,15,20 cores.
+AMD Opteron 6172 running at 2.10GHz with 64GB RAM, with only 1 [resp. 2] cores
+used.}
+\label{table:fftborBenchmarkingParallel}
+\end{table}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=.75\textwidth]{Figures/FFTbor/fftborParallelRunTimes.pdf}
+\caption[]{Graph showing parallel run time of \fftbor as a function of
+sequence length, running on an AMD Opteron 6172 running at 2.10GHz with 64GB RAM,
+using respectively 1,2,3,4,6,9,12,15,20 cores.
 }
 \label{fig:fftbor:benchmarkingParallel}
 \end{figure}
