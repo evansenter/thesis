@@ -34,8 +34,9 @@ recursions for the Nussinov energy model for expository clarity, the
 underlying implementation uses the more complicated and robust Turner energy
 model. Recursions in place, we then move to show how these lead to
 a single variable polynomial $P(x)$ whose coeffecients can be computed by
-the \idft, and map to the 2D energy landscape. We describe two exploitations of
-$P(x)$, a parity condition and complex conjugates which further reduce the
+the \idft, and map to the 2D energy landscape. We describe two improvements over
+the straight-forward use of the \fft to compute $P(x)$,
+a parity condition and complex conjugates, which together reduce the
 runtime by a factor of 4. Finally, we contrast this software against \rnatwofold,
 and outline the performance characteristics of both softwares and highlight
 the benefits and drawbacks of both. We elect to refrain from describing
@@ -84,50 +85,14 @@ trans splicing, but as well in transcriptional and
 translational regulation, protein synthesis, and mRNA splicing.
 
 For these reasons, substantial experimental and computational work
-has been done on folding pathways and the kinetics of RNA folding;
-below, we cite only a small sample of the work in this area.
-On the experimental side,
-%Baird et al.  \citep{Baird.jacs10} used cryo-electron microscopy and single
-%particle image reconstruction to determine the structure of the major folding
-%intermediate of the specificity domain of a ribonuclease P ribozyme.
-%Mitra et al.  \citep{Mitra.r11} conducted experiments using
-%time-resolved hydroxyl radical probing of backbone solvent accessible
-%surface and catalytic activity measurements, integrated with
-%structural-kinetic modeling to compare folding pathways of
-%three group I intron ribozymes.
-Neupane et al. \citep{neupane.nar11} applied single-molecule force spectroscopy
-of the add adenine \rb, to show how folding relates to
-gene regulation;
-see also \citep{woodside.cocb08,baird.jacs10,mitra.r11}.
-%see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
-%
-On the computational side, Morgan and Higgs \citep{morganhiggsbarrier}
-appear to have been among the first
-to have considered the computational problem of determining optimal and
-near-optimal {\em folding pathways} between two metastable secondary
-structures \strAB of a given RNA sequence.  In \citep{flammphd}, Flamm
-developed an event-driven Monte Carlo simulation, \kinfold,
-to determine expected
-folding time between two reference structures, including the mean first
-passage time to fold into the minimum free energy structure.
-Using \rnasub \citep{wuchty.b99}, Flamm et al.
-\citep{flamm} designed the exponential
-time exact algorithm, \barriers, that computes the optimal folding
-pathway between metastable structures \strA and \strB. Since \barriers
-may not converge, due to its reliance on the enumeration of possibly
-exponentially many structures, in \citep{dotu.nar10} we developed a
-local search (tabu) method that rapidly returns near-optimal folding
-pathways; in benchmarking results \citep{dotu.nar10}, local search was shown
-to outperform various methods, including direct and indirect path methods
-of Morgan and Higgs \citep{morganhiggsbarrier}, breadth-first search with
-bounded lookahead, \ms{Findpath} \citep{flamm.r01}, and the
-exponential time, exact method \barriers \citep{flamm}, in producing
-near-optimal pathways within
-reasonable time.
-There are far too many contributions to kinetics and folding pathways
-to adequately survey here; the references
-\citep{xayaphoummine.nar05,tang.jmb08,geis.jmb08,zhao.bj10,li.bb12}
-give some idea of the variety of methods.
+has been done on folding pathways. In \citep{lorenz}, \rnatwofold---a dynamic
+programming method that operates in
+\On{7} time and \On{4} space---is presented, a generalization of \rnabor
+\citep{freyhult.b07} that computes a 2D projection of the energy landscape,
+discretized by \bpd to two input structures. Our work presented
+here, called \ffttwo, produces a similar energy landscape in \On{5} time and
+\On{2} space---efficient enough for the analysis of folding pathways of large
+RNA sequences not tractable using \rnatwofold.
 
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
@@ -183,7 +148,7 @@ $\bfZ{x,y}{i,j}$ is equal to
 \label{eq:ffttwo:bfZabij}
 \begin{split}
 & \bfZ{x-\alpha_0,y-\beta_0}{i,j-1}\enspace + \\
-& \sum_{\substack{s_k,s_j \in \bpSet, \\ i \le k<j}}
+& \sum_{\substack{(s_k,s_j) \in \bpSet, \\ i \le k<j}}
 \left(
 \boltzNuss{k,j}\quad
 \sum_{\mathclap{u+u'=x-\alpha(k)}}\hspace{3.75em}
@@ -196,7 +161,7 @@ $\bfZ{x,y}{i,j}$ is equal to
 where $\alpha_0 = 1$ if $j$ is base paired in $\strA_{[i,j]}$ and 0 otherwise,
 $\beta_0 = 1$ if $j$ is base paired in $\strB_{[i,j]}$ and 0 otherwise,
 $E_0(k,j)=-1$ if $k,j$ can base-pair
-(see \eqnref{fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
+(see equation \ref{eq:fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
 $\alpha(k) =
 \dBP{\strA_{[i,j]}}{\strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup \{ (k,j) \}}$,
 and
@@ -238,7 +203,7 @@ $a_0,\dots,a_{n^2-1}$ in
 
 then Lagrange polynomial interpolation
 (\eqnref{fftbor:lagrangeInterpolation})
-guarantees that we can determine the coefficients $c_{rn+s}$ of \fullZx,
+guarantees that we can determine the coefficients $z_{rn+s}$ of \fullZx,
 for $0 \leq r,s < n$. Due to technical difficulties concerning numerical
 robustness observered while working on the \fftbor software
 (\Chref{fftbor}), we will perform polynomial interpolation
@@ -274,6 +239,7 @@ are $r$-neighbors of the restriction $\strA_{[i,j]}$ of reference structure
 \strB to interval $[i,j]$.
 
 \begin{theorem}
+\label{thm:ffttwo:recursions}
 Let $s_1,\dots,s_n$ be a given RNA sequence.
 For any integers $1 \leq i < j \leq n$, let
 
@@ -293,7 +259,7 @@ Inductively we define $\emZ{i,j}$ to equal
 \label{eq:ffttwo:polyRecNussJac}
 \begin{split}
 &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
-&\sum_{\substack{s_k,s_j \in \bpSet,\\i\le k<j}}
+&\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
 \left(\boltzNuss{k,j}\cdot
 \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
 \end{split}
@@ -306,7 +272,7 @@ $\alpha(k) =
 $\beta(k) =
 \dBP{\strB_{[i,j]}}{\strB_{[i,k-1]} \cup \strB_{[k+1,j-1]} \cup \{ (k,j) \}}$.
 
-% The proof is given in supplementary information.
+The proof is given in \Secref{sec:ffttwo:recursions}.
 \end{theorem}
 
 Note that if one were to compute all terms of the polynomial $\emZ{1,n}$
@@ -478,15 +444,14 @@ As a corollary, we have the {\em parity condition}, that
 first noticed in \citep{hofacker:RNAbor2D}, as well as
 the triangle inequality
 $\dBP{\strA}{\str} + \dBP{\str}{\strB} \geq \dBP{\strA}{\strB}$
-for base pair distance, probably folklore.
+for \bpd, probably folklore.
 Lorenz et al. \citep{hofacker:RNAbor2D} exploited the parity condition
 and the triangle inequality by using sparse matrix methods to improve on
 the efficiency of the na\"{\i}ve implementation of the
 \On{7} time and \On{4} space algorithm to compute
 the partition function, $\bfZ{r,s}{1,n}$,
-and minimum free energy structure, $\text{MFE\,}^{r,s}_{1,n}$, over all
-structures having base pair distance $r$ to \strA and \str to \strB.
-The following lemma is not difficult to establish.
+and \mfes, $\text{MFE\,}^{r,s}_{1,n}$, over all
+structures having \bpd $r$ to \strA and \str to \strB.
 \end{lemma}
 
 \begin{lemma}
@@ -501,7 +466,7 @@ $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
 \label{lem:ffttwo:lemma3}
 Let \fullZx be defined by \eqnref{ffttwo:zOfX}, and
 let $\alpha \in \mathbb{C}$ be any complex number.
-If the base pair distance between reference
+If the \bpd between reference
 structures \strAB is even, then $\emZof{}{-\alpha} = \emZof{}{\alpha}$,
 while if
 the distance is odd, then $\emZof{}{-\alpha} = -\emZof{}{\alpha}$.
@@ -514,19 +479,18 @@ $\nu = \exp(\frac{2 \pi i}{M})$ is the principal $M$-root of unity, and
 $\frac{M}{4} < k \leq \frac{M}{2}$. Then
 
 \begin{align}
-\nu^k = -(\nu^{-(M/2-k)}) = -\overline{\nu^{M/2-k}}.
+\nu^k = -(\nu^{-(M_0-k)}) = -\overline{\nu^{M_0-k}}.
 \end{align}
 \end{lemma}
 
-Lemma \ref{lem:ffttwo:lemma1} is proved by simple induction;
+Lemma \ref{lem:ffttwo:lemma1} is proved by induction;
 Lemma \ref{lem:ffttwo:lemma2}
-is proved by a computation involving binomial coefficients;
-Lemma \ref{lem:ffttwo:lemma3} is immediate
+is proved in \Secref{lem:fftbor:compconj} by a computation involving
+binomial coefficients;
+Lemma \ref{lem:ffttwo:lemma3} is proved in \Secref{sec:ffttwo:lemma3proof}
 by the parity observation above, resulting from Lemma \ref{lem:ffttwo:lemma1};
-Lemma \ref{lem:ffttwo:lemma4} is elementary, relying on Euler's
-formula and trigonometric addition formulas. Details proofs of
-Lemmas \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4}
-can be found in supplementary information.
+Lemma \ref{lem:ffttwo:lemma4} is proved in \Secref{sec:ffttwo:lemma4proof},
+relying on Euler's formula and trigonometric addition formulas.
 
 Lemma \ref{lem:ffttwo:lemma1}
 entails that either all even coefficients, or all odd coefficients
@@ -534,7 +498,7 @@ of \fullZx are zero, and so by a variable change described in detail below,
 we require only half the number of evaluations of \fullZx, in order to perform
 polynomial interpolation.
 Lemma \ref{lem:ffttwo:lemma2}
- entails that we require only half again the number of evaluations of
+entails that we require only half again the number of evaluations of
 \fullZx, since the remainder can be inferred by taking the complex conjugate.
 Lemma \ref{lem:ffttwo:lemma1} and Lemma \ref{lem:ffttwo:lemma2},
 along with a
@@ -625,7 +589,7 @@ full polynomial \fullZx, since its coefficients of odd parity are zero.
 \smallskip
 
 In this case, $z_0,z_2,z_4,\dots$ are zero, so
-$\fullZx = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
+$\fullZx = \sum_{k=0}^{M_0-1} z_{2k+1} x^{2k+1}$. But then
 $\fullZx = x \cdot \emYof{}{u}$, where
 $\emYof{}{u}= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
 a variable change $u=x^2$, and coefficient changes
@@ -652,7 +616,7 @@ full polynomial \fullZx, since $\fullZx = x \cdot \emYof{}{x^2}$, and the
 coefficients of \fullZx of even parity are zero.
 
 In the following, we will need the observation, that if the parity of
-base pair distance \dBP{\strA}{\strB} between \strAB is
+\bpd \dBP{\strA}{\strB} between \strAB is
 even, then
 
 \begin{align}
@@ -938,7 +902,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{
+\caption[Pseudocode for improved \ffttwo]{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
@@ -967,7 +931,7 @@ Using \rnabor, we determined that value $k_0 \geq 10$, for which
 partition function $\bfZ{k_0}{}$ constitutes a visible peak in the graphical
 output --- see Figure 2 and 3 of \citep{freyhult.b07} for an example.
 Subsequently, metastable structure \strB was taken to be that structure
-having minimum free energy over all structures, whose base pair distance from
+having \mfe over all structures, whose \bpd from
 \strA was $k_0$.
 
 For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
@@ -975,7 +939,7 @@ benchmarked in the computation of all Boltzmann probabilities
 $p(x,y)= \frac{\bfZ{x,y}{}}{\fullZ}$, where $x$ [resp. $y$] represents base pair
 distance to metastable structure \strA [resp. \strBresp]. Care was taken for
 both software to employ the same energy model (Turner99 energy model,
-no dangles, suppression of minimum free energy structure computations
+no dangles, suppression of \mfes computations
 for \rnatwofold) and the same number of parallel threads (8 threads
 using OpenMP). Nonetheless, there are slight differences in the energy
 models --- namely, \rnatwofold includes
@@ -983,16 +947,16 @@ mismatch penalties for multiloop stems and for exterior loops, while
 \ffttwo does not. Even in the computation of the partition function
 $Z$, for spliced leader RNA from {\em L. collosoma} of length 56 nt,
 \rnatwofold \ms{-d0} obtains a value of
-$-9.660419$ kcal/mol, while \ffttwo obtains
-$-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
+$-9.6604$ kcal/mol, while \ffttwo obtains
+$-9.6605$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
 \rnatwofold \ms{-d0} obtains a value of
-$-22.171785$ kcal/mol, while \ffttwo obtains
-$-22.173213$ kcal/mol.
+$-22.1718$ kcal/mol, while \ffttwo obtains
+$-22.1732$ kcal/mol.
 Note that the straightforward calculation of the partition function, following McCaskill's algorithm \citep{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
 
 For benchmarking purposes,
 to allow for a fair comparison of \ffttwo
-with \rnatwofold, we restricted therange of $x,y$ in the same manner as done in the source code of \rnatwofold.
+with \rnatwofold, we restricted the range of $x,y$ in the same manner as done in the source code of \rnatwofold.
 In that code, parameters $K$ [resp. $L$] are defined respectively to be the
 sum of the number of base pairs in reference structure \strA
 [resp. \strBresp] plus the number of base pairs in
@@ -1030,7 +994,8 @@ on sequence length.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
-\caption{
+\caption[Run time in seconds for \rnatwofold and \ffttwo on random
+RNA sequences of length 20--200 nt]{
 Run time in seconds for \rnatwofold and \ffttwo on random
 RNA sequences of length 20--200 nt, where sequence generation and
 choice of metastable structures \strAB is described in the text.
@@ -1043,7 +1008,8 @@ faster.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
-\caption{
+\caption[Logarithm of run time in seconds for \rnatwofold and \ffttwo
+on random RNA sequences of length less than 200 nt]{
 Logarithm of run time in seconds for \rnatwofold and \ffttwo
 on random RNA sequences of length less than 200 nt, for same data as that
 in \Figref{ffttwo:ffttwoRtwofoldTiming}.
@@ -1066,7 +1032,11 @@ in a fraction of a second, this difference is of no practical consequence.
 \centering
 \includegraphics[width=.65\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
 \end{subfigure}
-\caption{
+\caption[{\em (Top)}
+Standard deviation of run times of \rnatwofold and \ffttwo
+as a function of sequence length $n$.
+{\em (Bottom)}
+Minimum and maximum run times for \rnatwofold and \ffttwo]{
 {\em (Top)}
 Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
@@ -1085,7 +1055,8 @@ sequence details.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
-\caption{
+\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
+from {\em L. collosoma}, as computed by \ffttwo]{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
@@ -1094,7 +1065,7 @@ $\strA =$ \ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} \\
 $\strB =$ \ms{.......................((((((((((((.....)))))..)))))))..}
 \rule[-1.25em]{0pt}{0pt} \\
 The $x$-axis [resp. $y$-axis]
-represents base pair distance between metastable structure \strA [resp.
+represents \bpd between metastable structure \strA [resp.
 \strBresp],
 while the $z$-axis represents the ensemble free energy $-RT \log \bfZ{x,y}{}$,
 where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$.
@@ -1113,13 +1084,20 @@ with \ffttwo; graphics produced using Mathematica.
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldProbContour.pdf}
 \quad
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldEnsFreeEnergyContour.pdf}
-\caption{
+\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
+from {\em L. collosoma}, as in
+\Figref{ffttwo:ffttwoProbContour},
+except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
+is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
+while in the left panel, ensemble free energy is computed from
+the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
+by \rnatwofold]{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, as in
 \Figref{ffttwo:ffttwoProbContour},
 except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
 is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
-while in the right panel, ensemble free energy is computed from
+while in the left panel, ensemble free energy is computed from
 the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
 by \rnatwofold.
 The loss of detail in the 2D energy landscape is caused uniquely by
@@ -1132,7 +1110,7 @@ Data produced with \rnatwofold; graphics produced using Mathematica.
 
 An important advantage of
 \rnatwofold over \ffttwo is that the former can additionally
-compute the structures $M_{x,y}$ having minimum free energy over all
+compute the structures $M_{x,y}$ having \mfe over all
 structures that are $x$-neighbors of metastable \strA and simultaneously
 $y$-neighbors of metastable \strB. (There is a similar advantage of \rnabor
 \citep{freyhult.b07} over the faster \fftbor \citep{senter.po12}.)
