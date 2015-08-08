@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL single_file_beta.tex    Sat Aug  8 03:17:49 2015
-%DIF ADD single_file_edits.tex   Sat Aug  8 03:18:09 2015
+%DIF DEL single_file_beta.tex    Sat Aug  8 03:45:47 2015
+%DIF ADD single_file_edits.tex   Sat Aug  8 06:28:44 2015
 % Masters/Doctoral Thesis
 % LaTeX Template
 % Version 1.43 (17/5/14)
@@ -1609,13 +1609,13 @@
 %----------------------------------------------------------------------------------------
 
 \DIFdelbegin %DIFDELCMD < \Declaration{
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < \addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < I, \authornames, declare that this thesis titled, `\ttitle' and the work presented in it are my own. I confirm that:
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < \begin{itemize}
 %DIFDELCMD < \item[\tiny{$\blacksquare$}] This work was done wholly or mainly while in candidature for a research degree at this University.
@@ -1625,11 +1625,11 @@
 %DIFDELCMD < \item[\tiny{$\blacksquare$}] I have acknowledged all main sources of help.
 %DIFDELCMD < \item[\tiny{$\blacksquare$}] Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself.\\
 %DIFDELCMD < \end{itemize}
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < Signed:\\
 %DIFDELCMD < \rule[1em]{25em}{0.5pt} % This prints a line for the signature
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < Date:\\
 %DIFDELCMD < \rule[1em]{25em}{0.5pt} % This prints a line to write the date
@@ -1656,7 +1656,7 @@ Signed:\\
 Date:\\
 \rule[1em]{25em}{0.5pt} % This prints a line to write the date
 }
-\DIFaddend 
+\DIFaddend
 
 \clearpage % Start a new page
 
@@ -1925,7 +1925,7 @@ computationally predicted \grbs in {\em Bacillus megaterium}. \DIFaddbegin \DIFa
 prepared a draft of the paper describing this work, and are presently awaiting
 biochemical validation before submitting it with co-authors M. M\"orl and
 coworkers.
-}\DIFaddend 
+}\DIFaddend
 
 \subsection{Organization}
 \label{subsec:rfinder:org}
@@ -1955,7 +1955,7 @@ discriminatory nature of metabolite sensing, groups have had great success in
 finding representative examples of aptamers across a diverse collection of
 bacterial species; \DIFdelbegin \DIFdel{RFam }\DIFdelend \DIFaddbegin \DIFadd{Rfam }\DIFaddend 12.0 currently contains 26 different families of aptamers
 involved in different metabolic pathways.
-\DIFaddbegin 
+\DIFaddbegin
 
 \DIFadd{Tools such as }\Rb \DIFadd{finder \mbox{%DIFAUXCMD
 \citep{bengert2004} }%DIFAUXCMD
@@ -2027,8 +2027,10 @@ program \infernal to determine the coordinates of putative aptamer structures
 within the RefSeq genomes, and \tthp to locate candidate rho-independent
 transcription terminators.
 
-\subsubsection{Detecting \DIFdelbegin \DIFdel{Aptamers }\DIFdelend \DIFaddbegin \DIFadd{aptamers }\DIFaddend with \infernal}
-\label{subsubsec:rfinder:infernal}
+\DIFdelbegin %DIFDELCMD < \subsubsection{Detecting Aptamers with \infernal}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \subsubsection{Detecting aptamers with \infernal}
+\DIFaddend \label{subsubsec:rfinder:infernal}
 
 \infernal \citep{infernal}, \citep{nawrocki:2013hk} uses a stochastic context-free
 grammar (SCFG) with a user-provided multiple sequence alignment (MSA) to
@@ -2051,7 +2053,9 @@ exclusively we require the presence of a cytidine at this residue
 unique organisms\DIFdelbegin \DIFdel{(note: here and elsewhere I define a `unique organism' as having
 a unique taxonomy ID)}\DIFdelend .
 
-\DIFaddbegin \begin{figure}[!ht]
+\DIFdelbegin %DIFDELCMD < \subsubsection{Detecting Expression Platforms with \tthp}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \begin{figure}[!ht]
 \centering
 \includegraphics[width=.4\textwidth]{Figures/Ribofinder/NC_000964_3_2320197_2320054_APTAMER.pdf}
 \caption[Diagram of the aptamer portion of the \Bsxpt \grb]{\DIFaddFL{Diagram of the aptamer portion of the }\Bsxpt \grb\DIFaddFL{, with annotations
@@ -2063,8 +2067,8 @@ generated using VARNA \mbox{%DIFAUXCMD
 \label{fig:rfinder:aptamerDiagram}
 \end{figure}
 
-\DIFaddend \subsubsection{Detecting \DIFdelbegin \DIFdel{Expression Platforms }\DIFdelend \DIFaddbegin \DIFadd{expression platforms }\DIFaddend with \tthp}
-\label{subsubsec:rfinder:tthp}
+\subsubsection{Detecting expression platforms with \tthp}
+\DIFaddend \label{subsubsec:rfinder:tthp}
 
 \tthp \citep{ermolaeva:2000cl} detects rho-independent terminators in bacterial
 genomes in a context-sensitive fashion by leveraging the protein annotations
@@ -2105,8 +2109,10 @@ secondary structures for these candidates. In the following section, we explain
 how constraint folding is used to generate putative `on' and `off' conformations
 for each candidate.
 
-\subsubsection{Notation for \DIFdelbegin \DIFdel{Representing Abstract }\DIFdelend \DIFaddbegin \DIFadd{representing abstract }\DIFaddend RNA \DIFdelbegin \DIFdel{Shapes}\DIFdelend \DIFaddbegin \DIFadd{shapes}\DIFaddend }
-\label{subsubsec:rfinder:shapes}
+\DIFdelbegin %DIFDELCMD < \subsubsection{Notation for Representing Abstract RNA Shapes}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \subsubsection{Notation for representing abstract RNA shapes}
+\DIFaddend \label{subsubsec:rfinder:shapes}
 
 Given an RNA sequence $\seq = \seqN$, where positions $s_i$ are drawn from the
 collection of single-letter nucleotide codes, i.e.
@@ -2118,24 +2124,20 @@ right] base in a base pair. Given any two base pairs $(i,j)$ and $(k,l)$ in \str
 then $i < k < j \iff i < l < j$; pseudoknots are not permitted in the structure. A
 secondary structure taking this form is said to have balanced parentheses, and can
 additionally be represented using a context-free grammar such as \DIFaddbegin \DIFadd{the
-following,}\footnote{\DIFadd{Note that in the grammar from }\eqnref{rfinder:strCfg}\DIFadd{,
-$\bullet^{\theta}$ should be interpreted to mean $\theta$ repetitions
-of the $\bullet$ symbol, where $\theta$ is generally taken to be 3.}}
-\DIFadd{derived from \mbox{%DIFAUXCMD
+following, derived from \mbox{%DIFAUXCMD
 \citep{fusy:2012ka}}%DIFAUXCMD
 }\DIFaddend :
 
 \begin{align}
 \label{eq:rfinder:strCfg}
-\DIFdelbegin \DIFdel{S \rightarrow S\,.\;|\;.\,S\;|\;(S)\;|\;SS\;|\;\epsilon
-}\DIFdelend \DIFaddbegin \begin{split}
-S &\rightarrow \bullet \;|\; S \bullet \,|\; T \;|\; S\,T \\
-T &\rightarrow \bpL \bullet^{\theta} \bpR \;|\;
-\bpL S\,\bullet^{\theta} \bpR \;|\; \bpL T \bpR \;|\; \bpL S\,T \bpR \\
-\end{split}
+S \DIFaddbegin &\DIFaddend \rightarrow \DIFdelbegin \DIFdel{S\,.}\DIFdelend \DIFaddbegin \DIFadd{\bullet }\DIFaddend \;|\; \DIFdelbegin \DIFdel{.\,}\DIFdelend S \DIFdelbegin \DIFdel{\;}\DIFdelend \DIFaddbegin \DIFadd{\bullet \,}\DIFaddend |\; \DIFdelbegin \DIFdel{(}\DIFdelend \DIFaddbegin \bpL \DIFaddend S \DIFdelbegin \DIFdel{)}\DIFdelend \DIFaddbegin \bpR \DIFaddend \;|\; \DIFdelbegin \DIFdel{SS\;|\;\epsilon
+}\DIFdelend \DIFaddbegin \DIFadd{S\, }\bpL \DIFadd{S }\bpR
 \DIFaddend \end{align}
 
-The grammar from \eqnref{rfinder:strCfg} can be used to generate a parse tree
+The grammar from \eqnref{rfinder:strCfg}\DIFaddbegin \DIFadd{,
+where the minimum number of unpaired bases $\theta$ in a hairpin loop
+is taken to be 1 for expository clarity,
+}\DIFaddend can be used to generate a parse tree
 \tree for \strS. The benefit of working with \tree over \strS is that the parse
 tree offers an abstract representation of secondary structure shape independent of
 sequence length, permitting us to classify and eventually constrain a large
@@ -2147,7 +2149,8 @@ the Giegerich lab refers to as
 their `type 5' structural abstraction using the \rshapes tool\DIFdelbegin \DIFdel{. }\DIFdelend \DIFaddbegin \DIFadd{, and can be
 described using the following grammar \mbox{%DIFAUXCMD
 \citep{Lorenz:2008gz}}%DIFAUXCMD
-:
+, which generates
+all combinations of matched brackets:
 }
 
 \begin{align}
@@ -2221,8 +2224,10 @@ proximal terminator hairpins produced by \tthp yield the aforementioned 577
 candidate \grbs for which we then try to produce reasonable gene `on' and off
 structures.
 
-\subsubsection{Constrained \DIFdelbegin \DIFdel{Folding }\DIFdelend \DIFaddbegin \DIFadd{folding }\DIFaddend to \DIFdelbegin \DIFdel{Predict Switch Structures}\DIFdelend \DIFaddbegin \DIFadd{predict switch structures}\DIFaddend }
-\label{subsubsec:rfinder:consfold}
+\DIFdelbegin %DIFDELCMD < \subsubsection{Constrained Folding to Predict Switch Structures}
+%DIFDELCMD < %%%
+\DIFdelend \DIFaddbegin \subsubsection{Constrained folding to predict switch structures}
+\DIFaddend \label{subsubsec:rfinder:consfold}
 
 To restrict our search to unannotated \grbs, and further ensure that we are not
 re-detecting sequences based off the \DIFdelbegin \DIFdel{RFam }\DIFdelend \DIFaddbegin \DIFadd{Rfam }\DIFaddend covariance model provided to \infernal,
@@ -2327,7 +2332,7 @@ the same options as before, only 463 (or 80.24\%) of the resulting structures fr
 \DIFdel{, and just 21 (or
 3.64\%) of the }%DIFDELCMD < \strConst{on} %%%
 \DIFdel{structures correctly re-fold their multiloop.
-}%DIFDELCMD < 
+}%DIFDELCMD <
 
 %DIFDELCMD < %%%
 \DIFdelend \subsection{Step 3: Candidate curation}
@@ -3675,7 +3680,7 @@ $p$-value of \DIFdelbeginFL \DIFdelFL{$0.00018249$}\DIFdelendFL \DIFaddbeginFL \
 \end{table}
 \DIFdelbegin %DIFDELCMD < \end{landscape}
 %DIFDELCMD < %%%
-\DIFdelend 
+\DIFdelend
 
 \begin{figure}[!ht]
 \centering
@@ -3763,7 +3768,7 @@ and additional evidence is provided to support this claim.
 
 %DIF <  \section{Riboswitch detection with \fftbor}
 %DIF <  \label{sec:fftbor:rb}
-\DIFdelbegin %DIFDELCMD < 
+\DIFdelbegin %DIFDELCMD <
 
 %DIFDELCMD < %%%
 %DIF <  A bacterial \rb is a portion of the $5'$
@@ -3779,7 +3784,7 @@ and additional evidence is provided to support this claim.
 %DIF <  Bacterial \rbs are often found upstream
 %DIF <  of operons, regulating groups of genes, as in purine {\em de novo}
 %DIF <  synthesis and salvage \citep{mandalboesebarrickwinklerbreaker}.
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < %%%
 %DIF <  A \rb consists of two equally important parts: an upstream
@@ -3811,7 +3816,7 @@ and additional evidence is provided to support this claim.
 %DIF <  Although this problem remains open, we report here how
 %DIF <  \fftbor may provide help to biologists in the selection and
 %DIF <  prioritization of \rb candidates.
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < %%%
 %DIF <  Figure 5 depicts the gene OFF structure of the
@@ -3870,7 +3875,7 @@ and additional evidence is provided to support this claim.
 %DIF <  target {\em expression platform} structure.
 %DIF <  Figure 6 determines the precise location of the
 %DIF <  xpt \rb, both aptamer and expression platform.
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < %%%
 %DIF <  If the biologically functional target structure is unknown, one can
@@ -3902,7 +3907,7 @@ and additional evidence is provided to support this claim.
 %DIF <  \url{http://bioinformatics.bc.edu/clotelab/FFTbor} produces a movie of
 %DIF <  prefixes, where the user can start/stop the movie,
 %DIF <  move forward/backward, or download all raw data output by \fftbor.
-%DIFDELCMD < 
+%DIFDELCMD <
 
 %DIFDELCMD < %%%
 \DIFdelend \section{Performance characteristics of \fftbor and \rnabor}
@@ -3978,48 +3983,30 @@ on random RNA of length $200,250,300,400,450,500$ with either 1 or 2 cores.
 presents similar data for running
 \fftbor on $2,3,6,4,12,15,20$ cores.
 
-\DIFdelbegin %DIFDELCMD < \begin{figure}[!ht]
-%DIFDELCMD < %%%
-\DIFdelendFL \DIFaddbeginFL \begin{table}[!ht]
-\DIFaddendFL \centering
-\DIFdelbeginFL %DIFDELCMD < \includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarkingOpenMP.pdf}
-%DIFDELCMD < \caption{%%%
-\DIFdelendFL \DIFaddbeginFL \begin{tabularx}{\linewidth}{c *{2}{R}}
+\begin{table}[!ht]
+\centering
+\begin{tabularx}{\linewidth}{c *{2}{R}}
 \toprule
 \small{$n$} & \small{Single core} & \small{Two cores} \\
-\cmidrule\DIFaddFL{(lr)}\DIFaddendFL {\DIFdelbeginFL %DIFDELCMD < \em %%%
-\DIFdelFL{(Left)}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{1-3}\DIFaddendFL }
-\DIFdelbeginFL \DIFdelFL{Table showing parallel run times in seconds
-for }%DIFDELCMD < \fftbor%%%
-\DIFdelFL{, using
-OpenMP---}%DIFDELCMD < \url{http://openmp.org/}%%%
-\DIFdelFL{. Column headers }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{200 }& \DIFaddFL{123.2 $\pm$ 16.2 }& \DIFaddFL{61.8 $\pm$ 8.0 }\\
-\DIFaddFL{250 }& \DIFaddFL{331.1 $\pm$ 27.2 }& \DIFaddFL{166.1 $\pm$ 13.7 }\\
-\DIFaddFL{300 }& \DIFaddFL{723.4 $\pm$ 59.9 }& \DIFaddFL{365.2 $\pm$ 30.1 }\\
-\DIFaddFL{350 }& \DIFaddendFL 1\DIFdelbeginFL \DIFdelFL{and }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{,380.8 $\pm$ 95.2 }& \DIFaddFL{698.4 $\pm$ 46.9 }\\
-\DIFaddFL{400 }& \DIFaddendFL 2\DIFdelbeginFL \DIFdelFL{indicate
-the number of cores used in the computational experiment.
-For each sequence length $200,\dots,500$}\DIFdelendFL ,\DIFdelbeginFL \DIFdelFL{five random RNAs were generated using equal probability for each nucleotide
-A}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{239.1 $\pm$ 210.9 }& \DIFaddFL{1}\DIFaddendFL ,\DIFdelbeginFL \DIFdelFL{C}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{129.5 $\pm$ 104.3 }\\
-\DIFaddFL{450 }& \DIFaddFL{3}\DIFaddendFL ,\DIFdelbeginFL \DIFdelFL{G}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{635.0 $\pm$ 857.4 }& \DIFaddFL{1}\DIFaddendFL ,\DIFdelbeginFL \DIFdelFL{U. Run time in seconds}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{980.9 $\pm$ 126.5 }\\
-\DIFaddFL{500 }& \DIFaddFL{5}\DIFaddendFL ,\DIFdelbeginFL \DIFdelFL{plus or minus one standard deviation}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{076.7 $\pm$ 1}\DIFaddendFL ,\DIFdelbeginFL \DIFdelFL{are
-given for a 24-core
-AMD Opteron 6172 with 2.10GHz and 64GB RAM}\DIFdelendFL \DIFaddbeginFL \DIFaddFL{292.1 }& \DIFaddFL{3}\DIFaddendFL ,\DIFdelbeginFL \DIFdelFL{with only 1 (resp. 2) cores
-used.
-}%DIFDELCMD < {\em %%%
-\DIFdelFL{(Right)}%DIFDELCMD < } %%%
-\DIFdelendFL \DIFaddbeginFL \DIFaddFL{389.8 $\pm$ 788.4 }\\
+\cmidrule(lr){1-3}
+200 & 123.2 $\pm$ 16.2 & 61.8 $\pm$ 8.0 \\
+250 & 331.1 $\pm$ 27.2 & 166.1 $\pm$ 13.7 \\
+300 & 723.4 $\pm$ 59.9 & 365.2 $\pm$ 30.1 \\
+350 & 1,380.8 $\pm$ 95.2 & 698.4 $\pm$ 46.9 \\
+400 & 2,239.1 $\pm$ 210.9 & 1,129.5 $\pm$ 104.3 \\
+450 & 3,635.0 $\pm$ 857.4 & 1,980.9 $\pm$ 126.5 \\
+500 & 5,076.7 $\pm$ 1,292.1 & 3,389.8 $\pm$ 788.4 \\
 \bottomrule
 \end{tabularx}
 \caption[Table showing parallel run times in seconds
-for \fftbor, using OpenMP]{\DIFaddFL{Table showing parallel run times in seconds
-for }\fftbor\DIFaddFL{, using OpenMP---}\url{http://openmp.org/}\DIFaddFL{.
+for \fftbor, using OpenMP]{Table showing parallel run times in seconds
+for \fftbor, using OpenMP---\url{http://openmp.org/}.
 For each sequence length $200,\dots,500$,
 five random RNAs were generated using equal probability for each nucleotide
 A,C,G,U. Run time in seconds, plus or minus one standard deviation, are
 given for a 24-core
-AMD Opteron 6172 running at 2.10GHz with 64GB RAM, with only 1 }[\DIFaddFL{resp. 2}] \DIFaddFL{cores
-used.}}
+AMD Opteron 6172 running at 2.10GHz with 64GB RAM, with only 1 [resp. 2] cores
+used.}
 \label{table:fftborBenchmarkingParallel}
 \end{table}
 
@@ -4151,7 +4138,7 @@ see also \mbox{%DIFAUXCMD
 \citep{woodside.cocb08,baird.jacs10,mitra.r11}}%DIFAUXCMD
 .
 %DIF < see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
-%DIF < 
+%DIF <
 On the computational side, Morgan and Higgs \mbox{%DIFAUXCMD
 \citep{morganhiggsbarrier}
 }%DIFAUXCMD
@@ -4212,7 +4199,7 @@ to adequately survey here; the references
 give some idea of the variety of methods.
 }\DIFdelend \DIFaddbegin \On{2} \DIFadd{space---efficient enough for the analysis of folding pathways of large
 RNA sequences not tractable using }\rnatwofold\DIFadd{.
-}\DIFaddend 
+}\DIFaddend
 
 \section{Derivation of the \ffttwo algorithm}
 \label{sec:ffttwo:math}
@@ -4637,7 +4624,7 @@ relying on Euler's formula and trigonometric addition formulas.
 \DIFdelbegin \DIFdel{Details proofs of
 Lemmas \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4}
 can be found in supplementary information.
-}\DIFdelend 
+}\DIFdelend
 
 Lemma \ref{lem:ffttwo:lemma1}
 entails that either all even coefficients, or all odd coefficients
@@ -5050,7 +5037,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
 \DIFdelbeginFL %DIFDELCMD < \caption{%%%
-\DIFdelendFL \DIFaddbeginFL \caption[Pseudocode for improved \ffttwo]{\DIFaddendFL 
+\DIFdelendFL \DIFaddbeginFL \caption[Pseudocode for improved \ffttwo]{\DIFaddendFL
 Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
@@ -5144,7 +5131,7 @@ on sequence length.
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
 \DIFdelbeginFL %DIFDELCMD < \caption{%%%
 \DIFdelendFL \DIFaddbeginFL \caption[Run time in seconds for \rnatwofold and \ffttwo on random
-RNA sequences of length 20--200 nt]{\DIFaddendFL 
+RNA sequences of length 20--200 nt]{\DIFaddendFL
 Run time in seconds for \rnatwofold and \ffttwo on random
 RNA sequences of length 20--200 nt, where sequence generation and
 choice of metastable structures \strAB is described in the text.
@@ -5159,7 +5146,7 @@ faster.
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
 \DIFdelbeginFL %DIFDELCMD < \caption{%%%
 \DIFdelendFL \DIFaddbeginFL \caption[Logarithm of run time in seconds for \rnatwofold and \ffttwo
-on random RNA sequences of length less than 200 nt]{\DIFaddendFL 
+on random RNA sequences of length less than 200 nt]{\DIFaddendFL
 Logarithm of run time in seconds for \rnatwofold and \ffttwo
 on random RNA sequences of length less than 200 nt, for same data as that
 in \Figref{ffttwo:ffttwoRtwofoldTiming}.
@@ -5187,7 +5174,7 @@ in a fraction of a second, this difference is of no practical consequence.
 Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
 {\em (Bottom)}
-Minimum and maximum run times for \rnatwofold and \ffttwo]{\DIFaddendFL 
+Minimum and maximum run times for \rnatwofold and \ffttwo]{\DIFaddendFL
 {\em (Top)}
 Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
@@ -5208,7 +5195,7 @@ sequence details.
 \includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
 \DIFdelbeginFL %DIFDELCMD < \caption{%%%
 \DIFdelendFL \DIFaddbeginFL \caption[2D projection of energy landscape for Spliced Leader (SL) RNA
-from {\em L. collosoma}, as computed by \ffttwo]{\DIFaddendFL 
+from {\em L. collosoma}, as computed by \ffttwo]{\DIFaddendFL
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
@@ -5244,7 +5231,7 @@ except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
 is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
 while in the left panel, ensemble free energy is computed from
 the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
-by \rnatwofold]{\DIFaddendFL 
+by \rnatwofold]{\DIFaddendFL
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, as in
 \Figref{ffttwo:ffttwoProbContour},
@@ -6258,7 +6245,7 @@ yielding the curvess seen in \Figref{hermes:populationOccupancySplicedLeader}.
 \includegraphics[width=0.7\textwidth]{Figures/Hermes/populationOccupancyCurves.pdf}
 \DIFdelbeginFL %DIFDELCMD < \caption{%%%
 \DIFdelendFL \DIFaddbeginFL \caption[Population occupancy curves computed with \ffteq for the
-56 nt conformational switch {\em L. collosoma} spliced leader RNA]{\DIFaddendFL 
+56 nt conformational switch {\em L. collosoma} spliced leader RNA]{\DIFaddendFL
 Population occupancy curves computed with \ffteq for the
 56 nt conformational switch {\em L. collosoma} spliced leader RNA,
 with sequence \ms{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGA}
@@ -6503,7 +6490,7 @@ to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
 \DIFdelendFL \DIFaddbeginFL \caption[{\em (Left)} Histogram of free energies of secondary structures of
 an example 20-mer from the benchmarking dataset.
 {\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
-Viroid (PLMVd) AJ005312.1/282-335]{\DIFaddendFL 
+Viroid (PLMVd) AJ005312.1/282-335]{\DIFaddendFL
 {\em (Left)} Histogram of free energies of secondary structures of
 \ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to $+25$ kcal/mol, with
 mean of $10.695$ kcal/mol.
@@ -6798,21 +6785,21 @@ tools for working with their data in a web-oriented environment, something
 
 %DIF <  \appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
 \DIFaddbegin \appendix %DIF >  Cue to tell LaTeX that the following 'chapters' are Appendices
-\DIFaddend 
+\DIFaddend
 
 % % Include the appendices of the thesis as separate files from the Appendices folder
 % % Uncomment the lines as you write the Appendices
 
 %DIF > !TEX root = ../main.tex
-\DIFaddbegin 
+\DIFaddbegin
 
-\chapter{\DIFadd{FFTbor Appendix}}
+\chapter{FFTbor Appendix}
 \label{ch:fftborapp}
 
 \lhead{FFTbor Appendix}
 
-\section{\DIFadd{Full recursions for }\texorpdfstring{\emZ{i,j}}{}
-\DIFadd{for the Turner energy model}}
+\section{Full recursions for \texorpdfstring{\emZ{i,j}}{}
+for the Turner energy model}
 \label{sec:fftbor:turner}
 
 \DIFadd{To compute $\emZ{} = \emZ{1,n}$ given input structure }\str\DIFadd{, we use the recursions
@@ -6894,13 +6881,13 @@ follow by induction, as in the proof of Theorem \ref{thm:fftbor:recursions}.
 %DIF > !TEX root = ../main.tex
 }
 
-\chapter{\DIFadd{FFTbor2D Appendix}}
+\chapter{FFTbor2D Appendix}
 \label{ch:ffttwoapp}
 
 \lhead{FFTbor2D Appendix}
 
-\section{\DIFadd{Full recursions for }\texorpdfstring{\emZ{i,j}}{}
-\DIFadd{for the Turner energy model}}
+\section{Full recursions for \texorpdfstring{\emZ{i,j}}{}
+for the Turner energy model}
 \label{sec:ffttwo:turner}
 
 \DIFadd{To compute $\emZ{} = \emZ{1,n}$ given input structures }\strAB\DIFadd{,
@@ -6995,7 +6982,7 @@ Justification of recursions (\ref{eq:ffttwoapp:zx}),
 follow by induction, as in the proof of Theorem \ref{thm:ffttwo:recursions}.
 }
 
-\section{\DIFadd{Proof for Theorem \ref{thm:ffttwo:recursions}}}
+\section{Proof for Theorem \ref{thm:ffttwo:recursions}}
 \label{sec:ffttwo:recursions}
 
 \begin{proof}
@@ -7053,7 +7040,7 @@ x^{\alpha(k)n+\beta(k)} \right) \right) \\
 }\end{align}
 \end{proof}
 
-\section{\DIFadd{Proof for Lemma \ref{lem:ffttwo:lemma3}}}
+\section{Proof for Lemma \ref{lem:ffttwo:lemma3}}
 \label{sec:ffttwo:lemma3proof}
 
 \begin{proof}
@@ -7069,7 +7056,7 @@ $Z(x) = z_1 x^1 + z_3 x^3 + z^5 x^5 \dots +
 z_{M-1} x^{M-1}$, and so $\emZof{}{-\alpha}=-\emZof{}{\alpha}$.
 }\end{proof}
 
-\section{\DIFadd{Proof for Lemma \ref{lem:ffttwo:lemma4}}}
+\section{Proof for Lemma \ref{lem:ffttwo:lemma4}}
 \label{sec:ffttwo:lemma4proof}
 
 \begin{proof}
@@ -7132,7 +7119,7 @@ $\nu^{k} = \overline{- \nu^{(M_0-k)}} = -\overline{\nu^{(M_0-k)}}$.
 
 %DIF <  \backmatter
 \DIFaddbegin \backmatter
-\DIFaddend 
+\DIFaddend
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY

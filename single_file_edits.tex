@@ -2038,21 +2038,17 @@ right] base in a base pair. Given any two base pairs $(i,j)$ and $(k,l)$ in \str
 then $i < k < j \iff i < l < j$; pseudoknots are not permitted in the structure. A
 secondary structure taking this form is said to have balanced parentheses, and can
 additionally be represented using a context-free grammar such as the
-following,\footnote{Note that in the grammar from \eqnref{rfinder:strCfg},
-$\bullet^{\theta}$ should be interpreted to mean $\theta$ repetitions
-of the $\bullet$ symbol, where $\theta$ is generally taken to be 3.}
-derived from \citep{fusy:2012ka}:
+following, derived from \citep{fusy:2012ka}:
 
 \begin{align}
 \label{eq:rfinder:strCfg}
-\begin{split}
-S &\rightarrow \bullet \;|\; S \bullet \,|\; T \;|\; S\,T \\
-T &\rightarrow \bpL \bullet^{\theta} \bpR \;|\;
-\bpL S\,\bullet^{\theta} \bpR \;|\; \bpL T \bpR \;|\; \bpL S\,T \bpR \\
-\end{split}
+S &\rightarrow \bullet \;|\; S \bullet \,|\; \bpL S \bpR \;|\; S\, \bpL S \bpR
 \end{align}
 
-The grammar from \eqnref{rfinder:strCfg} can be used to generate a parse tree
+The grammar from \eqnref{rfinder:strCfg},
+where the minimum number of unpaired bases $\theta$ in a hairpin loop
+is taken to be 1 for expository clarity,
+can be used to generate a parse tree
 \tree for \strS. The benefit of working with \tree over \strS is that the parse
 tree offers an abstract representation of secondary structure shape independent of
 sequence length, permitting us to classify and eventually constrain a large
@@ -2060,7 +2056,8 @@ collection of sequences having variable length which are all expected to have th
 same abstract tree shape \citep{voss:2006iq}. This is analogous to what
 the Giegerich lab refers to as
 their `type 5' structural abstraction using the \rshapes tool, and can be
-described using the following grammar \citep{Lorenz:2008gz}:
+described using the following grammar \citep{Lorenz:2008gz}, which generates
+all combinations of matched brackets:
 
 \begin{align}
 \label{eq:rfinder:shapeCfg}
