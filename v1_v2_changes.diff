@@ -1,0 +1,2162 @@
+ Chapters/Discussion.tex   |   8 +-
+ Chapters/FFTbor.tex       | 382 +++++++++++++++++-----------------------------
+ Chapters/FFTbor2D.tex     | 144 ++++++++---------
+ Chapters/Hermes.tex       | 170 ++++++++++++---------
+ Chapters/Introduction.tex |  12 +-
+ Chapters/Ribofinder.tex   | 195 ++++++++++++++---------
+ main.tex                  |  28 ++--
+ 7 files changed, 444 insertions(+), 495 deletions(-)
+
+diff --git a/Chapters/Discussion.tex b/Chapters/Discussion.tex
+index ee62da0..2633eae 100644
+--- a/Chapters/Discussion.tex
++++ b/Chapters/Discussion.tex
+@@ -21,7 +21,7 @@ genomes. While the aptamer portion of the \rb necessarily exhibits high
+ sequence and structural conservation---necessary to retain a high binding affinity
+ for the corresponding ligand---the downstream expression platform is much more
+ variable, and difficult to detect using covariance models such as \infernal
+-\citep{infernal}. For this reason, databases such as RFam \citep{nawrocki:2014uy}
++\citep{infernal}. For this reason, databases such as Rfam \citep{nawrocki:2014uy}
+ only contain alignments for the conserved aptamer domain; rarely enough to
+ understand the structural characteristics of the \rb `states' in the greater
+ context of the mRNA. \rfinder aims to provide a holistic description of
+@@ -34,7 +34,7 @@ in a general manner.
+ The remainder of the thesis follows a natural progression. In \Chref{fftbor} we
+ present the algorithm \fftbor, an efficient approach to compute the
+ {\em parameterized} Boltzmann probabilities $\pk = \frac{\bfZ{k}{}}{\fullZ}$ of
+-those sequences having base pair distance $k$ from an arbitrary input structure
++those sequences having \bpd $k$ from an arbitrary input structure
+ \strSt. By using the \fft along with \nRoUs, \fftbor operates in \On{4} speed,
+ an order of magnitude faster than its predecessor. This approach of applying the
+ \fft to compute parameterized partition functions was put to use in
+@@ -43,13 +43,13 @@ an order of magnitude faster than its predecessor. This approach of applying the
+ having exactly $k$ hairpins [resp. multiloops]. Though not discussed here, by
+ training a support vector machine (SVM) on the probability distributions output
+ by these
+-programs we were able to classify RFam families using five-fold cross validation
++programs we were able to classify Rfam families using five-fold cross validation
+ with excellent `area under curve' (AUC) values.
+ 
+ \Chref{ffttwo} uses the \fft to compute the 2D probability distribution, where
+ given two compatible input secondary structures \strA and \strB, position
+ $(x,y)$ on the discrete energy landscape corresponds to the Boltzmann
+-probability for those structures \str which have base pair distance $x$ [resp. $y$]
++probability for those structures \str which have \bpd $x$ [resp. $y$]
+ from \strA [resp. \strBresp]. Compared against its closest relative \rnatwofold,
+ \ffttwo is two orders of magnitude faster, operating in \On{5} speed and only
+ \On{2} space. This opens the door for using \ffttwo in a high-throughput fashion,
+diff --git a/Chapters/FFTbor.tex b/Chapters/FFTbor.tex
+index 1942949..52c6b7b 100644
+--- a/Chapters/FFTbor.tex
++++ b/Chapters/FFTbor.tex
+@@ -10,7 +10,7 @@
+ 
+ In this chapter, we present the \fftbor algorithm and accompanying software.
+ \fftbor is a novel algorithm developed with the intent of efficiently computing
+-the Boltzmann probability of those structures whom, for a given input RNA
++the Boltzmann probability of those structures which, for a given input RNA
+ sequence \seq, differ by $k$ base pairs. By leveraging polynomial interpolation
+ via the \fft, this algorithm runs in \On{4} time and
+ \On{2} space, a significant improvement over its predecessor. The accompanying
+@@ -28,9 +28,9 @@ proceed to describe how the energy landscape is coarsified into discrete bins.
+ We then develop the recursions for the parameterized partition function using
+ the Nussinov-Jacobson energy model, which allows us to highlight the novel aspects
+ of the algorithm. After developing the recursions, we indicate how they can be
+-reformulated as a polynomial whose coefficients $c_k=\bfZ{k}{1,n}$. We then
++reformulated as a polynomial whose coefficients $z_k=\bfZ{k}{1,n}$. We then
+ describe how the \fft can be employed to efficiently compute the coefficients
+-$c_k$, finishing our description of the underlying algorithm. Then we proceed
++$z_k$, finishing our description of the underlying algorithm. Then we proceed
+ to present an application of \fftbor, in the area of RNA folding kinetics.
+ 
+ \section{Background}
+@@ -41,14 +41,14 @@ In \citep{freyhult.b07}, a dynamic programming algorithm
+ computes for
+ each integer $k$, the Boltzmann probability $\pk = \frac{\bfZ{k}{}}{\fullZ}$
+ of the subensemble of structures
+-whose base pair distance to a given {\em initial}, or
++whose \bpd to a given {\em initial}, or
+ {\em reference}, structure \strSt is $k$.
+ \footnote{As later
+ explained, \fullZ denotes the partition function, defined as the sum of
+ all Boltzmann factors \boltzf{\str}, over all secondary structures \str
+ of a given RNA sequence, and $R$ denotes the universal
+ gas constant and $T$ absolute temperature. Similarly \bfZ{k}{} denotes the
+-sum of all Boltzmann factors of all structures \str, whose base pair distance
++sum of all Boltzmann factors of all structures \str, whose \bpd
+ to the initial structure \strSt is exactly $k$.}
+ \rnabor stores the value of the (partial)
+ partition functions \bfZ{k}{i,j} for all $1 \leq i \leq j \leq n$ and
+@@ -59,8 +59,8 @@ This restriction is somewhat mitigated by the fact that
+ in \citep{cloteloulorenz}, we showed how to use sampling
+ \citep{ding.nar03} to efficiently approximate
+ \rnabor in cubic time \On{3} and quadratic space \On{2},
+-{\em provided} that the starting structure \strSt is the minimum free
+-energy (MFE) structure. We expect that a more efficient version of
++{\em provided} that the starting structure \strSt is the \mfe
++(MFE) structure. We expect that a more efficient version of
+ \rnabor could be used in applications in genomics and synthetic
+ biology, to detect potential conformational switches---
+ RNA sequences containing two or more (distinct) metastable structures.
+@@ -137,7 +137,7 @@ to ignore them.
+ Provided two secondary structures \strST, we can define a notion of
+ distance between them. There are a number of different definitions of distance
+ used across the literature; we will use {\em \bpd} for \fftbor.
+-Base pair distance is defined as the symmetric difference between the sets
++\Bpd is defined as the symmetric difference between the sets
+ \strST:
+ 
+ \begin{align}
+@@ -222,7 +222,7 @@ Although we describe here the recursions for the Nussinov-Jacobson
+ model, for the sake of
+ simplicity of exposition, both \rnabor
+ \citep{Freyhult.ab05} as well as our current software \fftbor,
+-concern the Turner energy model, consisting of free energy parameters for
++concern the Turner energy model (described in \Secref{sec:fftbor:turner}), consisting of free energy parameters for
+ stacked bases, hairpins, bulges, internal loops and multiloops.
+ 
+ % The full
+@@ -284,12 +284,12 @@ we define the {\em polynomial}
+ 
+ \begin{align}
+ \label{eq:fftbor:zOfX}
+-\fullZx = \sum_{k=0}^n c_k x^k
++\fullZx = \sum_{k=0}^n z_k x^k
+ \end{align}
+ 
+-where coefficients $c_k=\bfZ{k}{1,n}$. Moreover, because of
++where coefficients $z_k=\bfZ{k}{1,n}$. Moreover, because of
+ \eqnref{fftbor:maxDist} and the fact that the minimum number of
+-unpaired bases in a hairpin loop $\theta$ is 3, we know that $c_n=0$,
++unpaired bases in a hairpin loop $\theta$ is 3, we know that $z_n=0$,
+ so that \fullZx is a polynomial of degree strictly less than $n$.
+ If we evaluate the polynomial \fullZx for $n$ distinct values
+ 
+@@ -308,10 +308,10 @@ P_k(x) = \frac{\prod_{i\ne k} (x-x_i)}{\prod_{i \ne k} (x_k-x_i)}.
+ \end{align}
+ 
+ Since the polynomials $P_k(x)$ can be explicitly computed, it follows that
+-we can compute the coefficients $c_k$ of polynomial \fullZx. As we describe
++we can compute the coefficients $z_k$ of polynomial \fullZx. As we describe
+ below, the evaluation of \fullZx for a fixed value of $x$ can be done in
+ time \On{3} and space \On{2}.  It follows that the coefficients
+-$c_k=\bfZ{k}{1,n}$ can be computed after
++$z_k=\bfZ{k}{1,n}$ can be computed after
+ $n$ evaluations of \fullZx, where the space for each evaluation of \fullZx
+ is re-used; hence these evaluations can be performed in time \On{4} and space
+ \On{2}. Finally,
+@@ -356,7 +356,7 @@ with respect to the Nussinov energy model $E_0$ is
+ \begin{align}
+ \label{eq:fftbor:rnaborNuss}
+ \bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
+-\sum_{\substack{s_r s_j \in \bpSet, \\ i \le r<j}}
++\sum_{\substack{(s_r,s_j) \in \bpSet, \\ i \le r<j}}
+ \left(
+ \boltzNuss{r,j}\enspace \sum_{\mathclap{w+w'=k-b(r)}}\quad
+ \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1}
+@@ -372,13 +372,13 @@ the {\em polynomial} $\emZ{i,j}$ defined by
+ 
+ \begin{align}
+ \label{eq:fftbor:polynomialZij}
+-\emZ{i,j} = \sum_{k=0}^n c_k(i,j)\,x^k
++\emZ{i,j} = \sum_{k=0}^n z_k(i,j)\,x^k
+ \end{align}
+ 
+ where
+ 
+ \begin{align}
+-c_k(i,j)\>=\>
++z_k(i,j)\>=\>
+ \bfZ{k}{i,j}\enspace=\enspace
+ \sum_{\mathclap{\substack{\str \text{ such that } \\
+ \dBP{\str}{\strSt_{[i,j]}}=k}}}\enspace
+@@ -391,17 +391,18 @@ are \kNbrs of the restriction $\strSt_{[i,j]}$ of initial structure
+ $E_0(S)=-1 \cdot |S|$ denotes the Nussinov-Jacobson energy of \str.
+ 
+ \begin{theorem}
++\label{thm:fftbor:recursions}
+ Let \seqN be a given RNA sequence.
+ For any integers $1 \leq i \leq j \leq n$, let
+ 
+ \begin{align}
+-\emZ{i,j} = \sum_{k=0}^n c_k\,x^k
++\emZ{i,j} = \sum_{k=0}^n z_k\,x^k
+ \end{align}
+ 
+ where
+ 
+ \begin{align}
+-c_k(i,j) = \bfZ{k}{i,j}.
++z_k(i,j) = \bfZ{k}{i,j}.
+ \end{align}
+ 
+ Then for $i\leq j \leq i+\theta$, $\emZ{i,j}=1$ and for
+@@ -410,7 +411,7 @@ $j>i+\theta$ we have the recurrence relation
+ \begin{align}
+ \label{eq:fftbor:fftborNussPoly}
+ \emZ{i,j} = \emZ{i,j-1} \cdot x^{b_0} +
+-\sum_{\substack{s_r s_j \in \bpSet, \\ i\le r<j}}
++\sum_{\substack{(s_r,s_j) \in \bpSet, \\ i\le r<j}}
+ \left(
+ \boltzNuss{r,j} \cdot \emZ{i,r-1} \cdot \emZ{r+1,j-1} \cdot x^{b(r)}
+ \right).
+@@ -424,11 +425,11 @@ $b(r) =
+ \begin{proof}
+ First, some notation is necessary.
+ Recall that if $F$ is an arbitrary
+-polynomial [resp. analytic] function, then $[x^k] F(x)$
++polynomial [resp. analytic] function, then $[x^k]F(x)$
+ denotes the coefficient of $x^k$ [resp. the $k$th Taylor coefficient in the
+-Taylor expansion of $F$]. For instance, in \eqnref{fftbor:pOfX},
+-$[x^k]p(x) = \pk$, and in \eqnref{fftbor:zOfX},
+-$[x^k]\fullZx = c_k(i,j)$.
++Taylor expansion of $F(x)$]. For instance, in
++\eqnref{fftbor:pOfX}, $[x^k]p(x) = \pk$, and in
++\eqnref{fftbor:zOfX}, $[x^k]\fullZx = z_k$.
+ 
+ By definition, it is clear that $\emZ{i,j}=1$ if $i \leq j \leq i + \theta$,
+ where we recall that $\theta = 3$ is the minimum number of unpaired bases in
+@@ -436,17 +437,18 @@ a hairpin loop. For $j > i + \theta$, we have
+ 
+ \begin{align}
+ \begin{split}
+-[x^k] \emZ{i,j} &= c_k(i,j) = \bfZ{k}{i,j} \\
++[x^k] \emZ{i,j} &= z_k(i,j) = \bfZ{k}{i,j} \\
+ &= \bfZ{k-b_0}{i,j-1} +
+-\sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\enspace
+-\boltzNuss{r,j} \cdot \bfZ{k_0}{i,r-1} \cdot \bfZ{k_1}{r+1,j-1} \\
++\sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\hspace{1.5em}
++\left( \boltzNuss{r,j} \cdot \bfZ{k_0}{i,r-1} \cdot \bfZ{k_1}{r+1,j-1} \right) \\
+ &= [x^{k-b_0}] \emZ{i,j-1} \\
+-&+ \sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\enspace
+-\boltzNuss{r,j} \cdot \left\{ [x^{k_0}] \emZ{i,r-1} \right\} \cdot
+-\left\{ [x^{k_1}] \emZ{r-1,j-1} \right\} \\
++&+ \sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\hspace{1.5em}
++\left( \boltzNuss{r,j} \cdot \left( [x^{k_0}] \emZ{i,r-1} \right) \cdot
++\left( [x^{k_1}] \emZ{r+1,j-1} \right) \right) \\
+ &= [x^{k-b_0}] \emZ{i,j-1} \\
+-&+ \sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\enspace
+-\boltzNuss{r,j} \cdot [x^{k_0+k_1}] \emZ{i,r-1} \emZ{r-1,j-1} .\\
++&+ \sum_{r=i}^{j-1}\hspace{2.25em} \sum_{\mathclap{k_0+k_1=k-b(r)}}\hspace{1.5em}
++\left( \boltzNuss{r,j} \cdot [x^{k_0+k_1}]
++\left( \emZ{i,r-1} \cdot \emZ{r+1,j-1} \right) \right).\\
+ \end{split}
+ \end{align}
+ 
+@@ -558,8 +560,8 @@ Since we defined \bfY in \eqnref{fftbor:yColumn} by $\bfY =
+ (y_0,\dots,y_{n-1})^{\text T}$, where
+ $y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$
+ and $\alpha_k = \omega^k \kRoU$, it follows that the coefficients
+-$c_k=\bfZ{k}{1,n}$ in the polynomial
+-$\fullZx = c_0 + c_1 x + \dots + c_{n-1} x^{n-1}$ defined in
++$z_k=\bfZ{k}{1,n}$ in the polynomial
++$\fullZx = z_0 + z_1 x + \dots + z_{n-1} x^{n-1}$ defined in
+ \eqnref{fftbor:zOfX} can be computed, at least in principle,
+ by using the \fft. It turns out, however, that the values of
+ \bfZ{k}{1,n} are so astronomically large, that the ensuing numerical
+@@ -615,7 +617,7 @@ from \eqnref{fftbor:probK}}
+ \EndFunction
+ \rule[-0.35ex]{0pt}{0pt}
+ \end{algorithmic}
+-\caption{The function {\sc FFTbor} computes the $m$ most significant digits
++\caption[Pseudocode for \fftbor]{The function {\sc FFTbor} computes the $m$ most significant digits
+ of $p_0,\dots,p_{n-1}$, where $\pk = \frac{\bfZ{k}{}}{\fullZ}$. This algorithm
+ operates in \On{4} time and \On{2} space, a significant improvement over its
+ predecessor \rnabor.}
+@@ -670,11 +672,11 @@ $b>0$, then we have $e^{-i k \theta} = \aMbi$. It follows that for any
+ \nRoU of the form \aPbi, where $b>0$, the number \aMbi
+ is also an \nRoU.
+ 
+-Recall that $\fullZx = \sum_{k=0}^n c_k x^k$, where
+-$c_k \in \mathbb{R}$ are real numbers representing the partition function
++Recall that $\fullZx = \sum_{k=0}^n z_k x^k$, where
++$z_k \in \mathbb{R}$ are real numbers representing the partition function
+ \bfZ{k}{1,n} over
+ all secondary structures of a given RNA sequence \seqN,
+-whose base pair distance from initial structure
++whose \bpd from initial structure
+ \strSt is $k$. Thus, in order to prove the lemma, it suffices to show
+ that for all values $k=0,\dots,n-1$, if \aPbi is a
+ \nRoU, where $a,b \in \mathbb{R}$
+@@ -710,7 +712,7 @@ ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
+ It follows that each term of the form
+ $a^{m-k} \cdot (bi)^k$, for $k=0,\dots,m$, is the complex conjugate of
+ $a^{m-k} \cdot (-bi)^k$, and thus $(\aPbi)^m$ is the complex conjugate of
+-$(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $c_k (\aPbi)^k$,
++$(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $z_k (\aPbi)^k$,
+ it follows that \emZof{}{\aMbi} is the complex conjugate of \emZof{}{\aPbi}.
+ This completes the proof of the lemma.
+ 
+@@ -728,10 +730,10 @@ enormous performance speed-up in our implementation of \fftbor.
+ 
+ The output of \fftbor, as shown in
+ \Figref{fftbor:tppDistributions}, is a probability distribution,
+-where the $x$-axis represents the base pair distance from an arbitrary,
++where the $x$-axis represents the \bpd from an arbitrary,
+ but fixed secondary structure \strSt, and the $y$-axis represents the
+ Boltzmann probability $p(k) = \frac{\bfZ{k}{}}{\fullZ}$ that a secondary structure
+-has base pair distance $k$ from \strSt. Arguably, this probability distribution
++has \bpd $k$ from \strSt. Arguably, this probability distribution
+ is an accurate one-dimensional projection of the rugged, high dimensional energy
+ landscape near structure \strSt,
+ of the sort artistically rendered in the well-known
+@@ -757,24 +759,24 @@ nt sequence
+   UAUAAGUCCAAGGGGUGCCAAUUGGCUGAGAUGGUUUUAACCAAUCCCUU%
+   UGAACCUGAUCCGGUUAAUACCGGCGUAGGAAUGGAUUUUCUCUACAGC%
+ }.
+-Rfam consensus and minimum free energy structures for both sequences are
++Rfam consensus and \mfess for both sequences are
+ depicted in \Figref{fftbor:tppConsensusAndMfe}.
+ Despite the fact that there is no sequence homology according to
+ pairwise BLAST \citep{blast}, this figure clearly demonstrates that
+ consensus and
+-minimum free energy structures closely resemble each other, and that the
++\mfess closely resemble each other, and that the
+ structures of both TPP \rb aptamers are quite similar, with the
+ exception of the leftmost hairpin loop [resp. multiloop].
+ The MFE structures differ
+ from the consensus structures principally by the addition of base pairs not
+ determined by covariation in the Rfam alignment.
+ Indeed, if we let $\str_0,\str_1$
+-denote the Rfam consensus structure resp. MFE structure for the 97 nt
++denote the Rfam consensus structure [resp. MFE structure] for the 97 nt
+ sequence with EMBL accession code BX842649.1/277414--277318, then
+ $\str_0 \setminus \str_1$ has 4 base pairs, and $\str_1 \setminus \str_0$
+  has 7
+ base pairs. If we let $\strT_0,\strT_1$
+-denote the Rfam consensus structure resp. MFE structure for the 99 nt
++denote the Rfam consensus structure [resp. MFE structure] for the 99 nt
+ sequence with EMBL accession code
+ AACY022101973.1/389--487, then
+ $\strT_0 \setminus \strT_1$ has 1 base pair, and $\strT_1 \setminus \strT_0$ has 5
+@@ -783,15 +785,16 @@ base pairs.
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/FFTbor/tppConsensusAndMfe.pdf}
+-\caption{Rfam consensus structures (Rfam) and minimum free energy (MFE)
++\caption[Rfam consensus structures (Rfam) and \mfe (MFE)
++secondary structures for two thiamine pyrophosphate (TPP) \rb aptamers]{Rfam consensus structures (Rfam) and \mfe (MFE)
+ secondary structures for two thiamine pyrophosphate (TPP) \rb aptamers,
+ chosen at random from RF00059 Rfam family seed alignment
+ \citep{Gardner.nar11}. Using pairwise BLAST \citep{blast}, there is no
+ sequence similarity, although the secondary structures are very similar,
+ as shown in this figure. From left to right:
+-{\em (A)} Rfam consensus structure for BX842649.1/277414--277318.
+-{\em (B)} MFE structure for BX842649.1/277414--277318.
+-{\em (C)} Rfam consensus structure for AACY022101973.1/389--487.
++{\em (A)} MFE structure for BX842649.1/277414--277318.
++{\em (B)} Rfam consensus structure for BX842649.1/277414--277318.
++{\em (C)} MFE structure for AACY022101973.1/389--487.
+ {\em (D)} Rfam consensus structure for AACY022101973.1/389--487.
+ }
+ \label{fig:fftbor:tppConsensusAndMfe}
+@@ -810,17 +813,20 @@ the second sequence should fold more quickly than the first.
+ 
+ \begin{figure}[!ht]
+ \centering
+-\includegraphics[width=.9\textwidth]{Figures/FFTbor/tppDistributions.pdf}
+-\caption{Output from \fftbor on two randomly selected
++\includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_AACY022101973_1.pdf}
++\quad
++\includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_BX842649_1.pdf}
++\caption[Output from \fftbor on two randomly selected
++thiamine pyrophosphate \rb (TPP) aptamers]{Output from \fftbor on two randomly selected
+ thiamine pyrophosphate \rb (TPP) aptamers, taken from the Rfam database
+-\citep{Gardner.nar11}. The $x$-axis represents base pair distance from the
+-minimum free energy structure for each given sequence; the $y$-axis represents
++\citep{Gardner.nar11}. The $x$-axis represents \bpd from the
++\mfes for each given sequence; the $y$-axis represents
+ Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$, where
+ \bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
+-whose base pair distance from the MFE structure is exactly $k$.
++whose \bpd from the MFE structure is exactly $k$.
+ {\em (Left)}
+ The 97 nt sequence BX842649.1/277414--277318 appears to have a rugged energy
+-landscape near its minimum free energy structure, with distinct
++landscape near its \mfes, with distinct
+ low energy structures that may compete with the MFE structure during the
+ folding process.
+ {\em (Right)}
+@@ -849,17 +855,17 @@ to determine the \mfpt (MFPT) to
+ fold into the MFE structure, when starting from the empty structure.
+ In this computational
+ experiment, we took MFPT to be the average number of Monte Carlo steps
+-taken by \kinfold, each step consisting of the addition or removal
+-of a single base pair (or shift --- see \citep{flamm}), to fold the
++taken by \kinfold---each step consisting of the addition or removal
++of a single base pair---to fold the
+ empty structure into the MFE
+ structure, where the average was taken over 30 runs, with an absolute
+ maximum number of Monte Carlo steps taken to be 500,000.
+ The first sequence, BX842649.1/277414--277318, converged within 500,000
+ steps only for 20 out of 30 runs. Assigning the maximum step count of
+-500,000 for the 10 runs that did not converge, we found a mean first
+-passage time of $311,075.06$ steps for this sequence.
++500,000 for the 10 runs that did not converge, we found a \mfpt
++of $311,075.06$ steps for this sequence.
+ The second sequence, AACY022101973.1/389--487, converged within 500,000
+-steps in 29 out of 30 runs, and we found a mean first passage time of
++steps in 29 out of 30 runs, and we found a \mfpt of
+ $61,575.69$ steps for this sequence. From computational experiments of this
+ type, it is suggestive that \fftbor may prove useful in synthetic
+ biology,
+@@ -872,7 +878,7 @@ we need to numerically quantify ruggedness. To this end, in the following
+ we define the notion of \ebpd to a designated
+ structure. Let \strSt be an arbitrary secondary structure of the RNA sequence
+ $\seq = \seqN$.
+-The expected base pair distance to \strSt is defined by
++The expected \bpd to \strSt is defined by
+ 
+ \begin{align}
+ E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
+@@ -883,7 +889,7 @@ where
+ $\mathbb{S}(\seqN)$ denotes the set of secondary structures for
+ $\seq = \seqN$, $P(\str) = \frac{\boltzf{\str}}{\fullZ}$ is the Boltzmann
+ probability of \str, and
+-\dBP{\str}{\strSt} denotes base pair distance between \str and \strSt.
++\dBP{\str}{\strSt} denotes \bpd between \str and \strSt.
+ If we run \fftbor on an input sequence \seq and secondary structure
+ \strSt, then clearly
+ $E[ \{ \dBP{\str}{\strSt} : \str \in \mathbb{S}(\seqN)\} ] =
+@@ -904,17 +910,21 @@ taken over 50 runs, of the number of Monte Carlo steps taken to fold
+ the empty structure into the MFE structure, where an absolute upper bound
+ of 5 million steps was allowed in the simulation.
+ 
++Surprisingly, we found that there is a significant
++correlation of $0.4847$ with one-tailed
++$p$-value of $0.0002$ between the
++standard deviation of the \fftbor output (when starting from the
++empty structure) and logarithm base 10 of the \mfpt.
+ As described above, \fftbor output is simply
+ the probability distribution
+ for the number of base pairs per structure, taken over the ensemble
+ of all secondary structure for the input RNA
+-sequence. Surprisingly, we found that there is a significant
+-correlation of  $0.48436192$ with one-tailed
+-$p$-value of $0.00018249$ between the
+-standard deviation of the \fftbor output (when starting from the
+-empty structure) and logarithm base 10 of the mean first passage time.
++sequence. The standard deviation of this probability distribution corresponds
++to a notion of the {\em width} of the distribution. It is possible that those
++sequences having distributions tightly centered around the
++mean have faster folding times than those with a wider distribution
++due to other local minima causing the RNA to get trapped while folding.
+ 
+-\begin{landscape}
+ \begin{table}[!ht]
+ \centering
+ \begin{tabularx}{\linewidth}{c *{6}{R}}
+@@ -930,7 +940,9 @@ empty structure) and logarithm base 10 of the mean first passage time.
+   % puts data.chomp.split(/\\/).map { |line| line.split("&")[1..-1].map { |item| item.gsub(/\s+/, "") }.reject { |item| item.empty? }.map { |number| "%.4f" % number.to_f }.join(" & ") + " \\\\" }.join(?\n)
+   \bottomrule
+ \end{tabularx}
+-\caption{\small Pearson correlation between various aspects of selenocysteine
++\caption[Pearson correlation between various aspects of selenocysteine
++insertion sequences from the seed alignment of Rfam family
++RF00031]{\small Pearson correlation between various aspects of selenocysteine
+ insertion sequences from the seed alignment of Rfam family
+ RF00031 \citep{Gardner.nar11}.
+ For each of the 61 RNA sequences, we ran \fftbor, starting
+@@ -948,7 +960,7 @@ the ensemble of all secondary structures for the given sequence;
+ structure;
+ {\em 3})\, the coefficient of variation $\frac{\sigma}{\mu}$;
+ {\em 4})\, the RNA sequence length $n$; and
+-{\em 5})\, the minimum free energy (MFE).
++{\em 5})\, the \mfe (MFE).
+ Additionally, we computed the logarithm base 10 of \mfpt
+ ($\log_{10}(\text{MFPT})$), taken over 50 Monte Carlo runs per sequence
+ (log base 10 of the standard deviation of number of Monte Carlo
+@@ -963,18 +975,18 @@ the mean $\mu$ is negatively correlated with the
+ coefficient of variation $\frac{\sigma}{\mu}$;
+ {\em iii})\;
+ the mean $\mu$ is negatively correlated with the
+-minimum free energy (MFE) --- if most low energy structures in the ensemble
+-have many base pairs, then it is likely that the minimum free energy is very
++\mfe (MFE) --- if most low energy structures in the ensemble
++have many base pairs, then it is likely that the \mfe is very
+ low (i.e. since MFE is negative, the absolute value of MFE increases); and
+ {\em iv})\;
+ sequence length is negatively correlated with MFE --- as sequence length
+-increases, the minimum free energy (MFE) decreases.
++increases, the \mfe (MFE) decreases.
+ However, it may appear surprising that
+ {\em v})\; the
+ mean $\mu$ number of base pairs per structure is independent of MFPT
+-(correlation $-0.036291124$), although
++(correlation $-0.0363$), although
+ {\em vi})\; MFE is correlated with MFPT
+-(correlation $0.399015556$) --- i.e. from {\em (iii)},
++(correlation $0.3990$) --- i.e. from {\em (iii)},
+ lower MFE is correlated with a larger average $\mu$ number of base pairs per
+ structure, from ({\em vi})
+ higher MFE is correlated with longer folding time, but
+@@ -982,17 +994,17 @@ from ({\em v}) the average $\mu$  number of base pairs per structure is
+ independent of folding time.
+ The most important insight from this table is that
+ {\em vii})\;
+-standard deviation $\sigma$ is correlated with mean first passage
+-time --- the correlation is statistically significant, with one-tailed
+-$p$-value of $0.00018249$.}
++standard deviation $\sigma$ is correlated with \mfpt---the correlation is statistically significant, with one-tailed
++$p$-value of $0.0002$.}
+ \label{table:correlationFFTborEmpty}
+ \end{table}
+-\end{landscape}
+ 
+ \begin{figure}[!ht]
+ \centering
+-\includegraphics[width=.9\textwidth]{Figures/FFTbor/correlationFFTborEmpty.pdf}
+-\caption{This figure represents the
++\includegraphics[width=.3\textwidth]{Figures/FFTbor/AB030643_1_4176-4241.pdf}
++\includegraphics[width=.3\textwidth]{Figures/FFTbor/AL645723_11_192421-192359.pdf}
++\includegraphics[width=.3\textwidth]{Figures/FFTbor/FFTborOutputFromEmptyStrForTPPriboswitches.pdf}
++\caption[Example of the graphical output of \fftbor, when the empty structure is chosen as initial structure \strSt]{This figure represents the
+ graphical output of \fftbor, when the empty structure is chosen as
+ initial structure \strSt.
+ The $x$-axis represents the number of base pairs per structure,
+@@ -1005,14 +1017,14 @@ having exactly $k$ base pairs.
+ For the selenocysteine (SECIS) element AB030643.1/4176--4241 from Rfam family
+ RF00031, the standard deviation $\sigma$ of the number of base pairs,
+ taken over the ensemble of all secondary structures, is
+-$0.727618$, while the logarithm base 10 of the mean first passage time ($\log_{10}(\text{MFPT})$)
++$0.7276$, while the logarithm base 10 of the \mfpt ($\log_{10}(\text{MFPT})$)
+ is $4.75$.
+ {\em (Center)}
+ For the selenocysteine (SECIS) element
+ AL645723.11/192421--192359 from Rfam family
+ RF00031, the standard deviation $\sigma$ of the number of base pairs,
+ taken over the ensemble of all secondary structures, is
+-$2.679446$, while $\log_{10}(\text{MFPT})$ is $5.69$.
++$2.6794$, while $\log_{10}(\text{MFPT})$ is $5.69$.
+ Among the 61 sequences in the seed alignment of RF00031,
+ AB030643.1/4176--4241 was the fastest folder, while
+ AL645723.11/192421--192359 was the slowest folder.
+@@ -1024,7 +1036,7 @@ taking the empty structure for the initial structure \strSt.
+ The mean $\mu$ for the \fftbor structural profile near the empty
+ structure is $23.0203$  [resp. $27.5821$], the
+ standard deviation $\sigma$ for the \fftbor structural profile
+-is $2.22528791$  [resp. $1.98565959$], and the \kinfold MFPT is
++is $2.2253$  [resp. $1.9857$], and the \kinfold MFPT is
+ $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
+ AB030643.1/4176--4241 [resp. AL645723.11/192421--192359].
+ The right panel of this figure should be compared with Figure
+@@ -1042,7 +1054,7 @@ from the empty reference structure $\strSt=\emptyset$.
+ The mean for the \fftbor structural profile near the empty
+ structure is $\mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
+ standard deviation $\sigma$ for the \fftbor structural profile
+-is $\sigma_1=2.22528791$  [resp. $\sigma_2=1.98565959$], and the \kinfold MFPT is
++is $\sigma_1=2.2253$  [resp. $\sigma_2=1.9857$], and the \kinfold MFPT is
+ $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
+ AB030643.1/4176--4241 [resp.  AL645723.11/192421--192359]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
+ 
+@@ -1054,11 +1066,11 @@ respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
+ AACY022101973 are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
+ maximum of 500,000 steps with 30 replicates (as explained in the text), we
+ found
+-that for randomized BX842649, all 30 runs converged yielding a mean first passage
+-time (MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
++that for randomized BX842649, all 30 runs converged yielding a \mfpt
++(MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
+ randomized AACY022101973, only 15 out of 30 runs converged within 500,000 steps,
+-and discounting these nonconvergent data, we obtain an average mean first passage
+-time (MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
++and discounting these nonconvergent data, we obtain an average \mfpt
++(MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
+ test provides more anecdotal evidence supporting our hypothesis that small
+ standard deviation $\sigma$ in \fftbor probability density is correlated with fast folding, as measured by MFPT.
+ 
+@@ -1067,140 +1079,6 @@ kinetics is what motivates the work described in Chapters \ref{ch:ffttwo}
+ and \ref{ch:hermes}, where a more detailed explanation of kinetics is provided,
+ and additional evidence is provided to support this claim.
+ 
+-% \section{Riboswitch detection with \fftbor}
+-% \label{sec:fftbor:rb}
+-
+-% A bacterial \rb is a portion of the $5'$
+-% untranslated region (UTR) of messenger RNA,
+-% that performs gene regulation by undergoing a conformational change upon
+-% binding with a ligand, such as guanine, thiamine pyrophosphate, lysine,
+-% etc.  \citep{breaker:Riboswitch2}.
+-% This conformational change may either turn  on or off
+-% the corresponding gene by either transcriptional or translational regulation
+-% of the messenger RNA \citep{tuckerBreaker:review}, depending on the
+-% particular \rb. The common feature shared by all \rbs
+-% is that a gene is regulated by conformational change upon ligand binding.
+-% Bacterial \rbs are often found upstream
+-% of operons, regulating groups of genes, as in purine {\em de novo}
+-% synthesis and salvage \citep{mandalboesebarrickwinklerbreaker}.
+-
+-% A \rb consists of two equally important parts: an upstream
+-% {\em aptamer}, capable of highly discriminative binding to a particular
+-% ligand, and a downstream {\em expression platform}, capable of undergoing
+-% a radical conformational change upon binding of a ligand with the
+-% discriminating aptamer.
+-% Since aptamers have been under strong evolutionary pressure to
+-% bind with high affinity
+-% (e.g. $K_D \approx 5$ nM for guanine \citep{Mandal.nsmb04}),
+-% there is strong
+-% sequence conservation found in the aptameric region of orthologous
+-% \rbs.
+-% In contrast, while secondary structure is conserved in the
+-% terminator loop of the expression platform in purine \rbs,
+-% there is relatively low sequence conservation (data not shown).
+-% While a number of methods exist to computationally predict
+-% \rb aptamers
+-% \citep{Bengert2004Riboswitch,Chang2009Computational,AbreuGoodger2005RibEx,Singh2009Riboswitch,Bergig.isb04}
+-% (and especially {\tt INFERNAL} \citep{infernal}, which latter is used
+-% to predict \rb aptamers in Rfam), it is an important
+-% biological problem to determine the expression platform, since the structure
+-% of the expression platform can suggest whether there is
+-% transcriptional regulation
+-% via a terminator loop or translational regulation via the sequestration of
+-% the Shine-Dalgarno sequence \citep{tuckerBreaker:review}. Determination of
+-% the precise location and structure of the expression platform is difficult
+-% due to low conserved sequence identity (in-house computations, data not shown).
+-% Although this problem remains open, we report here how
+-% \fftbor may provide help to biologists in the selection and
+-% prioritization of \rb candidates.
+-
+-% Figure 5 depicts the gene OFF structure of the
+-% xpt G-box purine \rb in {\em B. subtilis}, as determined by
+-% inline-probing --- this structure was taken from
+-% Figure 1 of \citep{breaker:Riboswitch2}.
+-% Note that this structure is only partial, since there are regions
+-% with no base pairs depicted, despite the fact that additional
+-% base pairs could be added. By using
+-% {\tt blastn}, it is found that this 161 nt purine \rb
+-% can be found on the complement strand of GenBank accession number
+-% CP002906.1/2165302--2165142 in
+-% complete genome of {\em B. subtilis subsp. subtilis RO-NN-1}.
+-% Figure 6 depicts the result of
+-% three computational experiments with FFTbor. The left panel displays
+-% the expected base pair distance to the following secondary structure
+-% \begin{small}
+-% \begin{eqnarray}
+-% \label{eq:xpt1}
+-% %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGAGCAAUGGAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
+-% \bf
+-% .((((((((...(((((((.......)))))))........((((((.......))))))..))))))))........(((((........)))))............((((((((((((((.......)))))))))))))).
+-% \end{eqnarray}
+-% \end{small}
+-% as a function of window offset, where window size equals the size of this
+-% target structure. This structure was
+-% obtained by removing all leading and trailing unpaired positions
+-% from the structure depicted in Figure 5,
+-% except for the leftmost [resp. rightmost] unpaired position
+-% adjacent to the leftmost [resp. rightmost] base-paired position.
+-% The reason for removal of the leading and trailing unpaired positions was
+-% that the structure of \citep{breaker:Riboswitch2}, depicted in
+-% Figure 5, is clearly only partial, as earlier
+-% mentioned.  The center panel displays
+-% the expected base pair distance to the following secondary structure
+-% \begin{small}
+-% \begin{eqnarray}
+-% \label{eq:xpt2}
+-% %ACACUCAUAUAAUCGCGUGGAUAUGGCACGCAAGUUUCUACCGGGCACCGUAAAUGUCCGACUAUGGGUGA
+-% \bf
+-% .((((((((...(((((((.......)))))))........((((((.......))))))..)))))))).
+-% \end{eqnarray}
+-% \end{small}
+-% as a function of window offset, where window size equals the size of this
+-% target {\em aptamer} structure. Similarly, the right panel displays
+-% the expected base pair distance to the following secondary structure
+-% \begin{small}
+-% \begin{eqnarray}
+-% \label{eq:xpt3}
+-% %GAACCGCACGUGUACGGUUUUUUGUGAUAUCAGCAUUGCUUGCUCUUUAUUUGAGCGGGCAAUGCUU
+-% \bf
+-% .(((((........)))))............((((((((((((((.......)))))))))))))).
+-% \end{eqnarray}
+-% \end{small}
+-% as a function of window offset, where window size equals the size of this
+-% target {\em expression platform} structure.
+-% Figure 6 determines the precise location of the
+-% xpt \rb, both aptamer and expression platform.
+-
+-% If the biologically functional target structure is unknown, one can
+-% instead attempt a similar moving window computation, where the target
+-% structure is taken to be the minimum free energy structure of the
+-% current window contents. In this case, one may hope to determine a
+-% bimodal distribution, as displayed in Figure 7.
+-% Given an input RNA sequence, or genomic region, the
+-% web server \url{http://bioinformatics.bc.edu/clotelab/FFTbor}
+-% creates a movie as follows, described here for the xpt \rb
+-% previously discussed.  We extracted the downstream region of
+-% Taking the
+-% 161 nt xpt G-box purine \rb described in Figure 5,
+-% with GenBank accession number CP002906.1/2165302--2165142, we extended
+-% to a sequence of length 200 nt, by appending flanking
+-% downstream genomic nucleotides.  Running \fftbor on all
+-% prefixes of the resulting sequence of lengths
+-% $70,72,74,\ldots,200$, we produced a movie, displayed on the webserver
+-% \url{http://bioinformatics.bc.edu/clotelab/FFTbor}.
+-% Figure 5 displays the output of \fftbor on the
+-% 166 nt prefix, clearly showing a bimodal distribution. Attempting to
+-% automate the identification of non-unimodal \fftbor output, we have
+-% applied the Hartigan-Hartigan dip-test \citep{hartigandiptest},
+-% implemented in {\tt R}; however,
+-% the dip-test appears to be too sensitive, in that a probability distribution
+-% is reported to be non-unimodal, even when visual inspection indicates that
+-% it appears overwhelmingly to be unimodal (data not shown). It is for this
+-% reason that the web server
+-% \url{http://bioinformatics.bc.edu/clotelab/FFTbor} produces a movie of
+-% prefixes, where the user can start/stop the movie,
+-% move forward/backward, or download all raw data output by \fftbor.
+-
+ \section{Performance characteristics of \fftbor and \rnabor}
+ \label{sec:fftbor:speed}
+ 
+@@ -1208,9 +1086,13 @@ As visible from the defining recursions, the algorithmic time complexity of
+ \rnabor is \On{5} and space complexity is \On{3}, where $n$ is
+ the length of input RNA sequence. In contrast, the time complexity of
+ \fftbor is \On{4} and space complexity is \On{2}.
++While \fftbor saves an order of magnitude in performance and memory,
++\rnabor has the benefit of producing suboptimal structures $\text{MFE}_k$
++for all $0 \leq k \leq n$, whose free energy is minimal across all structures
++having \bpd $k$ from input structures \strSt.
+ \Figref{fftbor:benchmarking} displays run time curves for both
+ \rnabor and \fftbor, when the initial structure \strSt is
+-taken to be either the empty structure or the minimum free energy
++taken to be either the empty structure or the \mfe
+ (MFE) structure.
+ 
+ Here, we compare the run time of \rnabor \citep{freyhult.b07} and
+@@ -1232,12 +1114,13 @@ independent evaluations.
+ 
+ \begin{figure}[!ht]
+ \centering
+-\includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarking.pdf}
+-\caption{Run times in seconds for \rnabor and \fftbor, on random RNA
++\includegraphics[width=.9\textwidth]{Figures/FFTbor/rnaborfftborRunTimeEvan.pdf}
++\caption[Run times in seconds for \rnabor and \fftbor, on random RNA
++of length $20,40,60,\dots,300$ in step size of 20 nt]{Run times in seconds for \rnabor and \fftbor, on random RNA
+ of length $20,40,60,\dots,300$ in step size of 20 nt. Each algorithm
+ was run with the empty initial structure \strSt, see rows
+-\rnabor (empty), \fftbor (empty), and with the minimum free
+-energy structure as the initial structure \strSt, see rows
++\rnabor (empty), \fftbor (empty), and with the \mfes as the initial structure
++\strSt, see rows
+ \rnabor (MFE) and \fftbor (MFE). Note that for both \rnabor
+ and \fftbor, the run time increases when \strSt is the MFE structure,
+ rather than the empty structure. Notice the radical improvement in the
+@@ -1257,29 +1140,46 @@ Using OpenMP primitives, we created multiple threads to evaluate the polynomial
+ presents benchmarks, executed on
+ a 24-core AMD Opteron 6172 with 2.10GHz and 64GB RAM, for the speedup
+ of \fftbor as a function of the number of cores.
+-The left panel of \Figref{fftbor:benchmarkingParallel} describes average
++The data in Table \ref{table:fftborBenchmarkingParallel} describes average
+ run time in seconds ($\pm$ one standard deviation) for running \fftbor
+ on random RNA of length $200,250,300,400,450,500$ with either 1 or 2 cores.
+-The right panel of \Figref{fftbor:benchmarkingParallel}
++\Figref{fftbor:benchmarkingParallel}
+ presents similar data for running
+ \fftbor on $2,3,6,4,12,15,20$ cores.
+ 
+-\begin{figure}[!ht]
++\begin{table}[!ht]
+ \centering
+-\includegraphics[width=.9\textwidth]{Figures/FFTbor/benchmarkingOpenMP.pdf}
+-\caption{{\em (Left)} Table showing parallel run times in seconds
+-for \fftbor, using
+-OpenMP---\url{http://openmp.org/}. Column headers 1 and 2 indicate
+-the number of cores used in the computational experiment.
++\begin{tabularx}{\linewidth}{c *{2}{R}}
++\toprule
++\small{$n$} & \small{Single core} & \small{Two cores} \\
++\cmidrule(lr){1-3}
++200 & 123.2 $\pm$ 16.2 & 61.8 $\pm$ 8.0 \\
++250 & 331.1 $\pm$ 27.2 & 166.1 $\pm$ 13.7 \\
++300 & 723.4 $\pm$ 59.9 & 365.2 $\pm$ 30.1 \\
++350 & 1,380.8 $\pm$ 95.2 & 698.4 $\pm$ 46.9 \\
++400 & 2,239.1 $\pm$ 210.9 & 1,129.5 $\pm$ 104.3 \\
++450 & 3,635.0 $\pm$ 857.4 & 1,980.9 $\pm$ 126.5 \\
++500 & 5,076.7 $\pm$ 1,292.1 & 3,389.8 $\pm$ 788.4 \\
++\bottomrule
++\end{tabularx}
++\caption[Table showing parallel run times in seconds
++for \fftbor, using OpenMP]{Table showing parallel run times in seconds
++for \fftbor, using OpenMP---\url{http://openmp.org/}.
+ For each sequence length $200,\dots,500$,
+ five random RNAs were generated using equal probability for each nucleotide
+ A,C,G,U. Run time in seconds, plus or minus one standard deviation, are
+ given for a 24-core
+-AMD Opteron 6172 with 2.10GHz and 64GB RAM, with only 1 (resp. 2) cores
+-used.
+-{\em (Right)} Graph showing parallel run time of \fftbor on
+-an AMD Opteron 6172 with 2.10GHz and 64GB RAM, using respectively
+-1,2,3,4,6,9,12,15,20 cores.
++AMD Opteron 6172 running at 2.10GHz with 64GB RAM, with only 1 [resp. 2] cores
++used.}
++\label{table:fftborBenchmarkingParallel}
++\end{table}
++
++\begin{figure}[!ht]
++\centering
++\includegraphics[width=.75\textwidth]{Figures/FFTbor/fftborParallelRunTimes.pdf}
++\caption[]{Graph showing parallel run time of \fftbor as a function of
++sequence length, running on an AMD Opteron 6172 running at 2.10GHz with 64GB RAM,
++using respectively 1,2,3,4,6,9,12,15,20 cores.
+ }
+ \label{fig:fftbor:benchmarkingParallel}
+ \end{figure}
+diff --git a/Chapters/FFTbor2D.tex b/Chapters/FFTbor2D.tex
+index 231e11f..13601d3 100644
+--- a/Chapters/FFTbor2D.tex
++++ b/Chapters/FFTbor2D.tex
+@@ -34,8 +34,9 @@ recursions for the Nussinov energy model for expository clarity, the
+ underlying implementation uses the more complicated and robust Turner energy
+ model. Recursions in place, we then move to show how these lead to
+ a single variable polynomial $P(x)$ whose coeffecients can be computed by
+-the \idft, and map to the 2D energy landscape. We describe two exploitations of
+-$P(x)$, a parity condition and complex conjugates which further reduce the
++the \idft, and map to the 2D energy landscape. We describe two improvements over
++the straight-forward use of the \fft to compute $P(x)$,
++a parity condition and complex conjugates, which together reduce the
+ runtime by a factor of 4. Finally, we contrast this software against \rnatwofold,
+ and outline the performance characteristics of both softwares and highlight
+ the benefits and drawbacks of both. We elect to refrain from describing
+@@ -84,50 +85,14 @@ trans splicing, but as well in transcriptional and
+ translational regulation, protein synthesis, and mRNA splicing.
+ 
+ For these reasons, substantial experimental and computational work
+-has been done on folding pathways and the kinetics of RNA folding;
+-below, we cite only a small sample of the work in this area.
+-On the experimental side,
+-%Baird et al.  \citep{Baird.jacs10} used cryo-electron microscopy and single
+-%particle image reconstruction to determine the structure of the major folding
+-%intermediate of the specificity domain of a ribonuclease P ribozyme.
+-%Mitra et al.  \citep{Mitra.r11} conducted experiments using
+-%time-resolved hydroxyl radical probing of backbone solvent accessible
+-%surface and catalytic activity measurements, integrated with
+-%structural-kinetic modeling to compare folding pathways of
+-%three group I intron ribozymes.
+-Neupane et al. \citep{neupane.nar11} applied single-molecule force spectroscopy
+-of the add adenine \rb, to show how folding relates to
+-gene regulation;
+-see also \citep{woodside.cocb08,baird.jacs10,mitra.r11}.
+-%see \citep{Woodside.cocb08} for a recent comprehensive review of such methods.
+-%
+-On the computational side, Morgan and Higgs \citep{morganhiggsbarrier}
+-appear to have been among the first
+-to have considered the computational problem of determining optimal and
+-near-optimal {\em folding pathways} between two metastable secondary
+-structures \strAB of a given RNA sequence.  In \citep{flammphd}, Flamm
+-developed an event-driven Monte Carlo simulation, \kinfold,
+-to determine expected
+-folding time between two reference structures, including the mean first
+-passage time to fold into the minimum free energy structure.
+-Using \rnasub \citep{wuchty.b99}, Flamm et al.
+-\citep{flamm} designed the exponential
+-time exact algorithm, \barriers, that computes the optimal folding
+-pathway between metastable structures \strA and \strB. Since \barriers
+-may not converge, due to its reliance on the enumeration of possibly
+-exponentially many structures, in \citep{dotu.nar10} we developed a
+-local search (tabu) method that rapidly returns near-optimal folding
+-pathways; in benchmarking results \citep{dotu.nar10}, local search was shown
+-to outperform various methods, including direct and indirect path methods
+-of Morgan and Higgs \citep{morganhiggsbarrier}, breadth-first search with
+-bounded lookahead, \ms{Findpath} \citep{flamm.r01}, and the
+-exponential time, exact method \barriers \citep{flamm}, in producing
+-near-optimal pathways within
+-reasonable time.
+-There are far too many contributions to kinetics and folding pathways
+-to adequately survey here; the references
+-\citep{xayaphoummine.nar05,tang.jmb08,geis.jmb08,zhao.bj10,li.bb12}
+-give some idea of the variety of methods.
++has been done on folding pathways. In \citep{lorenz}, \rnatwofold---a dynamic
++programming method that operates in
++\On{7} time and \On{4} space---is presented, a generalization of \rnabor
++\citep{freyhult.b07} that computes a 2D projection of the energy landscape,
++discretized by \bpd to two input structures. Our work presented
++here, called \ffttwo, produces a similar energy landscape in \On{5} time and
++\On{2} space---efficient enough for the analysis of folding pathways of large
++RNA sequences not tractable using \rnatwofold.
+ 
+ \section{Derivation of the \ffttwo algorithm}
+ \label{sec:ffttwo:math}
+@@ -183,7 +148,7 @@ $\bfZ{x,y}{i,j}$ is equal to
+ \label{eq:ffttwo:bfZabij}
+ \begin{split}
+ & \bfZ{x-\alpha_0,y-\beta_0}{i,j-1}\enspace + \\
+-& \sum_{\substack{s_k,s_j \in \bpSet, \\ i \le k<j}}
++& \sum_{\substack{(s_k,s_j) \in \bpSet, \\ i \le k<j}}
+ \left(
+ \boltzNuss{k,j}\quad
+ \sum_{\mathclap{u+u'=x-\alpha(k)}}\hspace{3.75em}
+@@ -196,7 +161,7 @@ $\bfZ{x,y}{i,j}$ is equal to
+ where $\alpha_0 = 1$ if $j$ is base paired in $\strA_{[i,j]}$ and 0 otherwise,
+ $\beta_0 = 1$ if $j$ is base paired in $\strB_{[i,j]}$ and 0 otherwise,
+ $E_0(k,j)=-1$ if $k,j$ can base-pair
+-(see \eqnref{fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
++(see equation \ref{eq:fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
+ $\alpha(k) =
+ \dBP{\strA_{[i,j]}}{\strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup \{ (k,j) \}}$,
+ and
+@@ -238,7 +203,7 @@ $a_0,\dots,a_{n^2-1}$ in
+ 
+ then Lagrange polynomial interpolation
+ (\eqnref{fftbor:lagrangeInterpolation})
+-guarantees that we can determine the coefficients $c_{rn+s}$ of \fullZx,
++guarantees that we can determine the coefficients $z_{rn+s}$ of \fullZx,
+ for $0 \leq r,s < n$. Due to technical difficulties concerning numerical
+ robustness observered while working on the \fftbor software
+ (\Chref{fftbor}), we will perform polynomial interpolation
+@@ -274,6 +239,7 @@ are $r$-neighbors of the restriction $\strA_{[i,j]}$ of reference structure
+ \strB to interval $[i,j]$.
+ 
+ \begin{theorem}
++\label{thm:ffttwo:recursions}
+ Let $s_1,\dots,s_n$ be a given RNA sequence.
+ For any integers $1 \leq i < j \leq n$, let
+ 
+@@ -293,7 +259,7 @@ Inductively we define $\emZ{i,j}$ to equal
+ \label{eq:ffttwo:polyRecNussJac}
+ \begin{split}
+ &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
+-&\sum_{\substack{s_k,s_j \in \bpSet,\\i\le k<j}}
++&\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
+ \left(\boltzNuss{k,j}\cdot
+ \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
+ \end{split}
+@@ -306,7 +272,7 @@ $\alpha(k) =
+ $\beta(k) =
+ \dBP{\strB_{[i,j]}}{\strB_{[i,k-1]} \cup \strB_{[k+1,j-1]} \cup \{ (k,j) \}}$.
+ 
+-% The proof is given in supplementary information.
++The proof is given in \Secref{sec:ffttwo:recursions}.
+ \end{theorem}
+ 
+ Note that if one were to compute all terms of the polynomial $\emZ{1,n}$
+@@ -478,15 +444,14 @@ As a corollary, we have the {\em parity condition}, that
+ first noticed in \citep{hofacker:RNAbor2D}, as well as
+ the triangle inequality
+ $\dBP{\strA}{\str} + \dBP{\str}{\strB} \geq \dBP{\strA}{\strB}$
+-for base pair distance, probably folklore.
++for \bpd, probably folklore.
+ Lorenz et al. \citep{hofacker:RNAbor2D} exploited the parity condition
+ and the triangle inequality by using sparse matrix methods to improve on
+ the efficiency of the na\"{\i}ve implementation of the
+ \On{7} time and \On{4} space algorithm to compute
+ the partition function, $\bfZ{r,s}{1,n}$,
+-and minimum free energy structure, $\text{MFE\,}^{r,s}_{1,n}$, over all
+-structures having base pair distance $r$ to \strA and \str to \strB.
+-The following lemma is not difficult to establish.
++and \mfes, $\text{MFE\,}^{r,s}_{1,n}$, over all
++structures having \bpd $r$ to \strA and \str to \strB.
+ \end{lemma}
+ 
+ \begin{lemma}
+@@ -501,7 +466,7 @@ $\alpha$, it is the case that $\emZof{}{\overline{\alpha}} =
+ \label{lem:ffttwo:lemma3}
+ Let \fullZx be defined by \eqnref{ffttwo:zOfX}, and
+ let $\alpha \in \mathbb{C}$ be any complex number.
+-If the base pair distance between reference
++If the \bpd between reference
+ structures \strAB is even, then $\emZof{}{-\alpha} = \emZof{}{\alpha}$,
+ while if
+ the distance is odd, then $\emZof{}{-\alpha} = -\emZof{}{\alpha}$.
+@@ -514,19 +479,18 @@ $\nu = \exp(\frac{2 \pi i}{M})$ is the principal $M$-root of unity, and
+ $\frac{M}{4} < k \leq \frac{M}{2}$. Then
+ 
+ \begin{align}
+-\nu^k = -(\nu^{-(M/2-k)}) = -\overline{\nu^{M/2-k}}.
++\nu^k = -(\nu^{-(M_0-k)}) = -\overline{\nu^{M_0-k}}.
+ \end{align}
+ \end{lemma}
+ 
+-Lemma \ref{lem:ffttwo:lemma1} is proved by simple induction;
++Lemma \ref{lem:ffttwo:lemma1} is proved by induction;
+ Lemma \ref{lem:ffttwo:lemma2}
+-is proved by a computation involving binomial coefficients;
+-Lemma \ref{lem:ffttwo:lemma3} is immediate
++is proved in \Secref{lem:fftbor:compconj} by a computation involving
++binomial coefficients;
++Lemma \ref{lem:ffttwo:lemma3} is proved in \Secref{sec:ffttwo:lemma3proof}
+ by the parity observation above, resulting from Lemma \ref{lem:ffttwo:lemma1};
+-Lemma \ref{lem:ffttwo:lemma4} is elementary, relying on Euler's
+-formula and trigonometric addition formulas. Details proofs of
+-Lemmas \ref{lem:ffttwo:lemma2}, \ref{lem:ffttwo:lemma3}, \ref{lem:ffttwo:lemma4}
+-can be found in supplementary information.
++Lemma \ref{lem:ffttwo:lemma4} is proved in \Secref{sec:ffttwo:lemma4proof},
++relying on Euler's formula and trigonometric addition formulas.
+ 
+ Lemma \ref{lem:ffttwo:lemma1}
+ entails that either all even coefficients, or all odd coefficients
+@@ -534,7 +498,7 @@ of \fullZx are zero, and so by a variable change described in detail below,
+ we require only half the number of evaluations of \fullZx, in order to perform
+ polynomial interpolation.
+ Lemma \ref{lem:ffttwo:lemma2}
+- entails that we require only half again the number of evaluations of
++entails that we require only half again the number of evaluations of
+ \fullZx, since the remainder can be inferred by taking the complex conjugate.
+ Lemma \ref{lem:ffttwo:lemma1} and Lemma \ref{lem:ffttwo:lemma2},
+ along with a
+@@ -625,7 +589,7 @@ full polynomial \fullZx, since its coefficients of odd parity are zero.
+ \smallskip
+ 
+ In this case, $z_0,z_2,z_4,\dots$ are zero, so
+-$\fullZx = \sum_{k=0}^{M/2-1} z_{2k+1} x^{2k+1}$. But then
++$\fullZx = \sum_{k=0}^{M_0-1} z_{2k+1} x^{2k+1}$. But then
+ $\fullZx = x \cdot \emYof{}{u}$, where
+ $\emYof{}{u}= \sum_{k=0}^{M_0-1} b_k u^k$, where we have made
+ a variable change $u=x^2$, and coefficient changes
+@@ -652,7 +616,7 @@ full polynomial \fullZx, since $\fullZx = x \cdot \emYof{}{x^2}$, and the
+ coefficients of \fullZx of even parity are zero.
+ 
+ In the following, we will need the observation, that if the parity of
+-base pair distance \dBP{\strA}{\strB} between \strAB is
++\bpd \dBP{\strA}{\strB} between \strAB is
+ even, then
+ 
+ \begin{align}
+@@ -938,7 +902,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
+ \EndFunction
+ \rule[-0.35ex]{0pt}{0pt}
+ \end{algorithmic}
+-\caption{
++\caption[Pseudocode for improved \ffttwo]{
+ Pseudocode to compute the $m$ most significant digits
+ for probabilities
+ $p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
+@@ -967,7 +931,7 @@ Using \rnabor, we determined that value $k_0 \geq 10$, for which
+ partition function $\bfZ{k_0}{}$ constitutes a visible peak in the graphical
+ output --- see Figure 2 and 3 of \citep{freyhult.b07} for an example.
+ Subsequently, metastable structure \strB was taken to be that structure
+-having minimum free energy over all structures, whose base pair distance from
++having \mfe over all structures, whose \bpd from
+ \strA was $k_0$.
+ 
+ For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
+@@ -975,7 +939,7 @@ benchmarked in the computation of all Boltzmann probabilities
+ $p(x,y)= \frac{\bfZ{x,y}{}}{\fullZ}$, where $x$ [resp. $y$] represents base pair
+ distance to metastable structure \strA [resp. \strBresp]. Care was taken for
+ both software to employ the same energy model (Turner99 energy model,
+-no dangles, suppression of minimum free energy structure computations
++no dangles, suppression of \mfes computations
+ for \rnatwofold) and the same number of parallel threads (8 threads
+ using OpenMP). Nonetheless, there are slight differences in the energy
+ models --- namely, \rnatwofold includes
+@@ -983,16 +947,16 @@ mismatch penalties for multiloop stems and for exterior loops, while
+ \ffttwo does not. Even in the computation of the partition function
+ $Z$, for spliced leader RNA from {\em L. collosoma} of length 56 nt,
+ \rnatwofold \ms{-d0} obtains a value of
+-$-9.660419$ kcal/mol, while \ffttwo obtains
+-$-9.660543$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
++$-9.6604$ kcal/mol, while \ffttwo obtains
++$-9.6605$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
+ \rnatwofold \ms{-d0} obtains a value of
+-$-22.171785$ kcal/mol, while \ffttwo obtains
+-$-22.173213$ kcal/mol.
++$-22.1718$ kcal/mol, while \ffttwo obtains
++$-22.1732$ kcal/mol.
+ Note that the straightforward calculation of the partition function, following McCaskill's algorithm \citep{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
+ 
+ For benchmarking purposes,
+ to allow for a fair comparison of \ffttwo
+-with \rnatwofold, we restricted therange of $x,y$ in the same manner as done in the source code of \rnatwofold.
++with \rnatwofold, we restricted the range of $x,y$ in the same manner as done in the source code of \rnatwofold.
+ In that code, parameters $K$ [resp. $L$] are defined respectively to be the
+ sum of the number of base pairs in reference structure \strA
+ [resp. \strBresp] plus the number of base pairs in
+@@ -1030,7 +994,8 @@ on sequence length.
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
+-\caption{
++\caption[Run time in seconds for \rnatwofold and \ffttwo on random
++RNA sequences of length 20--200 nt]{
+ Run time in seconds for \rnatwofold and \ffttwo on random
+ RNA sequences of length 20--200 nt, where sequence generation and
+ choice of metastable structures \strAB is described in the text.
+@@ -1043,7 +1008,8 @@ faster.
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
+-\caption{
++\caption[Logarithm of run time in seconds for \rnatwofold and \ffttwo
++on random RNA sequences of length less than 200 nt]{
+ Logarithm of run time in seconds for \rnatwofold and \ffttwo
+ on random RNA sequences of length less than 200 nt, for same data as that
+ in \Figref{ffttwo:ffttwoRtwofoldTiming}.
+@@ -1066,7 +1032,11 @@ in a fraction of a second, this difference is of no practical consequence.
+ \centering
+ \includegraphics[width=.65\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldMinMax.pdf}
+ \end{subfigure}
+-\caption{
++\caption[{\em (Top)}
++Standard deviation of run times of \rnatwofold and \ffttwo
++as a function of sequence length $n$.
++{\em (Bottom)}
++Minimum and maximum run times for \rnatwofold and \ffttwo]{
+ {\em (Top)}
+ Standard deviation of run times of \rnatwofold and \ffttwo
+ as a function of sequence length $n$.
+@@ -1085,7 +1055,8 @@ sequence details.
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
+-\caption{
++\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
++from {\em L. collosoma}, as computed by \ffttwo]{
+ 2D projection of energy landscape for Spliced Leader (SL) RNA
+ from {\em L. collosoma}, having
+ sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
+@@ -1094,7 +1065,7 @@ $\strA =$ \ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} \\
+ $\strB =$ \ms{.......................((((((((((((.....)))))..)))))))..}
+ \rule[-1.25em]{0pt}{0pt} \\
+ The $x$-axis [resp. $y$-axis]
+-represents base pair distance between metastable structure \strA [resp.
++represents \bpd between metastable structure \strA [resp.
+ \strBresp],
+ while the $z$-axis represents the ensemble free energy $-RT \log \bfZ{x,y}{}$,
+ where \bfZ{x,y}{} is computed in \ffttwo by $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$.
+@@ -1113,13 +1084,20 @@ with \ffttwo; graphics produced using Mathematica.
+ \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldProbContour.pdf}
+ \quad
+ \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldEnsFreeEnergyContour.pdf}
+-\caption{
++\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
++from {\em L. collosoma}, as in
++\Figref{ffttwo:ffttwoProbContour},
++except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
++is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
++while in the left panel, ensemble free energy is computed from
++the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
++by \rnatwofold]{
+ 2D projection of energy landscape for Spliced Leader (SL) RNA
+ from {\em L. collosoma}, as in
+ \Figref{ffttwo:ffttwoProbContour},
+ except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
+ is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
+-while in the right panel, ensemble free energy is computed from
++while in the left panel, ensemble free energy is computed from
+ the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
+ by \rnatwofold.
+ The loss of detail in the 2D energy landscape is caused uniquely by
+@@ -1132,7 +1110,7 @@ Data produced with \rnatwofold; graphics produced using Mathematica.
+ 
+ An important advantage of
+ \rnatwofold over \ffttwo is that the former can additionally
+-compute the structures $M_{x,y}$ having minimum free energy over all
++compute the structures $M_{x,y}$ having \mfe over all
+ structures that are $x$-neighbors of metastable \strA and simultaneously
+ $y$-neighbors of metastable \strB. (There is a similar advantage of \rnabor
+ \citep{freyhult.b07} over the faster \fftbor \citep{senter.po12}.)
+diff --git a/Chapters/Hermes.tex b/Chapters/Hermes.tex
+index ae51dd9..9c5cf73 100644
+--- a/Chapters/Hermes.tex
++++ b/Chapters/Hermes.tex
+@@ -89,7 +89,7 @@ region, e.g. \citep{huang.bb14,zhao.jcp11}.
+ Most computational approaches involve either (1) algorithms to
+ determine optimal or near-optimal folding pathways, (2) explicit
+ solutions of the master equation, (3) repeated simulations to fold an
+-initially empty secondary structure to the target minimum free energy
++initially empty secondary structure to the target \mfe
+ (MFE) structure. Examples of methods to determine optimal or
+ near-optimal folding pathways include the greedy approach of Morgan
+ and Higgs \citep{morganhiggsbarrier}, the exact, optimal, exponential
+@@ -97,7 +97,8 @@ time program \barriers \citep{flammhofacker}, the program
+ \ms{Findpath} \citep{flamm.r01}, which uses bounded look-ahead
+ breadth-first search, a genetic algorithm \citep{shapiro.jmb01}, the
+ program \ms{RNAtabupath} that uses local search to determine
+-near-optimal folding pathways, etc. The program \barriers
++near-optimal folding pathways, the Basin Hopping Graph (BHG, \citep{kucharik:2014ft}) which uses a greedy algorithm to determine local minima
++and approximate their barrier energies, etc. The program \barriers
+ \citep{flammhofacker} is the only current method guaranteed to
+ produce optimal folding pathways. Since it has been shown that
+ the problem of determining optimal folding pathways is
+@@ -126,7 +127,10 @@ of Gillespie's algorithm \citep{gillespiestochasticsimulation1},
+ directly related to the master equation, hence is considered by many
+ to be the {\em gold standard} for RNA kinetics. A recent extension of the
+ \kinfold algorithm was reported in \citep{aviram.amb12}.
+-\ms{Kinefold} \citep{xayaphoummine.nar05} uses stochastic simulations of
++\ms{KFOLD} \citep{dykeman:2015bxa} also implements Gillespie's algorithm,
++but leverages memoization of transition rates to operate much more efficiently
++than \kinfold. Meanwhile \ms{Kinefold} \citep{xayaphoummine.nar05} uses
++stochastic simulations of
+ the nucleation and dissociation of helical regions to predict
+ secondary structure and folding pathways. In contrast to the
+ previously mentioned methods, both \ms{RNAKinetics}
+@@ -143,9 +147,9 @@ information.
+ In contrast to the previous methods, \hermes computes the \mfpt (MFPT)
+ and {\em equilibrium time} for a
+ coarse-grained Markov chain consisting of the ensemble of all
+-secondary structures having base pair distance $x$ [resp. $y$] from
++secondary structures having \bpd $x$ [resp. $y$] from
+ reference structures \strA [resp. \strBresp] of a given RNA sequence.
+-Mean first passage time (MFPT) is computed exactly by matrix inversion,
++\Mfpt (MFPT) is computed exactly by matrix inversion,
+ and equilibrium time is computed using spectral decomposition of the rate
+ matrix for the coarse-grained master equation.
+ 
+@@ -180,7 +184,7 @@ the conditional probability $Pr[ q_{t+1} = j | q_t=i] = p_{i,j}$.
+ Define the {\em population occupancy frequency} of visiting state
+ $i$ at time $t$ by $p_{i}(t) = Pr[q_t=i]$.  Denote
+ $p_{i,j}^{(t)} = Pr[q_t = j | q_0 = i]$ and notice that
+-the $(i,j)$-th entry of the $t$-th power $P^t$ of matrix $P$  equals
++the $(i,j)$th entry of the $t$th power $P^t$ of matrix $P$  equals
+ $p_{i,j}^{(t)}$.
+ 
+ The {\em \mfpt} (MFPT) or
+@@ -269,7 +273,7 @@ satisfies detailed balance---see \eqnref{hermes:xitionProbWithHastings}.
+ Following Anfinsen's experimental work on the denaturation and
+ refolding of bovine pancreatic ribonuclease \citep{anfinsen},
+ the native conformation is assumed to be the ground state having
+-minimum free energy. These results justify the use of the Monte Carlo
++\mfe. These results justify the use of the Monte Carlo
+ Algorithm \ref{fig:hermes:mcmc} in macromolecular kinetics and
+ structure prediction.
+ \medskip
+@@ -311,7 +315,7 @@ upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
+ \EndFunction
+ \rule[-0.35ex]{0pt}{0pt}
+ \end{algorithmic}
+-\caption{The function {\sc Metropolis} implements a discrete time simulation
++\caption[Pseudocode for the Metropolis Monte Carlo algorithm]{The function {\sc Metropolis} implements a discrete time simulation
+ of folding trajectories for a Markov chain.}
+ \label{fig:hermes:mcmc}
+ \rule[0ex]{0pt}{1.5em} \hrule
+@@ -455,8 +459,8 @@ values $c_k$ are determined by the initial population occupancy
+ distribution $p(0)$ at time 0. Here
+ ${\bf v}_k$ denotes the $k$th eigenvector and
+ $\lambda_k$ the $k$th eigenvalue. In particular,
+-$c_k = \left(p(0) \cdot T^{-1})\right)_k$, where the $j$-th row of $T$
+-is the $j$-th left eigenvector of $R$,
++$c_k = \left(p(0) \cdot T^{-1})\right)_k$, where the $j$th row of $T$
++is the $j$th left eigenvector of $R$,
+ and $p(0)$ is the population occupancy distribution
+ at time $t=0$. If the eigenvalues are labeled in decreasing
+ order, then $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n$,
+@@ -519,7 +523,7 @@ expedient to compute the {\em \eqt} as the smallest $t_0$,
+ such that for $t \in \{t_0+1,t_0+2,t_0+3,t_0+4\}$, the absolute difference
+ $|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$, for $\epsilon =
+ 10^{-4}$, where \xEnd is the target RNA structure (usually taken
+-to be the minimum free energy structure, though this is not necessary for
++to be the \mfes, though this is not necessary for
+ the software). We provide a more detailed explanation of the reasoning behind
+ this decision in \Secref{subsubsec:hermes:eqestimate}.
+ 
+@@ -579,7 +583,7 @@ upper bound on time \tMax \rule[-1.5ex]{0pt}{0pt} \\
+ \EndFunction
+ \rule[-0.35ex]{0pt}{0pt}
+ \end{algorithmic}
+-\caption{The function {\sc Gillespie} implements a continuous time simulation of
++\caption[Pseudocode for the Gillespie algorithm]{The function {\sc Gillespie} implements a continuous time simulation of
+ folding trajectories for a Markov process.}
+ \label{fig:hermes:gillespie}
+ \rule[0ex]{0pt}{1.5em} \hrule
+@@ -634,7 +638,8 @@ aspects of this software for other developers---the C++ sourcecode comprising
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Hermes/softwareOrg.pdf}
+-\caption{Overall organization of
++\caption[Overall organization of the \hermes software suite]{Overall
++organization of
+ \hermes. \ffttwo, \rnamfpt, and \rnaeq are three distinct software
+ packages we have developed, which compile into both standalone
+ executables and archive files, providing an API that allow novel
+@@ -644,7 +649,7 @@ without having to copy-and-paste relevant functions. The applications
+ \ffttwo, \rnamfpt and \rnaeq. \fftmfpt computes the
+ \mfpt (MFPT) for an RNA secondary structure to fold from an
+ initial structure, such as the empty structure or a given metastable
+-structure, into a target structure, such as the minimum free energy
++structure, into a target structure, such as the \mfe
+ (MFE) structure or possibly the Rfam \citep{Gardner.nar11} consensus
+ structure. \ffteq uses spectral decomposition to compute the \eqt and the
+ fraction of the population of RNA structures that are
+@@ -671,7 +676,7 @@ From this input, the probability transition matrix is constructed using
+ 
+ Given RNA sequence \seq and secondary structure $x$,
+ let $N(x)$ denote the set of neighboring secondary structures of
+-\seq, whose base pair distance with $x$ is one. Define the Markov
++\seq, whose \bpd with $x$ is one. Define the Markov
+ chain $\mathcal{M}(\seq)=(\str,P)$, where \str denotes the
+ set of all secondary structures of \seq, $\pSt(x)$ is the stationary
+ probability of structure $x$, defined by $\pSt(x)=\boltzf{x}/\fullZ$,
+@@ -705,7 +710,7 @@ p_{x,y}=
+ \end{cases}
+ \end{align}
+ 
+-The exact value of mean first passage time (MFPT) can be computed as
++The exact value of \mfpt (MFPT) can be computed as
+ follows. Let $x_0$ [resp. $x_{\infty}$] denote the empty structure
+ [resp. MFE structure] for sequence \seq (here we have implicitly
+ identified integer indices with secondary structures). Let
+@@ -716,13 +721,13 @@ number of secondary structures of \seq. Let $e$ denote the vector of
+ size $n-1$, each of whose coordinates is 1. It is well-known
+ \citep{meyermfpt} that for each $k\ne x_{\infty}$, the $k$th coordinate
+ of the vector $(I - \widetilde{P}_{x_{\infty}})^{-1} \cdot {\bf e}$ is
+-exactly equal to the mean first passage time from the structure with
++exactly equal to the \mfpt from the structure with
+ index $k$ to the target structure $x_{\infty}$. In particular, the
+ MFPT from the empty structure to the MFE structure is computable by
+ applying matrix inversion using a computational library such as the GSL.
+ 
+ Since this computation of the
+-mean first passage time is mathematically exact, we consider that MFPT
++\mfpt is mathematically exact, we consider that MFPT
+ to be the {\em gold standard} value for RNA folding kinetics.
+ 
+ Because this program was designed with the original intent
+@@ -740,7 +745,7 @@ Due to our interest in efficiently estimating MFPT using coarse-grained 2D
+ energy landscapes, the default input for \rnamfpt (and \rnaeq) is a 2D
+ probability grid, as described above. We additionally allow as alternative input
+ an energy landscape (whereby transition probabilities are defined as in
+-\eqnref{hermes:mfptXitionProb}).
++equation \ref{eq:hermes:mfptXitionProb}).
+ Some of the options to influence the underlying transition matrix
+ include the option to force a fully
+ connected graph (useful in cases where there is no non-zero path
+@@ -756,21 +761,21 @@ first passage time for the corresponding Markov chain.
+ sequence folding from input structure \strA to \strB, by
+ computing {\em exactly} the \mfpt from state $(0,d_0)$ to state
+ $(d_0,0)$ in the 2D probability grid obtained from running
+-\ffttwo. Here, $d_0$ is the base pair distance between structures
++\ffttwo. Here, $d_0$ is the \bpd between structures
+ \strAB, and the MFPT is computed for the Markov chain, whose states are
+ the non-empty 2D probability grid points, and whose transition
+ probabilities are defined by $p_{(x,y),(x',y')} =
+ \frac{P(x',y')}{P(x,y)}$.
+ 
+ More formally, given an RNA sequence \seq, starting structure \strA, and
+-target structure \strB, we proceed in the following fashion. Let \dBP{\strA}{\strB} denote the base pair distance between structures
++target structure \strB, we proceed in the following fashion. Let \dBP{\strA}{\strB} denote the \bpd between structures
+ \strAB. Then $\bfZ{}{x,y} = \sum_\str \boltzf{\str}$, where the sum is over
+ structures \str, such that $\dBP{\strA}{\str} = x$, and
+ $\dBP{\strB}{\str} = y$; as
+ well the partition function $\fullZ = \sum_\str \boltzf{\str}$, where the sum
+ is over all secondary structures \str of the sequence \seq.
+ 
+-Let $d_0= \dBP{\strA}{\strB}$, the base pair distance between initial structure
++Let $d_0= \dBP{\strA}{\strB}$, the \bpd between initial structure
+ \strA and target structure \strB.  Let $n$ denote the length of sequence \seq.
+ Define the Markov chain $\mathcal{M}_1(\seq) = (Q_1,P_1)$, where
+ 
+@@ -921,11 +926,10 @@ small sequences.
+ kinetics for a sequence folding between two arbitrary, but fixed,
+ structures. The transition rate matrix underlying the Markov process
+ necessary for eigendecomposition is derived from the 2D energy
+-landscape. Vertices in the rate matrix represent a subset of
+-structures compatible with the input sequence as modeled by
+-\ffttwo (in a fashion similar to \fftmfpt, explained in
+-\Secref{subsec:hermes:fftmfpt}), which makes the graph size more tractable
+-than structural
++landscape.
++Indices $(x,y)$ in the rate matrix correspond to all strucutres having
++\bpd $x$ [resp. $y$] to input structure \strA [resp. \strBresp],
++which makes the graph size more tractable than structural
+ sampling with \rnasub using \rnaeq, even with constraints.
+ 
+ This method consists of computing the equilibrium time
+@@ -962,7 +966,8 @@ yielding the curvess seen in \Figref{hermes:populationOccupancySplicedLeader}.
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=0.7\textwidth]{Figures/Hermes/populationOccupancyCurves.pdf}
+-\caption{
++\caption[Population occupancy curves computed with \ffteq for the
++56 nt conformational switch {\em L. collosoma} spliced leader RNA]{
+ Population occupancy curves computed with \ffteq for the
+ 56 nt conformational switch {\em L. collosoma} spliced leader RNA,
+ with sequence \ms{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGA}
+@@ -974,15 +979,15 @@ structure is
+ \ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} with free
+ energy $-7.5$ kcal/mol. In the case of the MFE structure, the
+ equilibrium occupancy $P(t_{\infty})$, which \hermes approximates
+-as $0.17893806$ should equal the Boltzmann probability $0.17909227$,
++as $0.1789$ should equal the Boltzmann probability $0.1791$,
+ since the MFE structure is the only structure at distance $x_0$ [resp.
+ $y_0$] from the reference structures \strA (empty
+ structure) [resp. \strB (MFE structure)]. As well, if there are few
+-other low energy structures at the same base pair distance $x_1$
+-[resp. $y_1$] from \strA [resp. \strB] as that of the alternate suboptimal
+-structure, then we expect that the occupancy probability $0.03003426$
++other low energy structures at the same \bpd $x_1$
++[resp. $y_1$] from \strA [resp. \strBresp] as that of the alternate suboptimal
++structure, then we expect that the occupancy probability $0.0300$
+ for the $(x_1,y_1)$ be approximately the Boltzmann probability
+-$0.03005854$ of the alternate structure.}
++$0.0301$ of the alternate structure.}
+ \label{fig:hermes:populationOccupancySplicedLeader}
+ \end{figure}
+ 
+@@ -991,22 +996,22 @@ $0.03005854$ of the alternate structure.}
+ 
+ The computation of an \eqt value from the eigendecomposition of the rate matrix
+ is a rather thorny issue. While in principle a nonlinear solver can be used to
+-compute the \eqt $t$ (from \eqnref{hermes:solutionEquilibriumTime}),
++compute the \eqt $t$ (from equation \ref{eq:hermes:solutionEquilibriumTime}),
+ in practice due to what we believe to be numeric instability issues the approach
+ was intractable. For this reason, we estimate the \eqt from the population
+ occupancy curve, an approach also taken by \treekin
+ \citep{wolfingerstadler:kinetics}. Our first
+ approximation of \eqt involved using a sliding window approach, where we
+ compute the smallest $t_0$,
+-such that for $t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$, the absolute difference
++such that for $t \in \{t_0+\tD,t_0+2\tD,t_0+3\tD,\dots,t_0+(w-1)\cdot\tD\}$, the absolute difference
+ $|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$, for $\epsilon =
+-10^{-4}$ and step size \tD{}. In systems where there are local energy minima, this approach has the
++10^{-4}$ and step size \tD across a window of length $w$. In systems where there are local energy minima, this approach has the
+ drawback of prematurely indicating equilibrium, as seen in
+ \Figref{hermes:eqEstFromRnaEq}. To address this concern, we introduce the
+ concept of $\delta,\epsilon$ equilibrium.
+ 
+ Given a starting state $i'$, target state $i$, and user definable parameters
+-$w = 5, \tD{} = 10^{-3}, \delta = 10^{-3}$ and $\epsilon = 10^{-4}$, we compute the estimated
++$w = 5, \tD = 10^{-3}, \delta = 10^{-3}$ and $\epsilon = 10^{-4}$, we compute the estimated
+ equilirium using the following algorithm.
+ \medskip
+ 
+@@ -1019,21 +1024,22 @@ equilirium using the following algorithm.
+ {\sc Purpose:} & Estimate time $\log_{10}(t)$ at which state \xStart appears
+ within $\epsilon$ of equilibrium \rule[-1.5ex]{0pt}{0pt} \\
+ {\sc Input:} & States \xStart, \xEnd; \tMin, \tMax;
+-$w = 5, \tD{} = 10^{-3}, \delta = 10^{-3}, \epsilon = 10^{-4}$ \rule[-1.5ex]{0pt}{0pt} \\
++$w = 5, \tD = 10^{-3}, \delta = 10^{-3}, \epsilon = 10^{-4}$ \rule[-1.5ex]{0pt}{0pt} \\
+ {\sc Output:} & Time $\log_{10}(t)$ at which $p_{\xEnd}(10^t)$ varies by no
+-more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
++more than $\epsilon$ within a \\ & window of size $w$, having step size \tD
++\rule[-1.75em]{0pt}{0pt} \\
+ \hline \rule[0ex]{0pt}{0pt}
+ \end{tabular*}
+ \begin{algorithmic}[1]
+-\Function{EstimateEquilibrium}{\xStart, \xEnd, \tMin, \tMax, \tD{}, $\delta$, $\epsilon$, $w$}
+-\State $t \gets \Call{SoftBound}{\xEnd, \tMin, \tMax, \tD{}, \delta, s}$
+-\If{$\Call{WindowEq}{\xEnd, t, \tD{}, w, \epsilon}$}
+-\While{$t > \tMin$ AND $\Call{WindowEq}{\xEnd, t, \tD{}, w, \epsilon}$}
+-\State $t \gets t - \tD{}$
++\Function{EstimateEquilibrium}{\xStart, \xEnd, \tMin, \tMax, \tD, $\delta$, $\epsilon$, $w$}
++\State $t \gets \Call{SoftBound}{\xEnd, \tMin, \tMax, \tD, \delta, s}$
++\If{$\Call{WindowEq}{\xEnd, t, \tD, w, \epsilon}$}
++\While{$t > \tMin$ AND $\Call{WindowEq}{\xEnd, t, \tD, w, \epsilon}$}
++\State $t \gets t - \tD$
+ \EndWhile
+ \EndIf
+-\While{$t < \tMax$ AND NOT $\Call{WindowEq}{\xEnd, t, \tD{}, w, \epsilon}$}
+-\State $t \gets t + \tD{}$
++\While{$t < \tMax$ AND NOT $\Call{WindowEq}{\xEnd, t, \tD, w, \epsilon}$}
++\State $t \gets t + \tD$
+ \EndWhile
+ \If{$t = \tMin$}
+ \Comment{$x$ doesn't leave equilibrium after \tMin}
+@@ -1054,12 +1060,12 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
+ \begin{figure}[!ht]
+ \begin{algorithmic}[1]
+ \algrestore{eqEst}
+-\Function{SoftBound}{$i$, \tMin, \tMax, \tD{}, $\delta$, $s$}
++\Function{SoftBound}{$i$, \tMin, \tMax, \tD, $\delta$, $s$}
+ \State $i_{\infty} \gets p_i(10^{\tMax})$
+ \Comment{From equation \ref{eq:hermes:solutionMasterEquationForSingleStateFixedStartPop}}
+ \State $t \gets \tMin + \frac{\tMax - \tMin}{2}$
+ \State $t' \gets \tMax$
+-\While{$|t - t'| > \tD{}$}
++\While{$|t - t'| > \tD$}
+ \Comment{Binary search for time $t$ within $\delta$ of \tMax}
+ \State $t_{\text{temp}} \gets t$
+ \If{$|p_i(10^t) - p_i(10^{t'})| > \delta$}
+@@ -1072,10 +1078,10 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
+ \EndWhile
+ \State \textbf{return} $t$
+ \EndFunction
+-\Function{WindowEq}{$x$, $t$, \tD{}, $w$, $\epsilon$}
+-\Comment{Is $x$ within $\epsilon$ of equilibrium for $[t, \tD{(w-1)}]$}
++\Function{WindowEq}{$x$, $t$, \tD, $w$, $\epsilon$}
++\Comment{Is $x$ within $\epsilon$ over $[t, t+(w-1)\cdot\tD]$}
+ \For{$i \gets 1, w - 1$}
+-\If{$|p_x(10^{t+\tD{i}}) - p_x(10^t)| > \epsilon$}
++\If{$|p_x(10^{t+i\cdot\tD}) - p_x(10^t)| > \epsilon$}
+ \State \textbf{return} \textbf{false}
+ \EndIf
+ \EndFor
+@@ -1083,8 +1089,8 @@ more than $\epsilon$ within $w$ \rule[-1.75em]{0pt}{0pt} \\
+ \EndFunction
+ \rule[-0.35ex]{0pt}{0pt}
+ \end{algorithmic}
+-\caption{The function {\sc EstimateEquilibrium} computes the smallest $t_0 > t'$,
+-such that for $t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$,
++\caption[Pseudocode for estimating equilibrium time]{The function {\sc EstimateEquilibrium} computes the smallest $t_0 > t'$,
++such that for $t \in \{t_0+\tD,t_0+2\tD,t_0+3\tD,\dots,t_0+(w-1)\cdot\tD\}$,
+ the absolute difference $|p(t)[\xEnd] - p(t_0)[\xEnd]| < \epsilon$ and
+ $|p(t')[\xEnd] - p(\tMax)[\xEnd]| \approx \delta|$. If $t'$ is already in
+ equilibrium, we relax the constraint that $t_0 > t'$ and instead find the
+@@ -1097,13 +1103,23 @@ across the window $w$ starting at time $t$.}
+ \rule[0ex]{0pt}{1.5em} \hrule
+ \end{figure}
+ 
+-In using the approach outlined in \Figref{hermes:eqEst}, the correlation
+-between $p_{\xEnd}(t_0)$ and $\frac{\boltzf{\xEnd}}{\fullZ}$ is $0.9997$, and
+-visual inspection of the estimated equilibrium times
++In using the approach outlined in \Figref{hermes:eqEst}, the root-mean-square
++deviation (RMSD)
++between $p_{\xEnd}(t_0)$ and $\frac{\boltzf{\xEnd}}{\fullZ}$ is $0.0041$, where
++RMSD is defined as
++
++\begin{align}
++\label{eq:hermes:rmsd}
++\sqrt{\frac{\sum_{i=1}^{n} (\widehat{x_i} - x_i)^2}{n}}.
++\end{align}
++
++Visual inspection of the estimated equilibrium times
+ (\Figref{hermes:eqEstFromRnaEq}) are much better than the
+-na\"{\i}ve approach used by \treekin. We also allow defining the \eqt to be the
++na\"{\i}ve approach used by \treekin, which uses a simple sliding window for
++all $x \in Q$.
++We also allow defining the \eqt to be the
+ smallest $t_0$, such that for
+-$t \in \{t_0+\tD{},t_0+\tD{2},t_0+\tD{3},t_0+\tD{4}\}$, the
++$t \in \{t_0+\tD,t_0+2\tD,t_0+3\tD,\dots,t_0+(w-1)\cdot\tD\}$, the
+ absolute difference $|p(t)[x] - p(t_0)[x]| < \epsilon$ for all $x \in
+ Q$ using Algorithm \ref{fig:hermes:eqEst};
+ however, results suggest that this definition is inferior
+@@ -1117,14 +1133,16 @@ the benchmarking set described later.
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/eqEstFromRnaEqSeq146.pdf}
+ \quad
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/eqEstFromRnaEqSeq427.pdf}
+-\caption{Example of the differences in using the simple sliding window
++\caption[Example of the differences in using a sliding window approach for estimating \eqt versus a more robust approach, outlined in Algorithm \ref{fig:hermes:eqEst}]{Example of the differences in using the simple sliding window
+ approach (green) versus the approach outlined in Algorithm \ref{fig:hermes:eqEst}
+ (blue). There are two representative sequences shown from the benchmarking
+ dataset described in \Secref{sec:hermes:benchdata}, sequence \#146
+ {\em (Left)} and \#427 {\em (Right)}. Note that the $p(t)$ for the approach from
+ Algorithm \ref{fig:hermes:eqEst} is much closer to the computed Boltzmann
+-probability---the correlation across the dataset of 1,000 sequences is
+-$0.9997$.}
++probability---the root-mean-square deviation (RMSD, equation
++\ref{eq:hermes:rmsd}) across the dataset of 1,000 sequences is $0.0041$
++[resp. $0.0491$] for the approach described in Algorithm \ref{fig:hermes:eqEst}
++[resp. simple sliding window].}
+ \label{fig:hermes:eqEstFromRnaEq}
+ \end{figure}
+ 
+@@ -1141,18 +1159,18 @@ and to ensure that \kinfold simulations would provide sufficient
+ statistics, we generated a collection of 1,000 random RNA sequences of
+ length 20 nt, each having expected compositional frequency of $1/4$
+ for A,C,G,U, and each having at most 2,500 distinct secondary
+-structures, such that the minimum free energy is less than or equal to
++structures, such that the \mfe is less than or equal to
+ $-5.5$ kcal/mol.
+ 
+ For example, one of the 1,000 sequences is \ms{ACGCGACGUGCACCGCACGU} with
+-minimum free energy structure \ms{.....((((((...))))))} having free
++\mfes \ms{.....((((((...))))))} having free
+ energy of $-6.4$ kcal/mol. Statistics for the free energies of the
+ 2,453 secondary structures of this 20-mer are the following: mean is
+ $10.695$, standary deviation is $4.804$, maximum is $25.00$, minimum
+ is $-6.40$. A histogram for the free energy of all secondary
+ structures of \ms{ACGCGACGUGCACCGCACGU} is depicted in
+ the left panel of \Figref{hermes:plmv}. The right panel of the
+-same figure depicts the minimum free energy structure of the
++same figure depicts the \mfes of the
+ 54 nt hammerhead type III ribozyme from Peach Latent Mosaic Viroid
+ (PLMVd), discussed later. This secondary structure is identical
+ to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
+@@ -1162,7 +1180,10 @@ to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
+ \includegraphics[width=0.525\textwidth]{Figures/Hermes/plmvDist.pdf}
+ \quad
+ \includegraphics[width=0.375\textwidth]{Figures/Hermes/plmvStr.pdf}
+-\caption{
++\caption[{\em (Left)} Histogram of free energies of secondary structures of
++an example 20-mer from the benchmarking dataset.
++{\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
++Viroid (PLMVd) AJ005312.1/282-335]{
+ {\em (Left)} Histogram of free energies of secondary structures of
+ \ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to $+25$ kcal/mol, with
+ mean of $10.695$ kcal/mol.
+@@ -1170,7 +1191,7 @@ mean of $10.695$ kcal/mol.
+ Viroid (PLMVd) AJ005312.1/282-335, which is identical to the consensus
+ structure from Rfam 11.0 \citep{Gardner.nar11}. \rfold from
+ Vienna RNA Package 2.1.7 with energy parameters from the Turner 1999
+-model were used, since the minimum free energy structure determined by
++model were used, since the \mfes determined by
+ the more recent Turner 2004 energy parameters
+ does {\em not} agree with the Rfam consensus structure---see
+ \citep{synthetichammerheads}. Positional entropy, a measure
+@@ -1232,7 +1253,8 @@ free energy.
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldTimeDist.pdf}
+ \quad
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldMeanStdev.pdf}
+-\caption{{\em (Left)} Histogram of \kinfold folding times for 20-mer
++\caption[Analysis of \kinfold folding times for 20-mer
++\ms{CCGAUUGGCGAAAGGCCACC}]{{\em (Left)} Histogram of \kinfold folding times for 20-mer
+ \ms{CCGAUUGGCGAAAGGCCACC}. The mean [resp. standard deviation] of 10,000 runs of \kinfold for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order.}
+ \label{fig:hermes:kinfoldMeanStdev}
+ \end{figure}
+@@ -1313,9 +1335,9 @@ kinetics.
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsRnaEq.pdf}
+ \quad
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaEqKinfold.pdf}
+-\caption{ Scatter plots of the natural logarithm of times from \rnamfpt
+-versus \rnaeq {\em (Left)} and for \kinfold versus
+-\rnaeq {\em (Right)}. }
++\caption{Scatter plots of the natural logarithm of times from \rnamfpt
++versus \msresp{RNAeq} {\em (Left)} and for \kinfold versus
++\msresp{RNAeq} {\em (Right)}. }
+ \label{fig:hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold}
+ \end{figure}
+ 
+@@ -1324,8 +1346,8 @@ versus \rnaeq {\em (Left)} and for \kinfold versus
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsKinfold.pdf}
+ \quad
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsFftMfptHastings.pdf}
+-\caption{ Scatter plots of the natural logarithm of times from \rnamfpt
+-versus \kinfold {\em (Left)} and for \rnamfpt versus \fftmfpt {\em (Right)}. }
++\caption{Scatter plots of the natural logarithm of times from \rnamfpt
++versus \msresp{Kinfold} {\em (Left)} and for \rnamfpt versus \msresp{FFTmfpt} {\em (Right)}. }
+ \label{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
+ \end{figure}
+ 
+@@ -1335,7 +1357,7 @@ versus \kinfold {\em (Left)} and for \rnamfpt versus \fftmfpt {\em (Right)}. }
+ \quad
+ \includegraphics[width=0.45\textwidth]{Figures/Hermes/fftMfptFftEq.pdf}
+ \caption{ Scatter plots of the natural logarithm of times from \kinfold
+-versus \fftmfpt {\em (Left)} and for \fftmfpt versus \ffteq
++versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
+ {\em (Right)}. }
+ \label{fig:hermes:scatterplotFftMfptVsKinfoldAndFftEq}
+ \end{figure}
+@@ -1357,7 +1379,7 @@ versus \fftmfpt {\em (Left)} and for \fftmfpt versus \ffteq
+   \small{\ffteq}         & 0.5614 & 0.7916 & 0.6966 & 0.9670 & 0.9590 & 0.4757 & 0.8940 & 1      \\
+   \bottomrule
+  \end{tabularx}
+- \caption{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having base pair distance $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose base pair distance is $x$ from the MFE structure), \ms{BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from \ms{Barriers}), and \ffteq (\eqt, computed in the same fashion as \ms{BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }
++ \caption[Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics]{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having \bpd $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose \bpd is $x$ from the MFE structure), \ms{BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from \ms{Barriers}), and \ffteq (\eqt, computed in the same fashion as \ms{BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }
+ \label{table:correlationHermes}
+  \end{table}
+  \end{landscape}
+diff --git a/Chapters/Introduction.tex b/Chapters/Introduction.tex
+index 531abaf..138f90e 100644
+--- a/Chapters/Introduction.tex
++++ b/Chapters/Introduction.tex
+@@ -61,13 +61,13 @@ the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm
+ determining the maximally matching secondary structure \str for
+ a given RNA sequence \citep{nussinov1980}, using dynamic programming
+ \citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
+-developed an algorithm and accompanying software for the minimum free energy
++developed an algorithm and accompanying software for the \mfe
+ formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In 1990, John
+ McCaskill showed how dynamic programming could be used to compute the
+ partition function for an RNA molecule, and even compute the probability that an
+ arbitrary base is bound \citep{mccaskill}. Alongside these early developments,
+ more robust energy models were experimentally derived \citep{turner,turner:2009vy},
+-further improving the accuracy of computational-based models.
++further improving the accuracy of computational models.
+ 
+ Fast-forwarding to today, there is now a huge collection of software aimed at
+ computing various properties of RNAs, be it folding, inverse folding, kinetics,
+@@ -78,7 +78,7 @@ and design of both existing and novel RNA sequences.
+ \section{Thesis Content}
+ \label{sec:intro:thesiscontent}
+ 
+-The work of this thesis is based off the following four journal articles, alongside
++The work of this thesis is based on the following four journal articles, alongside
+ unpublished data and observations. The journal articles constituting the
+ primary body of research include:
+ 
+@@ -102,14 +102,14 @@ software intended to facilitate the detection of full \rb sequences
+ alongside their corresponding `on' and `off' structures in genomic data. In
+ \Chref{fftbor} we introduce the program \fftbor, which computes---for
+ each integer $k$---the Boltzmann probability \pk of the subensemble of structures
+-whose base pair distance to an input reference structure \str is $k$.
++whose \bpd to an input reference structure \str is $k$.
+ In \Chref{ffttwo} we extend this idea to simultaneously consider two
+ reference structures \strST and produce as a result the coarse-grained 2D energy
+ landscape where---for each integer pair $x,y$---we compute the Boltzmann
+ probability $p_{x,y}$
+-of those structures whose base pair distance from \strS [resp. \strTresp] is $x$
++of those structures whose \bpd from \strS [resp. \strTresp] is $x$
+ [resp. $y$]. This program---\ffttwo---allows for the efficient approximation of
+-kinetic characteristics of RNA molecules; presented in \Chref{hermes}
++kinetic characteristics of RNA molecules, presented in \Chref{hermes}
+ through the software package \hermes. Finally in \Chref{disc} we conclude
+ with a summary of this work as a whole, and consider its place in the greater
+ ecosystem of computational RNA tools.
+diff --git a/Chapters/Ribofinder.tex b/Chapters/Ribofinder.tex
+index 4551e2d..a5b7f09 100644
+--- a/Chapters/Ribofinder.tex
++++ b/Chapters/Ribofinder.tex
+@@ -19,14 +19,17 @@ putative aptamers and expression platforms, two distinct components of
+ this data into a pool of candidate \rbs, we use \rfold \citep{lorenz.amb11}
+ with constraints based on experimental data to compute the two distinct structural
+ conformations---gene `on' and gene `off'. In the third and final stage, we
+-leverage \foldalign \citep{havgaard:2007ca} to measure the similarity between our
++leverage \foldalign \citep{gorodkin:1997tr,havgaard:2007ca} to measure the similarity between our
+ candidate pool and a
+ canonical \grb well studied in the literature, the
+ xanthine phosphoribosyltransferase (xpt) \grb from {\em Bacillus subtilis}. At the
+ time of this writing, Prof. Dr. Mario
+ M\"orl at Universit\"at Leipzig is overseeing preliminary structural
+ validation of predicted gene `on' and off structures for a number of
+-computationally predicted \grbs in {\em Bacillus megaterium}.
++computationally predicted \grbs in {\em Bacillus megaterium}. We have already
++prepared a draft of the paper describing this work, and are presently awaiting
++biochemical validation before submitting it with co-authors M. M\"orl and
++coworkers.
+ 
+ \subsection{Organization}
+ \label{subsec:rfinder:org}
+@@ -54,11 +57,22 @@ sensing of the small-molecule---and a downstream expression platform whose
+ structure changes upon the aptamer binding the metabolite. Because of the
+ discriminatory nature of metabolite sensing, groups have had great success in
+ finding representative examples of aptamers across a diverse collection of
+-bacterial species; RFam 12.0 currently contains 26 different families of aptamers
+-involved in different metabolic pathways. Whereas there exists strong sequence and
++bacterial species; Rfam 12.0 currently contains 26 different families of aptamers
++involved in different metabolic pathways.
++
++Tools such as \Rb finder \citep{bengert2004} and \ms{RiboSW}
++\citep{chang:2009de} have used the conserved
++structural characteristics of the aptamer as search criteria with promising
++results, while the webserver \ms{RibEx} relies solely on sequence conservation
++to detect putative aptamer domains in genomic data \citep{abreugoodger:2005hb}.
++Meanwhile other groups have used covariance model (CM)-based approaches to find
++aptamer domains, most notably \ms{CMfinder} \citep{yao2006} and Rfam
++\citep{nawrocki:2014uy}.
++
++Whereas there exists strong sequence and
+ structural similarity within the aptamer of a \rb family, the expression
+ platform is highly variable, and thus challenging to capture using traditional
+-SCFG-based approaches. For this reason databases such as RFam only contain the aptamer
++SCFG-based approaches. For this reason databases such as Rfam only contain the aptamer
+ portion of the \rb, and there exists no database providing sequences
+ including expression platforms, necessary for capturing the `on' and `off'
+ conformations of this regulatory element. We have developed a new
+@@ -98,19 +112,20 @@ which modulate the expression of genes involved in purine biosynthesis.
+ \subsection{Step 1: Candidate selection}
+ \label{subsec:rfinder:selection}
+ 
+-The RefSeq data we used for analysis contains 5,121 annotated bacterial genomes
++The RefSeq data we used for analysis (downloaded on \fnaRetrievalTime)
++contains 5,121 annotated bacterial genomes
+ across 2,732 different organisms, totaling over $9.5 * 10^9$ bases. We used the
+ program \infernal to determine the coordinates of putative aptamer structures
+ within the RefSeq genomes, and \tthp to locate candidate rho-independent
+ transcription terminators.
+ 
+-\subsubsection{Detecting Aptamers with \infernal}
++\subsubsection{Detecting aptamers with \infernal}
+ \label{subsubsec:rfinder:infernal}
+ 
+ \infernal \citep{infernal}, \citep{nawrocki:2013hk} uses a stochastic context-free
+ grammar (SCFG) with a user-provided multiple sequence alignment (MSA) to
+ efficiently scan genomic data for RNA homologs, taking into consideration both
+-sequence and structural conservation. Using the purine aptamer MSA from RFam 12.0
++sequence and structural conservation. Using the purine aptamer MSA from Rfam 12.0
+ (RF00167), \infernal (v1.1.1, default options) detects 1,537 significant hits
+ having E-value $<= 0.01$. Because \infernal leverages the concept of a
+ `local end'---a large insertion or deletion in the alignment at reduced cost---it
+@@ -122,17 +137,27 @@ complexity to contain a multiloop (described further in
+ \ref{subsubsec:rfinder:shapes}). The pyrimidine residue abutted next to the P1
+ stem in the J3--1 junction differentiates between guanine and adenine-sensing
+ \rbs by binding the complimentary purine ligand; for our interest in \grbs
+-exclusively we require the presence of a cytidine at this residue. In total, using
++exclusively we require the presence of a cytidine at this residue
++(\Figref{rfinder:aptamerDiagram}). In total, using
+ \infernal with these additional filters yields 1,280 guanine aptamers across 555
+-unique organisms (note: here and elsewhere I define a `unique organism' as having
+-a unique taxonomy ID).
++unique organisms.
+ 
+-\subsubsection{Detecting Expression Platforms with \tthp}
++\begin{figure}[!ht]
++\centering
++\includegraphics[width=.4\textwidth]{Figures/Ribofinder/NC_000964_3_2320197_2320054_APTAMER.pdf}
++\caption[Diagram of the aptamer portion of the \Bsxpt \grb]{Diagram of the aptamer portion of the \Bsxpt \grb, with annotations
++to indicate the P1, P2, and P3 stems of the multiloop, junctions between the
++hairpins, and the ligand binding site (in yellow). This structural diagram was
++generated using VARNA \citep{darty:2009gt}.}
++\label{fig:rfinder:aptamerDiagram}
++\end{figure}
++
++\subsubsection{Detecting expression platforms with \tthp}
+ \label{subsubsec:rfinder:tthp}
+ 
+ \tthp \citep{ermolaeva:2000cl} detects rho-independent terminators in bacterial
+ genomes in a context-sensitive fashion by leveraging the protein annotations
+-available in PTT data. These terminator sequences canonically have a stable
++available in NCBI Protein Table (PTT) data. These terminator sequences canonically have a stable
+ hairpin loop structure immediately preceding a run of $5+$ uracil residues, the
+ combination of which causes the ribosomal machinery to stall and dissociate from
+ the transcript. \tthp performs a genomic scan to determine candidate loci with
+@@ -153,9 +178,9 @@ rho-independent terminators within range of a putative aptamer produced by
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/refseqGenomeSizes.pdf}
+-\caption{Histogram displaying the distribution of genome sizes across the RefSeq
++\caption[Histogram displaying the distribution of genome sizes across RefSeq]{Histogram displaying the distribution of genome sizes across the RefSeq
+ data analyzed, comprising 5,172 bacterial genomes. Genome size is shown using a
+-$\log_{10}$ scale.}
++$\log_{10}$ scale, and appears to have a bimodal distribution.}
+ \label{fig:rfinder:genomeSizes}
+ \end{figure}
+ 
+@@ -168,7 +193,7 @@ secondary structures for these candidates. In the following section, we explain
+ how constraint folding is used to generate putative `on' and `off' conformations
+ for each candidate.
+ 
+-\subsubsection{Notation for Representing Abstract RNA Shapes}
++\subsubsection{Notation for representing abstract RNA shapes}
+ \label{subsubsec:rfinder:shapes}
+ 
+ Given an RNA sequence $\seq = \seqN$, where positions $s_i$ are drawn from the
+@@ -180,11 +205,19 @@ $s_i$ is denoted as a `.' if unpaired and a `(' [resp. `)'] if the left [resp.
+ right] base in a base pair. Given any two base pairs $(i,j)$ and $(k,l)$ in \strS,
+ then $i < k < j \iff i < l < j$; pseudoknots are not permitted in the structure. A
+ secondary structure taking this form is said to have balanced parentheses, and can
+-additionally be represented using a context-free grammar such as:
++additionally be represented using a context-free grammar such as the
++following,\footnote{Note that in the grammar from \eqnref{rfinder:strCfg},
++$\bullet^{\theta}$ should be interpreted to mean $\theta$ repetitions
++of the $\bullet$ symbol, where $\theta$ is generally taken to be 3.}
++derived from \citep{fusy:2012ka}:
+ 
+ \begin{align}
+ \label{eq:rfinder:strCfg}
+-S \rightarrow S\,.\;|\;.\,S\;|\;(S)\;|\;SS\;|\;\epsilon
++\begin{split}
++S &\rightarrow \bullet \;|\; S \bullet \,|\; T \;|\; S\,T \\
++T &\rightarrow \bpL \bullet^{\theta} \bpR \;|\;
++\bpL S\,\bullet^{\theta} \bpR \;|\; \bpL T \bpR \;|\; \bpL S\,T \bpR \\
++\end{split}
+ \end{align}
+ 
+ The grammar from \eqnref{rfinder:strCfg} can be used to generate a parse tree
+@@ -192,8 +225,20 @@ The grammar from \eqnref{rfinder:strCfg} can be used to generate a parse tree
+ tree offers an abstract representation of secondary structure shape independent of
+ sequence length, permitting us to classify and eventually constrain a large
+ collection of sequences having variable length which are all expected to have the
+-same abstract tree shape. This is analogous to what the Giegerich lab refers to as
+-their `type 5' structural abstraction using the \rshapes tool. Every node in \tree
++same abstract tree shape \citep{voss:2006iq}. This is analogous to what
++the Giegerich lab refers to as
++their `type 5' structural abstraction using the \rshapes tool, and can be
++described using the following grammar \citep{Lorenz:2008gz}:
++
++\begin{align}
++\label{eq:rfinder:shapeCfg}
++\begin{split}
++S &\rightarrow \brL T \brR\, S \;|\; \brL T \brR \\
++T &\rightarrow \brL T \brR \;|\; \epsilon \\
++\end{split}
++\end{align}
++
++Every node in \tree
+ represents a helix in \strS, and internally tracks the indices of both its
+ beginning $(i,j)$ and closing $(k,l)$ base pair. We use a level-order naming
+ convention to refer to helices within the parse tree, whereby a position
+@@ -210,7 +255,7 @@ notation \treePos{t}{$i$} to refer to the subtree of \tree whose root is
+ Finally, we introduce the concept of a tree signature. The tree signature for a
+ tree \tree is a list of the node depths when traversed in a depth-first pre-order
+ fashion. To provide a concrete example, consider the following experimentally
+-validated xpt \grb from Bacillus subtilis subsp. subtilis str. 168
++validated xpt \grb from {\em Bacillus subtilis} subsp. subtilis str. 168
+ (NC\_000964.3 2320197--2320054) with corresponding gene `off' structure as seen in
+ \Figref{rfinder:xptOff}.
+ \medskip
+@@ -226,10 +271,13 @@ validated xpt \grb from Bacillus subtilis subsp. subtilis str. 168
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_000964_3_2320197_2320054_ON.pdf}
+ \end{subfigure}
+-\caption{{\em (Top)} The xanthine phosphoribosyltransferase (xpt) \grb from
++\caption[The xanthine phosphoribosyltransferase (xpt) \grb from
+ {\em B. subtilis} subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054),
+-and corresponding gene `off' structure derived from crystallography analysis in
+-complex with guanine \citep{breaker:riboswitch2}. {\em (Bottom)} The experimentally
++and corresponding gene `off' and `on' structures]{{\em (Top)} The xanthine phosphoribosyltransferase (xpt) \grb from
++{\em B. subtilis} subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054),
++and corresponding gene `off' structure derived from inline probing studies both in
++the presence and absence of guanine \citep{mandal2003}. {\em (Bottom)} The
++experimentally
+ derived gene `on' structure for \Bsxpt. These structural diagrams were generated
+ using VARNA \citep{darty:2009gt}.}
+ \label{fig:rfinder:xptOff}
+@@ -248,12 +296,12 @@ proximal terminator hairpins produced by \tthp yield the aforementioned 577
+ candidate \grbs for which we then try to produce reasonable gene `on' and off
+ structures.
+ 
+-\subsubsection{Constrained Folding to Predict Switch Structures}
++\subsubsection{Constrained folding to predict switch structures}
+ \label{subsubsec:rfinder:consfold}
+ 
+ To restrict our search to unannotated \grbs, and further ensure that we are not
+-re-detecting sequences based off the RFam covariance model provided to \infernal,
+-we constrain our search to those RefSeq organisms not represented in the RFam seed
++re-detecting sequences based off the Rfam covariance model provided to \infernal,
++we constrain our search to those RefSeq organisms not represented in the Rfam seed
+ alignment. 503 of the 577 candidates, or 87.18\% represent putative unannotated
+ \rbs not represented by RF00167.
+ 
+@@ -315,26 +363,21 @@ disruptive pairing downstream of the newly formed anti-terminator stem.}
+ 
+ These constraint masks are run using the command-line flags
+ \ms{-d 0 -P rna\_turner1999.par} to disable dangles and use the Turner 1999
+-energies respectively. Experimental evidence using inline probing and
++energies respectively \citep{mathews:1999jw}. We choose to disable dangles (\ms{-d 0}) and use
++the Turner 1999 energy model (\ms{-P rna\_turner1999.par})
++based on visual inspection of the structures output by \rfold with
++constraints---these flags appear to yield conformations most frequently consistent
++with the known structures for the \Bsxpt \grb.
++Experimental evidence using inline probing and
+ crystallographic analysis suggests that
+ the `on' conformation of the \grb has a reduced P1 stem length of 3 base pairs
+ \citep{mandalboesebarrickwinklerbreaker,serganov:2004dq};
+ in practice we were unable to force \rfold to respect this constraint regardless
+ of command-line options specified. For this reason we reconstitute the P1 stem in
+ both structures after constrained folding, having length equivalent to it the
+-\infernal P1 stem (resp. 3 base pairs) in the gene `off' (resp. gene `on')
++\infernal P1 stem [resp. 3 base pairs] in the gene `off' [resp. gene `on']
+ structure.
+ 
+-This difficulty with \rfold can be shown by using the constraint-produced
+-structures as exhaustive constraints themselves. All unpaired nucleotides in
+-\strOff and \strOn are notated by a `\ms{x}' and all base pairs by `\ms{()}' for
+-the 5' and 3' side of the pair respectively to form new constraints mask
+-\strConst{off} and \strConst{on}, having all bases' state explicitly specified. By
+-refolding all 577 candidate sequences with \strConst{off} and \strConst{on} using
+-the same options as before, only 463 (or 80.24\%) of the resulting structures from
+-\strConst{off} have the tree signature prefix \ms{[0,1,2,2,1]}, and just 21 (or
+-3.64\%) of the \strConst{on} structures correctly re-fold their multiloop.
+-
+ \subsection{Step 3: Candidate curation}
+ \label{subsec:rfinder:curation}
+ 
+@@ -343,20 +386,20 @@ in RefSeq, alongside their gene `on' and off structures. Unfortunately the
+ experimental validation of all 503 candidates is not tractable, so it was
+ necessary to reduce this collection again to a more manageable size, while only
+ keeping the most promising candidates. Our original approach involved using
+-\foldalign \citep{havgaard:2007ca} alongside the \ms{needleall} tool from EMBOSS
++\foldalign \citep{gorodkin:1997tr,havgaard:2007ca} alongside the \ms{needleall} tool from EMBOSS
+ \citep{rice:2000wr}, to simultaneously
+ select sequences which closely approximate the more thermodynamically stable
+ gene `off' conformation of the experimentally known \Bsxpt \grb, while minimizing
+ sequence similarity between candidates selected for experimental validation. Due to
+-experimental constraints, we elected finally to instead choose a small number
++expense, we elected to instead choose a small number
+ ($n = 2$) of organisms easily available which had multiple promising hits as our
+ experimental candidate pool.
+ 
+ In \Figref{rfinder:histogramFoldalignCandidatesVsXpt}, we display a histogram of scores produced
+ by \foldalign for the 503 candidates, when aligned with the \Bsxpt \grb. \foldalign
+-is based off Sankoff's algorithm \citep{sankoff:1985wc}, a dynamic programming
+-algorithm for simultaneous folding and alignment that runs in \On{6} time and
+-\On{4} space. Because three of the sequences from our pool of 503 candidates have
++is based off a simplification of Sankoff's algorithm \citep{sankoff:1985wc}, and
++is a dynamic programming
++algorithm for simultaneous folding and alignment that runs in \On{4} time. Because three of the sequences from our pool of 503 candidates have
+ no global alignment with the \Bsxpt sequence, we have pruned them from our
+ dataset and only consider those remaining 500 sequences for which \foldalign
+ scores are produced. The \foldalign scores produce have a mean of $153.798$ with a
+@@ -366,7 +409,7 @@ minimum [resp. maximum] score of $-2698$ [resp. 1908]. Running \foldalign with t
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/histogramFoldalignCandidatesVsXpt.pdf}
+-\caption{Histogram displaying the distribution of scores produced by \foldalign
++\caption[Histogram displaying the distribution of scores produced by \foldalign]{Histogram displaying the distribution of scores produced by \foldalign
+ 2.1.1 using flags \ms{-global -summary -format commandline} when folding each of
+ the 503 candidates against the \Bsxpt sequence NC\_000964.3 2320197--2320054.
+ Three of the sequences run against \foldalign (NC\_010674.1 1516712--1516868,
+@@ -387,19 +430,19 @@ two organisms for experimental validation was to take this pool of 25 organisms,
+ sort by descending average score $s$, and select the first two which are available
+ via DSMZ (\url{https://www.dsmz.de/}), the warehouse for microorganisms used by
+ our collaborators. Prof. Dr. Mario M\"orl at Universit\"at Leipzig is presently
+-overseeing a post-doc who is using the SHAPE protocol \citep{wilkinson:2006vd} to
++overseeing Dr. Regula Aregger, a post-doc who is using the SHAPE protocol
++\citep{wilkinson:2006vd} to
+ validate the computationally predicted structure of these candidates.
+ 
+ \begin{figure}[!ht]
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/candidateHistogramGroupedByAccession.pdf}
+-\caption{Histogram displaying the distribution of scores produced by \foldalign
+-2.1.1 using flags \ms{-global -summary -format commandline} when folding each of
+-the 503 candidates against the \Bsxpt sequence NC\_000964.3 2320197--2320054.
+-Three of the sequences run against \foldalign (NC\_010674.1 1516712--1516868,
+-NC\_010723.1 1487041--1487197, and NC\_020291.1 4599412--4599258) have no global
+-alignment with the \Bsxpt sequence, and thus the histogram represents 500 of the
+-original 503 sequences.}
++\caption[Histogram displaying the number of candidate \rbs we observe
++per organism]{Histogram displaying the number of candidate \rbs we observe
++per organism. From this data, it is clear that the majority of organisms have
++only one putative \rb, however two organisms have five candidates each:
++{\em Clostridium botulinum} B str. Eklund 17B (NC\_010674.1) and
++{\em Clostridium botulinum} E3 str. Alaska E43 (NC\_010723.1)}
+ \label{fig:rfinder:candidateHistogramGroupedByAccession}
+ \end{figure}
+ 
+@@ -415,16 +458,17 @@ candidate \grbs each, outlined in Table \ref{table:rfinderCandidateLocs}.
+ \begin{table}[!ht]
+ \centering
+ \begin{tabularx}{\linewidth}{*{1}{L} *{2}{C}}
+-  \toprule
+-  \small{Downstream gene function} & \small{{\em B. megaterium} QM B1551} & \small{{\em B. megaterium} DSM319} \\
+-  \cmidrule(lr){1-3}
+-  \small{xpt} & 1427313--1427501 & 1413696--1413884 \\[1ex]
+-  \small{GMP synthase} & 231630--231806 & 230059--230235 \\[1ex]
+-  \small{guanine permease} & 233482--233680 & 231911--232108 \\[1ex]
+-  \small{N5-carboxyaminoimidazole} & 240759--240970 & 239188--239400 \\
+-  \bottomrule
++\toprule
++\small{Downstream gene function} & \small{{\em B. megaterium} QM B1551} & \small{{\em B. megaterium} DSM319} \\
++\cmidrule(lr){1-3}
++\small{xpt} & 1427313--1427501 & 1413696--1413884 \\[1ex]
++\small{GMP synthase} & 231630--231806 & 230059--230235 \\[1ex]
++\small{guanine permease} & 233482--233680 & 231911--232108 \\[1ex]
++\small{N5-carboxyaminoimidazole} & 240759--240970 & 239188--239400 \\
++\bottomrule
+ \end{tabularx}
+-\caption{The genomic coordinates for the four candidate \grbs in both
++\caption[The genomic coordinates for the four candidate \grbs in both
++{\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319]{The genomic coordinates for the four candidate \grbs in both
+ {\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319. Note that the
+ \grbs are located upstream of the same genes, and that these two strains of
+ {\em B. megaterium} are highly similar. These structures are pictured in
+@@ -457,9 +501,10 @@ experimental data for the {\em B. subtilis} ydhL gene \citep{mandal2004a} and ca
+ be used as templates for the constraint masks used in \Secref{subsec:rfinder:strpred}.
+ 
+ In general, we believe those \rbs using rho-independent transcription
+-termination as a mode of regulation, for which an aptamer alignment exists and
+-some experimental knowledge of the terminator stem's structural conformation are
+-well suited for more robust structural prediction using \rfinder.
++termination as a mode of regulation---for which an aptamer alignment exists and
++some experimental knowledge of the expression platform's structural
++conformation is known---are well suited for more robust structural
++prediction using \rfinder.
+ 
+ \section{Guanine \rbs for experimental validation}
+ \label{sec:rfinder:grbValidationVarna}
+@@ -475,7 +520,7 @@ well suited for more robust structural prediction using \rfinder.
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_ON.pdf}
+ \end{subfigure}
+-\caption{{\em Top:} the computationally predicted gene `off' conformation of
++\caption[Structures for the putative \rb located upstream of the xpt gene in {\em B. megaterium} QM B1551]{{\em Top:} the computationally predicted gene `off' conformation of
+ sequence NC\_014019.1 1427313--1427501, using \rfold from the ViennaRNA 2.1.8
+ suite, with dangles disabled and the Turner 1999 energies. This sequence is
+ located upstream of the xpt gene in {\em B. megaterium} QM B1551. {\em Bottom:}
+@@ -495,7 +540,7 @@ the gene `on' conformation.}
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_231630_231806_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the GMP synthase
++\caption[Structures for the putative \rb located upstream of the GMP synthase gene in {\em B. megaterium} QM B1551]{The computationally predicted \rb located upstream of the GMP synthase
+ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 231630--231806).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014019_1_231630_231806}
+@@ -513,7 +558,7 @@ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 231630--231806).
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_233482_233680_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the guanine permease
++\caption[Structures for the putative \rb located upstream of the guanine permease gene in {\em B. megaterium} QM B1551]{The computationally predicted \rb located upstream of the guanine permease
+ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 233482--233680).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014019_1_233482_233680}
+@@ -531,8 +576,8 @@ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 233482--233680).
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_240759_240970_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the
+-N5-carboxyaminoimidazole
++\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} QM B1551]{The computationally predicted \rb located upstream of the
++N5- carboxy\-amino\-imidazole
+ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 240759--240970).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014019_1_240759_240970}
+@@ -550,7 +595,7 @@ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 240759--240970).
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_1413696_1413884_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the xpt
++\caption[Structures for the putative \rb located upstream of the xpt gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the xpt
+ gene in {\em B. megaterium} DSM319 (NC\_014103.1 1413696--1413884).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014103_1_1413696_1413884}
+@@ -568,7 +613,7 @@ gene in {\em B. megaterium} DSM319 (NC\_014103.1 1413696--1413884).
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_230059_230235_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the GMP synthase
++\caption[Structures for the putative \rb located upstream of the GMP synthase gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the GMP synthase
+ gene in {\em B. megaterium} DSM319 (NC\_014103.1 230059--230235).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014103_1_230059_230235}
+@@ -586,7 +631,7 @@ gene in {\em B. megaterium} DSM319 (NC\_014103.1 230059--230235).
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_231911_232108_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the guanine permease
++\caption[Structures for the putative \rb located upstream of the guanine permease gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the guanine permease
+ gene in {\em B. megaterium} DSM319 (NC\_014103.1 231911--232108).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014103_1_231911_232108}
+@@ -604,8 +649,8 @@ gene in {\em B. megaterium} DSM319 (NC\_014103.1 231911--232108).
+ \centering
+ \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_239188_239400_ON.pdf}
+ \end{subfigure}
+-\caption{The computationally predicted \rb located upstream of the
+-N5-carboxyaminoimidazole
++\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the
++N5- carboxy\-amino\-imidazole
+ gene in {\em B. megaterium} DSM319 (NC\_014103.1 239188--239400).
+ {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
+ \label{fig:figure:NC_014103_1_239188_239400}
+diff --git a/main.tex b/main.tex
+index 3eacfd9..18b0d0a 100755
+--- a/main.tex
++++ b/main.tex
+@@ -140,12 +140,12 @@
+ I, \authornames, declare that this thesis titled, `\ttitle' and the work presented in it are my own. I confirm that:
+ 
+ \begin{itemize}
+-\item[\tiny{$\blacksquare$}] This work was done wholly or mainly while in candidature for a research degree at this University.
+-\item[\tiny{$\blacksquare$}] Where any part of this thesis has previously been submitted for a degree or any other qualification at this University or any other institution, this has been clearly stated.
+-\item[\tiny{$\blacksquare$}] Where I have consulted the published work of others, this is always clearly attributed.
+-\item[\tiny{$\blacksquare$}] Where I have quoted from the work of others, the source is always given. With the exception of such quotations, this thesis is entirely my own work.
+-\item[\tiny{$\blacksquare$}] I have acknowledged all main sources of help.
+-\item[\tiny{$\blacksquare$}] Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself.\\
++\item This work was done wholly or mainly while in candidature for a research degree at this University.
++\item Where any part of this thesis has previously been submitted for a degree or any other qualification at this University or any other institution, this has been clearly stated.
++\item Where I have consulted the published work of others, this is always clearly attributed.
++\item Where I have quoted from the work of others, the source is always given. With the exception of such quotations, this thesis is entirely my own work.
++\item I have acknowledged all main sources of help.
++\item Where the thesis is based on work done by myself jointly with others, I have made clear exactly what was done by others and what I have contributed myself.\\
+ \end{itemize}
+ 
+ Signed:\\
+@@ -196,9 +196,12 @@ Date:\\
+ \acknowledgements{\addtocontents{toc}{\vspace{1em}} % Add a gap in the Contents, for aesthetics
+ First and foremost, I would like to thank my advisor, Prof. Peter Clote, for the
+ countless hours spent explaining the nuances of the computational RNA field.
+-Between the excellent introduction to this field of research and all of the
+-guidance and support he provided over my graduate school tenure, I could not have
+-asked for a better advisor.
++With all the guidance and support he provided over my graduate school career,
++I could not have asked for a better advisor.
++
++Additionally, I'd like to thank my family and friends for their support and
++encouragement, and the members of my thesis committee for their insights
++along the way.
+ }
+ \clearpage % Start a new page
+ 
+@@ -274,18 +277,19 @@ asked for a better advisor.
+ 
+ % \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+ 
+-% \appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
++\appendix % Cue to tell LaTeX that the following 'chapters' are Appendices
+ 
+ % % Include the appendices of the thesis as separate files from the Appendices folder
+ % % Uncomment the lines as you write the Appendices
+ 
+-% %\input{Appendices/AppendixA}
++\input{Appendices/FFTborAppendix}
++\input{Appendices/FFTbor2DAppendix}
+ % %\input{Appendices/AppendixB}
+ % %\input{Appendices/AppendixC}
+ 
+ % \addtocontents{toc}{\vspace{2em}} % Add a gap in the Contents, for aesthetics
+ 
+-% \backmatter
++\backmatter
+ 
+ %----------------------------------------------------------------------------------------
+ %	BIBLIOGRAPHY
