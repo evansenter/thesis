@@ -53,7 +53,7 @@ For instance, in the {\em hok/sok}
 the transition between two metastable RNA structures determines the
 fate of a cell as follows.
 The {\em hok} gene of {\em E. coli} and other bacteria
-codes a small (52 amino acid) toxin causing irreversible damage to the cell
+codes a small ($52$ amino acid) toxin causing irreversible damage to the cell
 membrane. It has been shown that {\em hok}-mRNA is
 constitutively expressed from a weak promoter, while
 the rapidly degraded {\em sok}-RNA is constitutively expressed from
@@ -64,7 +64,7 @@ digests the last $\approx 40$ nt of the $3'$ end of {\em hok}-mRNA,
 transforming the molecule into its active form in which
 the Shine-Dalgarno sequence is no longer sequestered.
 If R1 plasmids of {\em E. coli} are present in
-sufficient copy number, then a portion of the 64 nt
+sufficient copy number, then a portion of the $64$ nt
 {\em sok}-RNA, which is complementary to {\em hok}-mRNA leader
 region, binds to the active conformation of {\em hok}-mRNA, thus
 causing degradation of the complex by RNase III \citep{gerdes.arg97}.
@@ -398,7 +398,7 @@ Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
-$m$ has an upper bound of 27---only the $\lfloor \log_{10}(2^m) \rfloor =8$
+$m$ has an upper bound of $27$---only the $\lfloor \log_{10}(2^m) \rfloor =8$
 most significant digits
 are computed with \ffttwo.
 It is well-known that
@@ -907,7 +907,7 @@ Pseudocode to compute the $m$ most significant digits
 for probabilities
 $p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
-$m$ has an upper bound of 27---only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
+$m$ has an upper bound of $27$---only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
 are computed with \ffttwo. It is well-known that
 the FFT requires $O(N \log N)$ time to solve the inverse discrete
 Fourier transform for a polynomial of degree $N$. In our case,
@@ -923,7 +923,7 @@ $N=n^2$, and so the FFT requires time $O(n^2 \log n)$.
 To perform comparative benchmarking between \rnatwofold and \ffttwo,
 we took precision parameter $m=8$, and proceeded as follows.
 For each sequence length $n = 20,25,30,\ldots,300$, we generated
-100 random sequences using probability $0.25$ for each nucleotide
+$100$ random sequences using probability $0.25$ for each nucleotide
 A,\,C,\,G,\,U.
 For a given RNA sequence \seq, the metastable structure \strA was
 taken to be the MFE structure of \seq.
@@ -938,17 +938,17 @@ For all $0 \leq x,y \leq n$, \rnatwofold and \ffttwo were
 benchmarked in the computation of all Boltzmann probabilities
 $p(x,y)= \frac{\bfZ{x,y}{}}{\fullZ}$, where $x$ [resp. $y$] represents base pair
 distance to metastable structure \strA [resp. \strBresp]. Care was taken for
-both software to employ the same energy model (Turner99 energy model,
+both software to employ the same energy model (Turner$99$ energy model,
 no dangles, suppression of \mfes computations
 for \rnatwofold) and the same number of parallel threads (8 threads
 using OpenMP). Nonetheless, there are slight differences in the energy
 models --- namely, \rnatwofold includes
 mismatch penalties for multiloop stems and for exterior loops, while
 \ffttwo does not. Even in the computation of the partition function
-$Z$, for spliced leader RNA from {\em L. collosoma} of length 56 nt,
+$Z$, for spliced leader RNA from {\em L. collosoma} of length $56$ nt,
 \rnatwofold \ms{-d0} obtains a value of
 $-9.6604$ kcal/mol, while \ffttwo obtains
-$-9.6605$ kcal/mol; similarly, for attenuator RNA of length 73 nt,
+$-9.6605$ kcal/mol; similarly, for attenuator RNA of length $73$ nt,
 \rnatwofold \ms{-d0} obtains a value of
 $-22.1718$ kcal/mol, while \ffttwo obtains
 $-22.1732$ kcal/mol.
@@ -973,15 +973,15 @@ and $0 \leq y \leq L$ in \rnatwofold.
 
 \Figref{ffttwo:ffttwoRtwofoldTiming} depicts average run time of \rnatwofold
 and \ffttwo as a function of RNA sequence length, for random RNA
-sequences of lengths 20--200 and their metastable structures \strAB, as
+sequences of lengths $20$--$200$ and their metastable structures \strAB, as
 previously explained.  We see that both programs have
 roughly comparable run times for sequences of length up to approximately
-80 nt, while \ffttwo is demonstrably faster for longer sequences.
+$80$ nt, while \ffttwo is demonstrably faster for longer sequences.
 \Figref{ffttwo:ffttwoRtwofoldLogScale}
 presents $\log_{10}$ run time as a function of sequence length, in order
 to more clearly determine the crossover point in performance.
 \rnatwofold is marginally faster for sequences of
-length up to roughly 80 nt, though the difference is in the millisecond
+length up to roughly $80$ nt, though the difference is in the millisecond
 range.
 \Figref{ffttwo:ffttwoRtwofoldStdevMinMax}
 shows that the standard deviation of run times on random sequences is
@@ -995,11 +995,11 @@ on sequence length.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming.pdf}
 \caption[Run time in seconds for \rnatwofold and \ffttwo on random
-RNA sequences of length 20--200 nt]{
+RNA sequences of length $20$--$200$ nt]{
 Run time in seconds for \rnatwofold and \ffttwo on random
-RNA sequences of length 20--200 nt, where sequence generation and
+RNA sequences of length $20$--$200$ nt, where sequence generation and
 choice of metastable structures \strAB is described in the text.
-Beyond a length of approximately 80 nt, \ffttwo is demonstrably
+Beyond a length of approximately $80$ nt, \ffttwo is demonstrably
 faster.
 }
 \label{fig:ffttwo:ffttwoRtwofoldTiming}
@@ -1009,9 +1009,9 @@ faster.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale.pdf}
 \caption[Logarithm of run time in seconds for \rnatwofold and \ffttwo
-on random RNA sequences of length less than 200 nt]{
+on random RNA sequences of length less than $200$ nt]{
 Logarithm of run time in seconds for \rnatwofold and \ffttwo
-on random RNA sequences of length less than 200 nt, for same data as that
+on random RNA sequences of length less than $200$ nt, for same data as that
 in \Figref{ffttwo:ffttwoRtwofoldTiming}.
 By taking $\log_{10}$ of the run times,
 crossover points are apparent,
@@ -1042,7 +1042,7 @@ Standard deviation of run times of \rnatwofold and \ffttwo
 as a function of sequence length $n$.
 {\em (Bottom)}
 Minimum and maximum run times for \rnatwofold and \ffttwo.
-For each collection of 100 random sequences of length $n$, the minimum
+For each collection of $100$ random sequences of length $n$, the minimum
 and maximum run time for a sequence of that length was computed.
 Taken together, these figures clearly show the
 run time dependence of \rnatwofold on particular sequences, while
@@ -1060,9 +1060,9 @@ from {\em L. collosoma}, as computed by \ffttwo]{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
-$\seq\,=$ \ms{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGAGACUUC} \\
-$\strA =$ \ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} \\
-$\strB =$ \ms{.......................((((((((((((.....)))))..)))))))..}
+\hspace{.1875em}$\seq\,=$ \strfont{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGAGACUUC} \\
+                $\strA =$ \strfont{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} \\
+  \hspace{.54em}$\strB =$ \strfont{.......................((((((((((((.....)))))..)))))))..}
 \rule[-1.25em]{0pt}{0pt} \\
 The $x$-axis [resp. $y$-axis]
 represents \bpd between metastable structure \strA [resp.

@@ -592,7 +592,7 @@ folding trajectories for a Markov process.}
 \section{Software within the \hermes suite}
 \label{sec:hermes:layout}
 The \hermes software package was developed on the Macintosh OS X
-operating system (10.9.2--10.11) and should work with any Unix-like platform
+operating system ($10.9.2$--$10.11$) and should work with any Unix-like platform
 (Ubuntu, Debian, and CentOS were tested). We make the source code freely
 available under the MIT License in two locations.
 Our lab hosts the latest stable version of the code at
@@ -603,7 +603,7 @@ source code hosted at the first URL, and we make no guarantee as to
 the stability of development branches in our Git repository.
 
 External dependencies for the software include a C [resp. C++]
-compiler supporting the GNU99 language specification [resp. C++98],
+compiler supporting the GNU$99$ language specification [resp. C++$98$],
 FFTW implementation of \fft \citep{fftw05} ($\geq
 3.3.4$) \url{http://www.fftw.org/}, Gnu Scientific Library GSL ($\geq
 1.15$) \url{http://www.gnu.org/software/gsl/}, Vienna RNA Package
@@ -633,7 +633,7 @@ slow-down due to a scripting language wrapper such as Python, Perl or R.
 We believe
 the API that \hermes provides via its archives to be one of the exciting
 aspects of this software for other developers---the C++ sourcecode comprising
-\fftmfpt is only 56 lines of code (LOC) and \ffteq is only 58 LOC.
+\fftmfpt is only $56$ lines of code (LOC) and \ffteq is only $58$ LOC.
 
 \begin{figure}[!ht]
 \centering
@@ -967,16 +967,16 @@ yielding the curvess seen in \Figref{hermes:populationOccupancySplicedLeader}.
 \centering
 \includegraphics[width=0.7\textwidth]{Figures/Hermes/populationOccupancyCurves.pdf}
 \caption[Population occupancy curves computed with \ffteq for the
-56 nt conformational switch {\em L. collosoma} spliced leader RNA]{
+$56$ nt conformational switch {\em L. collosoma} spliced leader RNA]{
 Population occupancy curves computed with \ffteq for the
-56 nt conformational switch {\em L. collosoma} spliced leader RNA,
+$56$ nt conformational switch {\em L. collosoma} spliced leader RNA,
 with sequence \ms{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGA}
 GACUUC. The dot bracket format for the MFE structure, as computed by
-version 2.1.7 of \ms{RNAfold -d0}, is
-\ms{.......................((((((((((((.....)))))..)))))))..} with free
+version $2.1.7$ of \ms{RNAfold -d0}, is
+\strfont{.......................((((((((((((.....)))))..)))))))..} with free
 energy $-8.6$ kcal/mol, while that of the the alternate suboptimal
 structure is
-\ms{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} with free
+\strfont{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} with free
 energy $-7.5$ kcal/mol. In the case of the MFE structure, the
 equilibrium occupancy $P(t_{\infty})$, which \hermes approximates
 as $0.1789$ should equal the Boltzmann probability $0.1791$,
@@ -1136,11 +1136,11 @@ the benchmarking set described later.
 \caption[Example of the differences in using a sliding window approach for estimating \eqt versus a more robust approach, outlined in Algorithm \ref{fig:hermes:eqEst}]{Example of the differences in using the simple sliding window
 approach (green) versus the approach outlined in Algorithm \ref{fig:hermes:eqEst}
 (blue). There are two representative sequences shown from the benchmarking
-dataset described in \Secref{sec:hermes:benchdata}, sequence \#146
-{\em (Left)} and \#427 {\em (Right)}. Note that the $p(t)$ for the approach from
+dataset described in \Secref{sec:hermes:benchdata}, sequence \#$146$
+{\em (Left)} and \#$427$ {\em (Right)}. Note that the $p(t)$ for the approach from
 Algorithm \ref{fig:hermes:eqEst} is much closer to the computed Boltzmann
 probability---the root-mean-square deviation (RMSD, equation
-\ref{eq:hermes:rmsd}) across the dataset of 1,000 sequences is $0.0041$
+\ref{eq:hermes:rmsd}) across the dataset of $1,000$ sequences is $0.0041$
 [resp. $0.0491$] for the approach described in Algorithm \ref{fig:hermes:eqEst}
 [resp. simple sliding window].}
 \label{fig:hermes:eqEstFromRnaEq}
@@ -1150,30 +1150,30 @@ probability---the root-mean-square deviation (RMSD, equation
 \label{sec:hermes:benchdata}
 
 In this section, we describe a
-benchmarking set of 1,000 small RNAs used to benchmark the previously
+benchmarking set of $1,000$ small RNAs used to benchmark the previously
 described kinetics methods in a comparative study. To ensure that mean
 first passage time can be computed from
 $(I - P^{-}_{\xEnd})^{-1} \cdot {\bf e}$ by using matrix
 inversion, that spectral decomposition of the rate matrix is possible,
 and to ensure that \kinfold simulations would provide sufficient
-statistics, we generated a collection of 1,000 random RNA sequences of
-length 20 nt, each having expected compositional frequency of $1/4$
-for A,C,G,U, and each having at most 2,500 distinct secondary
+statistics, we generated a collection of $1,000$ random RNA sequences of
+length $20$ nt, each having expected compositional frequency of $1/4$
+for A,C,G,U, and each having at most $2,500$ distinct secondary
 structures, such that the \mfe is less than or equal to
 $-5.5$ kcal/mol.
 
-For example, one of the 1,000 sequences is \ms{ACGCGACGUGCACCGCACGU} with
-\mfes \ms{.....((((((...))))))} having free
+For example, one of the $1,000$ sequences is \ms{ACGCGACGUGCACCGCACGU} with
+\mfes \strfont{.....((((((...))))))} having free
 energy of $-6.4$ kcal/mol. Statistics for the free energies of the
-2,453 secondary structures of this 20-mer are the following: mean is
+$2,453$ secondary structures of this $20$-mer are the following: mean is
 $10.695$, standary deviation is $4.804$, maximum is $25.00$, minimum
 is $-6.40$. A histogram for the free energy of all secondary
 structures of \ms{ACGCGACGUGCACCGCACGU} is depicted in
 the left panel of \Figref{hermes:plmv}. The right panel of the
 same figure depicts the \mfes of the
-54 nt hammerhead type III ribozyme from Peach Latent Mosaic Viroid
+$54$ nt hammerhead type III ribozyme from Peach Latent Mosaic Viroid
 (PLMVd), discussed later. This secondary structure is identical
-to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
+to the consensus structure from Rfam $11.0$ \citep{Gardner.nar11}.
 
 \begin{figure}[!ht]
 \centering
@@ -1181,18 +1181,18 @@ to the consensus structure from Rfam 11.0 \citep{Gardner.nar11}.
 \quad
 \includegraphics[width=0.375\textwidth]{Figures/Hermes/plmvStr.pdf}
 \caption[{\em (Left)} Histogram of free energies of secondary structures of
-an example 20-mer from the benchmarking dataset.
-{\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
-Viroid (PLMVd) AJ005312.1/282-335]{
+an example $20$-mer from the benchmarking dataset.
+{\em (Right)} Minimum free energy structure of the $54$ nt Peach Latent Mosaic
+Viroid (PLMVd) AJ$005312.1$/$282$--$335$]{
 {\em (Left)} Histogram of free energies of secondary structures of
 \ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to $+25$ kcal/mol, with
 mean of $10.695$ kcal/mol.
-{\em (Right)} Minimum free energy structure of the 54 nt Peach Latent Mosaic
-Viroid (PLMVd) AJ005312.1/282-335, which is identical to the consensus
-structure from Rfam 11.0 \citep{Gardner.nar11}. \rfold from
-Vienna RNA Package 2.1.7 with energy parameters from the Turner 1999
+{\em (Right)} Minimum free energy structure of the $54$ nt Peach Latent Mosaic
+Viroid (PLMVd) AJ$005312.1$/$282$--$335$, which is identical to the consensus
+structure from Rfam $11.0$ \citep{Gardner.nar11}. \rfold from
+Vienna RNA Package $2.1.7$ with energy parameters from the Turner $1999$
 model were used, since the \mfes determined by
-the more recent Turner 2004 energy parameters
+the more recent Turner $2004$ energy parameters
 does {\em not} agree with the Rfam consensus structure---see
 \citep{synthetichammerheads}. Positional entropy, a measure
 of divergence in the base pairing status at each positions for the
@@ -1204,20 +1204,20 @@ RNA Vienna Package utility script \ms{relplot.pl}.
 
 \Figref{hermes:kinfoldMeanStdev} displays the mean
 and standard deviation for \kinfold simulations of folding time
-for each of the 1,000 RNA sequences from our benchmarking data. For
+for each of the $1,000$ RNA sequences from our benchmarking data. For
 each sequence, the mean and standard deviation of the time required to
 fold the empty structure to the MFE structure were computed from
-10,000 \kinfold runs, each run with an upper bound of $10^8$
+$10,000$ \kinfold runs, each run with an upper bound of $10^8$
 Monte Carlo steps, thus ensuring that all simulations converged. The
 sequences were then sorted by increasing folding time mean. Standard
-deviation exceeded the mean in $83.9\%$ of the 1,000 cases, indicating
+deviation exceeded the mean in $83.9\%$ of the $1,000$ cases, indicating
 the enormous variation between separate \kinfold runs, even for
-20 nt RNA sequences having at most 2,500 secondary structures.
+$20$ nt RNA sequences having at most $2,500$ secondary structures.
 Elementary considerations from statistics indicate that for our benchmarking set
-of 20-mers, the minimum sample size $n = \left( \frac{z_{\alpha/2}
-\cdot \sigma}{E} \right)^2$ ranges from 937,712 to 23,289,310
-to have a confidence level of 95\% that the average of $n$
-\kinfold runs differs from the real folding time by at most 100 steps.
+of $20$-mers, the minimum sample size $n = \left( \frac{z_{\alpha/2}
+\cdot \sigma}{E} \right)^2$ ranges from $937,712$ to $23,289,310$
+to have a confidence level of $95$\% that the average of $n$
+\kinfold runs differs from the real folding time by at most $100$ steps.
 In our opinion, \kinfold is an expertly crafted implementation of
 Gillespie's algorithm for an event driven Monte Carlo simulation of
 one-step RNA secondary structure folding. From the standpoint of
@@ -1253,9 +1253,9 @@ free energy.
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldTimeDist.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldMeanStdev.pdf}
-\caption[Analysis of \kinfold folding times for 20-mer
-\ms{CCGAUUGGCGAAAGGCCACC}]{{\em (Left)} Histogram of \kinfold folding times for 20-mer
-\ms{CCGAUUGGCGAAAGGCCACC}. The mean [resp. standard deviation] of 10,000 runs of \kinfold for this 20-mer is 538.37 [resp. 755.65]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over 10,000 runs for each of the 1,000 sequences from the benchmarking set of 20-mers. For graphical illustration, we have sorted the log folding times in increasing order.}
+\caption[Analysis of \kinfold folding times for $20$-mer
+\ms{CCGAUUGGCGAAAGGCCACC}]{{\em (Left)} Histogram of \kinfold folding times for $20$-mer
+\ms{CCGAUUGGCGAAAGGCCACC}. The mean [resp. standard deviation] of $10,000$ runs of \kinfold for this $20$-mer is $538.37$ [resp. $755.65$]. Note the close fit to the exponential distribution, {\em (Right)} Mean minus standard deviation ($\mu -\sigma$), mean ($\mu$), and mean plus standard deviation ($\mu + \sigma$) of the logarithm of \kinfold folding times, taken over $10,000$ runs for each of the $1,000$ sequences from the benchmarking set of $20$-mers. For graphical illustration, we have sorted the log folding times in increasing order.}
 \label{fig:hermes:kinfoldMeanStdev}
 \end{figure}
 
@@ -1294,33 +1294,33 @@ depict scatterplots for kinetics obtained by some of the algorithms
 above. The left panel of
 \Figref{hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold}
 shows a scatter plots for gold standard \rnamfpt versus platinum
-standard \rnaeq, with correlation value 0.5652. The right
+standard \rnaeq, with correlation value $0.5652$. The right
 panel of the same figure shows a scatter plot for \kinfold versus
-\rnaeq, with correlation 0.7814. Note the persence of two
+\rnaeq, with correlation $0.7814$. Note the persence of two
 clusters in this and some of the other scatter plots. Cluster A
 consists of RNA sequences whose folding time, as determined by \rnamfpt
 or \rnaeq, is rapid---specifically, the natural
-logarithm of the MFPT is at most 7.5. Cluster B consists of the
+logarithm of the MFPT is at most $7.5$. Cluster B consists of the
 remaining RNA sequences, whose folding time is longer than that of
 cluster A. There are no significant differences between RNA sequences
 in clusters A and B with respect to GC-content, sequence logo, minimum
 free energy, number of secondary structures, etc.  The left panel of
 \Figref{hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
 shows the scatter plot for \rnamfpt versus \kinfold, with
-correlation 0.7933, and the right panel shows the scatter plot for
-\rnamfpt versus \fftmfpt, with correlation 0.6035.
+correlation $0.7933$, and the right panel shows the scatter plot for
+\rnamfpt versus \fftmfpt, with correlation $0.6035$.
 \Figref{hermes:scatterplotFftMfptVsKinfoldAndFftEq}
 shows scatter plots for \fftmfpt versus \kinfold {\em (Left)} and
 for \fftmfpt versus \ffteq {\em (Right)}, with respective
-correlation values 0.7608 and 0.9589. \kinfold obviously provides
+correlation values $0.7608$ and $0.9589$. \kinfold obviously provides
 a better correlation with the exact value of \mfpt;
 however, since the standard deviation of \kinfold runs is as
 large as the mean, accurate kinetics estimates
 from \kinfold require prohibitively large computational time---indeed, in
 \citep{wolfingerstadler:kinetics} reliable kinetics for phe-tRNA from
-yeast were obtained by 9,000 \kinfold simulations, each for $10^8$
+yeast were obtained by $9,000$ \kinfold simulations, each for $10^8$
 steps, requiring 3 months of CPU time on an Intel Pentium 4 running at
-2.4 GHz under Linux. Although the correlation value of 0.6035 between
+$2.4$ GHz under Linux. Although the correlation value of $0.6035$ between
 \rnamfpt and \fftmfpt is much less than that obtained by \kinfold,
 the runtime required by our method \fftmfpt is measured
 in seconds, even for moderate to large RNAs. For this reason, we
@@ -1369,14 +1369,14 @@ versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
   \toprule
   \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\ms{BarriersEq}} & \small{\ffteq} \\
   \cmidrule(l){2-9}
-  \small{\rnamfpt}   & 1      & 0.5683 & 0.7945 & 0.5060 & 0.5110 & 0.5204 & 0.5280 & 0.4472 \\
-  \small{\rnaeq}   & 0.5798 & 1      & 0.7814 & 0.7043 & 0.7025 & 0.5080 & 0.5979 & 0.6820 \\
-  \small{\kinfold}       & 0.7933 & 0.7507 & 1      & 0.7312 & 0.7358 & 0.6241 & 0.6328 & 0.6445 \\
-  \small{\fftmfpt}       & 0.6035 & 0.7935 & 0.7608 & 1      & 0.9980 & 0.5485 & 0.8614 & 0.9589 \\
-  \small{\rnatwofold}     & 0.6076 & 0.7919 & 0.7655 & 0.9983 & 1      & 0.5584 & 0.8538 & 0.9515 \\
-  \small{\fftbor}        & 0.5416 & 0.5218 & 0.6241 & 0.5748 & 0.5855 & 1      & 0.3450 & 0.4229 \\
-  \small{\ms{BarriersEq}} & 0.6346 & 0.6578 & 0.6328 & 0.8310 & 0.8217 & 0.3450 & 1      & 0.9149 \\
-  \small{\ffteq}         & 0.5614 & 0.7916 & 0.6966 & 0.9670 & 0.9590 & 0.4757 & 0.8940 & 1      \\
+  \small{\rnamfpt}   & $1$      & $0.5683$ & $0.7945$ & $0.5060$ & $0.5110$ & $0.5204$ & $0.5280$ & $0.4472$ \\
+  \small{\rnaeq}   & $0.5798$ & $1$      & $0.7814$ & $0.7043$ & $0.7025$ & $0.5080$ & $0.5979$ & $0.6820$ \\
+  \small{\kinfold}       & $0.7933$ & $0.7507$ & $1$      & $0.7312$ & $0.7358$ & $0.6241$ & $0.6328$ & $0.6445$ \\
+  \small{\fftmfpt}       & $0.6035$ & $0.7935$ & $0.7608$ & $1$      & $0.9980$ & $0.5485$ & $0.8614$ & $0.9589$ \\
+  \small{\rnatwofold}     & $0.6076$ & $0.7919$ & $0.7655$ & $0.9983$ & $1$      & $0.5584$ & $0.8538$ & $0.9515$ \\
+  \small{\fftbor}        & $0.5416$ & $0.5218$ & $0.6241$ & $0.5748$ & $0.5855$ & $1$      & $0.3450$ & $0.4229$ \\
+  \small{\ms{BarriersEq}} & $0.6346$ & $0.6578$ & $0.6328$ & $0.8310$ & $0.8217$ & $0.3450$ & $1$      & $0.9149$ \\
+  \small{\ffteq}         & $0.5614$ & $0.7916$ & $0.6966$ & $0.9670$ & $0.9590$ & $0.4757$ & $0.8940$ & $1$      \\
   \bottomrule
  \end{tabularx}
  \caption[Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics]{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having \bpd $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose \bpd is $x$ from the MFE structure), \ms{BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from \ms{Barriers}), and \ffteq (\eqt, computed in the same fashion as \ms{BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }

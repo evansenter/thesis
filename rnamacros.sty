@@ -1,8 +1,6 @@
 % --------------------------------------------------
 % General config
 % --------------------------------------------------
-\renewcommand*\ttdefault{txtt}
-
 \renewcommand{\arraystretch}{.7}
 
 \renewcommand{\footnoterule}{
@@ -54,8 +52,8 @@
 \newcommand{\hermes}{\ms{Hermes}}
 \newcommand{\infernal}{\ms{Infernal}}
 \newcommand{\kinfold}{\ms{Kinfold}}
-\newcommand{\ms}[1]{\mbox{\tt #1}\xspace}
 \newcommand{\msresp}[1]{\mbox{\tt #1}}
+\newcommand{\ms}[1]{\mbox{\tt #1}\xspace}
 \newcommand{\rbfam}{\ms{rbfam}}
 \newcommand{\rfinder}{\ms{Ribofinder}}
 \newcommand{\rfold}{\ms{RNAfold}}
@@ -65,6 +63,7 @@
 \newcommand{\rnasub}{\ms{RNAsubopt}}
 \newcommand{\rnatwofold}{\ms{RNA2Dfold}}
 \newcommand{\rshapes}{\ms{RNAshapes}}
+\newcommand{\strfont}[1]{\mbox{\fontfamily{cmtt}\selectfont #1}\xspace}
 \newcommand{\treekin}{\ms{treekin}}
 \newcommand{\tthp}{\ms{TransTermHP}}
 \newcommand{\wrnap}{\ms{wrnap}}
@@ -86,8 +85,8 @@
 \newcommand{\hit}{hitting time\xspace}
 \newcommand{\Hit}{Hitting time\xspace}
 \newcommand{\idft}{inverse Discrete Fourier Transform\xspace}
-\newcommand{\mfes}{minimum free energy structure\xspace}
 \newcommand{\mfess}{minimum free energy structures\xspace}
+\newcommand{\mfes}{minimum free energy structure\xspace}
 \newcommand{\mfe}{minimum free energy\xspace}
 \newcommand{\Mfpt}{Mean first passage time\xspace}
 \newcommand{\mfpt}{mean first passage time\xspace}
@@ -101,11 +100,11 @@
 % --------------------------------------------------
 \newcommand{\ab}[1]{\ensuremath{\alpha_#1 n + \beta_#1}}
 \newcommand{\alphaN}{\ensuremath{\alpha_0,\dots,\alpha_{n-1}}\xspace}
-\newcommand{\bpL}{\ensuremath{\ms{(\,}}}
-\newcommand{\brL}{\ensuremath{\ms{[\,}}}
-\newcommand{\bpR}{\ensuremath{\ms{\,)}}}
-\newcommand{\brR}{\ensuremath{\ms{\,]}}}
+\newcommand{\bpL}{\ensuremath{\strfont{(\,}}}
+\newcommand{\bpR}{\ensuremath{\strfont{\,)}}}
 \newcommand{\bpSet}{\ensuremath{\mathbb{B}}}
+\newcommand{\brL}{\ensuremath{\strfont{[\,}}}
+\newcommand{\brR}{\ensuremath{\strfont{\,]}}}
 \newcommand{\dBP}[2]{\ensuremath{d_{\text{BP}}(#1,\,#2)}\xspace}
 \newcommand{\kNbrs}{$k$-{\em neighbors}\xspace}
 \newcommand{\kNbr}{$k$-{\em neighbor}\xspace}
@@ -145,10 +144,10 @@
 \newcommand{\boltzNuss}[1]{\ensuremath{e^{\frac{-E_0(#1)}{RT}}}\xspace}
 \newcommand{\boltzYmX}{\ensuremath{\exp(-\frac{E(y)-E(x)}{RT})}\xspace}
 \newcommand{\emYof}[2]{\ensuremath{{\mathcal Y}_{#1}(#2)}\xspace}
-\newcommand{\emZof}[2]{\ensuremath{{\mathcal Z}_{#1}(#2)}\xspace}
-\newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
 \newcommand{\emZB}[1]{\ensuremath{\mathcal{ZB}_{#1}(x)}\xspace}
 \newcommand{\emZM}[1]{\ensuremath{\mathcal{ZM}_{#1}(x)}\xspace}
+\newcommand{\emZof}[2]{\ensuremath{{\mathcal Z}_{#1}(#2)}\xspace}
+\newcommand{\emZ}[1]{\ensuremath{{\mathcal Z}_{#1}(x)}\xspace}
 \newcommand{\fullZx}{\emZ{}}
 \newcommand{\fullZ}{\bfZ{}{}}
 \newcommand{\kRoU}{\ensuremath{e^{2 \pi i k/n}}\xspace}
@@ -158,9 +157,9 @@
 \newcommand{\nRoUs}{complex $n$th roots of unity\xspace}
 \newcommand{\nRoU}{complex $n$th root of unity\xspace}
 \newcommand{\On}[1]{\ensuremath{O(n^{#1})}\xspace}
+\newcommand{\pk}{\ensuremath{p_k}\xspace}
 \newcommand{\pRoU}{\ensuremath{e^{2 \pi i/n}}\xspace}
 \newcommand{\pSt}{\ensuremath{p^*}\xspace}
-\newcommand{\pk}{\ensuremath{p_k}\xspace}
 \newcommand{\statDist}{\ensuremath{p^*=(p^*_1,\dots,p^*_n)}\xspace}
 \newcommand{\tD}{\ensuremath{t_{\Delta}}\xspace}
 \newcommand{\tMax}{\ensuremath{T_{\max}}\xspace}
