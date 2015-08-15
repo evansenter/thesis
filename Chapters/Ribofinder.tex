@@ -57,7 +57,7 @@ sensing of the small-molecule---and a downstream expression platform whose
 structure changes upon the aptamer binding the metabolite. Because of the
 discriminatory nature of metabolite sensing, groups have had great success in
 finding representative examples of aptamers across a diverse collection of
-bacterial species; Rfam 12.0 currently contains 26 different families of aptamers
+bacterial species; Rfam $12.0$ currently contains $26$ different families of aptamers
 involved in different metabolic pathways.
 
 Tools such as \Rb finder \citep{bengert2004} and \ms{RiboSW}
@@ -84,7 +84,7 @@ of genomic sequences.
 \label{sec:rfinder:pipeline}
 
 At the time of our retrieval (\fnaRetrievalTime), the RefSeq database hosted by
-NCBI comprised 5,121 complete bacterial genomes with corresponding genomic
+NCBI comprised $5,121$ complete bacterial genomes with corresponding genomic
 annotations. In order to both detect putative full \rbs across this
 collection of data as well as filter the candidates down to a number tractable for
 experimental validation, we developed a novel pipeline which takes a three-tiered
@@ -113,8 +113,8 @@ which modulate the expression of genes involved in purine biosynthesis.
 \label{subsec:rfinder:selection}
 
 The RefSeq data we used for analysis (downloaded on \fnaRetrievalTime)
-contains 5,121 annotated bacterial genomes
-across 2,732 different organisms, totaling over $9.5 * 10^9$ bases. We used the
+contains $5,121$ annotated bacterial genomes
+across $2,732$ different organisms, totaling over $9.5 * 10^9$ bases. We used the
 program \infernal to determine the coordinates of putative aptamer structures
 within the RefSeq genomes, and \tthp to locate candidate rho-independent
 transcription terminators.
@@ -125,8 +125,8 @@ transcription terminators.
 \infernal \citep{infernal}, \citep{nawrocki:2013hk} uses a stochastic context-free
 grammar (SCFG) with a user-provided multiple sequence alignment (MSA) to
 efficiently scan genomic data for RNA homologs, taking into consideration both
-sequence and structural conservation. Using the purine aptamer MSA from Rfam 12.0
-(RF00167), \infernal (v1.1.1, default options) detects 1,537 significant hits
+sequence and structural conservation. Using the purine aptamer MSA from Rfam $12.0$
+(RF$00167$), \infernal (v$1.1.1$, default options) detects $1,537$ significant hits
 having E-value $<= 0.01$. Because \infernal leverages the concept of a
 `local end'---a large insertion or deletion in the alignment at reduced cost---it
 is possible for the software to return a significant hit whose aligned structure
@@ -139,7 +139,7 @@ stem in the J3--1 junction differentiates between guanine and adenine-sensing
 \rbs by binding the complimentary purine ligand; for our interest in \grbs
 exclusively we require the presence of a cytidine at this residue
 (\Figref{rfinder:aptamerDiagram}). In total, using
-\infernal with these additional filters yields 1,280 guanine aptamers across 555
+\infernal with these additional filters yields $1,280$ guanine aptamers across $555$
 unique organisms.
 
 \begin{figure}[!ht]
@@ -164,14 +164,14 @@ the transcript. \tthp performs a genomic scan to determine candidate loci with
 this motif, and returns scored hits. The scoring system considers both structural
 homology and the genomic contextual information available in the PTT file. Across
 our collection of bacterial genomes acquired from NCBI RefSeq data, \tthp
-identified 2,752,469 rho-independent terminators using the default filters.
+identified $2,752,469$ rho-independent terminators using the default filters.
 
 Due to the spatially-mediated structural regulation of purine \rbs,
 whereby ligand interaction with the aptamer domain induces local structural
 rearrangement in the expression platform, we paired aptamers with corresponding
-terminators by minimizing the genomic distance, with an upper bound of 200
+terminators by minimizing the genomic distance, with an upper bound of $200$
 nucleotides between the end of the aptamer domain and start of the terminator.
-This approach yields 577 candidate \rbs, 81 of which have multiple
+This approach yields $577$ candidate \rbs, $81$ of which have multiple
 rho-independent terminators within range of a putative aptamer produced by
 \infernal. For these, we simply pair the closest \tthp hit with the aptamer domain.
 
@@ -179,7 +179,7 @@ rho-independent terminators within range of a putative aptamer produced by
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/refseqGenomeSizes.pdf}
 \caption[Histogram displaying the distribution of genome sizes across RefSeq]{Histogram displaying the distribution of genome sizes across the RefSeq
-data analyzed, comprising 5,172 bacterial genomes. Genome size is shown using a
+data analyzed, comprising $5,172$ bacterial genomes. Genome size is shown using a
 $\log_{10}$ scale, and appears to have a bimodal distribution.}
 \label{fig:rfinder:genomeSizes}
 \end{figure}
@@ -252,8 +252,8 @@ notation \treePos{t}{$i$} to refer to the subtree of \tree whose root is
 Finally, we introduce the concept of a tree signature. The tree signature for a
 tree \tree is a list of the node depths when traversed in a depth-first pre-order
 fashion. To provide a concrete example, consider the following experimentally
-validated xpt \grb from {\em Bacillus subtilis} subsp. subtilis str. 168
-(NC\_000964.3 2320197--2320054) with corresponding gene `off' structure as seen in
+validated xpt \grb from {\em Bacillus subtilis} subsp. subtilis str. $168$
+(NC\_$000964.3$ $2320197$--$2320054$) with corresponding gene `off' structure as seen in
 \Figref{rfinder:xptOff}.
 \medskip
 
@@ -269,9 +269,9 @@ validated xpt \grb from {\em Bacillus subtilis} subsp. subtilis str. 168
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_000964_3_2320197_2320054_ON.pdf}
 \end{subfigure}
 \caption[The xanthine phosphoribosyltransferase (xpt) \grb from
-{\em B. subtilis} subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054),
+{\em B. subtilis} subsp. subtilis str. $168$ (NC\_$000964.3$ $2320197$--$2320054$),
 and corresponding gene `off' and `on' structures]{{\em (Top)} The xanthine phosphoribosyltransferase (xpt) \grb from
-{\em B. subtilis} subsp. subtilis str. 168 (NC\_000964.3 2320197--2320054),
+{\em B. subtilis} subsp. subtilis str. $168$ (NC\_$000964.3$ $2320197$--$2320054$),
 and corresponding gene `off' structure derived from inline probing studies both in
 the presence and absence of guanine \citep{mandal2003}. {\em (Bottom)} The
 experimentally
@@ -289,7 +289,7 @@ We leverage the notion of abstract structural filtering initially to ensure that
 all \infernal aptamer hits have a tree signature of \ms{[0,1,2,2]}, which
 represents a three-way junction, and that the binding site for the guanine ligand
 $\treeIdx{p}{1}{l - 1} = \text{C}$. These filters, in combination with the
-proximal terminator hairpins produced by \tthp yield the aforementioned 577
+proximal terminator hairpins produced by \tthp yield the aforementioned $577$
 candidate \grbs for which we then try to produce reasonable gene `on' and off
 structures.
 
@@ -299,8 +299,8 @@ structures.
 To restrict our search to unannotated \grbs, and further ensure that we are not
 re-detecting sequences based off the Rfam covariance model provided to \infernal,
 we constrain our search to those RefSeq organisms not represented in the Rfam seed
-alignment. 503 of the 577 candidates, or 87.18\% represent putative unannotated
-\rbs not represented by RF00167.
+alignment. $503$ of the $577$ candidates, or $87.18$\% represent putative unannotated
+\rbs not represented by RF$00167$.
 
 The gene `off' structure \strOff for a \grb is the easier of the two to find
 computationally, since the terminator stem is exceptionally thermodynamically
@@ -311,7 +311,7 @@ P1 stem, which closes the three-way junction in the aptamer, is exceptionally
 unstable based on present energy models available for structural folding, and
 requires special treatment to reconstitute in our final structures.
 
-The software \rfold (v2.1.8) allows for the folding of RNA molecules with `loose'
+The software \rfold (v$2.1.8$) allows for the folding of RNA molecules with `loose'
 constraints. In this model of constrained folding, the resulting structure
 produced by the software guarantees not to explicitly invalidate any user-provided
 constraints, but does not guarantee all constraints will be satisfied in the
@@ -359,9 +359,9 @@ disruptive pairing downstream of the newly formed anti-terminator stem.}
 \end{enumerate}
 
 These constraint masks are run using the command-line flags
-\ms{-d 0 -P rna\_turner1999.par} to disable dangles and use the Turner 1999
+\ms{-d 0 -P rna\_turner1999.par} to disable dangles and use the Turner $1999$
 energies respectively \citep{mathews:1999jw}. We choose to disable dangles (\ms{-d 0}) and use
-the Turner 1999 energy model (\ms{-P rna\_turner1999.par})
+the Turner $1999$ energy model (\ms{-P rna\_turner1999.par})
 based on visual inspection of the structures output by \rfold with
 constraints---these flags appear to yield conformations most frequently consistent
 with the known structures for the \Bsxpt \grb.
@@ -378,9 +378,9 @@ structure.
 \subsection{Step 3: Candidate curation}
 \label{subsec:rfinder:curation}
 
-Until now, we have described our approach for generating the 503 \grb candidates
+Until now, we have described our approach for generating the $503$ \grb candidates
 in RefSeq, alongside their gene `on' and off structures. Unfortunately the
-experimental validation of all 503 candidates is not tractable, so it was
+experimental validation of all $503$ candidates is not tractable, so it was
 necessary to reduce this collection again to a more manageable size, while only
 keeping the most promising candidates. Our original approach involved using
 \foldalign \citep{gorodkin:1997tr,havgaard:2007ca} alongside the \ms{needleall} tool from EMBOSS
@@ -393,37 +393,37 @@ expense, we elected to instead choose a small number
 experimental candidate pool.
 
 In \Figref{rfinder:histogramFoldalignCandidatesVsXpt}, we display a histogram of scores produced
-by \foldalign for the 503 candidates, when aligned with the \Bsxpt \grb. \foldalign
+by \foldalign for the $503$ candidates, when aligned with the \Bsxpt \grb. \foldalign
 is based off a simplification of Sankoff's algorithm \citep{sankoff:1985wc}, and
 is a dynamic programming
-algorithm for simultaneous folding and alignment that runs in \On{4} time. Because three of the sequences from our pool of 503 candidates have
+algorithm for simultaneous folding and alignment that runs in \On{4} time. Because three of the sequences from our pool of $503$ candidates have
 no global alignment with the \Bsxpt sequence, we have pruned them from our
-dataset and only consider those remaining 500 sequences for which \foldalign
+dataset and only consider those remaining $500$ sequences for which \foldalign
 scores are produced. The \foldalign scores produce have a mean of $153.798$ with a
-minimum [resp. maximum] score of $-2698$ [resp. 1908]. Running \foldalign with the
-\Bsxpt sequence aligned with itself produces a theoretical maximum score of 2419.
+minimum [resp. maximum] score of $-2698$ [resp. $1908$]. Running \foldalign with the
+\Bsxpt sequence aligned with itself produces a theoretical maximum score of $2419$.
 
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/histogramFoldalignCandidatesVsXpt.pdf}
 \caption[Histogram displaying the distribution of scores produced by \foldalign]{Histogram displaying the distribution of scores produced by \foldalign
-2.1.1 using flags \ms{-global -summary -format commandline} when folding each of
-the 503 candidates against the \Bsxpt sequence NC\_000964.3 2320197--2320054.
-Three of the sequences run against \foldalign (NC\_010674.1 1516712--1516868,
-NC\_010723.1 1487041--1487197, and NC\_020291.1 4599412--4599258) have no global
-alignment with the \Bsxpt sequence, and thus the histogram represents 500 of the
-original 503 sequences.}
+$2.1.1$ using flags \ms{-global -summary -format commandline} when folding each of
+the $503$ candidates against the \Bsxpt sequence NC\_$000964.3$ $2320197$--$2320054$.
+Three of the sequences run against \foldalign (NC\_$010674.1$ $1516712$--$1516868$,
+NC\_$010723.1$ $1487041$--$1487197$, and NC\_$020291.1$ $4599412$--$4599258$) have no global
+alignment with the \Bsxpt sequence, and thus the histogram represents $500$ of the
+original $503$ sequences.}
 \label{fig:rfinder:histogramFoldalignCandidatesVsXpt}
 \end{figure}
 
-Of these 500 sequences, 335 have a \foldalign score $s > 0$, representing 227
+Of these $500$ sequences, $335$ have a \foldalign score $s > 0$, representing $227$
 unique accession numbers, with a distribution of candidates per accession number
 as shown in \Figref{rfinder:candidateHistogramGroupedByAccession}. From
 the perspective of experimental validation, we have tried to maximize the chance
 of success per organism by selecting those having multiple candidates within the
-same genome. Only 25 of the candidate organisms have more than three hits within
+same genome. Only $25$ of the candidate organisms have more than three hits within
 their genome (only two have five hits). Our approach for selecting the initial
-two organisms for experimental validation was to take this pool of 25 organisms,
+two organisms for experimental validation was to take this pool of $25$ organisms,
 sort by descending average score $s$, and select the first two which are available
 via DSMZ (\url{https://www.dsmz.de/}), the warehouse for microorganisms used by
 our collaborators. Prof. Dr. Mario M\"orl at Universit\"at Leipzig is presently
@@ -438,17 +438,17 @@ validate the computationally predicted structure of these candidates.
 per organism]{Histogram displaying the number of candidate \rbs we observe
 per organism. From this data, it is clear that the majority of organisms have
 only one putative \rb, however two organisms have five candidates each:
-{\em Clostridium botulinum} B str. Eklund 17B (NC\_010674.1) and
-{\em Clostridium botulinum} E3 str. Alaska E43 (NC\_010723.1)}
+{\em Clostridium botulinum} B str. Eklund $17$B (NC\_$010674.1$) and
+{\em Clostridium botulinum} E3 str. Alaska E$43$ (NC\_$010723.1$)}
 \label{fig:rfinder:candidateHistogramGroupedByAccession}
 \end{figure}
 
-Proceeding in this fashion, we have selected {\em B. megaterium} QM B1551
-(\href{http://www.ncbi.nlm.nih.gov/nuccore/NC_014019.1}{NC\_014019.1},
-\href{http://www.dsmz.de/catalogues/details/culture/DSM-1804.html}{DSM1804})
-and {\em B. megaterium} DSM319
-(\href{http://www.ncbi.nlm.nih.gov/nuccore/NC_014103.1}{NC\_014103.1},
-\href{http://www.dsmz.de/catalogues/details/culture/DSM-319.html}{DSM319})
+Proceeding in this fashion, we have selected {\em B. megaterium} QM B$1551$
+(\href{http://www.ncbi.nlm.nih.gov/nuccore/NC_014019.1}{NC\_$014019.1$},
+\href{http://www.dsmz.de/catalogues/details/culture/DSM-1804.html}{DSM$1804$})
+and {\em B. megaterium} DSM$319$
+(\href{http://www.ncbi.nlm.nih.gov/nuccore/NC_014103.1}{NC\_$014103.1$},
+\href{http://www.dsmz.de/catalogues/details/culture/DSM-319.html}{DSM$319$})
 for initial validation. These organisms have four
 candidate \grbs each, outlined in Table \ref{table:rfinderCandidateLocs}.
 
@@ -456,17 +456,17 @@ candidate \grbs each, outlined in Table \ref{table:rfinderCandidateLocs}.
 \centering
 \begin{tabularx}{\linewidth}{*{1}{L} *{2}{C}}
 \toprule
-\small{Downstream gene function} & \small{{\em B. megaterium} QM B1551} & \small{{\em B. megaterium} DSM319} \\
+\small{Downstream gene function} & \small{{\em B. megaterium} QM B$1551$} & \small{{\em B. megaterium} DSM$319$} \\
 \cmidrule(lr){1-3}
-\small{xpt} & 1427313--1427501 & 1413696--1413884 \\[1ex]
-\small{GMP synthase} & 231630--231806 & 230059--230235 \\[1ex]
-\small{guanine permease} & 233482--233680 & 231911--232108 \\[1ex]
-\small{N5-carboxyaminoimidazole} & 240759--240970 & 239188--239400 \\
+\small{xpt} & $1427313$--$1427501$ & $1413696$--$1413884$ \\[1ex]
+\small{GMP synthase} & $231630$--$231806$ & $230059$--$230235$ \\[1ex]
+\small{guanine permease} & $233482$--$233680$ & $231911$--$232108$ \\[1ex]
+\small{N5-carboxyaminoimidazole} & $240759$--$240970$ & $239188$--$239400$ \\
 \bottomrule
 \end{tabularx}
 \caption[The genomic coordinates for the four candidate \grbs in both
-{\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319]{The genomic coordinates for the four candidate \grbs in both
-{\em B. megaterium} QM B1551 and {\em B. megaterium} DSM319. Note that the
+{\em B. megaterium} QM B$1551$ and {\em B. megaterium} DSM$319$]{The genomic coordinates for the four candidate \grbs in both
+{\em B. megaterium} QM B$1551$ and {\em B. megaterium} DSM$319$. Note that the
 \grbs are located upstream of the same genes, and that these two strains of
 {\em B. megaterium} are highly similar. These structures are pictured in
 \Secref{sec:rfinder:grbValidationVarna}, plotted using VARNA \citep{darty:2009gt}.}
@@ -517,10 +517,10 @@ prediction using \rfinder.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_1427313_1427501_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the xpt gene in {\em B. megaterium} QM B1551]{{\em Top:} the computationally predicted gene `off' conformation of
-sequence NC\_014019.1 1427313--1427501, using \rfold from the ViennaRNA 2.1.8
-suite, with dangles disabled and the Turner 1999 energies. This sequence is
-located upstream of the xpt gene in {\em B. megaterium} QM B1551. {\em Bottom:}
+\caption[Structures for the putative \rb located upstream of the xpt gene in {\em B. megaterium} QM B$1551$]{{\em Top:} the computationally predicted gene `off' conformation of
+sequence NC\_$014019.1$ $1427313$--$1427501$, using \rfold from the ViennaRNA $2.1.8$
+suite, with dangles disabled and the Turner $1999$ energies. This sequence is
+located upstream of the xpt gene in {\em B. megaterium} QM B$1551$. {\em Bottom:}
 the gene `on' conformation.}
 \label{fig:figure:NC_014019_1_1427313_1427501}
 \end{figure}
@@ -537,8 +537,8 @@ the gene `on' conformation.}
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_231630_231806_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the GMP synthase gene in {\em B. megaterium} QM B1551]{The computationally predicted \rb located upstream of the GMP synthase
-gene in {\em B. megaterium} QM B1551 (NC\_014019.1 231630--231806).
+\caption[Structures for the putative \rb located upstream of the GMP synthase gene in {\em B. megaterium} QM B$1551$]{The computationally predicted \rb located upstream of the GMP synthase
+gene in {\em B. megaterium} QM B$1551$ (NC\_$014019.1$ $231630$--$231806$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014019_1_231630_231806}
 \end{figure}
@@ -555,8 +555,8 @@ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 231630--231806).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_233482_233680_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the guanine permease gene in {\em B. megaterium} QM B1551]{The computationally predicted \rb located upstream of the guanine permease
-gene in {\em B. megaterium} QM B1551 (NC\_014019.1 233482--233680).
+\caption[Structures for the putative \rb located upstream of the guanine permease gene in {\em B. megaterium} QM B$1551$]{The computationally predicted \rb located upstream of the guanine permease
+gene in {\em B. megaterium} QM B$1551$ (NC\_$014019.1$ $233482$--$233680$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014019_1_233482_233680}
 \end{figure}
@@ -573,9 +573,9 @@ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 233482--233680).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_240759_240970_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} QM B1551]{The computationally predicted \rb located upstream of the
+\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} QM B$1551$]{The computationally predicted \rb located upstream of the
 N5- carboxy\-amino\-imidazole
-gene in {\em B. megaterium} QM B1551 (NC\_014019.1 240759--240970).
+gene in {\em B. megaterium} QM B$1551$ (NC\_$014019.1$ $240759$--$240970$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014019_1_240759_240970}
 \end{figure}
@@ -592,8 +592,8 @@ gene in {\em B. megaterium} QM B1551 (NC\_014019.1 240759--240970).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_1413696_1413884_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the xpt gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the xpt
-gene in {\em B. megaterium} DSM319 (NC\_014103.1 1413696--1413884).
+\caption[Structures for the putative \rb located upstream of the xpt gene in {\em B. megaterium} DSM$319$]{The computationally predicted \rb located upstream of the xpt
+gene in {\em B. megaterium} DSM$319$ (NC\_$014103.1$ $1413696$--$1413884$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014103_1_1413696_1413884}
 \end{figure}
@@ -610,8 +610,8 @@ gene in {\em B. megaterium} DSM319 (NC\_014103.1 1413696--1413884).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_230059_230235_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the GMP synthase gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the GMP synthase
-gene in {\em B. megaterium} DSM319 (NC\_014103.1 230059--230235).
+\caption[Structures for the putative \rb located upstream of the GMP synthase gene in {\em B. megaterium} DSM$319$]{The computationally predicted \rb located upstream of the GMP synthase
+gene in {\em B. megaterium} DSM$319$ (NC\_$014103.1$ $230059$--$230235$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014103_1_230059_230235}
 \end{figure}
@@ -628,8 +628,8 @@ gene in {\em B. megaterium} DSM319 (NC\_014103.1 230059--230235).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_231911_232108_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the guanine permease gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the guanine permease
-gene in {\em B. megaterium} DSM319 (NC\_014103.1 231911--232108).
+\caption[Structures for the putative \rb located upstream of the guanine permease gene in {\em B. megaterium} DSM$319$]{The computationally predicted \rb located upstream of the guanine permease
+gene in {\em B. megaterium} DSM$319$ (NC\_$014103.1$ $231911$--$232108$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014103_1_231911_232108}
 \end{figure}
@@ -646,9 +646,9 @@ gene in {\em B. megaterium} DSM319 (NC\_014103.1 231911--232108).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_239188_239400_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} DSM319]{The computationally predicted \rb located upstream of the
+\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} DSM$319$]{The computationally predicted \rb located upstream of the
 N5- carboxy\-amino\-imidazole
-gene in {\em B. megaterium} DSM319 (NC\_014103.1 239188--239400).
+gene in {\em B. megaterium} DSM$319$ (NC\_$014103.1$ $239188$--$239400$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014103_1_239188_239400}
 \end{figure}
