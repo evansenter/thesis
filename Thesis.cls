@@ -181,10 +181,10 @@
 %	defined as \examname above so you cite it as \examname
 %----------------------------------------------------------------------------------------
 
-\thesistitle{On the use of Coarse Grained Thermodynamic Landscapes to Efficiently Estimate Kinetic Pathways for RNA Molecules} % Your thesis title - this is used in the title and abstract
+\thesistitle{On the Use of Coarse-Grained Thermodynamic Landscapes to Efficiently Estimate Folding Kinetics for RNA Molecules} % Your thesis title - this is used in the title and abstract
 %-------------------------------------------------
 \supervisor{Dr. Peter \textsc{Clote}} % You supervisor's name - this is used in the title page
-%-------------------------------------------------
+%-------------------------------------------- -----
 \examiner{} % Your examiner's name - this is not currently used anywhere in the template, cite it with \examname if you want it
 %-------------------------------------------------
 \degree{Doctor of Philosophy} % Your degree name - this is currently used in the title page and abstract
@@ -326,7 +326,7 @@
 \btypeout{Acknowledgements}
 \addtotoc{Acknowledgements}
 \thispagestyle{plain}
-\begin{center}{\huge{\textit{Acknowledgements}} \par}\end{center}
+\begin{center}{\huge{Acknowledgements} \par}\end{center}
 {\normalsize #1}
 \vfil\vfil\null
 }
