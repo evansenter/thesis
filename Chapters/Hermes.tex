@@ -145,7 +145,7 @@ of RNA using stochastic context-free grammars and evolutionary
 information.
 
 In contrast to the previous methods, \hermes computes the \mfpt (MFPT)
-and {\em equilibrium time} for a
+and \eqt for a
 coarse-grained Markov chain consisting of the ensemble of all
 secondary structures having \bpd $x$ [resp. $y$] from
 reference structures \strA [resp. \strBresp] of a given RNA sequence.
@@ -341,7 +341,7 @@ and the $n\times n$ matrix $P(t)=(p_{i,j}(t))$ of
 probability transition functions.
 
 Letting $q_t$ denote the state at (continuous)
-time $t$, the probability that the initial state $q_0$ at time 0 is
+time $t$, the probability that the initial state $q_0$ at time $0$ is
 $k$ is $\pi_k$, while
 
 \begin{align}
@@ -1319,7 +1319,7 @@ large as the mean, accurate kinetics estimates
 from \kinfold require prohibitively large computational time---indeed, in
 \citep{wolfingerstadler:kinetics} reliable kinetics for phe-tRNA from
 yeast were obtained by $9,000$ \kinfold simulations, each for $10^8$
-steps, requiring 3 months of CPU time on an Intel Pentium 4 running at
+steps, requiring $3$ months of CPU time on an Intel Pentium $4$ running at
 $2.4$ GHz under Linux. Although the correlation value of $0.6035$ between
 \rnamfpt and \fftmfpt is much less than that obtained by \kinfold,
 the runtime required by our method \fftmfpt is measured

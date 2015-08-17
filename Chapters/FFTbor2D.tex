@@ -158,8 +158,8 @@ $\bfZ{x,y}{i,j}$ is equal to
 \end{split}
 \end{align}
 
-where $\alpha_0 = 1$ if $j$ is base paired in $\strA_{[i,j]}$ and 0 otherwise,
-$\beta_0 = 1$ if $j$ is base paired in $\strB_{[i,j]}$ and 0 otherwise,
+where $\alpha_0 = 1$ if $j$ is base paired in $\strA_{[i,j]}$ and $0$ otherwise,
+$\beta_0 = 1$ if $j$ is base paired in $\strB_{[i,j]}$ and $0$ otherwise,
 $E_0(k,j)=-1$ if $k,j$ can base-pair
 (see equation \ref{eq:fftbor:validBP}), and otherwise $E_0(k,j)=0$, and
 $\alpha(k) =
@@ -265,8 +265,8 @@ Inductively we define $\emZ{i,j}$ to equal
 \end{split}
 \end{align}
 
-where $\alpha_0 = 1$ if $j$ is base-paired in $\strA_{[i,j]}$ and 0 otherwise,
-$\beta_0 = 1$ if $j$ is base-paired in $\strB_{[i,j]}$ and 0 otherwise, and
+where $\alpha_0 = 1$ if $j$ is base-paired in $\strA_{[i,j]}$ and $0$ otherwise,
+$\beta_0 = 1$ if $j$ is base-paired in $\strB_{[i,j]}$ and $0$ otherwise, and
 $\alpha(k) =
 \dBP{\strA_{[i,j]}}{\strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup \{ (k,j) \}}$,
 $\beta(k) =
@@ -434,7 +434,7 @@ then the only possible values for
 $(x,y)$ are $(0,d_0), (1,d_0-1), (1,d_0+1),
 (2,d_0-2), (2,d_0), (2, d_0+2),
 (3,d_0-3), (3,d_0-1), (3, d_0+1), (3,d_0+3), \dots$.
-As a corollary, we have the {\em parity condition}, that
+As a corollary, we have the parity condition, that
 
 \begin{align}
 \label{eq:ffttwo:parity}
@@ -504,7 +504,7 @@ Lemma \ref{lem:ffttwo:lemma1} and Lemma \ref{lem:ffttwo:lemma2},
 along with a
 precomputation of powers of the complex roots of unity, lead to a
 large performance speed-up in our implementation of \ffttwo---by a factor
-of 4 or more.
+of $4$ or more.
 
 \subsection{Optimization due to parity condition}
 \label{subsec:ffttwo:parity}
@@ -689,11 +689,11 @@ By induction on $k=\frac{M_0}{2}+1,\dots,M_0-1$, we have
 \end{split}
 \end{align}
 
-Line 1 follows by definition, since $\omega=\nu^2$;
-line 2 follows by equations (\ref{eq:ffttwo:evenY}) and
+Line $1$ follows by definition, since $\omega=\nu^2$;
+line $2$ follows by equations (\ref{eq:ffttwo:evenY}) and
 (\ref{eq:ffttwo:oddY});
-line 3 follows by Lemma \ref{lem:ffttwo:lemma4};
-line 4 follows by Lemma \ref{lem:ffttwo:lemma3}.
+line $3$ follows by Lemma \ref{lem:ffttwo:lemma4};
+line $4$ follows by Lemma \ref{lem:ffttwo:lemma3}.
 Thus if \dBP{\strA}{\strB} is even, then
 
 \begin{align}
@@ -929,7 +929,7 @@ For a given RNA sequence \seq, the metastable structure \strA was
 taken to be the MFE structure of \seq.
 Using \rnabor, we determined that value $k_0 \geq 10$, for which
 partition function $\bfZ{k_0}{}$ constitutes a visible peak in the graphical
-output --- see Figure 2 and 3 of \citep{freyhult.b07} for an example.
+output---see Figure 2 and 3 of \citep{freyhult.b07} for an example.
 Subsequently, metastable structure \strB was taken to be that structure
 having \mfe over all structures, whose \bpd from
 \strA was $k_0$.
