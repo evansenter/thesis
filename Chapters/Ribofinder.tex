@@ -25,7 +25,7 @@ canonical \grb well studied in the literature, the
 xanthine phosphoribosyltransferase (xpt) \grb from {\em Bacillus subtilis}. At the
 time of this writing, Prof. Dr. Mario
 M\"orl at Universit\"at Leipzig is overseeing preliminary structural
-validation of predicted gene `on' and off structures for a number of
+validation of predicted gene `on' and `off' structures for a number of
 computationally predicted \grbs in {\em Bacillus megaterium}. We have already
 prepared a draft of the paper describing this work, and are presently awaiting
 biochemical validation before submitting it with co-authors M. M\"orl and
@@ -101,7 +101,8 @@ flowchart.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/ribofinderOverview.pdf}
-\caption{Outline of the approach for the \rfinder pipeline.}
+\caption[Outline of the approach for the \rfinder pipeline]
+{Outline of the approach for the \rfinder pipeline.}
 \label{fig:rfinder:flowchart}
 \end{figure}
 
@@ -114,7 +115,7 @@ which modulate the expression of genes involved in purine biosynthesis.
 
 The RefSeq data we used for analysis (downloaded on \fnaRetrievalTime)
 contains $5,121$ annotated bacterial genomes
-across $2,732$ different organisms, totaling over $9.5 * 10^9$ bases. We used the
+across $2,732$ different organisms, totaling over $9.5 \times 10^9$ bases. We used the
 program \infernal to determine the coordinates of putative aptamer structures
 within the RefSeq genomes, and \tthp to locate candidate rho-independent
 transcription terminators.
@@ -122,7 +123,7 @@ transcription terminators.
 \subsubsection{Detecting aptamers with \infernal}
 \label{subsubsec:rfinder:infernal}
 
-\infernal \citep{infernal}, \citep{nawrocki:2013hk} uses a stochastic context-free
+\infernal \citep{infernal,nawrocki:2013hk} uses a stochastic context-free
 grammar (SCFG) with a user-provided multiple sequence alignment (MSA) to
 efficiently scan genomic data for RNA homologs, taking into consideration both
 sequence and structural conservation. Using the purine aptamer MSA from Rfam $12.0$
@@ -573,8 +574,8 @@ gene in {\em B. megaterium} QM B$1551$ (NC\_$014019.1$ $233482$--$233680$).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014019_1_240759_240970_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} QM B$1551$]{The computationally predicted \rb located upstream of the
-N5- carboxy\-amino\-imidazole
+\caption[Structures for the putative \rb located upstream of the N5-carboxy\-amino\-imidazole gene in {\em B. megaterium} QM B$1551$]{The computationally predicted \rb located upstream of the
+N5-carboxy\-amino\-imidazole
 gene in {\em B. megaterium} QM B$1551$ (NC\_$014019.1$ $240759$--$240970$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014019_1_240759_240970}
@@ -646,8 +647,8 @@ gene in {\em B. megaterium} DSM$319$ (NC\_$014103.1$ $231911$--$232108$).
 \centering
 \includegraphics[width=.9\textwidth]{Figures/Ribofinder/NC_014103_1_239188_239400_ON.pdf}
 \end{subfigure}
-\caption[Structures for the putative \rb located upstream of the N5- carboxy\-amino\-imidazole gene in {\em B. megaterium} DSM$319$]{The computationally predicted \rb located upstream of the
-N5- carboxy\-amino\-imidazole
+\caption[Structures for the putative \rb located upstream of the N5-carboxy\-amino\-imidazole gene in {\em B. megaterium} DSM$319$]{The computationally predicted \rb located upstream of the
+N5-carboxy\-amino\-imidazole
 gene in {\em B. megaterium} DSM$319$ (NC\_$014103.1$ $239188$--$239400$).
 {\em Top:} The gene `off' conformation. {\em Bottom:} The gene `on' conformation.}
 \label{fig:figure:NC_014103_1_239188_239400}

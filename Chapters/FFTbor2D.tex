@@ -37,7 +37,7 @@ a single variable polynomial $P(x)$ whose coeffecients can be computed by
 the \idft, and map to the 2D energy landscape. We describe two improvements over
 the straight-forward use of the \fft to compute $P(x)$,
 a parity condition and complex conjugates, which together reduce the
-runtime by a factor of 4. Finally, we contrast this software against \rnatwofold,
+runtime by a factor of $4$. Finally, we contrast this software against \rnatwofold,
 and outline the performance characteristics of both softwares and highlight
 the benefits and drawbacks of both. We elect to refrain from describing
 applications of \ffttwo until \Chref{hermes}, where the software is
@@ -202,7 +202,7 @@ $a_0,\dots,a_{n^2-1}$ in
 \end{align}
 
 then Lagrange polynomial interpolation
-(\eqnref{fftbor:lagrangeInterpolation})
+(equation \ref{eq:fftbor:lagrangeInterpolation})
 guarantees that we can determine the coefficients $z_{rn+s}$ of \fullZx,
 for $0 \leq r,s < n$. Due to technical difficulties concerning numerical
 robustness observered while working on the \fftbor software
@@ -235,7 +235,7 @@ z_{rn+s}(i,j) \;=\; \bfZ{r,s}{i,j}\;=
 Here, in the summation, \str runs over structures on $s_i,\dots,s_j$, which
 are $r$-neighbors of the restriction $\strA_{[i,j]}$ of reference structure
 \strA to interval $[i,j]$, and simultaneously
-\str-neighbors of the restriction $\strB_{[i,j]}$ of reference structure
+$s$-neighbors of the restriction $\strB_{[i,j]}$ of reference structure
 \strB to interval $[i,j]$.
 
 \begin{theorem}
@@ -305,6 +305,7 @@ values $\emZof{}{\rho_0},\dots,\emZof{}{\rho_{n^2-1}}$, each time re-using the
 \On{2} space for the next computation of $\emZof{}{\rho_i}$.
 It follows that
 the computation resources used to determine the (column) vector
+
 \begin{align}
 \label{eq:ffttwo:yColumn}
 \bfY = (y_0,\dots,y_{n^2-1})^{\text T} =
@@ -352,7 +353,7 @@ $N=n^2$, and so the computation involving the FFT requires time $O(n^2 \log n)$.
 The pseudocode for the algorithm to compute $p(x)$ is given in
 \Figref{ffttwo:algo}.
 In the next section, we explain a highly non-trivial improvement of
-this algorithm to reduce time by a factor of 4.
+this algorithm to reduce time by a factor of $4$.
 \medskip
 
 \begin{figure}[!ht]
@@ -393,10 +394,9 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,n-1$
 \EndFunction
 \rule[-0.35ex]{0pt}{0pt}
 \end{algorithmic}
-\caption{
-Pseudocode to compute the $m$ most significant digits
-for probabilities
-$p_{rn+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
+\caption[Pseudocode for \ffttwo]{Pseudocode to compute the $m$
+ most significant digits for probabilities
+$p_{rn+s} = \frac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
 $m$ has an upper bound of $27$---only the $\lfloor \log_{10}(2^m) \rfloor =8$
 most significant digits
@@ -530,7 +530,7 @@ x^{\pi_1(k)\cdot (N+1) + \pi_2(k)} \\
 
 where for the last equality, we have used the fact that
 $k = \pi_1(k)\cdot (N+1)+\pi_2(k)$, well-known from
-row major order of a 0-indexed 2-dimensional array.
+row major order of a $0$-indexed $2$-dimensional array.
 
 Consider the coefficients of the polynomial
 
@@ -606,7 +606,7 @@ the previous recursions from \eqnref{ffttwo:polyRecNussJac}
 to evaluate \emZof{}{\exp(\frac{2\pi i k}{M})}.  Note, that unlike the
 Case 1, since $\fullZx = x \cdot \emYof{}{x^2}$, we have
 $\emYof{}{x^2}=\frac{\fullZx}{x}$, which explains the presence of additional factor
-$\exp(\frac{-2\pi i k}{M}))$ in Case 2.  Thus, instead of
+$\exp(\frac{-2\pi i k}{M}))$ in Case $2$.  Thus, instead of
 performing $M$ evaluations of \fullZx at $M$-roots of unity,
 we perform only $M_0=\frac{M}{2}$ evaluations of $\emYof{}{u}$ at
 $M_0$-roots of unity; i.e. only half the number of
@@ -905,7 +905,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \caption[Pseudocode for improved \ffttwo]{
 Pseudocode to compute the $m$ most significant digits
 for probabilities
-$p_{r\cdot(N + 1)+s} = \sfrac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
+$p_{r\cdot(N + 1)+s} = \frac{\bfZ{r,s}{1,n}}{\fullZ}$. In our implementation,
 due to numerical stability issues in the FFT engine, precision parameter
 $m$ has an upper bound of $27$---only the $\lfloor \log_{10}(2^m) \rfloor =8$ most significant digits
 are computed with \ffttwo. It is well-known that
@@ -1060,9 +1060,9 @@ from {\em L. collosoma}, as computed by \ffttwo]{
 2D projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
-\hspace{.1875em}$\seq\,=$ \strfont{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGAGACUUC} \\
+\hspace{.4em}$\seq\,=$ \strfont{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGAGACUUC} \\
                 $\strA =$ \strfont{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} \\
-  \hspace{.54em}$\strB =$ \strfont{.......................((((((((((((.....)))))..)))))))..}
+  \hspace{.4em}$\strB =$ \strfont{.......................((((((((((((.....)))))..)))))))..}
 \rule[-1.25em]{0pt}{0pt} \\
 The $x$-axis [resp. $y$-axis]
 represents \bpd between metastable structure \strA [resp.
