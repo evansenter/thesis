@@ -80,12 +80,6 @@ $\omega = \pRoU$ is the principal \nRoU and
 $p(x)$ is defined in \eqnref{fftbor:pOfX}. This
 gives rise to an improved version of \rnabor, denoted \fftbor,
 which runs in time \On{4} and space \On{2}.
-% Once two metastable structures \strST are identified, we can
-% subsequently evaluate the feasibility of transition between
-% structures \strS and \strT,
-% by computing the {\em barrier energy} using algorithms, such as that
-% described in Dotu et al. \citep{dotu.nar10} or Flamm et al.
-% \citep{flamm.r01}.
 
 \section{Formalization of the problem}
 \label{sec:fftbor:formal}
@@ -108,7 +102,7 @@ Consider an RNA sequence $\seq = \seqN$, where
 $s_i \in \{\text{A,\,U,\,G,\,C}\}$, i.e. a sequence of nucleotides. We can describe a
 secondary structure \str which is compatible with \seq as a collection of
 base pair tuples $(i,j)$, where $1 \le i \le i+\theta < j \le n$ and
-$\theta \ge 0$ (generally taken to be 3), the minimum number of unpaired bases
+$\theta \ge 0$ (generally taken to be $3$), the minimum number of unpaired bases
 in a hairpin loop due to steric constraints.
 
 To more simply develop the underlying recursions for \fftbor, we introduce a
@@ -236,7 +230,7 @@ The base case for \bfZ{k}{i,j} is given by
 \bfZ{0}{i,j} = 1, \text{ for } i \le j,
 \end{align}
 
-since the only 0-neighbor to a structure \strSt
+since the only $0$-neighbor to a structure \strSt
 is the structure \strSt itself, and
 
 \begin{align}
@@ -289,7 +283,7 @@ we define the {\em polynomial}
 
 where coefficients $z_k=\bfZ{k}{1,n}$. Moreover, because of
 \eqnref{fftbor:maxDist} and the fact that the minimum number of
-unpaired bases in a hairpin loop $\theta$ is 3, we know that $z_n=0$,
+unpaired bases in a hairpin loop $\theta$ is $3$, we know that $z_n=0$,
 so that \fullZx is a polynomial of degree strictly less than $n$.
 If we evaluate the polynomial \fullZx for $n$ distinct values
 
@@ -493,7 +487,7 @@ y_{n-1} \\
 \end{align}
 
 where
-$y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$ is thus quartic time \On{4} and quadratic space \On{2}.
+$y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}}$ is thus quartic time \On{4} and quadratic space \On{2}.
 
 \subsection{Polynomial interpolation to evaluate
 \texorpdfstring{\emZ{i,j}}{}}
@@ -558,7 +552,7 @@ for $j=0,\dots,n-1$.
 
 Since we defined \bfY in \eqnref{fftbor:yColumn} by $\bfY =
 (y_0,\dots,y_{n-1})^{\text T}$, where
-$y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}})$
+$y_0=\emZof{}{\alpha_0},\dots,y_{n-1}=\emZof{}{\alpha_{n-1}}$
 and $\alpha_k = \omega^k \kRoU$, it follows that the coefficients
 $z_k=\bfZ{k}{1,n}$ in the polynomial
 $\fullZx = z_0 + z_1 x + \dots + z_{n-1} x^{n-1}$ defined in
@@ -748,12 +742,12 @@ in \Figref{fftbor:tppDistributions}.
 We randomly chose two TPP \rb
 aptamers from the seed alignment for
 Rfam family RF$00059$. The first sequence has EMBL accession code
-BX$842649.1$/$277414$--$277318$ and is comprised of the $97$ nt sequence
+BX$842649.1$ $277414$--$277318$ and is comprised of the $97$ nt sequence
 \seqsplit{%
   ACCUGACGCUAGGGGUGUUGGUGAAUUCACCGACUGAGAAUAACCCUUU%
   GAACCUGAUAGAGAUAAUGCUCGCGCAGGGAAGCAAGAAUAGAAAGAU%
 }, while the second sequence
-has EMBL accession code AACY$022101973.1$/$389$--$487$ and is comprised of the $99$
+has EMBL accession code AACY$022101973.1$ $389$--$487$ and is comprised of the $99$
 nt sequence
 \seqsplit{%
   UAUAAGUCCAAGGGGUGCCAAUUGGCUGAGAUGGUUUUAACCAAUCCCUU%
@@ -770,15 +764,15 @@ exception of the leftmost hairpin loop [resp. multiloop].
 The MFE structures differ
 from the consensus structures principally by the addition of base pairs not
 determined by covariation in the Rfam alignment.
-Indeed, if we let $\str_0,\str_1$
+Indeed, if we let $\str_0,\,\str_1$
 denote the Rfam consensus structure [resp. MFE structure] for the $97$ nt
-sequence with EMBL accession code BX$842649.1$/$277414$--$277318$, then
+sequence with EMBL accession code BX$842649.1$ $277414$--$277318$, then
 $\str_0 \setminus \str_1$ has $4$ base pairs, and $\str_1 \setminus \str_0$
  has $7$
-base pairs. If we let $\strT_0,\strT_1$
+base pairs. If we let $\strT_0,\,\strT_1$
 denote the Rfam consensus structure [resp. MFE structure] for the $99$ nt
 sequence with EMBL accession code
-AACY$022101973.1$/$389$--$487$, then
+AACY$022101973.1$ $389$--$487$, then
 $\strT_0 \setminus \strT_1$ has $1$ base pair, and $\strT_1 \setminus \strT_0$ has $5$
 base pairs.
 
@@ -792,10 +786,10 @@ chosen at random from RF$00059$ Rfam family seed alignment
 \citep{Gardner.nar11}. Using pairwise BLAST \citep{blast}, there is no
 sequence similarity, although the secondary structures are very similar,
 as shown in this figure. From left to right:
-{\em (A)} MFE structure for BX$842649.1$/$277414$--$277318$.
-{\em (B)} Rfam consensus structure for BX$842649.1$/$277414$--$277318$.
-{\em (C)} MFE structure for AACY$022101973.1$/$389$--$487$.
-{\em (D)} Rfam consensus structure for AACY$022101973.1$/$389$--$487$.
+{\em (A)} MFE structure for BX$842649.1$ $277414$--$277318$.
+{\em (B)} Rfam consensus structure for BX$842649.1$ $277414$--$277318$.
+{\em (C)} MFE structure for AACY$022101973.1$ $389$--$487$.
+{\em (D)} Rfam consensus structure for AACY$022101973.1$ $389$--$487$.
 }
 \label{fig:fftbor:tppConsensusAndMfe}
 \end{figure}
@@ -803,11 +797,11 @@ as shown in this figure. From left to right:
 We ran \fftbor on each of the TPP \rb aptamer
 sequences, with the MFE structure of each
 sequence taken as the initial structure \strSt for that sequence. For the
-first sequence, BX$842649.1$/$277414$--$277318$, the \fftbor output
+first sequence, BX$842649.1$ $277414$--$277318$, the \fftbor output
 suggests that there are low energy structures
 at a distance from the MFE structure, which might compete with the MFE
 structure and hence slow the kinetics of folding. In contrast, for the
-second sequence, AACY$022101973.1$/$389$--$487$, the \fftbor output suggests
+second sequence, AACY$022101973.1$ $389$--$487$, the \fftbor output suggests
 that there are no such competing low energy structures, hence
 the second sequence should fold more quickly than the first.
 
@@ -821,16 +815,16 @@ thiamine pyrophosphate \rb (TPP) aptamers]{Output from \fftbor on two randomly s
 thiamine pyrophosphate \rb (TPP) aptamers, taken from the Rfam database
 \citep{Gardner.nar11}. The $x$-axis represents \bpd from the
 \mfes for each given sequence; the $y$-axis represents
-Boltzmann probabilities $p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$, where
+Boltzmann probabilities $p(k) = \frac{\bfZ{k}{}}{\fullZ}$, where
 \bfZ{k}{} denotes the sum of Boltzmann factors or all secondary structures,
 whose \bpd from the MFE structure is exactly $k$.
 {\em (Left)}
-The $97$ nt sequence BX$842649.1$/$277414$--$277318$ appears to have a rugged energy
+The $97$ nt sequence BX$842649.1$ $277414$--$277318$ appears to have a rugged energy
 landscape near its \mfes, with distinct
 low energy structures that may compete with the MFE structure during the
 folding process.
 {\em (Right)}
-The $99$ nt sequence, AACY$022101973.1$/$389$--$487$ appears to have a smooth energy
+The $99$ nt sequence, AACY$022101973.1$ $389$--$487$ appears to have a smooth energy
 landscape near its MFE structure, with no distinct low energy structures
 to might compete with the MFE structure.
 Based on the \fftbor output or {\em structural profile} near MFE
@@ -850,7 +844,7 @@ details.}
 To test the hypothesis that folding is slower for rugged energy landscapes,
 we ran the kinetic folding software, \kinfold \citep{flamm},
 on each of the two TPP \rb aptamer sequences,
-BX$842649.1$/$277414$--$277318$ and AACY$022101973.1$/$389$--$487$,
+BX$842649.1$ $277414$--$277318$ and AACY$022101973.1$ $389$--$487$,
 to determine the \mfpt (MFPT) to
 fold into the MFE structure, when starting from the empty structure.
 In this computational
@@ -860,11 +854,11 @@ of a single base pair---to fold the
 empty structure into the MFE
 structure, where the average was taken over $30$ runs, with an absolute
 maximum number of Monte Carlo steps taken to be $500,000$.
-The first sequence, BX$842649.1$/$277414$--$277318$, converged within $500,000$
+The first sequence, BX$842649.1$ $277414$--$277318$, converged within $500,000$
 steps only for $20$ out of $30$ runs. Assigning the maximum step count of
 $500,000$ for the $10$ runs that did not converge, we found a \mfpt
 of $311,075.06$ steps for this sequence.
-The second sequence, AACY$022101973.1$/$389$--$487$, converged within $500,000$
+The second sequence, AACY$022101973.1$ $389$--$487$, converged within $500,000$
 steps in $29$ out of $30$ runs, and we found a \mfpt of
 $61,575.69$ steps for this sequence. From computational experiments of this
 type, it is suggestive that \fftbor may prove useful in synthetic
@@ -920,7 +914,7 @@ the probability distribution
 for the number of base pairs per structure, taken over the ensemble
 of all secondary structure for the input RNA
 sequence. The standard deviation of this probability distribution corresponds
-to a notion of the {\em width} of the distribution. It is possible that those
+to a notion of the width of the distribution. It is possible that those
 sequences having distributions tightly centered around the
 mean have faster folding times than those with a wider distribution
 due to other local minima causing the RNA to get trapped while folding.
@@ -1010,35 +1004,35 @@ initial structure \strSt.
 The $x$-axis represents the number of base pairs per structure,
 taken over the ensemble of all secondary structures for the given RNA
 sequence; the $y$-axis represents Boltzmann probability
-$p(k) = \sfrac{\bfZ{k}{}}{\fullZ}$,
+$p(k) = \frac{\bfZ{k}{}}{\fullZ}$,
 where \fullZ is the partition function for all secondary structures
 having exactly $k$ base pairs.
 {\em (Left)}
-For the selenocysteine (SECIS) element AB$030643.1$/$4176$--$4241$ from Rfam family
+For the selenocysteine (SECIS) element AB$030643.1$ $4176$--$4241$ from Rfam family
 RF$00031$, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
 $0.7276$, while the logarithm base $10$ of the \mfpt ($\log_{10}(\text{MFPT})$)
 is $4.75$.
 {\em (Center)}
 For the selenocysteine (SECIS) element
-AL$645723.11$/$192421$--$192359$ from Rfam family
+AL$645723.11$ $192421$--$192359$ from Rfam family
 RF$00031$, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
 $2.6794$, while $\log_{10}(\text{MFPT})$ is $5.69$.
 Among the $61$ sequences in the seed alignment of RF$00031$,
-AB$030643.1$/$4176$--$4241$ was the fastest folder, while
-AL$645723.11$/$192421$--$192359$ was the slowest folder.
+AB$030643.1$ $4176$--$4241$ was the fastest folder, while
+AL$645723.11$ $192421$--$192359$ was the slowest folder.
 {\em (Right)}
 Superimposition of output of \fftbor for two TPP \rb aptamers: the
-$97$ nt sequence BX$842649.1$/$277414$--$277318$ and the
-$99$ nt sequence AACY$022101973.1$/$389$--$487$, both obtained when
+$97$ nt sequence BX$842649.1$ $277414$--$277318$ and the
+$99$ nt sequence AACY$022101973.1$ $389$--$487$, both obtained when
 taking the empty structure for the initial structure \strSt.
 The mean $\mu$ for the \fftbor structural profile near the empty
 structure is $23.0203$  [resp. $27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
 is $2.2253$  [resp. $1.9857$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
-AB$030643.1$/$4176$--$4241$ [resp. AL$645723.11$/$192421$--$192359$].
+AB$030643.1$ $4176$--$4241$ [resp. AL$645723.11$ $192421$--$192359$].
 The right panel of this figure should be compared with Figure
 \ref{fig:fftbor:tppDistributions}.
 These anecdotal results bear up the correlation between standard deviation
@@ -1049,16 +1043,16 @@ $\sigma$ and $\log_{10}(\text{MFPT})$ described in Table \ref{table:correlationF
 
 In the right panel of \Figref{fftbor:correlationFFTborEmpty}, we
 applied \fftbor to each of the two randomly chosen TPP \rb
-aptamers BX$842649.1$/$277414$--$277318$ and AACY$022101973.1$/$389$--$487$, starting
+aptamers BX$842649.1$ $277414$--$277318$ and AACY$022101973.1$ $389$--$487$, starting
 from the empty reference structure $\strSt=\varnothing$.
 The mean for the \fftbor structural profile near the empty
 structure is $\mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
 is $\sigma_1=2.2253$  [resp. $\sigma_2=1.9857$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
-AB$030643.1$/$4176$--$4241$ [resp.  AL$645723.11$/$192421$--$192359$]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
+AB$030643.1$ $4176$--$4241$ [resp.  AL$645723.11$ $192421$--$192359$]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
 
-Additionally, we randomized the TPP \rbs BX$842649.1$/$277414$--$277318$ and AACY$022101973.1$/$389$--$487$ by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
+We randomized the TPP \rbs BX$842649.1$ $277414$--$277318$ and AACY$022101973.1$ $389$--$487$ by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
 \citep{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these
 sequences, starting from the empty structure.  The mean $\mu_1$ and standard
 deviation $\sigma_1$ for the \fftbor distribution for randomized BX$842649$ are
@@ -1116,7 +1110,7 @@ independent evaluations.
 \centering
 \includegraphics[width=.9\textwidth]{Figures/FFTbor/rnaborfftborRunTimeEvan.pdf}
 \caption[Run times in seconds for \rnabor and \fftbor, on random RNA
-of length $20,\dots,300$ in step size of $20$ nt]{Run times in seconds for \rnabor and \fftbor, on random RNA
+of length $20$--$300$ in step size of $20$ nt]{Run times in seconds for \rnabor and \fftbor, on random RNA
 of length $20,40,60,\dots,300$ in step size of $20$ nt. Each algorithm
 was run with the empty initial structure \strSt, see rows
 \rnabor (empty), \fftbor (empty), and with the \mfes as the initial structure

@@ -86,11 +86,14 @@ Nevertheless, it should be noted that there are a number of
 methods that concern the addition or removal of an entire helical
 region, e.g. \citep{huang.bb14,zhao.jcp11}.
 
-Most computational approaches involve either (1) algorithms to
-determine optimal or near-optimal folding pathways, (2) explicit
-solutions of the master equation, (3) repeated simulations to fold an
-initially empty secondary structure to the target \mfe
-(MFE) structure. Examples of methods to determine optimal or
+Most computational approaches involve either
+\begin{inparaenum}[\em 1\upshape)]
+\item algorithms to determine optimal or near-optimal folding pathways;
+\item explicit solutions of the master equation; or
+\item repeated simulations to fold an initially empty secondary structure to
+the target \mfe (MFE) structure.
+\end{inparaenum}
+Examples of methods to determine optimal or
 near-optimal folding pathways include the greedy approach of Morgan
 and Higgs \citep{morganhiggsbarrier}, the exact, optimal, exponential
 time program \barriers \citep{flammhofacker}, the program
@@ -262,8 +265,8 @@ that the stationary probability distribution
 
 where $E(k)$ is the energy of conformation $k$ at temperature $T$,
 $R$ is the universal gas constant,
-$T$ is absolute temperature, and the {\em partition function}
-$Z = \sum_{k=1}^n \boltzf{k}$ is a normalization constant
+$T$ is absolute temperature, and the partition function
+$\fullZ = \sum_{k=1}^n \boltzf{k}$ is a normalization constant
 \citep{waterman:book,cloteBackofen:book}. If neighborhood size is not
 constant, as in the case where states are RNA secondary structures and transitions
 are restricted to the addition or removal of a single base pair, then
@@ -456,10 +459,10 @@ p(t) = \sum_{k=1}^n c_k {\bf v}_k\, e^{\lambda_k t}
 
 where $p(t) = (p_1(t),\dots,p_n(t))$, and the
 values $c_k$ are determined by the initial population occupancy
-distribution $p(0)$ at time 0. Here
+distribution $p(0)$ at time $0$. Here
 ${\bf v}_k$ denotes the $k$th eigenvector and
 $\lambda_k$ the $k$th eigenvalue. In particular,
-$c_k = \left(p(0) \cdot T^{-1})\right)_k$, where the $j$th row of $T$
+$c_k = \left(p(0) \cdot T^{-1}\right)_k$, where the $j$th row of $T$
 is the $j$th left eigenvector of $R$,
 and $p(0)$ is the population occupancy distribution
 at time $t=0$. If the eigenvalues are labeled in decreasing
@@ -668,7 +671,7 @@ matrix inversion \citep{meyermfpt}---see
 comma separated value (CSV) file containing the non-zero positions and
 values of a 2D probability grid; i.e. a CSV format file having columns {\em i},
 {\em j}, and {\em p}. The first two columns, {\em i} and {\em j}
-correspond to the 0-indexed row-ordered position in the probability grid, and
+correspond to the $0$-indexed row-ordered position in the probability grid, and
 the final column {\em p} is the stationary probability $p_{i,j}$.
 From this input, the probability transition matrix is constructed using
 \eqnref{hermes:xitionProbFfttwoWithoutHastings} and the
@@ -718,7 +721,7 @@ $\widetilde{P}_{x_{\infty}}$ be the matrix obtained from $P$ by
 removal of the row and column with index $x_{\infty}$, and $I$ denote
 the $(n-1)\times(n-1)$ identity matrix, where $n=|\str|$ is the
 number of secondary structures of \seq. Let $e$ denote the vector of
-size $n-1$, each of whose coordinates is 1. It is well-known
+size $n-1$, each of whose coordinates is $1$. It is well-known
 \citep{meyermfpt} that for each $k\ne x_{\infty}$, the $k$th coordinate
 of the vector $(I - \widetilde{P}_{x_{\infty}})^{-1} \cdot {\bf e}$ is
 exactly equal to the \mfpt from the structure with
@@ -731,7 +734,7 @@ Since this computation of the
 to be the {\em gold standard} value for RNA folding kinetics.
 
 Because this program was designed with the original intent
-of handling 2D-probability grids, all vertexes are uniquely identified
+of handling 2D probability grids, all vertexes are uniquely identified
 by index tuples (which conceptually correspond to positioning in a 2D
 array). However, it is trivial to use this code with both
 1D-probability grids such as those produced by \fftbor
@@ -808,9 +811,9 @@ only between states $(x,y),(u,v) \in Q_1$, such that $u=x\pm 1$, $v =
 y \pm 1$. However, we have found that for some RNA sequences, there is
 no non-zero probability path from $(0,d_0)$ to $(d_0,0)$
 (corresponding to a folding pathway from structure \strA to
-\strB). Since \ffttwo computes {\em probabilities} $p(x,y)$ by
+\strB). Since \ffttwo computes probabilities $p(x,y)$ by
 polynomial interpolation using the \fft, any
-probability less than $10^{-8}$ is set to 0. Also with \rnatwofold,
+probability less than $10^{-8}$ is set to $0$. Also with \rnatwofold,
 it may arise that there is no non-zero probability path
 from structure $(0,d_0)$ to $(d_0,0)$.
 
@@ -894,7 +897,7 @@ k_{x,y}=
 \end{cases}
 \end{align}
 
-Clearly the rate matrix satisfies {\em detailed balance}; i.e. $\pSt(x)
+Clearly the rate matrix satisfies detailed balance; i.e. $\pSt(x)
 \cdot k_{x,y} = \pSt(y) \cdot k_{y,x}$ for all distinct $x,y \in
 \str$. In fact, the rate matrix for Markov processes is usually
 defined as above, precisely to ensure detailed balance, which then
@@ -949,17 +952,17 @@ k((u,v),(x,y))=
 \end{align}
 
 Equilibrium time is then computed for this Markov process using
-equation \ref{eq:hermes:populationOccupancyEquation}.
+\eqnref{hermes:populationOccupancyEquation}.
 
 \subsubsection{Population occupancy curves with \ffteq}
 \label{subsubsec:hermes:popcurve}
 
 Population occupancy curves provide valuable visual insight into the folding
 kinetics of RNA molecules.
-Equation \ref{eq:hermes:solutionMasterEquationForSingleState} describes a
-computation for the probability distribution
-$p(t)=(p_1(t),\dots,p_n(t))^{\text T}$ of all states $1 \leq x \leq n$ at
-time $t$. Rather than plot $p(t)$ as a function of $t$, we find it more
+A computation for the probability distribution
+$p(t) = (p_1(t),\dots,p_n(t))^{\text T}$ of all states $1 \leq x \leq n$ at
+time $t$ is described in \eqnref{hermes:solutionMasterEquationForSingleState}.
+Rather than plot $p(t)$ as a function of $t$, we find it more
 visually impactful to plot the log-logistic function $p(\log_{10}(t))$,
 yielding the curvess seen in \Figref{hermes:populationOccupancySplicedLeader}.
 
@@ -1062,7 +1065,7 @@ more than $\epsilon$ within a \\ & window of size $w$, having step size \tD
 \algrestore{eqEst}
 \Function{SoftBound}{$i$, \tMin, \tMax, \tD, $\delta$, $s$}
 \State $i_{\infty} \gets p_i(10^{\tMax})$
-\Comment{From equation \ref{eq:hermes:solutionMasterEquationForSingleStateFixedStartPop}}
+\Comment{From \eqnref{hermes:solutionMasterEquationForSingleStateFixedStartPop}}
 \State $t \gets \tMin + \frac{\tMax - \tMin}{2}$
 \State $t' \gets \tMax$
 \While{$|t - t'| > \tD$}
@@ -1070,7 +1073,7 @@ more than $\epsilon$ within a \\ & window of size $w$, having step size \tD
 \State $t_{\text{temp}} \gets t$
 \If{$|p_i(10^t) - p_i(10^{t'})| > \delta$}
 \State $t \gets t + s * \frac{|t - t'|}{2}$
-\Comment{$s$ is 1 [resp. $-1$] for the right [resp. left] bound}
+\Comment{$s$ is $1$ [resp. $-1$] for the right [resp. left] bound}
 \Else
 \State $t \gets t - s * \frac{|t - t'|}{2}$
 \EndIf
@@ -1183,12 +1186,12 @@ to the consensus structure from Rfam $11.0$ \citep{Gardner.nar11}.
 \caption[{\em (Left)} Histogram of free energies of secondary structures of
 an example $20$-mer from the benchmarking dataset.
 {\em (Right)} Minimum free energy structure of the $54$ nt Peach Latent Mosaic
-Viroid (PLMVd) AJ$005312.1$/$282$--$335$]{
+Viroid (PLMVd) AJ$005312.1$ $282$--$335$]{
 {\em (Left)} Histogram of free energies of secondary structures of
 \ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to $+25$ kcal/mol, with
 mean of $10.695$ kcal/mol.
 {\em (Right)} Minimum free energy structure of the $54$ nt Peach Latent Mosaic
-Viroid (PLMVd) AJ$005312.1$/$282$--$335$, which is identical to the consensus
+Viroid (PLMVd) AJ$005312.1$ $282$--$335$, which is identical to the consensus
 structure from Rfam $11.0$ \citep{Gardner.nar11}. \rfold from
 Vienna RNA Package $2.1.7$ with energy parameters from the Turner $1999$
 model were used, since the \mfes determined by
@@ -1228,11 +1231,11 @@ time required for reliable \kinfold estimations and the large
 standard deviations observed point out the need for a faster method to
 approximate folding time.
 
-With this in mind, it is natural to turn to {\em coarse-grained} models,
+With this in mind, it is natural to turn to coarse-grained models,
 as done by Wolfinger et al. \citep{wolfingerstadler:kinetics} and by
 Tang et al. \citep{tang.jmb08}. The software of Tang et al. appears not
 to be available. Concerning the method of Wolfinger et al. (called
-\ms{BarriersEq} in our benchmarking), there is now a web server available,
+\barrierseq in our benchmarking), there is now a web server available,
 which runs \rnasub \citep{wuchty.b99} to generate all secondary structures within
 a user-specified energy range, then runs \barriers \citep{flammhofacker}
 to generate basins of attraction around a user-specified number of locally
@@ -1273,7 +1276,7 @@ modification using equations (\ref{eq:hermes:xitionProbWithHastings}) and
 \item \fftmfpt with and without the Hastings modification using equations
 (\ref{eq:hermes:xitionProbFfttwoWithHastings}) and
 (\ref{eq:hermes:xitionProbFfttwoWithoutHastings});
-\item \ffteq which computes \eqt for the 2D-grid using
+\item \ffteq which computes \eqt for the 2D grid using
 \eqnref{hermes:xitionRateWithoutHastings}; and finally
 \item \rnatwofold with and without the Hastings modification using equations
 (\ref{eq:hermes:xitionProbFfttwoWithHastings}) and
@@ -1335,9 +1338,12 @@ kinetics.
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsRnaEq.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaEqKinfold.pdf}
-\caption{Scatter plots of the natural logarithm of times from \rnamfpt
+\caption[Scatter plots of the natural logarithm of times from \rnamfpt
 versus \msresp{RNAeq} {\em (Left)} and for \kinfold versus
-\msresp{RNAeq} {\em (Right)}. }
+\msresp{RNAeq} {\em (Right)}]
+{Scatter plots of the natural logarithm of times from \rnamfpt
+versus \msresp{RNAeq} {\em (Left)} and for \kinfold versus
+\msresp{RNAeq} {\em (Right)}.}
 \label{fig:hermes:scatterplotRnaEqVsRnaMfptHastingsAndKinfold}
 \end{figure}
 
@@ -1346,8 +1352,10 @@ versus \msresp{RNAeq} {\em (Left)} and for \kinfold versus
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsKinfold.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/rnaMfptHastingsFftMfptHastings.pdf}
-\caption{Scatter plots of the natural logarithm of times from \rnamfpt
-versus \msresp{Kinfold} {\em (Left)} and for \rnamfpt versus \msresp{FFTmfpt} {\em (Right)}. }
+\caption[Scatter plots of the natural logarithm of times from \rnamfpt
+versus \msresp{Kinfold} {\em (Left)} and for \rnamfpt versus \msresp{FFTmfpt} {\em (Right)}]
+{Scatter plots of the natural logarithm of times from \rnamfpt
+versus \msresp{Kinfold} {\em (Left)} and for \rnamfpt versus \msresp{FFTmfpt} {\em (Right)}.}
 \label{fig:hermes:scatterplotRnaMfptHastingsVsKinfoldAndFftMfpt}
 \end{figure}
 
@@ -1356,9 +1364,11 @@ versus \msresp{Kinfold} {\em (Left)} and for \rnamfpt versus \msresp{FFTmfpt} {\
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/kinfoldFftMfptHastings.pdf}
 \quad
 \includegraphics[width=0.45\textwidth]{Figures/Hermes/fftMfptFftEq.pdf}
-\caption{ Scatter plots of the natural logarithm of times from \kinfold
+\caption[Scatter plots of the natural logarithm of times from \kinfold
 versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
-{\em (Right)}. }
+{\em (Right)}]{Scatter plots of the natural logarithm of times from \kinfold
+versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
+{\em (Right)}.}
 \label{fig:hermes:scatterplotFftMfptVsKinfoldAndFftEq}
 \end{figure}
 
@@ -1367,7 +1377,7 @@ versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
 \centering
 \begin{tabularx}{\linewidth}{c *{8}{L}}
   \toprule
-  \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\ms{BarriersEq}} & \small{\ffteq} \\
+  \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\barrierseq} & \small{\ffteq} \\
   \cmidrule(l){2-9}
   \small{\rnamfpt}   & $1$      & $0.5683$ & $0.7945$ & $0.5060$ & $0.5110$ & $0.5204$ & $0.5280$ & $0.4472$ \\
   \small{\rnaeq}   & $0.5798$ & $1$      & $0.7814$ & $0.7043$ & $0.7025$ & $0.5080$ & $0.5979$ & $0.6820$ \\
@@ -1375,11 +1385,29 @@ versus \msresp{FFTmfpt} {\em (Left)} and for \fftmfpt versus \msresp{FFTeq}
   \small{\fftmfpt}       & $0.6035$ & $0.7935$ & $0.7608$ & $1$      & $0.9980$ & $0.5485$ & $0.8614$ & $0.9589$ \\
   \small{\rnatwofold}     & $0.6076$ & $0.7919$ & $0.7655$ & $0.9983$ & $1$      & $0.5584$ & $0.8538$ & $0.9515$ \\
   \small{\fftbor}        & $0.5416$ & $0.5218$ & $0.6241$ & $0.5748$ & $0.5855$ & $1$      & $0.3450$ & $0.4229$ \\
-  \small{\ms{BarriersEq}} & $0.6346$ & $0.6578$ & $0.6328$ & $0.8310$ & $0.8217$ & $0.3450$ & $1$      & $0.9149$ \\
+  \small{\barrierseq} & $0.6346$ & $0.6578$ & $0.6328$ & $0.8310$ & $0.8217$ & $0.3450$ & $1$      & $0.9149$ \\
   \small{\ffteq}         & $0.5614$ & $0.7916$ & $0.6966$ & $0.9670$ & $0.9590$ & $0.4757$ & $0.8940$ & $1$      \\
   \bottomrule
  \end{tabularx}
- \caption[Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics]{Table of Pearson correlation coefficients for various methods to compute or approximate RNA secondary structure folding kinetics. Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix inversion for the Markov chain consisting of all secondary structures, with move allowed between structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$), \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of ``grid point'' states $(x,y)$ with probability $P(x,y)=\sum_S exp(-E(S)/RT)/Z$, computed by \ffttwo, where the sum is taken over structures having \bpd $x$ to the empty structure and $y$ to the MFE structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of states $0,1,\dots,n$, for which $P(x) = \sum_S \exp(-E(S)/RT)/Z$, where the sum is taken over all secondary structures whose \bpd is $x$ from the MFE structure), \ms{BarriersEq} (\eqt, computed using spectral decomposition on the Markov process consisting of ``grid point'' states output from \ms{Barriers}), and \ffteq (\eqt, computed in the same fashion as \ms{BarriersEq} using a Markov process derived from the energy landscape output by \ffttwo). }
+ \caption[Table of Pearson correlation coefficients for various methods to compute or approximate
+ RNA secondary structure folding kinetics]{Table of Pearson correlation coefficients for
+ various methods to compute or approximate RNA secondary structure folding kinetics.
+ Lower [resp. upper] triangular entries are with [resp. without] the Hastings correction
+ for Markov chain probability matrices. The methods are: \rnamfpt (\mfpt, computed by matrix
+ inversion for the Markov chain consisting of all secondary structures, with move allowed between
+ structures differing by one base pair), \rnaeq (\eqt, computed by spectral decomposition of a
+ rate matrix comprising all secondary structures to compute population fraction $P(t)$ at time $t$),
+ \kinfold (an implementation of Gillespie's Algorithm to approximate refolding pathways using an
+ event-based Monte Carlo simulation), \fftmfpt (\mfpt for Markov chain consisting of `grid point'
+ states $(x,y)$ with probability $P(x,y)=\sum_\str \frac{\boltzf{\str}}{\fullZ}$, computed by \ffttwo,
+ where the sum is taken over structures having \bpd $x$ to the empty structure and $y$ to the MFE
+ structure, \rnatwofold (\mfpt, computed as previously explained, but using \rnatwofold in place
+ of \ffttwo to compute $P(x,y)$), \fftbor (\mfpt, computed for the Markov chain consisting of
+ states $0,1,\dots,n$, for which $P(x) = \sum_\str \frac{\boltzf{\str}}{\fullZ}$, where the
+ sum is taken over all secondary structures whose \bpd is $x$ from the MFE structure), \barrierseq
+ (\eqt, computed using spectral decomposition on the Markov process consisting of `grid point'
+ states output from \barriers), and \ffteq (\eqt, computed in the same fashion as \barrierseq
+ using a Markov process derived from the energy landscape output by \ffttwo).}
 \label{table:correlationHermes}
  \end{table}
  \end{landscape}
