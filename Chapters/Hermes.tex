@@ -100,7 +100,8 @@ time program \barriers \citep{flammhofacker}, the program
 \ms{Findpath} \citep{flamm.r01}, which uses bounded look-ahead
 breadth-first search, a genetic algorithm \citep{shapiro.jmb01}, the
 program \ms{RNAtabupath} that uses local search to determine
-near-optimal folding pathways, the Basin Hopping Graph (BHG, \citep{kucharik:2014ft}) which uses a greedy algorithm to determine local minima
+near-optimal folding pathways, the Basin Hopping Graph
+(BHG, \citep{kucharik:2014ft}) which uses a greedy algorithm to determine local minima
 and approximate their barrier energies, etc. The program \barriers
 \citep{flammhofacker} is the only current method guaranteed to
 produce optimal folding pathways. Since it has been shown that
@@ -669,7 +670,7 @@ referred to as the \hit of a Markov chain, by using
 matrix inversion \citep{meyermfpt}---see
 \Secref{subsec:hermes:mfpt}. The program takes as input a
 comma separated value (CSV) file containing the non-zero positions and
-values of a 2D probability grid; i.e. a CSV format file having columns {\em i},
+values of a \twoD probability grid; i.e. a CSV format file having columns {\em i},
 {\em j}, and {\em p}. The first two columns, {\em i} and {\em j}
 correspond to the $0$-indexed row-ordered position in the probability grid, and
 the final column {\em p} is the stationary probability $p_{i,j}$.
@@ -734,8 +735,8 @@ Since this computation of the
 to be the {\em gold standard} value for RNA folding kinetics.
 
 Because this program was designed with the original intent
-of handling 2D probability grids, all vertexes are uniquely identified
-by index tuples (which conceptually correspond to positioning in a 2D
+of handling \twoD probability grids, all vertexes are uniquely identified
+by index tuples (which conceptually correspond to positioning in a \twoD
 array). However, it is trivial to use this code with both
 1D-probability grids such as those produced by \fftbor
 \citep{senter.po12} or arbitrary transition matrices without any change
@@ -744,8 +745,8 @@ many options for defining the format of the input as well as the
 structure of the graph underlying the
 Markov chain.
 
-Due to our interest in efficiently estimating MFPT using coarse-grained 2D
-energy landscapes, the default input for \rnamfpt (and \rnaeq) is a 2D
+Due to our interest in efficiently estimating MFPT using coarse-grained \twoD
+energy landscapes, the default input for \rnamfpt (and \rnaeq) is a \twoD
 probability grid, as described above. We additionally allow as alternative input
 an energy landscape (whereby transition probabilities are defined as in
 equation \ref{eq:hermes:mfptXitionProb}).
@@ -763,10 +764,10 @@ first passage time for the corresponding Markov chain.
 \fftmfpt approximates the \mfpt of a given RNA
 sequence folding from input structure \strA to \strB, by
 computing {\em exactly} the \mfpt from state $(0,d_0)$ to state
-$(d_0,0)$ in the 2D probability grid obtained from running
+$(d_0,0)$ in the \twoD probability grid obtained from running
 \ffttwo. Here, $d_0$ is the \bpd between structures
 \strAB, and the MFPT is computed for the Markov chain, whose states are
-the non-empty 2D probability grid points, and whose transition
+the non-empty \twoD probability grid points, and whose transition
 probabilities are defined by $p_{(x,y),(x',y')} =
 \frac{P(x',y')}{P(x,y)}$.
 
@@ -875,7 +876,7 @@ single base pair.
 \rnaeq computes the population proportion of a user-provided structure
 over arbitrary time units. Like \rnamfpt, this program takes as input a
 comma separated value (CSV) file containing the non-zero positions and
-values of a 2D probability grid. From this input a rate matrix
+values of a \twoD probability grid. From this input a rate matrix
 is constructed for the underlying Markov process. Alternatively,
 \rnaeq can accept as input an arbitrary rate matrix. Performing
 spectral decomposition of the column-ordered rate matrix that
@@ -928,7 +929,7 @@ small sequences.
 \ffteq allows an investigator to efficiently estimate population
 kinetics for a sequence folding between two arbitrary, but fixed,
 structures. The transition rate matrix underlying the Markov process
-necessary for eigendecomposition is derived from the 2D energy
+necessary for eigendecomposition is derived from the \twoD energy
 landscape.
 Indices $(x,y)$ in the rate matrix correspond to all strucutres having
 \bpd $x$ [resp. $y$] to input structure \strA [resp. \strBresp],
@@ -1276,7 +1277,7 @@ modification using equations (\ref{eq:hermes:xitionProbWithHastings}) and
 \item \fftmfpt with and without the Hastings modification using equations
 (\ref{eq:hermes:xitionProbFfttwoWithHastings}) and
 (\ref{eq:hermes:xitionProbFfttwoWithoutHastings});
-\item \ffteq which computes \eqt for the 2D grid using
+\item \ffteq which computes \eqt for the \twoD grid using
 \eqnref{hermes:xitionRateWithoutHastings}; and finally
 \item \rnatwofold with and without the Hastings modification using equations
 (\ref{eq:hermes:xitionProbFfttwoWithHastings}) and
