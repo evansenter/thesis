@@ -3,7 +3,7 @@
 \chapter{FFTbor2D}
 \label{ch:ffttwo}
 
-\lhead{FFTbor2D: 2D Coarse-Grained Energy Landscapes}
+\lhead{FFTbor\twoD: \twoD Coarse-Grained Energy Landscapes}
 
 \section{Introduction}
 \label{sec:ffttwo:intro}
@@ -34,7 +34,7 @@ recursions for the Nussinov energy model for expository clarity, the
 underlying implementation uses the more complicated and robust Turner energy
 model. Recursions in place, we then move to show how these lead to
 a single variable polynomial $P(x)$ whose coeffecients can be computed by
-the \idft, and map to the 2D energy landscape. We describe two improvements over
+the \idft, and map to the \twoD energy landscape. We describe two improvements over
 the straight-forward use of the \fft to compute $P(x)$,
 a parity condition and complex conjugates, which together reduce the
 runtime by a factor of $4$. Finally, we contrast this software against \rnatwofold,
@@ -74,21 +74,21 @@ cells.
 
 In the case of spliced leader (SL) RNA from certain trypanosomes and nematodes,
 a portion of the $5'$ exon is donated to
-another mRNA by trans splicing.
+another mRNA by trans-splicing.
 Intermediate structures appear to be important in the process of splicing,
 as shown by LeCuyer and Crothers \citep{lecuyercrothers}, who performed
 stopped-flow rapid-mixing and temperature-jump measurements
 of the kinetics for the structural transition between two low
 energy structures of SL RNA from {\em Leptomonas collosoma}.
 Conformational switches are thought not only to play a role in such
-trans splicing, but as well in transcriptional and
+trans-splicing, but as well in transcriptional and
 translational regulation, protein synthesis, and mRNA splicing.
 
 For these reasons, substantial experimental and computational work
 has been done on folding pathways. In \citep{lorenz}, \rnatwofold---a dynamic
 programming method that operates in
 \On{7} time and \On{4} space---is presented, a generalization of \rnabor
-\citep{freyhult.b07} that computes a 2D projection of the energy landscape,
+\citep{freyhult.b07} that computes a \twoD projection of the energy landscape,
 discretized by \bpd to two input structures. Our work presented
 here, called \ffttwo, produces a similar energy landscape in \On{5} time and
 \On{2} space---efficient enough for the analysis of folding pathways of large
@@ -826,7 +826,7 @@ $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
-\Function{FFTbor2D Improved}{\seq, \strA, \strB, $m$}
+\Function{FFTbor\twoD Improved}{\seq, \strA, \strB, $m$}
 \State $n \gets \textit{length}(\seq)$
 \State $N \gets n + (n \bmod 2)$
 \State $M \gets (N + 1)^2 + ((N + 1)^2 \bmod 4)$
@@ -1055,9 +1055,9 @@ sequence details.
 \begin{figure}[!ht]
 \centering
 \includegraphics[width=.7\textwidth]{Figures/FFTbor2D/ffttwoProbContour.pdf}
-\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
+\caption[\twoD projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, as computed by \ffttwo]{
-2D projection of energy landscape for Spliced Leader (SL) RNA
+\twoD projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, having
 sequence and metastable secondary structures: \rule[-1.25em]{0pt}{0pt} \\
 \hspace{.4em}$\seq\,=$ \strfont{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGAGACUUC} \\
@@ -1084,7 +1084,7 @@ with \ffttwo; graphics produced using Mathematica.
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldProbContour.pdf}
 \quad
 \includegraphics[width=.45\textwidth]{Figures/FFTbor2D/rtwofoldEnsFreeEnergyContour.pdf}
-\caption[2D projection of energy landscape for Spliced Leader (SL) RNA
+\caption[\twoD projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, as in
 \Figref{ffttwo:ffttwoProbContour},
 except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
@@ -1092,7 +1092,7 @@ is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
 while in the left panel, ensemble free energy is computed from
 the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
 by \rnatwofold]{
-2D projection of energy landscape for Spliced Leader (SL) RNA
+\twoD projection of energy landscape for Spliced Leader (SL) RNA
 from {\em L. collosoma}, as in
 \Figref{ffttwo:ffttwoProbContour},
 except that in the right panel, ensemble free energy $-RT \log \bfZ{x,y}{}$
@@ -1100,7 +1100,7 @@ is computed from the values of \bfZ{x,y}{} output by \rnatwofold,
 while in the left panel, ensemble free energy is computed from
 the values $\bfZ{x,y}{}=p(x,y) \cdot \fullZ$, where values $p(x,y)$ are output
 by \rnatwofold.
-The loss of detail in the 2D energy landscape is caused uniquely by
+The loss of detail in the \twoD energy landscape is caused uniquely by
 working with probabilities $p(x,y)$, rather than partition function
 values \bfZ{x,y}{}.
 Data produced with \rnatwofold; graphics produced using Mathematica.
