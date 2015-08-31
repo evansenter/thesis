@@ -1,0 +1,49 @@
+comprised of => composed of
+Jaque Fresco, Paul Doty => 1959 RNA as graph theoretic
+There are only a select set of possible base pairs (clarify that select set of commonly occuring)
+coarsified => partitioned
+
+Meanwhile other groups have used covariance model (CM)-based approaches to find aptamer domains, most notably CMfinder [35] and Rfam [36].
+
+    This isn't really true, RFam is a DB, not a finder
+
+Talk about de novo search vs. homology search
+
+Cut mention of experimental validation
+
+Ribosomal machinery vs. RNA pol. for expression platform in 2.3.1.2
+
+Also talk about non-canonical base pairs and their implications
+
+pH jump experiments increase non-canonical base pair diversity
+
+While pseudoknots have been shown to be present in some biologically relevant RNAs, their inclusion greatly complicates the recursive decomposition of the structure, and thus it is common to ignore them.
+
+    Discuss biological implications of no supporting pseudoknots, as well as what biological significant RNAs are impacted by this omission
+
+kcal / mol / K
+
+Add in the organisms for anything that I have accession number indices for
+
+reasonable mathematical model to simulate the process
+
+    Reasonable because there exists no respository of experimentally derived kinetics
+    Woodson, Tau Pan
+
+Discussion of the ramifications of investigating biologically relevant rnas without considering cofactors
+
+Lemma 3.2, 4.3 can go
+
+"no sequence homology according" => "no sequence identity according"
+
+    homology implies shared descent
+
+Semilog to spread figures out for FFTbor2D benchmarking figures
+
+Make sure that the legend doesn't override the graph
+
+Figure 4.7 make sure that the labels are correct (right panel twice)
+
+Download RFam Hammerhead and don't provide family number
+
+Indicate that those RNAs in group 1 (scatterplots) are generally the same
