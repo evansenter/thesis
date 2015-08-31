@@ -582,10 +582,10 @@ in the pseudocode on the following page.
 \end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $\pk = \sfrac{\bfZ{k}{1,n}}{\fullZ}$ \rule[-1.5ex]{0pt}{0pt} \\
+of probabilities $\pk = \rfrac{\bfZ{k}{1,n}}{\fullZ}$ \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structure \strSt of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & Probabilities $\pk = \sfrac{\bfZ{k}{1,n}}{\fullZ}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
+{\sc Output:} & Probabilities $\pk = \rfrac{\bfZ{k}{1,n}}{\fullZ}$ to $m$ significant digits for $k=0,\dots,n-1$ \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
 \end{tabular*}
 \begin{algorithmic}[1]
@@ -817,9 +817,9 @@ the second sequence should fold more quickly than the first.
 
 \begin{figure}[!ht]
 \centering
-\includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_AACY022101973_1.pdf}
-\quad
 \includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_BX842649_1.pdf}
+\quad
+\includegraphics[width=.45\textwidth]{Figures/FFTbor/FFTbor_AACY022101973_1.pdf}
 \caption[Output from \fftbor on two randomly selected
 thiamine pyrophosphate \rb (TPP) aptamers]{Output from \fftbor on two randomly selected
 thiamine pyrophosphate \rb (TPP) aptamers, taken from the Rfam database
@@ -933,11 +933,11 @@ due to other local minima causing the RNA to get trapped while folding.
 \centering
 \begin{tabularx}{\linewidth}{c *{6}{R}}
   \toprule
-  ~ & \small{$\mu$} & \small{$\sigma$} & \small{$\sfrac{\sigma}{\mu}$} & \small{$n$} & \small{MFE} & \small{$\log_{10}(\text{MFPT})$} \\
+  ~ & \small{$\mu$} & \small{$\sigma$} & \small{$\rfrac{\sigma}{\mu}$} & \small{$n$} & \small{MFE} & \small{$\log_{10}(\text{MFPT})$} \\
   \cmidrule(l){2-7}
   \small{$\mu$} & $1$ & & & & \\
   \small{$\sigma$} & $-0.4372$ & $1$ & & & \\
-  \small{$\sfrac{\sigma}{\mu}$} & $-0.6914$ & $0.9437$ & $1$ & & & \\
+  \small{$\rfrac{\sigma}{\mu}$} & $-0.6914$ & $0.9437$ & $1$ & & & \\
   \small{$n$} & $0.7077$ & $-0.1590$ & $-0.3646$ & $1$ & &  \\
   \small{MFE} & $-0.5695$ & $0.7395$ & $0.7596$ & $-0.3685$ & $1$ & \\
   \small{$\log_{10}(\text{MFPT})$} & $-0.0363$ & $0.4844$ & $0.3762$ & $0.4059$ & $0.3990$ & $1$ \\
