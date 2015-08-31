@@ -363,11 +363,11 @@ this algorithm to reduce time by a factor of $4$.
 \end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$
+of probabilities $p_{rn+s}=\rfrac{\bfZ{r,s}{1,n}}{\fullZ}$
 \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & $p_{rn+s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$ to
+{\sc Output:} & $p_{rn+s}=\rfrac{\bfZ{r,s}{1,n}}{\fullZ}$ to
 $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,n-1$
 \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
@@ -816,11 +816,11 @@ Pseudocode for \ffttwo which includes the performance enhancements described in
 \end{center}
 \begin{tabular*}{\textwidth}{ll}
 {\sc Purpose:} & Computes the $m$ most significant digits
-of probabilities $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$
+of probabilities $p_{r\cdot(N + 1) + s}=\rfrac{\bfZ{r,s}{1,n}}{\fullZ}$
 \rule[-1.5ex]{0pt}{0pt} \\
 {\sc Input:} & RNA sequence $\seq = \seqN$, secondary
 structures \strA, \strB of \seq, integer $m$ \rule[-1.5ex]{0pt}{0pt} \\
-{\sc Output:} & $p_{r\cdot(N + 1) + s}=\sfrac{\bfZ{r,s}{1,n}}{\fullZ}$ to
+{\sc Output:} & $p_{r\cdot(N + 1) + s}=\rfrac{\bfZ{r,s}{1,n}}{\fullZ}$ to
 $\lfloor \log_{10}(2^m) \rfloor$ significant digits for $r,s=0,\dots,N$
 \rule[-1.75em]{0pt}{0pt} \\
 \hline \rule[0ex]{0pt}{0pt}
