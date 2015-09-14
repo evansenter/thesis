@@ -164,6 +164,7 @@
 \newcommand*{\addresses}[1]{\def\addressnames{#1}}
 \newcommand*{\university}[1]{\def\univname{#1}}
 \newcommand*{\UNIVERSITY}[1]{\def\UNIVNAME{#1}}
+\newcommand*{\subcollegename}[1]{\def\subcollege{#1}}
 \newcommand*{\department}[1]{\def\deptname{#1}}
 \newcommand*{\DEPARTMENT}[1]{\def\DEPTNAME{#1}}
 \newcommand*{\group}[1]{\def\groupname{#1}}
@@ -183,13 +184,13 @@
 
 \thesistitle{On the Use of Coarse-Grained Thermodynamic Landscapes to Efficiently Estimate Folding Kinetics for RNA Molecules} % Your thesis title - this is used in the title and abstract
 %-------------------------------------------------
-\supervisor{Dr. Peter \textsc{Clote}} % You supervisor's name - this is used in the title page
+\supervisor{\textsc{Dr. Peter Clote}} % You supervisor's name - this is used in the title page
 %-------------------------------------------- -----
 \examiner{} % Your examiner's name - this is not currently used anywhere in the template, cite it with \examname if you want it
 %-------------------------------------------------
 \degree{Doctor of Philosophy} % Your degree name - this is currently used in the title page and abstract
 %-------------------------------------------------
-\authors{Evan \textsc{Senter}} % Your name - this is used in the title page and abstract
+\authors{\textsc{Evan Andrew Senter}} % Your name - this is used in the title page and abstract
 %-------------------------------------------------
 \addresses{} % Your address - this is not currently used anywhere in the template, cite it with \addressnames if you want it
 %-------------------------------------------------
@@ -204,6 +205,10 @@
 \UNIVERSITY{\texorpdfstring{\href{http://www.bc.edu/} % Your university's URL
                 {BOSTON COLLEGE}} % Your university's name in capitals - this is currently used in the abstract page
                 {BOSTON COLLEGE}}
+%-------------------------------------------------
+\subcollegename{\texorpdfstring{\href{http://www.bc.edu/schools/gsas/}
+                {The Graduate School of Arts and Sciences}}
+                {The Graduate School of Arts and Sciences}}
 %-------------------------------------------------
 \department{\texorpdfstring{\href{http://www.bc.edu/schools/cas/biology} % Your department's URL
                 {Department of Biology}} % Your department's name - used in the title page and abstract
@@ -240,10 +245,11 @@
     \setlength{\parskip}{0pt}
     {\normalsize \UNIVNAME \par} % University name in capitals
     \bigskip
-    {\huge{\textit{Abstract}} \par}
+    {\huge{Abstract} \par}
     \bigskip
-    {\normalsize \facname \par} % Faculty name
+    {\normalsize \textsc{\facname} \par} % Faculty name
     {\normalsize \deptname \par} % Department name
+    {\normalsize \subcollege \par} % Department name
     \bigskip
     {\normalsize \degreename\par} % Degree name
     \bigskip
