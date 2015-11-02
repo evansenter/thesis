@@ -1,0 +1,223 @@
+diff --git a/Biblio/Full.bib b/Biblio/Full.bib
+index 3faad37..67abc3a 100644
+--- a/Biblio/Full.bib
++++ b/Biblio/Full.bib
+@@ -10491,10 +10491,14 @@ month = mar
+ }
+ 
+ @article{nawrocki:2014uy,
+-author = {Nawrocki, E P and Burge, S W and Bateman, A},
+-title = {{Rfam 12.0: updates to the RNA families database}},
+-journal = {Nucleic acids {\ldots}},
+-year = {2014}
++author = {Nawrocki, Eric P and Burge, Sarah W and Bateman, Alex and Daub, Jennifer and Eberhardt, Ruth Y and Eddy, Sean R and Floden, Evan W and Gardner, Paul P and Jones, Thomas A and Tate, John and Finn, Robert D},
++title = {{Rfam 12.0: updates to the RNA families database.}},
++journal = {Nucleic Acids Research},
++year = {2015},
++volume = {43},
++number = {Database issue},
++pages = {D130--7},
++month = jan
+ }
+ 
+ @article{voss:2006iq,
+@@ -10594,3 +10598,10 @@ pages = {853--856},
+ month = nov
+ }
+ 
++@article{nussinov:1978wc,
++author = {Nussinov, R and Pieczenik, G and Griggs, J R},
++title = {{Algorithms for loop matchings}},
++journal = {SIAM Journal on Applied {\ldots}},
++year = {1978}
++}
++
+diff --git a/Chapters/FFTbor.tex b/Chapters/FFTbor.tex
+index 1da09bd..f9ea9d0 100644
+--- a/Chapters/FFTbor.tex
++++ b/Chapters/FFTbor.tex
+@@ -649,73 +649,11 @@ if $\emZof{}{\aPbi} = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case th
+ \emZof{}{\aMbi} = A - Bi.
+ \end{align}
+ 
++This comes from the well known fact that
++$\emZof{}{\overline{\alpha}} = \overline{\emZof{}{\alpha}}$
++for any polynomial with real coefficients.
+ \end{lemma}
+ 
+-\begin{proof}
+-Letting $i = \sqrt{-1}$, if
+-$\theta = \frac{2 \pi}{n}$, then
+-$\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
+-is the principal \nRoU, and
+-$e^{(0) \cdot i \theta} = 1 = \omega^{0}, \dots ,
+-e^{(n-1) \cdot i \theta} = \omega^{n-1}$ together
+-constitute the complete collection of all
+-\nRoUs---i.e. the $n$ unique solutions of
+-of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
+-Clearly, for any $1 \leq k < n$,
+-$e^{-i k \theta} = 1 \cdot e^{-i k \theta} =
+-e^{2 \pi i} \cdot e^{-i k \theta} = e^{i(2 \pi - k \theta)} =
+-e^{i(n \theta - k \theta)} = e^{i \theta (n - k)}$.
+-Moreover, if $\omega^k = e^{i k \theta} = a + b i$ where
+-$b>0$, then we have $e^{-i k \theta} = \aMbi$. It follows that for any
+-\nRoU of the form \aPbi, where $b>0$, the number \aMbi
+-is also an \nRoU.
+-
+-Recall that $\fullZx = \sum_{k=0}^n z_k x^k$, where
+-$z_k \in \mathbb{R}$ are real numbers representing the partition function
+-\bfZ{k}{1,n} over
+-all secondary structures of a given RNA sequence \seqN,
+-whose \bpd from initial structure
+-\strSt is $k$. Thus, in order to prove the lemma, it suffices to show
+-that for all values $k=0,\dots,n-1$, if \aPbi is a
+-\nRoU, where $a,b \in \mathbb{R}$
+-and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
+-$(\aMbi)^k = C-Di$. Indeed, we have the following.
+-
+-\begin{align}
+-\begin{split}
+-(\aPbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (bi)^k \\
+-(bi)^k  &=
+-\begin{cases}
+-b^k    & \text{if $k \equiv 0 \bmod 4$} \\
+-i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
+--b^k   & \text{if $k \equiv 2 \bmod 4$} \\
+--i b^k & \text{if $k \equiv 3 \bmod 4$} \\
+-\end{cases}
+-\end{split}
+-\end{align}
+-
+-\begin{align}
+-\begin{split}
+-(\aMbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (-bi)^k \\
+-(-bi)^k &=
+-\begin{cases}
+-b^k   & \text{if $k \equiv 0 \bmod 4$} \\
+--ib^k & \text{if $k \equiv 1 \bmod 4$} \\
+--b^k  & \text{if $k \equiv 2 \bmod 4$} \\
+-ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
+-\end{cases}
+-\end{split}
+-\end{align}
+-
+-It follows that each term of the form
+-$a^{m-k} \cdot (bi)^k$, for $k=0,\dots,m$, is the complex conjugate of
+-$a^{m-k} \cdot (-bi)^k$, and thus $(\aPbi)^m$ is the complex conjugate of
+-$(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $z_k (\aPbi)^k$,
+-it follows that \emZof{}{\aMbi} is the complex conjugate of \emZof{}{\aPbi}.
+-This completes the proof of the lemma.
+-
+-\end{proof}
+-
+ Lemma \ref{lem:fftbor:compconj} immediately entails that we need only to evaluate \fullZx on $n/2$
+ many of the \nRoUs---namely, those of the form
+ \aPbi, where $b \geq 0$. The remaining values of \fullZx are obtained by
+@@ -759,7 +697,7 @@ nt sequence
+ }.
+ Rfam consensus and \mfess for both sequences are
+ depicted in \Figref{fftbor:tppConsensusAndMfe}.
+-Despite the fact that there is no sequence identity according to
++Despite the fact that there is no sequence similarity according to
+ pairwise BLAST \citep{blast}, this figure clearly demonstrates that
+ consensus and
+ \mfess closely resemble each other, and that the
+diff --git a/Chapters/FFTbor2D.tex b/Chapters/FFTbor2D.tex
+index db2e08c..773d40d 100644
+--- a/Chapters/FFTbor2D.tex
++++ b/Chapters/FFTbor2D.tex
+@@ -945,13 +945,13 @@ using OpenMP). Nonetheless, there are slight differences in the energy
+ models --- namely, \rnatwofold includes
+ mismatch penalties for multiloop stems and for exterior loops, while
+ \ffttwo does not. Even in the computation of the partition function
+-$Z$, for spliced leader RNA from {\em L. collosoma} of length $56$ nt,
++\fullZ, for spliced leader RNA from {\em L. collosoma} of length $56$ nt,
+ \rnatwofold \ms{-d0} obtains a value of
+-\kmolk{-9.6604}, while \ffttwo obtains
+-\kmolk{-9.6605}; similarly, for attenuator RNA of length $73$ nt,
++\kmol{-9.660}, while \ffttwo obtains
++\kmol{-9.661}; similarly, for attenuator RNA of length $73$ nt,
+ \rnatwofold \ms{-d0} obtains a value of
+-\kmolk{-22.1718}, while \ffttwo obtains
+-\kmolk{-22.1732}.
++\kmol{-22.172}, while \ffttwo obtains
++\kmol{-22.173}.
+ Note that the straightforward calculation of the partition function, following McCaskill's algorithm \citep{mccaskill} makes no use of the FFT engine, and thus the differences cannot be due to floating point or precision issues.
+ 
+ For benchmarking purposes,
+diff --git a/Chapters/Hermes.tex b/Chapters/Hermes.tex
+index 8c5fd94..77e0441 100644
+--- a/Chapters/Hermes.tex
++++ b/Chapters/Hermes.tex
+@@ -978,10 +978,10 @@ with sequence \ms{AACUAAAACAAUUUUUGAAGAACAGUUUCUGUACUUCAUUGGUAUGUAGA}
+ GACUUC. The dot bracket format for the MFE structure, as computed by
+ version $2.1.7$ of \ms{RNAfold -d0}, is
+ \strfont{.......................((((((((((((.....)))))..)))))))..} with free
+-energy \kmolk{-8.6}, while that of the the alternate suboptimal
++energy \kmol{-8.6}, while that of the the alternate suboptimal
+ structure is
+ \strfont{..((...((((((..(((((.((((...)))).)))))..))).)))..)).....} with free
+-energy \kmolk{-7.5}. In the case of the MFE structure, the
++energy \kmol{-7.5}. In the case of the MFE structure, the
+ equilibrium occupancy $P(t_{\infty})$, which \hermes approximates
+ as $0.1789$ should equal the Boltzmann probability $0.1791$,
+ since the MFE structure is the only structure at distance $x_0$ [resp.
+@@ -1164,11 +1164,11 @@ statistics, we generated a collection of $1,000$ random RNA sequences of
+ length $20$ nt, each having expected compositional frequency of $1/4$
+ for A,C,G,U, and each having at most $2,500$ distinct secondary
+ structures, such that the \mfe is less than or equal to
+-\kmolk{-5.5}.
++\kmol{-5.5}.
+ 
+ For example, one of the $1,000$ sequences is \ms{ACGCGACGUGCACCGCACGU} with
+ \mfes \strfont{.....((((((...))))))} having free
+-energy of \kmolk{-6.4}. Statistics for the free energies of the
++energy of \kmol{-6.4}. Statistics for the free energies of the
+ $2,453$ secondary structures of this $20$-mer are the following: mean is
+ $10.695$, standary deviation is $4.804$, maximum is $25.00$, minimum
+ is $-6.40$. A histogram for the free energy of all secondary
+@@ -1189,8 +1189,8 @@ an example $20$-mer from the benchmarking dataset.
+ {\em (Right)} Minimum free energy structure of the $54$ nt Peach Latent Mosaic
+ Viroid (PLMVd) AJ$005312.1$ $282$--$335$]{
+ {\em (Left)} Histogram of free energies of secondary structures of
+-\ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to \kmolk{+25}, with
+-mean of \kmolk{10.695}.
++\ms{ACGCGACGUGCACCGCACGU}, which range from $-6.5$ to \kmol{+25}, with
++mean of \kmol{10.7}.
+ {\em (Right)} Minimum free energy structure of the $54$ nt Peach Latent Mosaic
+ Viroid (PLMVd) AJ$005312.1$ $282$--$335$, which is identical to the consensus
+ structure from Rfam $11.0$ \citep{Gardner.nar11}. \rfold from
+diff --git a/Chapters/Introduction.tex b/Chapters/Introduction.tex
+index 9603c17..b9129de 100644
+--- a/Chapters/Introduction.tex
++++ b/Chapters/Introduction.tex
+@@ -62,7 +62,7 @@ Michael Waterman's graph-theoretic model of single stranded
+ nucleic acids such as RNA in $1978$ \citep{waterman:1978va}. This was followed in $1980$ by
+ the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm for
+ determining the maximally matching secondary structure \str for
+-a given RNA sequence \citep{nussinov1980}, using dynamic programming
++a given RNA sequence \citep{nussinov:1978wc}, using dynamic programming
+ \citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
+ developed an algorithm and accompanying software for the \mfe
+ formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In $1990$, John
+diff --git a/main.pdf b/PhD Dissertation, Evan Senter, RC3.0.0.pdf
+similarity index 75%
+copy from main.pdf
+copy to PhD Dissertation, Evan Senter, RC3.0.0.pdf
+index 882ea80..86be8fb 100644
+Binary files a/main.pdf and b/PhD Dissertation, Evan Senter, RC3.0.0.pdf differ
+diff --git a/main.pdf b/main.pdf
+index 882ea80..a4d7587 100644
+Binary files a/main.pdf and b/main.pdf differ
+diff --git a/rnamacros.sty b/rnamacros.sty
+index ad27e56..a980c0e 100644
+--- a/rnamacros.sty
++++ b/rnamacros.sty
+@@ -116,6 +116,7 @@
+ \newcommand{\brL}{\ensuremath{\strfont{[\,}}}
+ \newcommand{\brR}{\ensuremath{\strfont{\,]}}}
+ \newcommand{\dBP}[2]{\ensuremath{d_{\text{BP}}(#1,\,#2)}\xspace}
++\newcommand{\kmol}[1]{\ensuremath{#1\text{ kcal}/\text{mol}}\xspace}
+ \newcommand{\kmolk}[1]{\ensuremath{#1\text{ kcal}/(\text{mol}\cdot \text{K})}\xspace}
+ \newcommand{\kNbrs}{$k$-{\em neighbors}\xspace}
+ \newcommand{\kNbr}{$k$-{\em neighbor}\xspace}
