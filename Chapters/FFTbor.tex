@@ -649,72 +649,10 @@ if $\emZof{}{\aPbi} = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case th
 \emZof{}{\aMbi} = A - Bi.
 \end{align}
 
+This comes from the well known fact that
+$\emZof{}{\overline{\alpha}} = \overline{\emZof{}{\alpha}}$
+for any polynomial with real coefficients.
 \end{lemma}
-
-\begin{proof}
-Letting $i = \sqrt{-1}$, if
-$\theta = \frac{2 \pi}{n}$, then
-$\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
-is the principal \nRoU, and
-$e^{(0) \cdot i \theta} = 1 = \omega^{0}, \dots ,
-e^{(n-1) \cdot i \theta} = \omega^{n-1}$ together
-constitute the complete collection of all
-\nRoUs---i.e. the $n$ unique solutions of
-of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
-Clearly, for any $1 \leq k < n$,
-$e^{-i k \theta} = 1 \cdot e^{-i k \theta} =
-e^{2 \pi i} \cdot e^{-i k \theta} = e^{i(2 \pi - k \theta)} =
-e^{i(n \theta - k \theta)} = e^{i \theta (n - k)}$.
-Moreover, if $\omega^k = e^{i k \theta} = a + b i$ where
-$b>0$, then we have $e^{-i k \theta} = \aMbi$. It follows that for any
-\nRoU of the form \aPbi, where $b>0$, the number \aMbi
-is also an \nRoU.
-
-Recall that $\fullZx = \sum_{k=0}^n z_k x^k$, where
-$z_k \in \mathbb{R}$ are real numbers representing the partition function
-\bfZ{k}{1,n} over
-all secondary structures of a given RNA sequence \seqN,
-whose \bpd from initial structure
-\strSt is $k$. Thus, in order to prove the lemma, it suffices to show
-that for all values $k=0,\dots,n-1$, if \aPbi is a
-\nRoU, where $a,b \in \mathbb{R}$
-and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
-$(\aMbi)^k = C-Di$. Indeed, we have the following.
-
-\begin{align}
-\begin{split}
-(\aPbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (bi)^k \\
-(bi)^k  &=
-\begin{cases}
-b^k    & \text{if $k \equiv 0 \bmod 4$} \\
-i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
--b^k   & \text{if $k \equiv 2 \bmod 4$} \\
--i b^k & \text{if $k \equiv 3 \bmod 4$} \\
-\end{cases}
-\end{split}
-\end{align}
-
-\begin{align}
-\begin{split}
-(\aMbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (-bi)^k \\
-(-bi)^k &=
-\begin{cases}
-b^k   & \text{if $k \equiv 0 \bmod 4$} \\
--ib^k & \text{if $k \equiv 1 \bmod 4$} \\
--b^k  & \text{if $k \equiv 2 \bmod 4$} \\
-ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
-\end{cases}
-\end{split}
-\end{align}
-
-It follows that each term of the form
-$a^{m-k} \cdot (bi)^k$, for $k=0,\dots,m$, is the complex conjugate of
-$a^{m-k} \cdot (-bi)^k$, and thus $(\aPbi)^m$ is the complex conjugate of
-$(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $z_k (\aPbi)^k$,
-it follows that \emZof{}{\aMbi} is the complex conjugate of \emZof{}{\aPbi}.
-This completes the proof of the lemma.
-
-\end{proof}
 
 Lemma \ref{lem:fftbor:compconj} immediately entails that we need only to evaluate \fullZx on $n/2$
 many of the \nRoUs---namely, those of the form
@@ -759,7 +697,7 @@ nt sequence
 }.
 Rfam consensus and \mfess for both sequences are
 depicted in \Figref{fftbor:tppConsensusAndMfe}.
-Despite the fact that there is no sequence identity according to
+Despite the fact that there is no sequence similarity according to
 pairwise BLAST \citep{blast}, this figure clearly demonstrates that
 consensus and
 \mfess closely resemble each other, and that the
