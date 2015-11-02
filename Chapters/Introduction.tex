@@ -35,12 +35,13 @@ and characterize the properties of these molecules.
 
 Unlike DNA, RNA is generally single stranded and thus able to interact with itself
 to form interesting shapes with various functional characteristics, akin to
-proteins. RNA is a polymer comprised of four monomer {\em building blocks}:
+proteins. RNA is a polymer composed of four monomer {\em building blocks}:
 the purines
 adenine (A) and guanine (G); and the pyrimidines cytosine (C) and uracil (U). These
-nucleotides can form planar base pairs comprised of energetically favorable
+nucleotides can form planar base pairs composed of energetically favorable
 hydrogen bonds, the stacking of which produces a stable {\em helix} structure
-\citep{yakovchuk:2006bm}. There are only a select set of possible base pairs; the
+\citep{yakovchuk:2006bm}. There are only a select set of possible
+commonly occuring base pairs; the
 Watson-Crick pairs (A-U, G-C) or the G-U wobble pair. Given an arbitrary RNA
 sequence $\seq = \seqN$, where $s_i \in \{\text{A,\,U,\,G,\,C}\}$, we can define
 a secondary structure \str for \seq as the set of index tuples indicating those
@@ -54,12 +55,14 @@ largely determined by 3D `tertiary' structure.
 
 From a computational perspective, the history of RNA folding is far too long for
 proper treatment within this introduction. Instead we will touch upon just some
-of the major milestones to get a flavor for what progress has been made. In $1978$,
-Michael Waterman presented the first graph-theoretic model of single stranded
-nucleic acids such as RNA \citep{waterman:1978va}. This was followed in $1980$ by
+of the major milestones to get a flavor for what progress has been made.
+In $1960$, the first modern model of RNA secondary structure was presented
+\citep{fresco:1960vg}, followed by
+Michael Waterman's graph-theoretic model of single stranded
+nucleic acids such as RNA in $1978$ \citep{waterman:1978va}. This was followed in $1980$ by
 the work of Ruth Nussinov and Ann Jacobson, who together presented an algorithm for
 determining the maximally matching secondary structure \str for
-a given RNA sequence \citep{nussinov1980}, using dynamic programming
+a given RNA sequence \citep{nussinov:1978wc}, using dynamic programming
 \citep{bellman:1952vza}. In the following years Michael Zuker and Patrick Stiegler
 developed an algorithm and accompanying software for the \mfe
 formulation of the problem \citep{zuker:1981tf,zuker:1989im}. In $1990$, John

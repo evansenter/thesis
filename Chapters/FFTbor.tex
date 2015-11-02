@@ -24,7 +24,7 @@ This chapter is organized in the following fashion. First, we provide
 background on
 the problem which \fftbor aims to address, as well as a brief overview of
 existing approaches. We follow by a formal explanation of the problem, and
-proceed to describe how the energy landscape is coarsified into discrete bins.
+proceed to describe how the energy landscape is partitioned into discrete bins.
 We then develop the recursions for the parameterized partition function using
 the Nussinov-Jacobson energy model, which allows us to highlight the novel aspects
 of the algorithm. After developing the recursions, we indicate how they can be
@@ -126,7 +126,11 @@ $i=x \iff j=y$ (bases have at most one partner). Finally, we require that
 $i<x<j \iff i<y<j$ (no pseudoknots are allowed). While pseudoknots have been
 shown to be present in some biologically relevant RNAs, their inclusion greatly
 complicates the recursive decomposition of the structure, and thus it is common
-to ignore them.
+to ignore them. As a result, sequences known to contain
+pseudoknots---such as RNase P \citep{haas:1991vl}---are
+not well suited for \fftbor, and whenever possible investigators should take
+care to consider the likely structure for their sequences before proceeding with
+computational analysis.
 
 Provided two secondary structures \strST, we can define a notion of
 distance between them. There are a number of different definitions of distance
@@ -171,7 +175,7 @@ Given an RNA sequence $\seq=\seqN$ and compatible secondary structure
 
 where $E(\str)$ denotes the Turner (nearest neighbor)
 energy \citep{xia:RNA}
-of \str, $R = 0.00198$ kcal/mol denotes the universal
+of \str, $R = \kmolk{0.00198}$ denotes the universal
 gas constant and $T$ denotes absolute temperature. From this, it follows that
 the full partition function is defined as
 
@@ -645,72 +649,10 @@ if $\emZof{}{\aPbi} = A + Bi$ where $A,B \in \mathbb{R}$, then it is the case th
 \emZof{}{\aMbi} = A - Bi.
 \end{align}
 
+This comes from the well known fact that
+$\emZof{}{\overline{\alpha}} = \overline{\emZof{}{\alpha}}$
+for any polynomial with real coefficients.
 \end{lemma}
-
-\begin{proof}
-Letting $i = \sqrt{-1}$, if
-$\theta = \frac{2 \pi}{n}$, then
-$\omega = e^{i \theta} = \cos(\theta) + i \sin(\theta)$
-is the principal \nRoU, and
-$e^{(0) \cdot i \theta} = 1 = \omega^{0}, \dots ,
-e^{(n-1) \cdot i \theta} = \omega^{n-1}$ together
-constitute the complete collection of all
-\nRoUs---i.e. the $n$ unique solutions of
-of the equation $x^n -1 = 0$ over the field $\mathbb{C}$ of complex numbers.
-Clearly, for any $1 \leq k < n$,
-$e^{-i k \theta} = 1 \cdot e^{-i k \theta} =
-e^{2 \pi i} \cdot e^{-i k \theta} = e^{i(2 \pi - k \theta)} =
-e^{i(n \theta - k \theta)} = e^{i \theta (n - k)}$.
-Moreover, if $\omega^k = e^{i k \theta} = a + b i$ where
-$b>0$, then we have $e^{-i k \theta} = \aMbi$. It follows that for any
-\nRoU of the form \aPbi, where $b>0$, the number \aMbi
-is also an \nRoU.
-
-Recall that $\fullZx = \sum_{k=0}^n z_k x^k$, where
-$z_k \in \mathbb{R}$ are real numbers representing the partition function
-\bfZ{k}{1,n} over
-all secondary structures of a given RNA sequence \seqN,
-whose \bpd from initial structure
-\strSt is $k$. Thus, in order to prove the lemma, it suffices to show
-that for all values $k=0,\dots,n-1$, if \aPbi is a
-\nRoU, where $a,b \in \mathbb{R}$
-and $b>0$, and if $(\aPbi)^k = C+Di$ where $C,D \in \mathbb{R}$, {\em then}
-$(\aMbi)^k = C-Di$. Indeed, we have the following.
-
-\begin{align}
-\begin{split}
-(\aPbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (bi)^k \\
-(bi)^k  &=
-\begin{cases}
-b^k    & \text{if $k \equiv 0 \bmod 4$} \\
-i b^k  & \text{if $k \equiv 1 \bmod 4$} \\
--b^k   & \text{if $k \equiv 2 \bmod 4$} \\
--i b^k & \text{if $k \equiv 3 \bmod 4$} \\
-\end{cases}
-\end{split}
-\end{align}
-
-\begin{align}
-\begin{split}
-(\aMbi)^m &= \sum_{k=0}^m \binom{m}{k}\; a^{m-k} \cdot (-bi)^k \\
-(-bi)^k &=
-\begin{cases}
-b^k   & \text{if $k \equiv 0 \bmod 4$} \\
--ib^k & \text{if $k \equiv 1 \bmod 4$} \\
--b^k  & \text{if $k \equiv 2 \bmod 4$} \\
-ib^k  & \text{if $k \equiv 3 \bmod 4$} \\
-\end{cases}
-\end{split}
-\end{align}
-
-It follows that each term of the form
-$a^{m-k} \cdot (bi)^k$, for $k=0,\dots,m$, is the complex conjugate of
-$a^{m-k} \cdot (-bi)^k$, and thus $(\aPbi)^m$ is the complex conjugate of
-$(\aMbi)^m$. Since \emZof{}{\aPbi} is a sum of terms of the form $z_k (\aPbi)^k$,
-it follows that \emZof{}{\aMbi} is the complex conjugate of \emZof{}{\aPbi}.
-This completes the proof of the lemma.
-
-\end{proof}
 
 Lemma \ref{lem:fftbor:compconj} immediately entails that we need only to evaluate \fullZx on $n/2$
 many of the \nRoUs---namely, those of the form
@@ -741,13 +683,13 @@ in \Figref{fftbor:tppDistributions}.
 
 We randomly chose two TPP \rb
 aptamers from the seed alignment for
-Rfam family RF$00059$. The first sequence has EMBL accession code
-BX$842649.1$ $277414$--$277318$ and is comprised of the $97$ nt sequence
+Rfam family RF$00059$. The first sequence from {\em B. bacteriovorus} has EMBL accession code
+BX$842649.1$ $277414$--$277318$ and is composed of the $97$ nt sequence
 \seqsplit{%
   ACCUGACGCUAGGGGUGUUGGUGAAUUCACCGACUGAGAAUAACCCUUU%
   GAACCUGAUAGAGAUAAUGCUCGCGCAGGGAAGCAAGAAUAGAAAGAU%
-}, while the second sequence
-has EMBL accession code AACY$022101973.1$ $389$--$487$ and is comprised of the $99$
+}. The second sequence from the marine metagenome has
+EMBL accession code AACY$022101973.1$ $389$--$487$ and is composed of the $99$
 nt sequence
 \seqsplit{%
   UAUAAGUCCAAGGGGUGCCAAUUGGCUGAGAUGGUUUUAACCAAUCCCUU%
@@ -755,7 +697,7 @@ nt sequence
 }.
 Rfam consensus and \mfess for both sequences are
 depicted in \Figref{fftbor:tppConsensusAndMfe}.
-Despite the fact that there is no sequence homology according to
+Despite the fact that there is no sequence similarity according to
 pairwise BLAST \citep{blast}, this figure clearly demonstrates that
 consensus and
 \mfess closely resemble each other, and that the
@@ -1018,13 +960,13 @@ $p(k) = \frac{\bfZ{k}{}}{\fullZ}$,
 where \fullZ is the partition function for all secondary structures
 having exactly $k$ base pairs.
 {\em (Left)}
-For the selenocysteine (SECIS) element AB$030643.1$ $4176$--$4241$ from Rfam family
+For the {\em M. musculus} selenocysteine (SECIS) element AB$030643.1$ $4176$--$4241$ from Rfam family
 RF$00031$, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
 $0.7276$, while the logarithm base $10$ of the \mfpt ($\log_{10}(\text{MFPT})$)
 is $4.75$.
 {\em (Center)}
-For the selenocysteine (SECIS) element
+For the {\em M. musculus} selenocysteine (SECIS) element
 AL$645723.11$ $192421$--$192359$ from Rfam family
 RF$00031$, the standard deviation $\sigma$ of the number of base pairs,
 taken over the ensemble of all secondary structures, is
@@ -1034,15 +976,15 @@ AB$030643.1$ $4176$--$4241$ was the fastest folder, while
 AL$645723.11$ $192421$--$192359$ was the slowest folder.
 {\em (Right)}
 Superimposition of output of \fftbor for two TPP \rb aptamers: the
-$97$ nt sequence BX$842649.1$ $277414$--$277318$ and the
-$99$ nt sequence AACY$022101973.1$ $389$--$487$, both obtained when
+$97$ nt sequence BX$842649.1$ $277414$--$277318$ from {\em B. bacteriovorus} and the
+$99$ nt sequence AACY$022101973.1$ $389$--$487$ from the marine metagenome, both obtained when
 taking the empty structure for the initial structure \strSt.
 The mean $\mu$ for the \fftbor structural profile near the empty
 structure is $23.0203$  [resp. $27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
 is $2.2253$  [resp. $1.9857$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
-AB$030643.1$ $4176$--$4241$ [resp. AL$645723.11$ $192421$--$192359$].
+BX$842649.1$ $277414$--$277318$ [resp. AACY$022101973.1$ $389$--$487$].
 The right panel of this figure should be compared with Figure
 \ref{fig:fftbor:tppDistributions}.
 These anecdotal results bear up the correlation between standard deviation
@@ -1053,26 +995,31 @@ $\sigma$ and $\log_{10}(\text{MFPT})$ described in Table \ref{table:correlationF
 
 In the right panel of \Figref{fftbor:correlationFFTborEmpty}, we
 applied \fftbor to each of the two randomly chosen TPP \rb
-aptamers BX$842649.1$ $277414$--$277318$ and AACY$022101973.1$ $389$--$487$, starting
+aptamers BX$842649.1$ $277414$--$277318$ from {\em B. bacteriovorus}
+and AACY$022101973.1$ $389$--$487$ from the marine metagenome, starting
 from the empty reference structure $\strSt=\varnothing$.
 The mean for the \fftbor structural profile near the empty
 structure is $\mu_1=23.0203$  [resp. $\mu_2=27.5821$], the
 standard deviation $\sigma$ for the \fftbor structural profile
 is $\sigma_1=2.2253$  [resp. $\sigma_2=1.9857$], and the \kinfold MFPT is
 $311,075.06$ [resp. $61,575.69$] for the TPP \rb aptamer
-AB$030643.1$ $4176$--$4241$ [resp.  AL$645723.11$ $192421$--$192359$]. This anecdotal evidence supports the hypothesis that small standard deviation in \fftbor distribution is correlated with fast folding.
+BX$842649.1$ $277414$--$277318$ [resp. AACY$022101973.1$ $389$--$487$]. This
+anecdotal evidence supports the hypothesis that small standard deviation
+in \fftbor distribution is correlated with fast folding.
 
-We randomized the TPP \rbs BX$842649.1$ $277414$--$277318$ and AACY$022101973.1$ $389$--$487$ by using our implementation of the Altschul-Erikson dinucleotide shuffle algorithm
+We randomized the TPP \rbs BX$842649.1$ $277414$--$277318$ and
+AACY$022101973.1$ $389$--$487$ by using our implementation of the
+Altschul-Erikson dinucleotide shuffle algorithm
 \citep{altschulErikson:dinucleotideShuffle}, and then applied \fftbor to these
 sequences, starting from the empty structure.  The mean $\mu_1$ and standard
-deviation $\sigma_1$ for the \fftbor distribution for randomized BX$842649$ are
+deviation $\sigma_1$ for the \fftbor distribution for randomized BX$842649.1$ are
 respectively $\mu_1=19.93$ and $\sigma_1=2.88$, while those for randomized
-AACY$022101973$ are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
+AACY$022101973.1$ are $\mu_2=24.39$ and $\sigma_2=24.00$. Running \kinfold, with a
 maximum of $500,000$ steps with $30$ replicates (as explained in the text), we
 found
 that for randomized BX$842649$, all $30$ runs converged yielding a \mfpt
 (MFPT) of $13,022.58$ with standard deviation of $15,221.78$. In contrast for
-randomized AACY$022101973$, only $15$ out of $30$ runs converged within $500,000$ steps,
+randomized AACY$022101973.1$, only $15$ out of $30$ runs converged within $500,000$ steps,
 and discounting these nonconvergent data, we obtain an average \mfpt
 (MFPT) of $94,446.93$ with standard deviation of $157,107.43$. This additional
 test provides more anecdotal evidence supporting our hypothesis that small

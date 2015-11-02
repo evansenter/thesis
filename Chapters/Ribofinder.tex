@@ -22,14 +22,7 @@ conformations---gene `on' and gene `off'. In the third and final stage, we
 leverage \foldalign \citep{gorodkin:1997tr,havgaard:2007ca} to measure the similarity between our
 candidate pool and a
 canonical \grb well studied in the literature, the
-xanthine phosphoribosyltransferase (xpt) \grb from {\em Bacillus subtilis}. At the
-time of this writing, Prof. Dr. Mario
-M\"orl at Universit\"at Leipzig is overseeing preliminary structural
-validation of predicted gene `on' and `off' structures for a number of
-computationally predicted \grbs in {\em Bacillus megaterium}. We have already
-prepared a draft of the paper describing this work, and are presently awaiting
-biochemical validation before submitting it with co-authors M. M\"orl and
-coworkers.
+xanthine phosphoribosyltransferase (xpt) \grb from {\em Bacillus subtilis}.
 
 \subsection{Organization}
 \label{subsec:rfinder:org}
@@ -66,8 +59,7 @@ structural characteristics of the aptamer as search criteria with promising
 results, while the webserver \ms{RibEx} relies solely on sequence conservation
 to detect putative aptamer domains in genomic data \citep{abreugoodger:2005hb}.
 Meanwhile other groups have used covariance model (CM)-based approaches to find
-aptamer domains, most notably \ms{CMfinder} \citep{yao2006} and Rfam
-\citep{nawrocki:2014uy}.
+aptamer domains, most notably \ms{CMfinder} \citep{yao2006}.
 
 Whereas there exists strong sequence and
 structural similarity within the aptamer of a \rb family, the expression
@@ -160,7 +152,7 @@ generated using VARNA \citep{darty:2009gt}.}
 genomes in a context-sensitive fashion by leveraging the protein annotations
 available in NCBI Protein Table (PTT) data. These terminator sequences canonically have a stable
 hairpin loop structure immediately preceding a run of $5+$ uracil residues, the
-combination of which causes the ribosomal machinery to stall and dissociate from
+combination of which causes RNA polymerase to stall and dissociate from
 the transcript. \tthp performs a genomic scan to determine candidate loci with
 this motif, and returns scored hits. The scoring system considers both structural
 homology and the genomic contextual information available in the PTT file. Across
