@@ -253,8 +253,8 @@
     \bigskip
     {\normalsize \degreename\par} % Degree name
     \bigskip
-    {\normalsize\bf \@title \par} % Thesis title
-    \medskip
+    {\large \textsc{\@title} \par} % Thesis title
+    \bigskip
     {\normalsize by \authornames \par} % Author name
     \bigskip
   \end{center}
